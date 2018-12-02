@@ -2052,15 +2052,8 @@ static int storeToFile(char *path, u8* buf, u32 sz)
 */
 int rtw_is_file_readable(char *path)
 {
-#ifdef PLATFORM_LINUX
-	if(isFileReadable(path) == 0)
-		return _TRUE;
-	else
-		return _FALSE;
-#else
 	//Todo...
 	return _FALSE;
-#endif
 }
 
 /*
@@ -2072,13 +2065,8 @@ int rtw_is_file_readable(char *path)
 */
 int rtw_retrieve_from_file(char *path, u8 *buf, u32 sz)
 {
-#ifdef PLATFORM_LINUX
-	int ret =retriveFromFile(path, buf, sz);
-	return ret>=0?ret:0;
-#else
 	//Todo...
 	return 0;
-#endif
 }
 
 /*
@@ -2090,13 +2078,8 @@ int rtw_retrieve_from_file(char *path, u8 *buf, u32 sz)
 */
 int rtw_store_to_file(char *path, u8* buf, u32 sz)
 {
-#ifdef PLATFORM_LINUX
-	int ret =storeToFile(path, buf, sz);
-	return ret>=0?ret:0;
-#else
 	//Todo...
 	return 0;
-#endif
 }
 
 #ifdef PLATFORM_LINUX
