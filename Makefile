@@ -639,15 +639,6 @@ endif
 ifeq ($(CONFIG_RTL8188F), y)
 
 RTL871X = rtl8188f
-ifeq ($(CONFIG_USB_HCI), y)
-MODULE_NAME = 8188fu
-endif
-ifeq ($(CONFIG_PCI_HCI), y)
-MODULE_NAME = 8188fe
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-MODULE_NAME = 8189fs
-endif
 
 EXTRA_CFLAGS += -DCONFIG_RTL8188F
 
@@ -665,9 +656,9 @@ _HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
 
 _HAL_INTFS_FILES +=	\
 			hal/$(RTL871X)/usb/usb_halinit.o \
-			hal/$(RTL871X)/usb/rtl$(MODULE_NAME)_led.o \
-			hal/$(RTL871X)/usb/rtl$(MODULE_NAME)_xmit.o \
-			hal/$(RTL871X)/usb/rtl$(MODULE_NAME)_recv.o
+			hal/$(RTL871X)/usb/rtl8188fu_led.o \
+			hal/$(RTL871X)/usb/rtl8188fu_xmit.o \
+			hal/$(RTL871X)/usb/rtl8188fu_recv.o
 
 ifeq ($(CONFIG_PCI_HCI), y)
 _HAL_INTFS_FILES += hal/$(RTL871X)/usb/usb_ops_linux.o
@@ -1599,11 +1590,6 @@ endif
 
 endif
 
-USER_MODULE_NAME ?=
-ifneq ($(USER_MODULE_NAME),)
-MODULE_NAME := $(USER_MODULE_NAME)
-endif
-
 ifneq ($(KERNELRELEASE),)
 
 rtk_core :=	core/rtw_cmd.o \
@@ -1633,26 +1619,26 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_odm.o \
 		core/efuse/rtw_efuse.o 
 
-$(MODULE_NAME)-y += $(rtk_core)
+rtl8188fu-y += $(rtk_core)
 
-$(MODULE_NAME)-$(CONFIG_INTEL_WIDI) += core/rtw_intel_widi.o
+rtl8188fu-$(CONFIG_INTEL_WIDI) += core/rtw_intel_widi.o
 
-$(MODULE_NAME)-$(CONFIG_WAPI_SUPPORT) += core/rtw_wapi.o	\
+rtl8188fu-$(CONFIG_WAPI_SUPPORT) += core/rtw_wapi.o	\
 					core/rtw_wapi_sms4.o
 
-$(MODULE_NAME)-y += $(_OS_INTFS_FILES)
-$(MODULE_NAME)-y += $(_HAL_INTFS_FILES)
-$(MODULE_NAME)-y += $(_OUTSRC_FILES)
-$(MODULE_NAME)-y += $(_PLATFORM_FILES)
+rtl8188fu-y += $(_OS_INTFS_FILES)
+rtl8188fu-y += $(_HAL_INTFS_FILES)
+rtl8188fu-y += $(_OUTSRC_FILES)
+rtl8188fu-y += $(_PLATFORM_FILES)
 
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o \
+rtl8188fu-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o \
 					core/rtw_mp_ioctl.o
 
 ifeq ($(CONFIG_RTL8723B), y)
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
+rtl8188fu-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 endif
 
-obj-$(CONFIG_RTL8188FU) := $(MODULE_NAME).o
+obj-$(CONFIG_RTL8188FU) := rtl8188fu.o
 
 else
 
