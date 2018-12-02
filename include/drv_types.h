@@ -150,8 +150,6 @@ typedef struct _ADAPTER _adapter, ADAPTER,*PADAPTER;
 #include <ethernet.h>
 #include <circ_buf.h>
 
-#include <rtw_android.h>
-
 #ifdef CONFIG_BT_COEXIST
 #include <rtw_btcoex.h>
 #endif // CONFIG_BT_COEXIST
