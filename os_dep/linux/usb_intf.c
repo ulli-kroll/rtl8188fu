@@ -143,19 +143,6 @@ MODULE_DEVICE_TABLE(usb, rtw_usb_id_tbl);
 
 int const rtw_usb_id_len = sizeof(rtw_usb_id_tbl) / sizeof(struct usb_device_id);
 
-static struct specific_device_id specific_device_id_tbl[] = {
-	{.idVendor=USB_VENDER_ID_REALTEK, .idProduct=0x8177, .flags=SPEC_DEV_ID_DISABLE_HT},//8188cu 1*1 dongole, (b/g mode only)
-	{.idVendor=USB_VENDER_ID_REALTEK, .idProduct=0x817E, .flags=SPEC_DEV_ID_DISABLE_HT},//8188CE-VAU USB minCard (b/g mode only)
-	{.idVendor=0x0b05, .idProduct=0x1791, .flags=SPEC_DEV_ID_DISABLE_HT},
-	{.idVendor=0x13D3, .idProduct=0x3311, .flags=SPEC_DEV_ID_DISABLE_HT},
-	{.idVendor=0x13D3, .idProduct=0x3359, .flags=SPEC_DEV_ID_DISABLE_HT},//Russian customer -Azwave (8188CE-VAU  g mode)
-#ifdef RTK_DMP_PLATFORM
-	{.idVendor=USB_VENDER_ID_REALTEK, .idProduct=0x8111, .flags=SPEC_DEV_ID_ASSIGN_IFNAME}, // Realtek 5G dongle for WiFi Display
-	{.idVendor=0x2019, .idProduct=0xAB2D, .flags=SPEC_DEV_ID_ASSIGN_IFNAME}, // PCI-Abocom 5G dongle for WiFi Display
-#endif /* RTK_DMP_PLATFORM */
-	{}
-};
-
 struct rtw_usb_drv {
 	struct usb_driver usbdrv;
 	int drv_registered;
@@ -673,42 +660,6 @@ static void usb_intf_stop(_adapter *padapter)
 
 	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("-usb_intf_stop\n"));
 
-}
-
-static void process_spec_devid(const struct usb_device_id *pdid)
-{
-	u16 vid, pid;
-	u32 flags;
-	int i;
-	int num = sizeof(specific_device_id_tbl)/sizeof(struct specific_device_id);
-
-	for(i=0; i<num; i++)
-	{
-		vid = specific_device_id_tbl[i].idVendor;
-		pid = specific_device_id_tbl[i].idProduct;
-		flags = specific_device_id_tbl[i].flags;
-
-#ifdef CONFIG_80211N_HT
-		if((pdid->idVendor==vid) && (pdid->idProduct==pid) && (flags&SPEC_DEV_ID_DISABLE_HT))
-		{
-			 rtw_ht_enable = 0;
-			 rtw_bw_mode = 0;
-			 rtw_ampdu_enable = 0;
-		}
-#endif
-
-#ifdef RTK_DMP_PLATFORM
-		// Change the ifname to wlan10 when PC side WFD dongle plugin on DMP platform.
-		// It is used to distinguish between normal and PC-side wifi dongle/module.
-		if((pdid->idVendor==vid) && (pdid->idProduct==pid) && (flags&SPEC_DEV_ID_ASSIGN_IFNAME))
-		{
-			extern char* ifname;
-			strncpy(ifname, "wlan10", 6);
-			//DBG_871X("%s()-%d: ifname=%s, vid=%04X, pid=%04X\n", __FUNCTION__, __LINE__, ifname, vid, pid);
-		}
-#endif /* RTK_DMP_PLATFORM */
-
-	}
 }
 
 #ifdef SUPPORT_HW_RFOFF_DETECTED
@@ -1343,9 +1294,6 @@ static int rtw_drv_init(struct usb_interface *pusb_intf, const struct usb_device
 
 	RT_TRACE(_module_hci_intfs_c_, _drv_err_, ("+rtw_drv_init\n"));
 	//DBG_871X("+rtw_drv_init\n");
-
-	//step 0.
-	process_spec_devid(pdid);
 
 	/* Initialize dvobj_priv */
 	if ((dvobj = usb_dvobj_init(pusb_intf, pdid)) == NULL) {
