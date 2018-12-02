@@ -13971,16 +13971,6 @@ static int rtw_ioctl_standard_wext_private(struct net_device *dev, struct ifreq 
 	return err;
 }
  
-static int rtw_ioctl_wext_private(struct net_device *dev, struct ifreq *rq)
-{
-#ifdef CONFIG_COMPAT
-	if(is_compat_task())
-		return rtw_ioctl_compat_wext_private( dev, rq );
-	else
-#endif // CONFIG_COMPAT
-		return rtw_ioctl_standard_wext_private( dev, rq );
-}
-
 int rtw_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 {
 	struct iwreq *wrq = (struct iwreq *)rq;
@@ -14001,12 +13991,6 @@ int rtw_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 			break;
 #endif
 #endif // CONFIG_AP_MODE
-		case SIOCDEVPRIVATE:				
-			 ret = rtw_ioctl_wext_private(dev, rq);
-			break;
-		case (SIOCDEVPRIVATE+1):
-			ret = rtw_android_priv_cmd(dev, rq, cmd);
-			break;
 		default:
 			ret = -EOPNOTSUPP;
 			break;
