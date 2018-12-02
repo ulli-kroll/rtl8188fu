@@ -1734,12 +1734,14 @@ hal_ReadEFuse_WiFi(
 	for (i = 0; i < _size_byte; i++)
 		pbuf[i] = efuseTbl[_offset + i];
 
+#if 0
 #ifdef CONFIG_DEBUG
 	if (1) {
 		DBG_871X("Efuse Realmap:\n");
 		for (i = 0; i < _size_byte; i++)
 			printk("%02X%s", pbuf[i], (((i + 1) % 16) == 0)?"\n":" ");
 	}
+#endif
 #endif
 	/* Calculate Efuse utilization */
 	total = 0;
