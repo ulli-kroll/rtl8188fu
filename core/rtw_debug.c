@@ -126,14 +126,6 @@ void dump_drv_cfg(void *sel)
 	DBG_871X_SEL_NL(sel, "ADAPTIVITY_MODE = %s\n", (CONFIG_RTW_ADAPTIVITY_MODE) ? "carrier_sense" : "normal");
 #endif
 
-#ifdef CONFIG_WOWLAN
-	DBG_871X_SEL_NL(sel, "CONFIG_WOWLAN - ");
-
-	#ifdef CONFIG_GPIO_WAKEUP
-	DBG_871X_SEL_NL(sel, "CONFIG_GPIO_WAKEUP - WAKEUP_GPIO_IDX:%d\n", WAKEUP_GPIO_IDX);
-	#endif
-#endif
-
 #ifdef CONFIG_TDLS
 	DBG_871X_SEL_NL(sel, "CONFIG_TDLS\n");
 #endif
@@ -2954,43 +2946,6 @@ ssize_t proc_set_wowlan_gpio_info(struct file *file, const char __user *buffer,
 	return count;
 }
 #endif /* CONFIG_GPIO_WAKEUP */
-
-#ifdef CONFIG_P2P_WOWLAN
-int proc_get_p2p_wowlan_info(struct seq_file *m, void *v)
-{
-	struct net_device *dev = m->private;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
-	struct p2p_wowlan_info	 peerinfo = pwdinfo->p2p_wow_info;
-	if(_TRUE == peerinfo.is_trigger)
-	{
-		DBG_871X_SEL_NL(m,"is_trigger: TRUE\n");
-		switch(peerinfo.wowlan_recv_frame_type)
-		{
-			case P2P_WOWLAN_RECV_NEGO_REQ:
-				DBG_871X_SEL_NL(m,"Frame Type: Nego Request\n");
-				break;
-			case P2P_WOWLAN_RECV_INVITE_REQ:
-				DBG_871X_SEL_NL(m,"Frame Type: Invitation Request\n");
-				break;
-			case P2P_WOWLAN_RECV_PROVISION_REQ:
-				DBG_871X_SEL_NL(m,"Frame Type: Provision Request\n");
-				break;
-			default:
-				break;
-		}
-		DBG_871X_SEL_NL(m,"Peer Addr: "MAC_FMT"\n", MAC_ARG(peerinfo.wowlan_peer_addr));
-		DBG_871X_SEL_NL(m,"Peer WPS Config: %x\n", peerinfo.wowlan_peer_wpsconfig);
-		DBG_871X_SEL_NL(m,"Persistent Group: %d\n", peerinfo.wowlan_peer_is_persistent);
-		DBG_871X_SEL_NL(m,"Intivation Type: %d\n", peerinfo.wowlan_peer_invitation_type);
-	}
-	else
-	{
-		DBG_871X_SEL_NL(m,"is_trigger: False\n");
-	}
-	return 0;
-}
-#endif /* CONFIG_P2P_WOWLAN */
 
 int proc_get_new_bcn_max(struct seq_file *m, void *v)
 {

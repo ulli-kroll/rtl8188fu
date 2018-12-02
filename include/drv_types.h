@@ -1278,11 +1278,6 @@ void rtw_dev_pno_debug(struct net_device *net);
 #endif //CONFIG_PNO_SET_DEBUG
 #endif //CONFIG_PNO_SUPPORT
 
-#ifdef CONFIG_WOWLAN
-int rtw_suspend_wow(_adapter *padapter);
-int rtw_resume_process_wow(_adapter *padapter);
-#endif
-
 // HCI Related header file
 #ifdef CONFIG_USB_HCI
 #include <usb_osintf.h>

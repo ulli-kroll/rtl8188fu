@@ -129,55 +129,6 @@ enum h2c_cmd{
 #define eqMacAddr(a,b)						( ((a)[0]==(b)[0] && (a)[1]==(b)[1] && (a)[2]==(b)[2] && (a)[3]==(b)[3] && (a)[4]==(b)[4] && (a)[5]==(b)[5]) ? 1:0 )
 #define cpMacAddr(des,src)					((des)[0]=(src)[0],(des)[1]=(src)[1],(des)[2]=(src)[2],(des)[3]=(src)[3],(des)[4]=(src)[4],(des)[5]=(src)[5])
 #define cpIpAddr(des,src)					((des)[0]=(src)[0],(des)[1]=(src)[1],(des)[2]=(src)[2],(des)[3]=(src)[3])
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-//
-// ARP packet
-//
-// LLC Header
-#define GET_ARP_PKT_LLC_TYPE(__pHeader)					ReadLE2Byte(((u8 *)(__pHeader)) + 6)
-
-//ARP element
-#define GET_ARP_PKT_OPERATION(__pHeader)				ReadLE2Byte(((u8 *)(__pHeader)) + 6)
-#define GET_ARP_PKT_SENDER_MAC_ADDR(__pHeader, _val) 	cpMacAddr((u8*)(_val), ((u8*)(__pHeader))+8)
-#define GET_ARP_PKT_SENDER_IP_ADDR(__pHeader, _val) 		cpIpAddr((u8*)(_val), ((u8*)(__pHeader))+14)
-#define GET_ARP_PKT_TARGET_MAC_ADDR(__pHeader, _val) 	cpMacAddr((u8*)(_val), ((u8*)(__pHeader))+18)
-#define GET_ARP_PKT_TARGET_IP_ADDR(__pHeader, _val) 	cpIpAddr((u8*)(_val), ((u8*)(__pHeader))+24)
-
-#define SET_ARP_PKT_HW(__pHeader, __Value)					WriteLE2Byte(((u8 *)(__pHeader)) + 0, __Value)
-#define SET_ARP_PKT_PROTOCOL(__pHeader, __Value)			WriteLE2Byte(((u8 *)(__pHeader)) + 2, __Value)
-#define SET_ARP_PKT_HW_ADDR_LEN(__pHeader, __Value)			WriteLE1Byte(((u8 *)(__pHeader)) + 4, __Value)
-#define SET_ARP_PKT_PROTOCOL_ADDR_LEN(__pHeader, __Value)	WriteLE1Byte(((u8 *)(__pHeader)) + 5, __Value)
-#define SET_ARP_PKT_OPERATION(__pHeader, __Value)			WriteLE2Byte(((u8 *)(__pHeader)) + 6, __Value)
-#define SET_ARP_PKT_SENDER_MAC_ADDR(__pHeader, _val) 	cpMacAddr(((u8*)(__pHeader))+8, (u8*)(_val))
-#define SET_ARP_PKT_SENDER_IP_ADDR(__pHeader, _val) 		cpIpAddr(((u8*)(__pHeader))+14, (u8*)(_val))
-#define SET_ARP_PKT_TARGET_MAC_ADDR(__pHeader, _val) 	cpMacAddr(((u8*)(__pHeader))+18, (u8*)(_val))
-#define SET_ARP_PKT_TARGET_IP_ADDR(__pHeader, _val) 		cpIpAddr(((u8*)(__pHeader))+24, (u8*)(_val))
-
-#define FW_WOWLAN_FUN_EN				BIT(0)
-#define FW_WOWLAN_PATTERN_MATCH			BIT(1)
-#define FW_WOWLAN_MAGIC_PKT				BIT(2)
-#define FW_WOWLAN_UNICAST				BIT(3)
-#define FW_WOWLAN_ALL_PKT_DROP			BIT(4)
-#define FW_WOWLAN_GPIO_ACTIVE			BIT(5)
-#define FW_WOWLAN_REKEY_WAKEUP			BIT(6)
-#define FW_WOWLAN_DEAUTH_WAKEUP			BIT(7)
-
-#define FW_WOWLAN_GPIO_WAKEUP_EN		BIT(0)
-#define FW_FW_PARSE_MAGIC_PKT			BIT(1)
-
-#define FW_REMOTE_WAKE_CTRL_EN			BIT(0)
-#define FW_REALWOWLAN_EN				BIT(5)
-
-#define FW_WOWLAN_KEEP_ALIVE_EN			BIT(0)
-#define FW_ADOPT_USER					BIT(1)
-#define FW_WOWLAN_KEEP_ALIVE_PKT_TYPE	BIT(2)
-
-#define FW_REMOTE_WAKE_CTRL_EN			BIT(0)
-#define FW_ARP_EN						BIT(1)
-#define FW_REALWOWLAN_EN				BIT(5)
-#define FW_WOW_FW_UNICAST_EN			BIT(7)
-
-#endif //CONFIG_WOWLAN
 
 //_RSVDPAGE_LOC_CMD_0x00
 #define SET_H2CCMD_RSVDPAGE_LOC_PROBE_RSP(__pH2CCmd, __Value)		SET_BITS_TO_LE_1BYTE(__pH2CCmd, 0, 8, __Value)
@@ -339,14 +290,6 @@ s32 rtw_hal_customer_str_write(_adapter *adapter, const u8 *cs);
 #define SET_H2CCMD_AOAC_RSVDPAGE_LOC_SSID_INFO(__pH2CCmd, __Value)	SET_BITS_TO_LE_1BYTE((__pH2CCmd)+3, 0, 8, __Value)
 #endif //CONFIG_PNO_SUPPORT
 
-#ifdef CONFIG_P2P_WOWLAN
-//P2P_RsvdPage_0x8a
-#define SET_H2CCMD_RSVDPAGE_LOC_P2P_BCN(__pH2CCmd, __Value)			SET_BITS_TO_LE_1BYTE(__pH2CCmd, 0, 8, __Value)
-#define SET_H2CCMD_RSVDPAGE_LOC_P2P_PROBE_RSP(__pH2CCmd, __Value)				SET_BITS_TO_LE_1BYTE((__pH2CCmd)+1, 0, 8, __Value)
-#define SET_H2CCMD_RSVDPAGE_LOC_P2P_NEGO_RSP(__pH2CCmd, __Value)			SET_BITS_TO_LE_1BYTE((__pH2CCmd)+2, 0, 8, __Value)
-#define SET_H2CCMD_RSVDPAGE_LOC_P2P_INVITE_RSP(__pH2CCmd, __Value)		SET_BITS_TO_LE_1BYTE((__pH2CCmd)+3, 0, 8, __Value)
-#define SET_H2CCMD_RSVDPAGE_LOC_P2P_PD_RSP(__pH2CCmd, __Value)	SET_BITS_TO_LE_1BYTE((__pH2CCmd)+4, 0, 8, __Value)
-#endif //CONFIG_P2P_WOWLAN
 
 /* CHNL_SWITCH_OPER_OFFLOAD_0x1C */
 #define SET_H2CCMD_CH_SW_OPER_OFFLOAD_CH_NUM(__pH2CCmd, __Value)	SET_BITS_TO_LE_1BYTE(__pH2CCmd, 0, 8, __Value)
@@ -363,44 +306,9 @@ typedef struct _RSVDPAGE_LOC {
 	u8 LocNullData;
 	u8 LocQosNull;
 	u8 LocBTQosNull;
-#ifdef CONFIG_WOWLAN
-	u8 LocRemoteCtrlInfo;
-	u8 LocArpRsp;
-	u8 LocNbrAdv;
-	u8 LocGTKRsp;
-	u8 LocGTKInfo;
-	u8 LocProbeReq;
-	u8 LocNetList;
-#ifdef CONFIG_GTK_OL
-	u8 LocGTKEXTMEM;
-#endif //CONFIG_GTK_OL
-#ifdef CONFIG_PNO_SUPPORT
-	u8 LocPNOInfo;
-	u8 LocScanInfo;
-	u8 LocSSIDInfo;
-	u8 LocProbePacket;
-#endif //CONFIG_PNO_SUPPORT
-#endif //CONFIG_WOWLAN	
 	u8 LocApOffloadBCN;
-#ifdef CONFIG_P2P_WOWLAN
-	u8 LocP2PBeacon;
-	u8 LocP2PProbeRsp;
-	u8 LocNegoRsp;
-	u8 LocInviteRsp;
-	u8 LocPDRsp;
-#endif //CONFIG_P2P_WOWLAN
 } RSVDPAGE_LOC, *PRSVDPAGE_LOC;
 
 #endif
 void dump_TX_FIFO(PADAPTER padapter, u8 page_num, u16 page_size);
 u8 rtw_hal_set_fw_media_status_cmd(_adapter* adapter, u8 mstatus, u8 macid);
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-//WOW command function
-void rtw_hal_set_fw_wow_related_cmd(_adapter* padapter, u8 enable);
-#ifdef CONFIG_P2P_WOWLAN
-//H2C 0x8A
-u8 rtw_hal_set_FwP2PRsvdPage_cmd(_adapter* adapter, PRSVDPAGE_LOC rsvdpageloc);
-//H2C 0x8B
-u8 rtw_hal_set_p2p_wowlan_offload_cmd(_adapter* adapter);
-#endif //CONFIG_P2P_WOWLAN
-#endif

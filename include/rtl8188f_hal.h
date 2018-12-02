@@ -99,11 +99,7 @@ typedef struct _RT_8188F_FIRMWARE_HDR
 #define RX_DMA_RESERVED_SIZE_8188F	0x80	// 128B, reserved for tx report
 #endif
 
-#ifdef CONFIG_WOWLAN
-#define RESV_FMWF	WKFMCAM_SIZE*MAX_WKFM_NUM /* 16 entries, for each is 24 bytes*/
-#else
 #define RESV_FMWF	0
-#endif
 
 #define RX_DMA_BOUNDARY_8188F		(RX_DMA_SIZE_8188F - RX_DMA_RESERVED_SIZE_8188F - 1)
 
@@ -125,19 +121,11 @@ typedef struct _RT_8188F_FIRMWARE_HDR
 
 //For WoWLan , more reserved page
 //ARP Rsp:1, RWC:1, GTK Info:1,GTK RSP:2,GTK EXT MEM:2, PNO: 6
-#ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8188F	0x07
-#else
 #define WOWLAN_PAGE_NUM_8188F	0x00
-#endif
 
 #ifdef CONFIG_PNO_SUPPORT
 #undef WOWLAN_PAGE_NUM_8188F
 #define WOWLAN_PAGE_NUM_8188F	0x15
-#endif
-
-#ifdef CONFIG_AP_WOWLAN
-#define AP_WOWLAN_PAGE_NUM_8188F	0x02
 #endif
 
 #define TX_TOTAL_PAGE_NUMBER_8188F	(0xFF - BCNQ_PAGE_NUM_8188F - BCNQ1_PAGE_NUM_8188F - WOWLAN_PAGE_NUM_8188F)
@@ -251,9 +239,6 @@ void rtl8188f_InitBeaconParameters(PADAPTER padapter);
 void rtl8188f_InitBeaconMaxError(PADAPTER padapter, u8 InfraMode);
 void	_InitBurstPktLen_8188FS(PADAPTER Adapter);
 void _8051Reset8188(PADAPTER padapter);
-#ifdef CONFIG_WOWLAN
-void Hal_DetectWoWMode(PADAPTER pAdapter);
-#endif //CONFIG_WOWLAN
 
 void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);

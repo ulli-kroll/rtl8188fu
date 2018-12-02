@@ -21,11 +21,6 @@
 #define _USB_HALINIT_C_
 
 #include <rtl8188f_hal.h>
-#ifdef CONFIG_WOWLAN
-#include "hal_com_h2c.h"
-#endif
-
-
 
 static void _dbg_dump_macreg(_adapter *padapter)
 {

@@ -262,10 +262,6 @@
 	#define BT_30_SUPPORT 0
 #endif /* CONFIG_BT_COEXIST */
 
-#ifdef CONFIG_WOWLAN
-	#define CONFIG_GTK_OL
-#endif /* CONFIG_WOWLAN */
-
 #ifdef CONFIG_GPIO_WAKEUP
 	#ifndef WAKEUP_GPIO_IDX
 		#define WAKEUP_GPIO_IDX	0	/* WIFI Chip Side */

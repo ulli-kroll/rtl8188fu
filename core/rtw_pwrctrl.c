@@ -666,17 +666,8 @@ u8 PS_RDY_CHECK(_adapter * padapter)
 #endif /* CONFIG_IOCTL_CFG80211 */
 #endif /* CONFIG_P2P */
 
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-	if(_TRUE == pwrpriv->bInSuspend && pwrpriv->wowlan_mode)
-		return _TRUE;
-	else if(_TRUE == pwrpriv->bInSuspend && pwrpriv->wowlan_ap_mode)
-		return _TRUE;
-	else if (_TRUE == pwrpriv->bInSuspend)
-		return _FALSE;
-#else
 	if(_TRUE == pwrpriv->bInSuspend )
 		return _FALSE;
-#endif
 
 	curr_time = rtw_get_current_time();	
 
@@ -924,32 +915,6 @@ _func_enter_;
 			pwrpriv->pwr_mode = ps_mode;
 			rtw_set_rpwm(padapter, PS_STATE_S4);
 			
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN) || defined(CONFIG_P2P_WOWLAN)
-			if (pwrpriv->wowlan_mode == _TRUE ||
-					pwrpriv->wowlan_ap_mode == _TRUE ||
-					pwrpriv->wowlan_p2p_mode == _TRUE)
-			{
-				u32 start_time, delay_ms;
-				u8 val8;
-				delay_ms = 20;
-				start_time = rtw_get_current_time();
-				do { 
-					rtw_hal_get_hwreg(padapter, HW_VAR_SYS_CLKR, &val8);
-					if (!(val8 & BIT(4))){ //0x08 bit4 =1 --> in 32k, bit4 = 0 --> leave 32k
-						pwrpriv->cpwm = PS_STATE_S4;
-						break;
-					}
-					if (rtw_get_passing_time_ms(start_time) > delay_ms)
-					{
-						DBG_871X("%s: Wait for FW 32K leave more than %u ms!!!\n", 
-								__FUNCTION__, delay_ms);
-						pdbgpriv->dbg_wow_leave_ps_fail_cnt++;
-						break;
-					}
-					rtw_usleep_os(100);
-				} while (1); 
-			}
-#endif
 			rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
 			pwrpriv->bFwCurrentInPSMode = _FALSE;
 
@@ -965,9 +930,6 @@ _func_enter_;
 			|| ((rtw_btcoex_IsBtControlLps(padapter) == _TRUE)
 				&& (rtw_btcoex_IsLpsOn(padapter) == _TRUE))
 #endif
-#ifdef CONFIG_P2P_WOWLAN
-			||( _TRUE == pwrpriv->wowlan_p2p_mode)
-#endif //CONFIG_P2P_WOWLAN
 			)
 		{
 			u8 pslv;
@@ -2185,25 +2147,6 @@ _func_enter_;
 		 __func__, WAKEUP_GPIO_IDX, val8);
 #endif /* CONFIG_GPIO_WAKEUP */
 
-#ifdef CONFIG_WOWLAN
-	pwrctrlpriv->wowlan_pattern_idx = 0;
-	for (i = 0 ; i < MAX_WKFM_NUM; i++) {
-		_rtw_memset(pwrctrlpriv->patterns[i].content, '\0',
-				sizeof(pwrctrlpriv->patterns[i].content));
-		_rtw_memset(pwrctrlpriv->patterns[i].mask, '\0',
-				sizeof(pwrctrlpriv->patterns[i].mask));
-		pwrctrlpriv->patterns[i].len = 0;
-	}
-
-#ifdef CONFIG_PNO_SUPPORT
-	pwrctrlpriv->pno_inited = _FALSE;
-	pwrctrlpriv->pnlo_info = NULL;
-	pwrctrlpriv->pscan_info = NULL;
-	pwrctrlpriv->pno_ssid_list = NULL;
-	pwrctrlpriv->pno_in_resume = _TRUE;
-#endif /* CONFIG_PNO_SUPPORT */
-#endif /* CONFIG_WOWLAN */
-
 _func_exit_;
 
 }
@@ -2229,19 +2172,6 @@ _func_enter_;
 		destroy_workqueue(pwrctrlpriv->rtw_workqueue);
 	}
 	#endif
-
-#ifdef CONFIG_WOWLAN
-#ifdef CONFIG_PNO_SUPPORT
-	if (pwrctrlpriv->pnlo_info != NULL)
-		printk("****** pnlo_info memory leak********\n");
-
-	if (pwrctrlpriv->pscan_info != NULL)
-		printk("****** pscan_info memory leak********\n");
-
-	if (pwrctrlpriv->pno_ssid_list != NULL)
-		printk("****** pno_ssid_list memory leak********\n");
-#endif
-#endif /* CONFIG_WOWLAN */
 
 	#if defined(CONFIG_HAS_EARLYSUSPEND) || defined(CONFIG_ANDROID_POWER)
 	rtw_unregister_early_suspend(pwrctrlpriv);

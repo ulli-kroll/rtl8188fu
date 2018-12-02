@@ -851,16 +851,6 @@ int rtw_resume_process(_adapter *padapter)
 	}
 #endif //#ifdef CONFIG_BT_COEXIST &CONFIG_AUTOSUSPEND&
 
-#if defined (CONFIG_WOWLAN) || defined (CONFIG_AP_WOWLAN)
-	/*
-	 * Due to usb wow suspend flow will cancel read/write port via intf_stop and
-	 * bReadPortCancel and bWritePortCancel are set _TRUE in intf_stop.
-	 * But they will not be clear in intf_start during wow resume flow. 
-	 * It should move to os_intf in the feature.
-	 */
-	RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
-	RTW_ENABLE_FUNC(padapter, DF_TX_BIT);
-#endif
 
 	ret =  rtw_resume_common(padapter);
 
@@ -1245,10 +1235,6 @@ static void rtw_usb_if1_deinit(_adapter *if1)
 	hostapd_mode_unload(if1);
 	#endif
 #endif
-
-#ifdef CONFIG_WOWLAN
-	pwrctl->wowlan_mode=_FALSE;
-#endif //CONFIG_WOWLAN
 
 	rtw_dev_unload(if1);
 

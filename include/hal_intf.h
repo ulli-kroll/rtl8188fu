@@ -111,11 +111,6 @@ typedef enum _HW_VARIABLES{
 	HW_VAR_HCI_SUS_STATE,
 	// The valid upper nav range for the HW updating, if the true value is larger than the upper range, the HW won't update it.
 	// Unit in microsecond. 0 means disable this function.
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-	HW_VAR_WOWLAN,
-	HW_VAR_WAKEUP_REASON,
-	HW_VAR_RPWM_TOG,
-#endif
 #ifdef CONFIG_GPIO_WAKEUP
 	HW_SET_GPIO_WL_CTRL,
 #endif
@@ -360,9 +355,6 @@ struct hal_ops {
 			u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
 	s32 (*fw_dl)(_adapter *adapter, u8 wowlan);
 
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-	void (*clear_interrupt)(_adapter *padapter);
-#endif	
 	u8 (*hal_get_tx_buff_rsvd_page_num)(_adapter *adapter, bool wowlan);
 #ifdef CONFIG_GPIO_API
 	void (*update_hisr_hsisr_ind)(PADAPTER padapter, u32 flag);
@@ -675,9 +667,6 @@ void rtw_hal_update_hisr_hsisr_ind(_adapter *padapter, u32 flag);
 void rtw_hal_fw_correct_bcn(_adapter *padapter);
 s32 rtw_hal_fw_dl(_adapter *padapter, u8 wowlan);
 
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-void rtw_hal_clear_interrupt(_adapter *padapter);
-#endif
 u8 rtw_hal_ops_check(_adapter *padapter);
 
 #endif //__HAL_INTF_H__
