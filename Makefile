@@ -472,6 +472,10 @@ modules:
 strip:
 	$(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded
 
+installfw:
+	mkdir -p /lib/firmware/rtlwifi
+	cp -n firmware/* /lib/firmware/rtlwifi/.
+
 install:
 	install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
 	/sbin/depmod -a ${KVER}
