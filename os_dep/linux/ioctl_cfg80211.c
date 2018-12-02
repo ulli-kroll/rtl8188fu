@@ -2062,6 +2062,14 @@ void rtw_cfg80211_indicate_scan_done(_adapter *adapter, bool aborted)
 {
 	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(adapter);
 	_irqL	irqL;
+#if (KERNEL_VERSION(4, 7, 0) <= LINUX_VERSION_CODE)
+	struct cfg80211_scan_info info;
+
+	memset(&info, 0, sizeof(info));
+	info.aborted = aborted;
+#endif
+
+
 
 	_enter_critical_bh(&pwdev_priv->scan_req_lock, &irqL);
 	if (pwdev_priv->scan_request != NULL) {
@@ -2076,7 +2084,11 @@ void rtw_cfg80211_indicate_scan_done(_adapter *adapter, bool aborted)
 		}
 		else
 		{
+#if (KERNEL_VERSION(4, 7, 0) <= LINUX_VERSION_CODE)
+			cfg80211_scan_done(pwdev_priv->scan_request, &info);
+#else
 			cfg80211_scan_done(pwdev_priv->scan_request, aborted);
+#endif
 		}
 
 		pwdev_priv->scan_request = NULL;
