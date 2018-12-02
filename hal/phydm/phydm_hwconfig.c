@@ -2594,39 +2594,6 @@ ODM_ConfigMACWithHeaderFile(
 	return HAL_STATUS_SUCCESS;    
 } 
 
-HAL_STATUS
-ODM_ConfigFWWithHeaderFile(
-	IN 	PDM_ODM_T			pDM_Odm,
-	IN 	ODM_FW_Config_Type 	ConfigType,
-	OUT u1Byte				*pFirmware,
-	OUT u4Byte				*pSize
-	)
-{
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
-
-#if (RTL8188F_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
-			ODM_ReadFirmware_MP_8188F_FW_NIC(pDM_Odm, pFirmware, pSize);
-	}
-#endif
-
-//1 New ICs (WIN only)
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-#if (RTL8188F_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188F)
-	{
-		if (ConfigType == CONFIG_FW_NIC)
-			ODM_ReadFirmware_MP_8188F_FW_NIC(pDM_Odmp8188F, pFirmware, pSize);
-	}
-#endif
-#endif
-#endif//(DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-#endif//(DM_ODM_SUPPORT_TYPE != ODM_AP)
-	return HAL_STATUS_SUCCESS;    
-} 
-
 u4Byte 
 ODM_GetHWImgVersion(
 	IN	PDM_ODM_T	pDM_Odm

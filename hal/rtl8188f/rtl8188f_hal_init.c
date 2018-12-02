@@ -21,6 +21,7 @@
 
 #include <rtl8188f_hal.h>
 #include "hal_com_h2c.h"
+#include <linux/firmware.h>
 
 #if 0 /* FW tx packet write */
 #define FW_DOWNLOAD_SIZE_8188F 8192
@@ -1074,6 +1075,9 @@ u8 send_fw_packet(PADAPTER padapter, u8 *pRam_code, u32 length)
 /*		Download 8192C firmware code. */
 /* */
 /* */
+
+MODULE_FIRMWARE("rtlwifi/rtl8188fufw.bin");
+
 s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedqFw)
 {
 	s32	rtStatus = _SUCCESS;
@@ -1082,27 +1086,18 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedqFw)
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
 	u8			*FwImage;
 	u32			FwImageLen;
-	u8			*pFwImageFileName;
 	u8			*pucMappedFile = NULL;
-	PRT_FIRMWARE_8188F	pFirmware = NULL;
 	PRT_8188F_FIRMWARE_HDR		pFwHdr = NULL;
 	u8			*pFirmwareBuf;
 	u32			FirmwareLen;
-#ifdef CONFIG_FILE_FWIMG
-	u8 *fwfilepath;
-#endif /* CONFIG_FILE_FWIMG */
+	char *fw_name =  "rtlwifi/rtl8188fufw.bin";
+	const struct firmware *fw;
 	u8			value8;
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 
 	RT_TRACE(_module_hal_init_c_, _drv_info_, ("+%s\n", __func__));
-	pFirmware = (PRT_FIRMWARE_8188F)rtw_zmalloc(sizeof(RT_FIRMWARE_8188F));
-
-	if (!pFirmware) {
-		rtStatus = _FAIL;
-		goto exit;
-	}
 
 	{
 		u8 tmp_ps = 0, tmp_rf = 0;
@@ -1125,56 +1120,23 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedqFw)
 	rtw_btcoex_PreLoadFirmware(padapter);
 #endif
 
-#ifdef CONFIG_FILE_FWIMG
-	{
-		fwfilepath = rtw_fw_file_path;
-	}
-#endif /* CONFIG_FILE_FWIMG */
-
-#ifdef CONFIG_FILE_FWIMG
-	if (rtw_is_file_readable(fwfilepath) == _TRUE) {
-		DBG_8192C("%s acquire FW from file:%s\n", __func__, fwfilepath);
-		pFirmware->eFWSource = FW_SOURCE_IMG_FILE;
-	} else
-#endif /* CONFIG_FILE_FWIMG */
-	{
-#ifdef CONFIG_EMBEDDED_FWIMG
-		pFirmware->eFWSource = FW_SOURCE_HEADER_FILE;
-#else /* !CONFIG_EMBEDDED_FWIMG */
-		pFirmware->eFWSource = FW_SOURCE_IMG_FILE; /* We should decided by Reg. */
-#endif /* !CONFIG_EMBEDDED_FWIMG */
-	}
-
-	switch (pFirmware->eFWSource) {
-	case FW_SOURCE_IMG_FILE:
-#ifdef CONFIG_FILE_FWIMG
-		rtStatus = rtw_retrieve_from_file(fwfilepath, FwBuffer, FW_8188F_SIZE);
-		pFirmware->ulFwLength = rtStatus >= 0 ? rtStatus : 0;
-		pFirmware->szFwBuffer = FwBuffer;
-#endif /* CONFIG_FILE_FWIMG */
-		break;
-
-	case FW_SOURCE_HEADER_FILE:
-		{
-			ODM_ConfigFWWithHeaderFile(&pHalData->odmpriv
-				/*, CONFIG_FW_WoWLAN  functions of CONFIG_FW_NIC is included in CONFIG_FW_WoWLAN */
-				, CONFIG_FW_NIC /* functions of NIC is separated from WoWLAN starting from V0200 */
-				, (u8 *)&pFirmware->szFwBuffer
-				, &pFirmware->ulFwLength
-			);
-			DBG_8192C("%s fw: %s, size: %d\n", __func__, "FW_NIC", pFirmware->ulFwLength);
-		}
-		break;
-	}
-
-	if (pFirmware->ulFwLength > FW_8188F_SIZE) {
-		rtStatus = _FAIL;
-		DBG_871X_LEVEL(_drv_emerg_, "Firmware size:%u exceed %u\n", pFirmware->ulFwLength, FW_8188F_SIZE);
+	dev_info(&psdpriv->pusbdev->dev, "request firmware %s\n",fw_name);
+	if (request_firmware(&fw, fw_name, &psdpriv->pusbdev->dev)) {
+		dev_err(&psdpriv->pusbdev->dev, "Firmware %s not available\n", fw_name);
 		goto exit;
 	}
 
-	pFirmwareBuf = pFirmware->szFwBuffer;
-	FirmwareLen = pFirmware->ulFwLength;
+	dev_info(&psdpriv->pusbdev->dev, "request firmware %s loaded\n",fw_name);
+
+
+	if (fw->size > FW_8188F_SIZE) {
+		rtStatus = _FAIL;
+		DBG_871X_LEVEL(_drv_emerg_, "Firmware size:%u exceed %u\n", (int) fw->size, FW_8188F_SIZE);
+		goto exit;
+	}
+
+	pFirmwareBuf = (u8 *) fw->data;
+	FirmwareLen = fw->size;
 
 	/* To Check Fw header. Added by tynli. 2009.12.04. */
 	pFwHdr = (PRT_8188F_FIRMWARE_HDR)pFirmwareBuf;
@@ -1309,8 +1271,7 @@ DLFW_FAIL:
 			);
 
 exit:
-	if (pFirmware)
-		rtw_mfree((u8 *)pFirmware, sizeof(RT_FIRMWARE_8188F));
+	release_firmware(fw);
 
 	rtl8188f_InitializeFirmwareVars(padapter);
 

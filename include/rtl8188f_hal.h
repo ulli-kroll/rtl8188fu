@@ -42,16 +42,6 @@
 
 #define IS_FW_HEADER_EXIST_8188F(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature)&0xFFF0) == 0x88F0)
 
-typedef struct _RT_FIRMWARE {
-	FIRMWARE_SOURCE	eFWSource;
-#ifdef CONFIG_EMBEDDED_FWIMG
-	u8*			szFwBuffer;
-#else
-	u8			szFwBuffer[FW_8188F_SIZE];
-#endif
-	u32			ulFwLength;
-} RT_FIRMWARE_8188F, *PRT_FIRMWARE_8188F;
-
 //
 // This structure must be cared byte-ordering
 //
