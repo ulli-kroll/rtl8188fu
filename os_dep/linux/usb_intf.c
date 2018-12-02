@@ -1679,8 +1679,10 @@ int rockchip_wifi_init_module(void)
     printk("=======================================================\n");
     printk("Realtek 8188FU USB WiFi driver (Powered by Rockchip) init.\n");
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 1, 0))
+#if 0
     rockchip_wifi_power(1);
     //rockchip_wifi_set_carddetect(1);
+#endif
 #else
     rk29sdk_wifi_power(1);
 #endif
@@ -1706,7 +1708,9 @@ void rockchip_wifi_exit_module(void)
     rtw_drv_halt();
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 1, 0))
     //rockchip_wifi_set_carddetect(0);
+#if 0
     rockchip_wifi_power(0);
+#endif
 #else
     rk29sdk_wifi_power(0);
 #endif
