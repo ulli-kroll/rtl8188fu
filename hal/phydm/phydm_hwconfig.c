@@ -2621,10 +2621,7 @@ ODM_ConfigFWWithHeaderFile(
 
 #if (RTL8188F_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
-		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8188F, _FW_NIC);
-		else if (ConfigType == CONFIG_FW_WoWLAN)
-			READ_FIRMWARE_MP(8188F, _FW_WoWLAN);
 	}
 #endif
 

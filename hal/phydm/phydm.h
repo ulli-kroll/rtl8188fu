@@ -1056,14 +1056,6 @@ typedef enum _ODM_RF_Config_Type{
 
 typedef enum _ODM_FW_Config_Type{
     CONFIG_FW_NIC,
-    CONFIG_FW_NIC_2,
-    CONFIG_FW_AP,
-    CONFIG_FW_AP_2,
-    CONFIG_FW_MP,
-    CONFIG_FW_WoWLAN,
-    CONFIG_FW_WoWLAN_2,
-    CONFIG_FW_AP_WoWLAN,
-    CONFIG_FW_BT,
 } ODM_FW_Config_Type;
 
 // Status code
