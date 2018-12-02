@@ -35,9 +35,6 @@ CONFIG_RTL8723C = n
 CONFIG_RTL8188F = y
 ######################### Interface ###########################
 CONFIG_USB_HCI = y
-CONFIG_PCI_HCI = n
-CONFIG_SDIO_HCI = n
-CONFIG_GSPI_HCI = n
 ########################## Features ###########################
 CONFIG_MP_INCLUDED = y
 CONFIG_POWER_SAVING = y
@@ -150,17 +147,6 @@ ifeq ($(CONFIG_MP_INCLUDED), y)
 _OS_INTFS_FILES += os_dep/linux/ioctl_mp.o
 endif
 
-ifeq ($(CONFIG_SDIO_HCI), y)
-_OS_INTFS_FILES += os_dep/linux/custom_gpio_linux.o
-_OS_INTFS_FILES += os_dep/linux/usb_ops_linux.o
-endif
-
-ifeq ($(CONFIG_GSPI_HCI), y)
-_OS_INTFS_FILES += os_dep/linux/custom_gpio_linux.o
-_OS_INTFS_FILES += os_dep/linux/usb_ops_linux.o
-endif
-
-
 _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com.o \
 			hal/hal_com_phycfg.o \
@@ -242,10 +228,6 @@ ifeq ($(CONFIG_USB_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_USB.o
 endif
 
-ifeq ($(CONFIG_SDIO_HCI), y)
-_HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_SDIO.o
-endif
-
 _OUTSRC_FILES += hal/phydm/rtl8188f/halhwimg8188f_bb.o\
 			hal/phydm/rtl8188f/halhwimg8188f_mac.o\
 			hal/phydm/rtl8188f/halhwimg8188f_rf.o\
@@ -253,22 +235,6 @@ _OUTSRC_FILES += hal/phydm/rtl8188f/halhwimg8188f_bb.o\
 			hal/phydm/rtl8188f/phydm_regconfig8188f.o\
 			hal/phydm/rtl8188f/halphyrf_8188f.o \
 			hal/phydm/rtl8188f/phydm_rtl8188f.o
-
-endif
-
-########### AUTO_CFG  #################################
-
-ifeq ($(CONFIG_AUTOCFG_CP), y)
-
-ifeq ($(CONFIG_RTL8188E)$(CONFIG_SDIO_HCI),yy)
-$(shell cp $(TopDIR)/autoconf_rtl8189e_usb_linux.h $(TopDIR)/include/autoconf.h)
-else ifeq ($(CONFIG_RTL8188F)$(CONFIG_SDIO_HCI),yy)
-$(shell cp $(TopDIR)/autoconf_rtl8189f_usb_linux.h $(TopDIR)/include/autoconf.h)
-else ifeq ($(CONFIG_RTL8723C),y)
-$(shell cp $(TopDIR)/autoconf_rtl8723c_usb_linux.h $(TopDIR)/include/autoconf.h)
-else
-$(shell cp $(TopDIR)/autoconf_$(RTL871X)_usb_linux.h $(TopDIR)/include/autoconf.h)
-endif
 
 endif
 
