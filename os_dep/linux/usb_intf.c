@@ -1657,7 +1657,7 @@ static void /*__exit*/ rtw_drv_halt(void)
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 1, 0))
-#include <linux/rfkill-wlan.h>
+#include <linux/rfkill.h>
 extern int get_wifi_chip_type(void);
 #else
 extern int rk29sdk_wifi_power(int on);
