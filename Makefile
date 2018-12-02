@@ -638,49 +638,47 @@ endif
 ########### HAL_RTL8188F #################################
 ifeq ($(CONFIG_RTL8188F), y)
 
-RTL871X = rtl8188f
-
 EXTRA_CFLAGS += -DCONFIG_RTL8188F
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/$(RTL871X)/Hal8188FPwrSeq.o\
-					hal/$(RTL871X)/$(RTL871X)_sreset.o
+			hal/rtl8188f/Hal8188FPwrSeq.o\
+			hal/rtl8188f/rtl8188f_sreset.o
 
-_HAL_INTFS_FILES +=	hal/$(RTL871X)/$(RTL871X)_hal_init.o \
-			hal/$(RTL871X)/$(RTL871X)_phycfg.o \
-			hal/$(RTL871X)/$(RTL871X)_rf6052.o \
-			hal/$(RTL871X)/$(RTL871X)_dm.o \
-			hal/$(RTL871X)/$(RTL871X)_rxdesc.o \
-			hal/$(RTL871X)/$(RTL871X)_cmd.o \
+_HAL_INTFS_FILES +=	hal/rtl8188f/rtl8188f_hal_init.o \
+			hal/rtl8188f/rtl8188f_phycfg.o \
+			hal/rtl8188f/rtl8188f_rf6052.o \
+			hal/rtl8188f/rtl8188f_dm.o \
+			hal/rtl8188f/rtl8188f_rxdesc.o \
+			hal/rtl8188f/rtl8188f_cmd.o \
 
 
 _HAL_INTFS_FILES +=	\
-			hal/$(RTL871X)/usb/usb_halinit.o \
-			hal/$(RTL871X)/usb/rtl8188fu_led.o \
-			hal/$(RTL871X)/usb/rtl8188fu_xmit.o \
-			hal/$(RTL871X)/usb/rtl8188fu_recv.o
+			hal/rtl8188f/usb/usb_halinit.o \
+			hal/rtl8188f/usb/rtl8188fu_led.o \
+			hal/rtl8188f/usb/rtl8188fu_xmit.o \
+			hal/rtl8188f/usb/rtl8188fu_recv.o
 
 ifeq ($(CONFIG_PCI_HCI), y)
-_HAL_INTFS_FILES += hal/$(RTL871X)/usb/usb_ops_linux.o
+_HAL_INTFS_FILES += hal/rtl8188f/usb/usb_ops_linux.o
 else
-_HAL_INTFS_FILES += hal/$(RTL871X)/usb/usb_ops.o
+_HAL_INTFS_FILES += hal/rtl8188f/usb/usb_ops.o
 endif
 
 ifeq ($(CONFIG_USB_HCI), y)
-_HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8188F_USB.o
+_HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_USB.o
 endif
 
 ifeq ($(CONFIG_SDIO_HCI), y)
-_HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8188F_SDIO.o
+_HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_SDIO.o
 endif
 
-_OUTSRC_FILES += hal/phydm/$(RTL871X)/halhwimg8188f_bb.o\
-								hal/phydm/$(RTL871X)/halhwimg8188f_mac.o\
-								hal/phydm/$(RTL871X)/halhwimg8188f_rf.o\
-								hal/phydm/$(RTL871X)/halhwimg8188f_fw.o\
-								hal/phydm/$(RTL871X)/phydm_regconfig8188f.o\
-								hal/phydm/$(RTL871X)/halphyrf_8188f.o \
-								hal/phydm/$(RTL871X)/phydm_rtl8188f.o
+_OUTSRC_FILES += hal/phydm/rtl8188f/halhwimg8188f_bb.o\
+			hal/phydm/rtl8188f/halhwimg8188f_mac.o\
+			hal/phydm/rtl8188f/halhwimg8188f_rf.o\
+			hal/phydm/rtl8188f/halhwimg8188f_fw.o\
+			hal/phydm/rtl8188f/phydm_regconfig8188f.o\
+			hal/phydm/rtl8188f/halphyrf_8188f.o \
+			hal/phydm/rtl8188f/phydm_rtl8188f.o
 
 endif
 
