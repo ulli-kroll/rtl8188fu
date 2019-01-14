@@ -7,3 +7,5 @@ git clone https://github.com/kelebek333/rtl8188fu
 sudo dkms add ./rtl8188fu
 
 sudo dkms install rtl8188fu/1.0
+
+sudo cp ./rtl8188fu/firmware/rtl8188fufw.bin /lib/firmware/rtlwifi/
