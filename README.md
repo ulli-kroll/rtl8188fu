@@ -1,38 +1,9 @@
-rtl8188fu for linux
-===================
+For Kernel 4.19 and 4.20 (Linux Mint or Ubuntu Derivatives)
 
-rtl8188fu linux driver for wireless bgn device
+sudo apt-get install build-essential git dkms linux-headers-$(uname -r)
 
-Note:
-This is an USB2 only adapter,  
-Source is ripped out of firefly source tree found at  
-https://gitlab.com/TeeFirefly/linux-kernel 
+git clone https://github.com/kelebek333/rtl8188fu
 
-<u>If one USB-ID is missing, please mail me.</u>  
+sudo dkms add ./rtl8188fu
 
-build/load/function tested with v4.19  
-
-Building and install driver
----------------------------
-
-for building type  
-`make`  
-
-for load the driver  
-`sudo modprobe cfg80211`  
-`sudo insmod rtl8188fu.ko`  
-
-You need to install the needed fw with  
-`sudo make installfw`  
-
-If you need to crosscompile use  
-`ARCH= CROSS_COMPILE= KSRC=`  
-while calling `make` i.e.  
-
-`make ARCH="arm" CROSS_COMPILE=armv5tel-softfloat-linux-gnueabi- KSRC=/home/linux-master modules`  
-
-Please use prefix **rtl8188fu** if you want to mail me  
-But please please don't, I have enough to do.  
-TIA  
-
-Hans Ulli Kroll <ulli.kroll@googlemail.com>
+sudo dkms install rtl8188fu/1.0
