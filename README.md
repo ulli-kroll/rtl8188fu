@@ -1,4 +1,4 @@
-For Kernel 4.19 and 4.20 (Linux Mint or Ubuntu Derivatives)
+For Kernel 4.15 ~ 4.20 (Linux Mint or Ubuntu Derivatives)
 
 sudo apt-get install build-essential git dkms linux-headers-$(uname -r)
 
