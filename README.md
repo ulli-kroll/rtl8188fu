@@ -26,7 +26,6 @@ https://github.com/kelebek333/rtl8188fu/raw/master/rtl8188fufw-firmware_1.0.1.de
 ------------------
 
 Run following for disable power mangement and plugging/replugging issues.
-Güç yönetimini pasifleştirmek ve takmak/yeniden takma sorunları için aşağıdaki komutları çalıştırınız.
 
 sudo mkdir -p /etc/modprobe.d/
 
