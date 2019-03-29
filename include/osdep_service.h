@@ -20,6 +20,10 @@
 #ifndef __OSDEP_SERVICE_H_
 #define __OSDEP_SERVICE_H_
 
+#include <linux/version.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+#include <linux/sched/signal.h>
+#endif
 
 #define _FAIL		0
 #define _SUCCESS	1
@@ -47,11 +51,6 @@
 
 #ifdef PLATFORM_OS_CE
 #include <osdep_service_ce.h>
-#endif
-
-#include <linux/version.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
-#include <linux/sched/signal.h>
 #endif
 
 #define RTW_TIMER_HDL_NAME(name) rtw_##name##_timer_hdl
@@ -635,5 +634,4 @@ char alpha_to_upper(char c);
 #endif // !PLATFORM_LINUX
 
 #endif
-
 
