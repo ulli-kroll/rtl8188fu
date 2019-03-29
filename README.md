@@ -2,17 +2,40 @@ For Kernel 4.15.x ~ 5.0.x (Linux Mint or Ubuntu Derivatives)
 
 ------------------
 
-sudo apt-get install build-essential git dkms linux-headers-$(uname -r)
+How to install
 
-git clone https://github.com/kelebek333/rtl8188fu
+`sudo apt-get install build-essential git dkms linux-headers-$(uname -r)`
 
-sudo dkms add ./rtl8188fu
+`git clone https://github.com/kelebek333/rtl8188fu`
 
-sudo dkms build rtl8188fu/1.0
+`sudo dkms add ./rtl8188fu`
 
-sudo dkms install rtl8188fu/1.0
+`sudo dkms build rtl8188fu/1.0`
 
-sudo cp ./rtl8188fu/firmware/rtl8188fufw.bin /lib/firmware/rtlwifi/
+`sudo dkms install rtl8188fu/1.0`
+
+`sudo cp ./rtl8188fu/firmware/rtl8188fufw.bin /lib/firmware/rtlwifi/`
+
+------------------
+
+Run following commands for disable power mangement and plugging/replugging issues.
+
+`sudo mkdir -p /etc/modprobe.d/`
+
+`sudo touch /etc/modprobe.d/rtl8188fu.conf`
+
+`echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
+
+------------------
+
+How to uninstall
+
+`sudo dkms remove rtl8188fu/1.0 --all`
+
+`sudo rm -f /lib/firmware/rtlwifi/rtl8188fufw.bin`
+
+`sudo rm -f /etc/modprobe.d/rtl8188fu.conf`
+
 
 ------------------
 
@@ -22,13 +45,8 @@ https://github.com/kelebek333/rtl8188fu/raw/master/rtl8188fu-dkms_1.0.3_amd64.de
 
 https://github.com/kelebek333/rtl8188fu/raw/master/rtl8188fufw-firmware_1.0.1.deb
 
+You can purge packages with following commands
 
-------------------
+`sudo apt purge rtl8188fu-dkms`
 
-Run following commands for disable power mangement and plugging/replugging issues.
-
-sudo mkdir -p /etc/modprobe.d/
-
-sudo touch /etc/modprobe.d/rtl8188fu.conf
-
-echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf
+`sudo apt purge rtl8188fufw-firmware`
