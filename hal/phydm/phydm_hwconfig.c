@@ -231,7 +231,7 @@ odm_SignalScaleMapping_92CSeries(
 #endif
 
 #if ((DEV_BUS_TYPE == RT_USB_INTERFACE) ||(DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-	if((pDM_Odm->SupportInterface  == ODM_ITRF_USB) || (pDM_Odm->SupportInterface  == ODM_ITRF_SDIO))
+	if((pDM_Odm->SupportInterface  == ODM_ITRF_USB))
 	{
 		if(CurrSig >= 51 && CurrSig <= 100)
 		{
@@ -2260,8 +2260,6 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
 			READ_AND_CONFIG_MP(8188F, _TxPowerTrack_USB);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8188F, _TxPowerTrack_SDIO);
 	}
 #endif
 
