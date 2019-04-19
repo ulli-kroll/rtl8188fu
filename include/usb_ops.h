@@ -55,33 +55,21 @@ enum{
 #ifdef CONFIG_RTL8188E
 void rtl8188eu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8188eu_set_intf_ops(struct _io_ops *pops);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8188eu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 #endif
 
 #if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
 void rtl8812au_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8812au_set_intf_ops(struct _io_ops *pops);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8812au(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 #endif
 
 #ifdef CONFIG_RTL8814A
 void rtl8814au_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8814au_set_intf_ops(struct _io_ops	*pops);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8814au(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 #endif /* CONFIG_RTL8814 */
 
 #ifdef CONFIG_RTL8192E
 void rtl8192eu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8192eu_set_intf_ops(struct _io_ops *pops);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8192eu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 
 #endif
 
@@ -90,9 +78,6 @@ void rtl8188fu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8188fu_set_intf_ops(struct _io_ops *pops);
 void rtl8188fu_recv_tasklet(void *priv);
 void rtl8188fu_xmit_tasklet(void *priv);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8188fu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 #endif
 
 #ifdef CONFIG_RTL8723B
@@ -100,9 +85,6 @@ void rtl8723bu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8723bu_set_intf_ops(struct _io_ops *pops);
 void rtl8723bu_recv_tasklet(void *priv);
 void rtl8723bu_xmit_tasklet(void *priv);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8723bu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 #endif
 
 #ifdef CONFIG_RTL8703B
@@ -110,9 +92,6 @@ void rtl8703bu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8703bu_set_intf_ops(struct _io_ops *pops);
 void rtl8703bu_recv_tasklet(void *priv);
 void rtl8703bu_xmit_tasklet(void *priv);
-#ifdef CONFIG_SUPPORT_USB_INT
-void interrupt_handler_8703bu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif /* CONFIG_SUPPORT_USB_INT */
 #endif /* CONFIG_RTL8703B */
 
 enum RTW_USB_SPEED {

@@ -131,12 +131,6 @@ void dump_drv_cfg(void *sel)
 #endif
 
 #ifdef CONFIG_USB_HCI
-	#ifdef CONFIG_SUPPORT_USB_INT	
-	DBG_871X_SEL_NL(sel, "CONFIG_SUPPORT_USB_INT\n");
-	#endif
-	#ifdef CONFIG_USB_INTERRUPT_IN_PIPE		
-	DBG_871X_SEL_NL(sel, "CONFIG_USB_INTERRUPT_IN_PIPE\n");
-	#endif
 	#ifdef CONFIG_USB_TX_AGGREGATION
 	DBG_871X_SEL_NL(sel, "CONFIG_USB_TX_AGGREGATION\n");
 	#endif

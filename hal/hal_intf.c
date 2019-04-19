@@ -526,12 +526,6 @@ s32	rtw_hal_interrupt_handler(_adapter *padapter)
 	return ret;
 }
 #endif
-#if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
-void	rtw_hal_interrupt_handler(_adapter *padapter, u16 pkt_len, u8 *pbuf)
-{
-	padapter->HalFunc.interrupt_handler(padapter, pkt_len, pbuf);
-}
-#endif
 
 void	rtw_hal_set_bwmode(_adapter *padapter, CHANNEL_WIDTH Bandwidth, u8 Offset)
 {
@@ -926,12 +920,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 	#endif/*#if defined(CONFIG_PCI_HCI)*/
-	#if (defined(CONFIG_PCI_HCI)) || (defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT))
-	if (NULL == padapter->HalFunc.interrupt_handler) {
-		rtw_hal_error_msg("interrupt_handler");
-		ret = _FAIL;
-	}
-	#endif /*#if (defined(CONFIG_PCI_HCI)) || (defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT))*/
 
 	#if defined(CONFIG_PCI_HCI) || defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)	
 	if (NULL == padapter->HalFunc.enable_interrupt) {

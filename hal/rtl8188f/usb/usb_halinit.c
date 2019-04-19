@@ -232,11 +232,6 @@ static u8 _LLTWrite(
  */
 static void _InitInterrupt(PADAPTER padapter)
 {
-#ifdef CONFIG_SUPPORT_USB_INT
-	/* clear interrupt, write 1 clear */
-	rtw_write32(padapter, REG_HISR0_8188F, 0xFFFFFFFF);
-	rtw_write32(padapter, REG_HISR1_8188F, 0xFFFFFFFF);
-#endif /* CONFIG_SUPPORT_USB_INT */
 }
 
 static void _InitQueueReservedPage(PADAPTER padapter)
@@ -2543,9 +2538,6 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 
 #ifdef CONFIG_XMIT_THREAD_MODE
 	pHalFunc->xmit_thread_handler = &rtl8188fu_xmit_buf_handler;
-#endif
-#ifdef CONFIG_SUPPORT_USB_INT
-	pHalFunc->interrupt_handler = interrupt_handler_8188fu;
 #endif
 
 	_func_exit_;
