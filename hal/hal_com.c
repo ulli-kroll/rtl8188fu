@@ -966,8 +966,7 @@ int hal_read_mac_hidden_rpt(_adapter *adapter)
 #if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	u8 hci_type = rtw_get_intf_type(adapter);
 
-	if ((hci_type == RTW_USB || hci_type == RTW_PCIE)
-		&& !rtw_is_hw_init_completed(adapter))
+	if (!rtw_is_hw_init_completed(adapter))
 		rtw_hal_power_on(adapter);
 #endif
 
@@ -1008,8 +1007,7 @@ mac_hidden_rpt_hdl:
 exit:
 
 #if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
-	if ((hci_type == RTW_USB || hci_type == RTW_PCIE)
-		&& !rtw_is_hw_init_completed(adapter))
+	if (!rtw_is_hw_init_completed(adapter))
 		rtw_hal_power_off(adapter);
 #endif
 
@@ -3445,8 +3443,6 @@ int hal_efuse_macaddr_offset(_adapter *adapter)
 	case RTL8188F:
 		if (interface_type == RTW_USB)
 			addr_offset = EEPROM_MAC_ADDR_8188FU;
-		else if (interface_type == RTW_SDIO)
-			addr_offset = EEPROM_MAC_ADDR_8188FS;
 		break;
 #endif
 #ifdef CONFIG_RTL8812A

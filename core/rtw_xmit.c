@@ -4103,8 +4103,6 @@ inline bool xmitframe_hiq_filter(struct xmit_frame *xmitframe)
 	_adapter *adapter = xmitframe->padapter;
 	struct registry_priv *registry = &adapter->registrypriv;
 
-if (rtw_get_intf_type(adapter) != RTW_PCIE) {
-
 	if (adapter->registrypriv.wifi_spec == 1) {
 		allow = _TRUE;
 	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_SPECIAL) {
@@ -4132,7 +4130,7 @@ if (rtw_get_intf_type(adapter) != RTW_PCIE) {
 	else {
 		rtw_warn_on(1);
 	}
-}
+
 	return allow;
 }
 

@@ -46,16 +46,7 @@ void rtw_hal_read_chip_info(_adapter *padapter)
 	u8 hci_type = rtw_get_intf_type(padapter);
 	u32 start = rtw_get_current_time();
 
-	/*  before access eFuse, make sure card enable has been called */
-	if ((hci_type == RTW_SDIO || hci_type == RTW_GSPI)
-		&& !rtw_is_hw_init_completed(padapter))
-		rtw_hal_power_on(padapter);
-
 	padapter->HalFunc.read_adapter_info(padapter);
-
-	if ((hci_type == RTW_SDIO || hci_type == RTW_GSPI)
-		&& !rtw_is_hw_init_completed(padapter))
-		rtw_hal_power_off(padapter);
 
 	DBG_871X("%s in %d ms\n", __func__, rtw_get_passing_time_ms(start));
 }

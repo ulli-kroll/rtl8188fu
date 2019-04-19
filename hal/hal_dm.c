@@ -90,9 +90,6 @@ void Init_ODM_ComInfo(_adapter *adapter)
 
 	rtw_odm_init_ic_type(adapter);
 
-	if (rtw_get_intf_type(adapter) == RTW_GSPI)
-		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_INTERFACE, ODM_ITRF_SDIO);
-	else
 		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_INTERFACE, rtw_get_intf_type(adapter));
 
 	ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_MP_TEST_CHIP, IS_NORMAL_CHIP(pHalData->VersionID));
