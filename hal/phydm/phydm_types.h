@@ -118,7 +118,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#define	STA_INFO_T			RT_WLAN_STA
 	#define	PSTA_INFO_T			PRT_WLAN_STA
 	#define	__func__		__FUNCTION__
-	#define	PHYDM_TESTCHIP_SUPPORT	TESTCHIP_SUPPORT
 	#define bMaskH3Bytes			0xffffff00
 	#define SUCCESS	0
 	#define FAIL	(-1)
@@ -162,12 +161,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#define _TRUE				1
 	#define _FALSE				0
 
-	#if (defined(TESTCHIP_SUPPORT))
-		#define	PHYDM_TESTCHIP_SUPPORT 1
-	#else
-		#define	PHYDM_TESTCHIP_SUPPORT 0
-	#endif
-	
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#include <drv_types.h>
 #if 0
@@ -244,11 +237,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#define	FPGA_TWO_MAC_VERIFICATION	0
 	#define	RTL8881A_SUPPORT	0
 
-	#if (defined(TESTCHIP_SUPPORT))
-		#define	PHYDM_TESTCHIP_SUPPORT 1
-	#else
-		#define	PHYDM_TESTCHIP_SUPPORT 0
-	#endif
 #endif
 
 #define READ_NEXT_PAIR(v1, v2, i) do { if (i+2 >= ArrayLen) break; i += 2; v1 = Array[i]; v2 = Array[i+1]; } while(0)
