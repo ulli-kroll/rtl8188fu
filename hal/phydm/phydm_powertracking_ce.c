@@ -458,13 +458,8 @@ odm_TXPowerTrackingThermalMeterInit(
 	pRFCalibrateInfo->TXPowercount = 0;
 	pRFCalibrateInfo->bTXPowerTrackingInit = _FALSE;
 
-	if(pDM_Odm->mp_mode == FALSE)
-		pRFCalibrateInfo->TxPowerTrackControl = _TRUE;
-	else
-		pRFCalibrateInfo->TxPowerTrackControl = _FALSE;	
-
-	if(pDM_Odm->mp_mode == FALSE)
-		pRFCalibrateInfo->TxPowerTrackControl = _TRUE;
+	pRFCalibrateInfo->TxPowerTrackControl = _TRUE;
+	pRFCalibrateInfo->TxPowerTrackControl = _TRUE;
 
 
 	MSG_8192C("pDM_Odm TxPowerTrackControl = %d\n", pRFCalibrateInfo->TxPowerTrackControl);

@@ -124,9 +124,6 @@ ODM_InitMpDriverStatus(
 
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
-	// Update information every period
-	pDM_Odm->mp_mode = (BOOLEAN)Adapter->registrypriv.mp_mode;
-
 #else
 
 	// MP mode is always false at AP side
@@ -147,8 +144,6 @@ ODM_UpdateMpDriverStatus(
 #elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
-	// Update information erery period
-	pDM_Odm->mp_mode = (BOOLEAN)Adapter->registrypriv.mp_mode;
 
 #else
 

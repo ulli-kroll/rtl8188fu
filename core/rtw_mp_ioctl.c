@@ -282,8 +282,7 @@ _func_enter_;
 
 	RT_TRACE(_module_mp_, _drv_notice_, ("+oid_rt_pro_start_test_hdl\n"));
 
-	if (Adapter->registrypriv.mp_mode == 0)
-		return NDIS_STATUS_NOT_ACCEPTED;
+	return NDIS_STATUS_NOT_ACCEPTED;
 
 	if (poid_par_priv->type_of_oid != SET_OID)
 		return NDIS_STATUS_NOT_ACCEPTED;
@@ -326,7 +325,6 @@ _func_enter_;
 		return NDIS_STATUS_NOT_ACCEPTED;
 
 	_irqlevel_changed_(&oldirql, LOWER);
-	mp_stop_test(Adapter);
 	_irqlevel_changed_(&oldirql, RAISE);
 
 	RT_TRACE(_module_mp_, _drv_notice_, ("-Set OID_RT_PRO_STOP_TEST\n"));

@@ -1105,16 +1105,6 @@ ssize_t proc_set_survey_info(struct file *file, const char __user *buffer, size_
 	if (count < 1)
 		return -EFAULT;
 
-#ifdef CONFIG_MP_INCLUDED
-		if ((padapter->registrypriv.mp_mode == 1)
-#ifdef CONFIG_CONCURRENT_MODE
-		|| ((padapter->pbuddy_adapter) && (padapter->pbuddy_adapter->registrypriv.mp_mode == 1))
-#endif			
-		){
-			DBG_871X(FUNC_ADPT_FMT ": MP mode block Scan request\n", FUNC_ADPT_ARG(padapter));	
-			goto exit;
-		}
-#endif
 	rtw_ps_deny(padapter, PS_DENY_SCAN);
 	if (_FAIL == rtw_pwr_wakeup(padapter))
 		goto exit;

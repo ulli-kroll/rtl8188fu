@@ -634,7 +634,7 @@ Phydm_AdaptivityInit(
 	pDM_Odm->Adaptivity_IGI_upper = 0;
 	pDM_Odm->Adaptivity_enable = FALSE;	/*use this flag to decide enable or disable*/
 
-	if (pDM_Odm->bWIFITest == TRUE || pDM_Odm->mp_mode == TRUE)
+	if (pDM_Odm->bWIFITest == TRUE)
 		pDM_Odm->EDCCA_enable = FALSE;
 	else
 		pDM_Odm->EDCCA_enable = TRUE;		/*even no adaptivity, we still enable EDCCA*/

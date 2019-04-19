@@ -85,14 +85,6 @@ int rtw_busy_thresh = 40;
 //int qos_enable = 0; //*
 int rtw_ack_policy = NORMAL_ACK;
 
-int rtw_mp_mode = 0;
-
-#if defined(CONFIG_MP_INCLUDED) && defined(CONFIG_RTW_CUSTOMER_STR)
-uint rtw_mp_customer_str = 0;
-module_param(rtw_mp_customer_str, uint, 0644);
-MODULE_PARM_DESC(rtw_mp_customer_str, "Whether or not to enable customer str support on MP mode");
-#endif
-
 int rtw_software_encrypt = 0;
 int rtw_software_decrypt = 0;
 
@@ -270,7 +262,6 @@ module_param(rtw_rfintfs, int, 0644);
 module_param(rtw_lbkmode, int, 0644);
 module_param(rtw_network_mode, int, 0644);
 module_param(rtw_channel, int, 0644);
-module_param(rtw_mp_mode, int, 0644);
 module_param(rtw_wmm_enable, int, 0644);
 module_param(rtw_vrtl_carrier_sense, int, 0644);
 module_param(rtw_vcs_type, int, 0644);
@@ -596,10 +587,6 @@ _func_enter_;
   	registry_par->busy_thresh = (u16)rtw_busy_thresh;
   	//registry_par->qos_enable = (u8)rtw_qos_enable;
 	registry_par->ack_policy = (u8)rtw_ack_policy;
-	registry_par->mp_mode = (u8)rtw_mp_mode;
-#if defined(CONFIG_MP_INCLUDED) && defined(CONFIG_RTW_CUSTOMER_STR)
-	registry_par->mp_customer_str = (u8)rtw_mp_customer_str;
-#endif
 	registry_par->software_encrypt = (u8)rtw_software_encrypt;
 	registry_par->software_decrypt = (u8)rtw_software_decrypt;
 

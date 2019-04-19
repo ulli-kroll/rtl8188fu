@@ -589,21 +589,7 @@ GetDeltaSwingTable_8188F(
 	u1Byte				TxRate			= 0xFF;
 	u1Byte				channel			= pHalData->CurrentChannel;
 
-	if (pDM_Odm->mp_mode == TRUE) {
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-			#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-				#if (MP_DRIVER == 1)
-					PMPT_CONTEXT pMptCtx = &(Adapter->MptCtx);
-						
-					TxRate = MptToMgntRate(pMptCtx->MptRateIndex);
-				#endif
-			#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
-				PMPT_CONTEXT pMptCtx = &(Adapter->mppriv.MptCtx);
-					
-				TxRate = MptToMgntRate(pMptCtx->MptRateIndex);
-			#endif	
-		#endif
-	} else {
+	{
 		u2Byte	rate	 = *(pDM_Odm->pForcedDataRate);
 		
 		if (!rate) { /*auto rate*/
@@ -2877,9 +2863,6 @@ PHY_IQCalibrate_8188F(
 		pDM_Odm->RFCalibrateInfo.RegE9C = pDM_Odm->RFCalibrateInfo.RegEBC = 0x0;        //Y default value
 	}
 
-#if MP_DRIVER == 1
-	if ((pMptCtx->MptRfPath == ODM_RF_PATH_A) || ((pDM_Odm->mp_mode) == 0))
-#endif
 	{
 		if (RegE94 != 0) {
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
@@ -2891,9 +2874,6 @@ PHY_IQCalibrate_8188F(
 	}
 
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-#if MP_DRIVER == 1
-	if ((pMptCtx->MptRfPath == ODM_RF_PATH_A) || ((pDM_Odm->mp_mode) == 0))
-#endif
 	{
 		if (RegEB4 != 0)
 			_PHY_PathBFillIQKMatrix8188F(pAdapter, bPathBOK, result, final_candidate, (RegEC4 == 0));

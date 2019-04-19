@@ -778,7 +778,7 @@ s32 rtw_hal_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBu
 
 	if (pri_adapter->bFWReady == _TRUE)
 		return padapter->HalFunc.fill_h2c_cmd(padapter, ElementID, CmdLen, pCmdBuffer);
-	else if (padapter->registrypriv.mp_mode == 0)
+	else 
 		DBG_871X_LEVEL(_drv_always_, FUNC_ADPT_FMT" FW doesn't exit when no MP mode, by pass H2C id:0x%02x\n"
 			, FUNC_ADPT_ARG(padapter), ElementID);
 	return _FAIL;

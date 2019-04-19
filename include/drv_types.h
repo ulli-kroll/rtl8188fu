@@ -197,11 +197,6 @@ struct registry_priv
 	u8	short_retry_lmt;
 	u16	busy_thresh;
 	u8	ack_policy;
-	u8	mp_mode;
-#if defined(CONFIG_MP_INCLUDED) && defined(CONFIG_RTW_CUSTOMER_STR)
-	u8 mp_customer_str;
-#endif
-	u8  mp_dm;
 	u8	software_encrypt;
 	u8	software_decrypt;
 	#ifdef CONFIG_TX_EARLY_MODE

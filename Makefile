@@ -135,10 +135,6 @@ _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/linux/wifi_regd.o \
 			os_dep/linux/rtw_proc.o
 
-ifeq ($(CONFIG_MP_INCLUDED), y)
-_OS_INTFS_FILES += os_dep/linux/ioctl_mp.o
-endif
-
 _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com.o \
 			hal/hal_com_phycfg.o \

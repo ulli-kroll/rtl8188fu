@@ -1207,23 +1207,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/*InitHalDm(Adapter); */
 
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_DOWNLOAD_FW);
-	if (padapter->registrypriv.mp_mode == 0
-		#if defined(CONFIG_MP_INCLUDED) && defined(CONFIG_RTW_CUSTOMER_STR)
-		|| padapter->registrypriv.mp_customer_str
-		#endif
-	) {
-		status = rtl8188f_FirmwareDownload(padapter, _FALSE);
-		if (status != _SUCCESS) {
-			padapter->bFWReady = _FALSE;
-			pHalData->fw_ractrl = _FALSE;
-			DBG_871X("fw download fail!\n");
-			goto exit;
-		} else {
-			padapter->bFWReady = _TRUE;
-			pHalData->fw_ractrl = _TRUE;
-			DBG_871X("fw download ok!\n");
-		}
-	}
 
 	if (pwrctrlpriv->reg_rfoff == _TRUE)
 		pwrctrlpriv->rf_pwrstate = rf_off;
@@ -1366,12 +1349,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_HAL_DM);
 	rtl8188f_InitHalDm(padapter);
 
-#if (MP_DRIVER == 1)
-	if (padapter->registrypriv.mp_mode == 1) {
-		padapter->mppriv.channel = pHalData->CurrentChannel;
-		MPT_InitializeAdapter(padapter, padapter->mppriv.channel);
-	} else
-#endif
 	{
 		pwrctrlpriv->rf_pwrstate = rf_on;
 
@@ -1959,11 +1936,6 @@ u32 rtl8188fu_hal_deinit(PADAPTER Adapter)
 	/* USB only need to clear HISR, no need to set HIMR, because there's no hardware interrupt for USB. */
 	rtw_write32(Adapter, REG_HIMR0_8188F, IMR_DISABLED_8188F);
 	rtw_write32(Adapter, REG_HIMR1_8188F, IMR_DISABLED_8188F);
-#endif
-
-#ifdef CONFIG_MP_INCLUDED
-	if (Adapter->registrypriv.mp_mode == 1)
-		MPT_DeInitAdapter(Adapter);
 #endif
 
 #ifdef SUPPORT_HW_RFOFF_DETECTED

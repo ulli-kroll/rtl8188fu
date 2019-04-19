@@ -290,15 +290,6 @@ static void Update_ODM_ComInfo_8188f(PADAPTER	Adapter)
 		SupportAbility |= ODM_BB_ANT_DIV;
 #endif
 
-#if (MP_DRIVER==1)
-	if (Adapter->registrypriv.mp_mode == 1) {
-		SupportAbility = 0
-						 | ODM_RF_CALIBRATION
-						 | ODM_RF_TX_PWR_TRACK
-						 ;
-	}
-#endif/*(MP_DRIVER==1) */
-
 #ifdef CONFIG_DISABLE_ODM
 	SupportAbility = 0;
 #endif/*CONFIG_DISABLE_ODM */
@@ -414,10 +405,6 @@ rtl8188f_HalDmWatchDog(
 #ifdef CONFIG_CONCURRENT_MODE
 	PADAPTER pbuddy_adapter = Adapter->pbuddy_adapter;
 #endif /*CONFIG_CONCURRENT_MODE */
-
-	if (Adapter->registrypriv.mp_mode == 1 && Adapter->mppriv.mp_dm == 0) /* for MP power tracking */
-		return;
-
 
 	if (!rtw_is_hw_init_completed(Adapter))
 		goto skip_dm;

@@ -5012,11 +5012,6 @@ LedControlUSB(
 {
 	struct led_priv	*ledpriv = &(padapter->ledpriv);
 
-#if(MP_DRIVER == 1)
-	if (padapter->registrypriv.mp_mode == 1)
-		return;
-#endif
-
 	if (RTW_CANNOT_RUN(padapter) || (!rtw_is_hw_init_completed(padapter))) {
 		/*DBG_871X("%s bDriverStopped:%s, bSurpriseRemoved:%s\n"
 		, __func__

@@ -735,7 +735,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			InterfaceIndex; /*Add for 92D  dual MAC: 0--Mac0 1--Mac1*/
 	BOOLEAN			bIsMPChip;
 	BOOLEAN			bOneEntryOnly;
-	BOOLEAN			mp_mode;
 	u4Byte			OneEntry_MACID;
 	u1Byte			pre_number_linked_client;	
 	u1Byte			number_linked_client;

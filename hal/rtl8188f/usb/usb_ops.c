@@ -305,8 +305,7 @@ int recvbuf2recvframe(PADAPTER padapter, void *ptr)
 
 		pattrib = &precvframe->u.hdr.attrib;
 
-		if ((padapter->registrypriv.mp_mode == 0)
-			&& ((pattrib->crc_err) || (pattrib->icv_err))) {
+		if (((pattrib->crc_err) || (pattrib->icv_err))) {
 			DBG_8192C("%s: RX Warning! crc_err=%d icv_err=%d, skip!\n",
 					  __func__, pattrib->crc_err, pattrib->icv_err);
 

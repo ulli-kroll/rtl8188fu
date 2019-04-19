@@ -562,28 +562,6 @@ phy_BB8188f_Config_ParaFile(
 		goto phy_BB8190_Config_ParaFile_Fail;
 	}
 
-#if MP_DRIVER == 1
-	if (Adapter->registrypriv.mp_mode == 1) {
-		/* */
-		/* 1.1 Read PHY_REG_MP.TXT BB INIT!! */
-		/* */
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-		if (phy_ConfigBBWithMpParaFile(Adapter, PHY_FILE_PHY_REG_MP) == _FAIL)
-#endif
-		{
-#ifdef CONFIG_EMBEDDED_FWIMG
-			if (HAL_STATUS_SUCCESS != ODM_ConfigBBWithHeaderFile(&pHalData->odmpriv, CONFIG_BB_PHY_REG_MP))
-				rtStatus = _FAIL;
-#endif
-		}
-
-		if (rtStatus != _SUCCESS) {
-			DBG_8192C("%s():Write BB Reg MP Fail!!", __func__);
-			goto phy_BB8190_Config_ParaFile_Fail;
-		}
-	}
-#endif	/* #if (MP_DRIVER == 1) */
-
 	/* */
 	/* 2. Read BB AGC table Initialization */
 	/* */
