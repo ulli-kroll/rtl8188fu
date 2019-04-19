@@ -395,7 +395,7 @@ else
 EXTRA_CFLAGS += -mfloat-abi=hard
 endif
 endif
-
+## ULLI set DM_ODM_SUPPORT_TYPE to ODM_CE
 EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)
