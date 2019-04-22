@@ -534,12 +534,6 @@ static inline u32 rtw_phydm_ability_get(_adapter *adapter)
 	return rtw_phydm_ability_ops(adapter, HAL_PHYDM_ABILITY_GET, 0);
 }
 
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-extern char *rtw_phy_file_path;
-extern char rtw_phy_para_file_path[PATH_LENGTH_MAX];
-#define GetLineFromBuffer(buffer)   strsep(&buffer, "\r\n")
-#endif
-
 #ifdef CONFIG_FW_C2H_DEBUG
 void Debug_FwC2H(PADAPTER padapter, u8 *pdata, u8 len);
 #endif

@@ -197,9 +197,6 @@ phy_RF6052_Config_ParaFile(
 		/*----Initialize RF fom connfiguration file----*/
 		switch (eRFPath) {
 		case RF_PATH_A:
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-			if (PHY_ConfigRFWithParaFile(Adapter, PHY_FILE_RADIO_A, eRFPath) == _FAIL)
-#endif
 			{
 #ifdef CONFIG_EMBEDDED_FWIMG
 				if (HAL_STATUS_FAILURE == ODM_ConfigRFWithHeaderFile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
@@ -208,9 +205,6 @@ phy_RF6052_Config_ParaFile(
 			}
 			break;
 		case RF_PATH_B:
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-			if (PHY_ConfigRFWithParaFile(Adapter, PHY_FILE_RADIO_B, eRFPath) == _FAIL)
-#endif
 			{
 #ifdef CONFIG_EMBEDDED_FWIMG
 				if (HAL_STATUS_FAILURE == ODM_ConfigRFWithHeaderFile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
@@ -247,9 +241,6 @@ phy_RF6052_Config_ParaFile(
 	/*3 Configuration of Tx Power Tracking */
 	/*3 ----------------------------------------------------------------- */
 
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-	if (PHY_ConfigRFWithTxPwrTrackParaFile(Adapter, PHY_FILE_TXPWR_TRACK) == _FAIL)
-#endif
 	{
 #ifdef CONFIG_EMBEDDED_FWIMG
 		ODM_ConfigRFWithTxPwrTrackHeaderFile(&pHalData->odmpriv);

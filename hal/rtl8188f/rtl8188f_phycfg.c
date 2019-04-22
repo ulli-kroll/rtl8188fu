@@ -477,10 +477,6 @@ s32 PHY_MACConfig8188F(PADAPTER Adapter)
 	/* */
 	/* Config MAC */
 	/* */
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-	rtStatus = phy_ConfigMACWithParaFile(Adapter, PHY_FILE_MAC_REG);
-	if (rtStatus == _FAIL)
-#endif
 	{
 #ifdef CONFIG_EMBEDDED_FWIMG
 		ODM_ConfigMACWithHeaderFile(&pHalData->odmpriv);
@@ -547,9 +543,6 @@ phy_BB8188f_Config_ParaFile(
 	/* */
 	/* 1. Read PHY_REG.TXT BB INIT!! */
 	/* */
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-	if (phy_ConfigBBWithParaFile(Adapter, PHY_FILE_PHY_REG, CONFIG_BB_PHY_REG) == _FAIL)
-#endif
 	{
 #ifdef CONFIG_EMBEDDED_FWIMG
 		if (HAL_STATUS_SUCCESS != ODM_ConfigBBWithHeaderFile(&pHalData->odmpriv, CONFIG_BB_PHY_REG))
@@ -565,9 +558,6 @@ phy_BB8188f_Config_ParaFile(
 	/* */
 	/* 2. Read BB AGC table Initialization */
 	/* */
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-	if (phy_ConfigBBWithParaFile(Adapter, PHY_FILE_AGC_TAB, CONFIG_BB_AGC_TAB) == _FAIL)
-#endif
 	{
 #ifdef CONFIG_EMBEDDED_FWIMG
 		if (HAL_STATUS_SUCCESS != ODM_ConfigBBWithHeaderFile(&pHalData->odmpriv, CONFIG_BB_AGC_TAB))

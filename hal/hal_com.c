@@ -26,10 +26,6 @@
 
 //#define CONFIG_GTK_OL_DBG
 
-#ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-char	rtw_phy_para_file_path[PATH_LENGTH_MAX];
-#endif
-
 void dump_chip_info(HAL_VERSION	ChipVersion)
 {
 	int cnt = 0;
