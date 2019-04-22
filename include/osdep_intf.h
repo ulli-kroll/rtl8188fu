@@ -124,8 +124,6 @@ u16 rtw_recv_select_queue(struct sk_buff *skb);
 int rtw_ndev_notifier_register(void);
 void rtw_ndev_notifier_unregister(void);
 
-#include "../os_dep/linux/rtw_proc.h"
-
 #ifdef CONFIG_IOCTL_CFG80211
 #include "../os_dep/linux/ioctl_cfg80211.h"
 #endif //CONFIG_IOCTL_CFG80211
