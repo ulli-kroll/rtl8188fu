@@ -158,30 +158,6 @@ static u32 _InitPowerOn_8188FU(PADAPTER padapter)
 				| PROTOCOL_EN | SCHEDULE_EN | ENSEC | CALTMR_EN);
 	rtw_write16(padapter, REG_CR_8188F, value16);
 
-#ifdef CONFIG_BT_COEXIST
-	rtw_btcoex_PowerOnSetting(padapter);
-
-	/* external switch to S1 */
-	/* 0x38[11] = 0x1 */
-	/* 0x4c[23] = 0x1 */
-	/* 0x64[0] = 0 */
-	value16 = rtw_read16(padapter, REG_PWR_DATA);
-	/* Switch the control of EESK, EECS to RFC for DPDT or Antenna switch */
-	value16 |= BIT(11); /* BIT_EEPRPAD_RFE_CTRL_EN */
-	rtw_write16(padapter, REG_PWR_DATA, value16);
-	/*DBG_8192C("%s: REG_PWR_DATA(0x%x)=0x%04X\n", __func__, REG_PWR_DATA, rtw_read16(padapter, REG_PWR_DATA)); */
-
-	value32 = rtw_read32(padapter, REG_LEDCFG0);
-	value32 |= BIT(23); /* DPDT_SEL_EN, 1 for SW control */
-	rtw_write32(padapter, REG_LEDCFG0, value32);
-	/*DBG_8192C("%s: REG_LEDCFG0(0x%x)=0x%08X\n", __func__, REG_LEDCFG0, rtw_read32(padapter, REG_LEDCFG0)); */
-
-	value8 = rtw_read8(padapter, REG_PAD_CTRL1_8188F);
-	value8 &= ~BIT(0); /* BIT_SW_DPDT_SEL_DATA, DPDT_SEL default configuration */
-	rtw_write8(padapter, REG_PAD_CTRL1_8188F, value8);
-	/*DBG_8192C("%s: REG_PAD_CTRL1(0x%x)=0x%02X\n", __func__, REG_PAD_CTRL1_8188F, rtw_read8(padapter, REG_PAD_CTRL1_8188F)); */
-#endif /* CONFIG_BT_COEXIST */
-
 	return status;
 }
 
@@ -1362,34 +1338,9 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 			PHY_LCCalibrate_8188F(&pHalData->odmpriv);
 
-#ifdef CONFIG_BT_COEXIST
-			/* Inform WiFi FW that it is the beginning of IQK */
-			h2cCmdBuf = 1;
-			FillH2CCmd8188F(padapter, H2C_8188F_BT_WLAN_CALIBRATION, 1, &h2cCmdBuf);
-
-			start_time = rtw_get_current_time();
-			do {
-				if (rtw_read8(padapter, 0x1e7) & 0x01)
-					break;
-
-				rtw_msleep_os(50);
-			} while (rtw_get_passing_time_ms(start_time) <= 400);
-
-
-			rtw_btcoex_IQKNotify(padapter, _TRUE);
-#endif
-
 			restore_iqk_rst = (pwrpriv->bips_processing == _TRUE) ? _TRUE : _FALSE;
 			PHY_IQCalibrate_8188F(padapter, _FALSE, restore_iqk_rst);
 			pHalData->odmpriv.RFCalibrateInfo.bIQKInitialized = _TRUE;
-
-#ifdef CONFIG_BT_COEXIST
-			rtw_btcoex_IQKNotify(padapter, _FALSE);
-
-			/* Inform WiFi FW that it is the finish of IQK */
-			h2cCmdBuf = 0;
-			FillH2CCmd8188F(padapter, H2C_8188F_BT_WLAN_CALIBRATION, 1, &h2cCmdBuf);
-#endif
 
 			ODM_TXPowerTrackingCheck(&pHalData->odmpriv);
 		}
@@ -1402,12 +1353,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 /*	_InitPABias(Adapter); */
 
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_BT_COEXIST);
-#ifdef CONFIG_BT_COEXIST
-	/* Init BT hw config. */
-	rtw_btcoex_HAL_Initialize(padapter, _FALSE);
-#else
 	/* rtw_btcoex_HAL_Initialize(padapter, _TRUE);	// For Test. */
-#endif
 
 #if 0
 	/* 2010/05/20 MH We need to init timer after update setting. Otherwise, we can not get correct inf setting. */

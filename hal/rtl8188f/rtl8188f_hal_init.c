@@ -840,95 +840,6 @@ int ReservedPage_Compare(PADAPTER Adapter, PRT_MP_FIRMWARE pFirmware, u32 BTPatc
 	return _TRUE;
 }
 
-#ifdef CONFIG_BT_COEXIST
-/* As the size of bt firmware is more than 16k which is too big for some platforms, we divide it
- * into four parts to transfer. The last parameter of _WriteBTFWtoTxPktBuf8188F is used to indicate
- * the location of every part. We call the first 4096 byte of bt firmware as part 1, the second 4096
- * part as part 2, the third 4096 part as part 3, the remain as part 4. First we transform the part
- * 4 and set the register 0x209 to 0x90, then the 32 bytes description are added to the head of part
- * 4, and those bytes are putted at the location 0x90. Second we transform the part 3 and set the
- * register 0x209 to 0x70. The 32 bytes description and part 3(4196 bytes) are putted at the location
- * 0x70. It can contain 4196 bytes between 0x70 and 0x90. So the last 32 bytes os part 3 will cover the
- * 32 bytes description of part4. Using this method, we can put the whole bt firmware to 0x30 and only
- * has 32 bytes descrption at the head of part 1.
-*/
-s32 FirmwareDownloadBT(PADAPTER padapter, PRT_MP_FIRMWARE pFirmware)
-{
-	s32 rtStatus;
-	u8 *pBTFirmwareBuf;
-	u32 BTFirmwareLen;
-	u8 download_time;
-	s8 i;
-
-
-	rtStatus = _SUCCESS;
-	pBTFirmwareBuf = NULL;
-	BTFirmwareLen = 0;
-
-	/* */
-	/* Patch BT Fw. Download BT RAM code to Tx packet buffer. */
-	/* */
-	if (padapter->bBTFWReady) {
-		DBG_8192C("%s: BT Firmware is ready!!\n", __func__);
-		return _FAIL;
-	}
-
-#ifdef CONFIG_FILE_FWIMG
-	if (rtw_is_file_readable(rtw_fw_mp_bt_file_path) == _TRUE) {
-		DBG_8192C("%s: acquire MP BT FW from file:%s\n", __func__, rtw_fw_mp_bt_file_path);
-
-		rtStatus = rtw_retrieve_from_file(rtw_fw_mp_bt_file_path, FwBuffer, FW_8188F_SIZE);
-		BTFirmwareLen = rtStatus >= 0 ? rtStatus : 0;
-		pBTFirmwareBuf = FwBuffer;
-	} else
-#endif /* CONFIG_FILE_FWIMG */
-	{
-#ifdef CONFIG_EMBEDDED_FWIMG
-		DBG_8192C("%s: Download MP BT FW from header\n", __func__);
-
-		pBTFirmwareBuf = (u8 *)Rtl8188FFwBTImgArray;
-		BTFirmwareLen = Rtl8188FFwBTImgArrayLength;
-		pFirmware->szFwBuffer = pBTFirmwareBuf;
-		pFirmware->ulFwLength = BTFirmwareLen;
-#endif /* CONFIG_EMBEDDED_FWIMG */
-	}
-
-	DBG_8192C("%s: MP BT Firmware size=%d\n", __func__, BTFirmwareLen);
-
-	/* for h2c cam here should be set to  true */
-	padapter->bFWReady = _TRUE;
-
-	download_time = (BTFirmwareLen + 4095) / 4096;
-	DBG_8192C("%s: download_time is %d\n", __func__, download_time);
-
-	/* Download BT patch Fw. */
-	for (i = (download_time - 1); i >= 0; i--) {
-		if (i == (download_time - 1)) {
-			rtStatus = _WriteBTFWtoTxPktBuf8188F(padapter, pBTFirmwareBuf + (4096 * i), (BTFirmwareLen - (4096 * i)), 1);
-			DBG_8192C("%s: start %d, len %d, time 1\n", __func__, 4096 * i, BTFirmwareLen - (4096 * i));
-		} else {
-			rtStatus = _WriteBTFWtoTxPktBuf8188F(padapter, pBTFirmwareBuf + (4096 * i), 4096, (download_time - i));
-			DBG_8192C("%s: start %d, len 4096, time %d\n", __func__, 4096 * i, download_time - i);
-		}
-
-		if (rtStatus != _SUCCESS) {
-			DBG_8192C("%s: BT Firmware download to Tx packet buffer fail!\n", __func__);
-			padapter->bBTFWReady = _FALSE;
-			return rtStatus;
-		}
-	}
-
-	ReservedPage_Compare(padapter, pFirmware, BTFirmwareLen);
-
-	padapter->bBTFWReady = _TRUE;
-	SetFwBTFwPatchCmd(padapter, (u16)BTFirmwareLen);
-	rtStatus = _CheckWLANFwPatchBTFwReady(padapter);
-
-	DBG_8192C("<===%s: return %s!\n", __func__, rtStatus == _SUCCESS ? "SUCCESS" : "FAIL");
-
-	return rtStatus;
-}
-#endif /* CONFIG_BT_COEXIST */
 #endif /* CONFIG_MP_INCLUDED */
 
 #if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
@@ -1115,10 +1026,6 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedqFw)
 			pdbgpriv->dbg_downloadfw_pwr_state_cnt++;
 		}
 	}
-
-#ifdef CONFIG_BT_COEXIST
-	rtw_btcoex_PreLoadFirmware(padapter);
-#endif
 
 	dev_info(&psdpriv->pusbdev->dev, "request firmware %s\n",fw_name);
 	if (request_firmware(&fw, fw_name, &psdpriv->pusbdev->dev)) {
@@ -2876,10 +2783,6 @@ void rtl8188f_InitBeaconParameters(PADAPTER padapter)
 
 	val8 = DIS_TSF_UDT;
 	val16 = val8 | (val8 << 8); /* port0 and port1 */
-#ifdef CONFIG_BT_COEXIST
-	/* Enable prot0 beacon function for PSTDMA */
-	val16 |= EN_BCN_FUNCTION;
-#endif
 	rtw_write16(padapter, REG_BCN_CTRL, val16);
 
 	/* TODO: Remove these magic number */
@@ -3144,22 +3047,8 @@ void UpdateHalRAMask8188F(PADAPTER padapter, u32 mac_id, u8 rssi_level)
 
 	mask &= rate_bitmap;
 
-#ifdef CONFIG_BT_COEXIST
-	rate_bitmap = rtw_btcoex_GetRaMask(padapter);
-	mask &= ~rate_bitmap;
-#endif /* CONFIG_BT_COEXIST */
 
 #ifdef CONFIG_CMCC_TEST
-#ifdef CONFIG_BT_COEXIST
-	if (pmlmeext->cur_wireless_mode & WIRELESS_11G) {
-		if (mac_id == 0) {
-			DBG_871X("CMCC_BT update raid entry, mask=0x%x\n", mask);
-			/*mask &=0xffffffc0; //disable CCK & <12M OFDM rate for 11G mode for CMCC */
-			mask &= 0xffffff00; /*disable CCK & <24M OFDM rate for 11G mode for CMCC */
-			DBG_871X("CMCC_BT update raid entry, mask=0x%x\n", mask);
-		}
-	}
-#endif
 #endif
 
 	if (pHalData->fw_ractrl == _TRUE)
@@ -5169,11 +5058,6 @@ static void hw_var_set_bcn_func(PADAPTER padapter, u8 variable, u8 *val)
 		u8 val8;
 		val8 = rtw_read8(padapter, bcn_ctrl_reg);
 		val8 &= ~(EN_BCN_FUNCTION | EN_TXBCN_RPT);
-#ifdef CONFIG_BT_COEXIST
-		/* Always enable port0 beacon function for PSTDMA */
-		if (REG_BCN_CTRL == bcn_ctrl_reg)
-			val8 |= EN_BCN_FUNCTION;
-#endif
 		rtw_write8(padapter, bcn_ctrl_reg, val8);
 	}
 }
@@ -5755,12 +5639,6 @@ s32 c2h_handler_8188f(PADAPTER padapter, u8 *buf)
 		/*CCX_FwC2HTxRpt(padapter, QueueID, pC2hEvent->payload); */
 		break;
 
-#ifdef CONFIG_BT_COEXIST
-	case C2H_BT_INFO:
-		rtw_btcoex_BtInfoNotify(padapter, pC2hEvent->plen, pC2hEvent->payload);
-		break;
-#endif
-
 #ifdef CONFIG_RTW_CUSTOMER_STR
 	case C2H_CUSTOMER_STR_RPT:
 		c2h_customer_str_rpt_hdl(padapter, pC2hEvent->payload, pC2hEvent->plen);
@@ -5809,12 +5687,6 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 		CCX_FwC2HTxRpt_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
 		break;
 		
-
-#ifdef CONFIG_BT_COEXIST
-	case C2H_BT_INFO:
-		rtw_btcoex_BtInfoNotify(padapter, pC2hEvent->CmdLen, c2hBuf);
-		break;
-#endif
 
 /*
 #ifdef CONFIG_MP_INCLUDED
@@ -6129,30 +6001,10 @@ void SetHwReg8188F(PADAPTER padapter, u8 variable, u8 *val)
 	case HW_VAR_MLME_SITESURVEY:
 		hw_var_set_mlme_sitesurvey(padapter, variable,  val);
 
-#ifdef CONFIG_BT_COEXIST
-		rtw_btcoex_ScanNotify(padapter, *val ? _TRUE : _FALSE);
-#endif /* CONFIG_BT_COEXIST */
 		break;
 
 	case HW_VAR_MLME_JOIN:
 		hw_var_set_mlme_join(padapter, variable, val);
-
-#ifdef CONFIG_BT_COEXIST
-		switch (*val) {
-		case 0:
-			/* prepare to join */
-			rtw_btcoex_ConnectNotify(padapter, _TRUE);
-			break;
-		case 1:
-			/* joinbss_event callback when join res < 0 */
-			rtw_btcoex_ConnectNotify(padapter, _FALSE);
-			break;
-		case 2:
-			/* sta add event callback */
-			/*rtw_btcoex_MediaStatusNotify(padapter, RT_MEDIA_CONNECT); */
-			break;
-		}
-#endif /* CONFIG_BT_COEXIST */
 		break;
 
 	case HW_VAR_ON_RCR_AM:
@@ -6507,11 +6359,6 @@ void SetHwReg8188F(PADAPTER padapter, u8 variable, u8 *val)
 		break;
 
 	case HW_VAR_DL_RSVD_PAGE:
-#ifdef CONFIG_BT_COEXIST
-		if (check_fwstate(&padapter->mlmepriv, WIFI_AP_STATE) == _TRUE)
-			rtl8188f_download_BTCoex_AP_mode_rsvd_page(padapter);
-		else
-#endif /* CONFIG_BT_COEXIST */
 		{
 			rtl8188f_download_rsvd_page(padapter, RT_MEDIA_CONNECT);
 		}
@@ -7014,41 +6861,6 @@ void rtl8188f_stop_thread(_adapter *padapter)
 #endif
 #endif
 }
-
-#if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-extern void check_bt_status_work(void *data);
-void rtl8188fs_init_checkbthang_workqueue(_adapter *adapter)
-{
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
-	adapter->priv_checkbt_wq = alloc_workqueue("sdio_wq", 0, 0);
-#else
-	adapter->priv_checkbt_wq = create_workqueue("sdio_wq");
-#endif
-	INIT_DELAYED_WORK(&adapter->checkbt_work, (void *)check_bt_status_work);
-}
-
-void rtl8188fs_free_checkbthang_workqueue(_adapter *adapter)
-{
-	if (adapter->priv_checkbt_wq) {
-		cancel_delayed_work_sync(&adapter->checkbt_work);
-		flush_workqueue(adapter->priv_checkbt_wq);
-		destroy_workqueue(adapter->priv_checkbt_wq);
-		adapter->priv_checkbt_wq = NULL;
-	}
-}
-
-void rtl8188fs_cancle_checkbthang_workqueue(_adapter *adapter)
-{
-	if (adapter->priv_checkbt_wq)
-		cancel_delayed_work_sync(&adapter->checkbt_work);
-}
-
-void rtl8188fs_hal_check_bt_hang(_adapter *adapter)
-{
-	if (adapter->priv_checkbt_wq)
-		queue_delayed_work(adapter->priv_checkbt_wq, &(adapter->checkbt_work), 0);
-}
-#endif
 
 
 

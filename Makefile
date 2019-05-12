@@ -41,7 +41,6 @@ CONFIG_POWER_SAVING = y
 CONFIG_USB_AUTOSUSPEND = n
 CONFIG_HW_PWRP_DETECTION = n
 CONFIG_WIFI_TEST = n
-CONFIG_BT_COEXIST = n
 CONFIG_INTEL_WIDI = n
 CONFIG_WAPI_SUPPORT = n
 CONFIG_EFUSE_CONFIG_FILE = n
@@ -138,7 +137,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com_phycfg.o \
 			hal/hal_phy.o \
 			hal/hal_dm.o \
-			hal/hal_btcoex.o \
 			hal/hal_mp.o \
 			hal/hal_hci/hal_usb.o \
 			hal/led/hal_usb_led.o
@@ -165,21 +163,6 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
 		hal/phydm/phydm_beamforming.o\
 		hal/phydm/txbf/halcomtxbf.o\
 		hal/phydm/txbf/haltxbfinterface.o
-
-ifeq ($(CONFIG_BT_COEXIST), y)
-EXTRA_CFLAGS += -I$(src)/hal/btc
-_OUTSRC_FILES += hal/btc/HalBtc8192e1Ant.o \
-				hal/btc/HalBtc8192e2Ant.o \
-				hal/btc/HalBtc8723b1Ant.o \
-				hal/btc/HalBtc8723b2Ant.o \
-				hal/btc/HalBtc8812a1Ant.o \
-				hal/btc/HalBtc8812a2Ant.o \
-				hal/btc/HalBtc8821a1Ant.o \
-				hal/btc/HalBtc8821a2Ant.o \
-				hal/btc/HalBtc8821aCsr2Ant.o \
-				hal/btc/HalBtc8703b1Ant.o \
-				hal/btc/HalBtc8703b2Ant.o 
-endif
 
 ########### HAL_RTL8188F #################################
 ifeq ($(CONFIG_RTL8188F), y)
@@ -248,10 +231,6 @@ endif
 
 ifeq ($(CONFIG_WIFI_TEST), y)
 EXTRA_CFLAGS += -DCONFIG_WIFI_TEST
-endif
-
-ifeq ($(CONFIG_BT_COEXIST), y)
-EXTRA_CFLAGS += -DCONFIG_BT_COEXIST
 endif
 
 ifeq ($(CONFIG_INTEL_WIDI), y)
@@ -421,7 +400,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_br_ext.o \
 		core/rtw_iol.o \
 		core/rtw_sreset.o \
-		core/rtw_btcoex.o \
 		core/rtw_beamforming.o \
 		core/rtw_odm.o \
 		core/efuse/rtw_efuse.o 

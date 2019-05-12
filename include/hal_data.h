@@ -23,9 +23,6 @@
 #if 1//def  CONFIG_SINGLE_IMG
 
 #include "../hal/phydm/phydm_precomp.h"
-#ifdef CONFIG_BT_COEXIST
-#include <hal_btcoex.h>
-#endif
 
 #ifdef CONFIG_SDIO_HCI
 #include <hal_sdio.h>
@@ -578,11 +575,6 @@ typedef struct hal_com_data
 #ifdef DBG_CONFIG_ERROR_DETECT
 	struct sreset_priv srestpriv;
 #endif //#ifdef DBG_CONFIG_ERROR_DETECT
-
-#ifdef CONFIG_BT_COEXIST
-	// For bluetooth co-existance
-	BT_COEXIST		bt_coexist;
-#endif // CONFIG_BT_COEXIST
 
 #if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8703B) || defined(CONFIG_RTL8188F)
 	#ifndef CONFIG_PCI_HCI	// mutual exclusive with PCI -- so they're SDIO and GSPI 

@@ -833,25 +833,6 @@ int rtw_resume_process(_adapter *padapter)
 		return -1;
 	}
 
-#if defined(CONFIG_BT_COEXIST) && defined(CONFIG_AUTOSUSPEND) //add by amy for 8723as-vau
-#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,32))
-	DBG_871X("%s...pm_usage_cnt(%d)  pwrpriv->bAutoResume=%x.  ....\n",__func__,atomic_read(&(adapter_to_dvobj(padapter)->pusbintf->pm_usage_cnt)),pwrpriv->bAutoResume);
-	pm_cnt=atomic_read(&(adapter_to_dvobj(padapter)->pusbintf->pm_usage_cnt));
-#else // kernel < 2.6.32
-	DBG_871X("...pm_usage_cnt(%d).....\n", adapter_to_dvobj(padapter)->pusbintf->pm_usage_cnt);
-	pm_cnt = adapter_to_dvobj(padapter)->pusbintf->pm_usage_cnt;
-#endif // kernel < 2.6.32
-
-	DBG_871X("pwrpriv->bAutoResume (%x)\n",pwrpriv->bAutoResume );
-	if( _TRUE == pwrpriv->bAutoResume ){
-		pwrpriv->bInternalAutoSuspend = _FALSE;
-		pwrpriv->bAutoResume=_FALSE;
-		DBG_871X("pwrpriv->bAutoResume (%x)  pwrpriv->bInternalAutoSuspend(%x)\n",pwrpriv->bAutoResume,pwrpriv->bInternalAutoSuspend );
-
-	}
-#endif //#ifdef CONFIG_BT_COEXIST &CONFIG_AUTOSUSPEND&
-
-
 	ret =  rtw_resume_common(padapter);
 
 	#ifdef CONFIG_AUTOSUSPEND
@@ -865,17 +846,7 @@ int rtw_resume_process(_adapter *padapter)
 			rtw_interface_ps_func(padapter,HAL_USB_SELECT_SUSPEND,&bOpen);
 		}	
 		#endif
-		#ifdef CONFIG_BT_COEXIST // for 8723as-vau
-		DBG_871X("pwrpriv->bAutoResume (%x)\n",pwrpriv->bAutoResume );
-		if( _TRUE == pwrpriv->bAutoResume ){
 		pwrpriv->bInternalAutoSuspend = _FALSE;
-			pwrpriv->bAutoResume=_FALSE;
-			DBG_871X("pwrpriv->bAutoResume (%x)  pwrpriv->bInternalAutoSuspend(%x)\n",pwrpriv->bAutoResume,pwrpriv->bInternalAutoSuspend );
-		}
-
-		#else	//#ifdef CONFIG_BT_COEXIST
-		pwrpriv->bInternalAutoSuspend = _FALSE;
-		#endif	//#ifdef CONFIG_BT_COEXIST
 		pwrpriv->brfoffbyhw = _FALSE;
 	}
 	#endif//CONFIG_AUTOSUSPEND
@@ -956,7 +927,6 @@ void autosuspend_enter(_adapter* padapter)
 
 	if(rf_off == pwrpriv->change_rfpwrstate )
 	{
-#ifndef	CONFIG_BT_COEXIST
 		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
 		usb_enable_autosuspend(dvobj->pusbdev);
 		#else
@@ -970,27 +940,6 @@ void autosuspend_enter(_adapter* padapter)
 		#else
 			usb_autosuspend_device(dvobj->pusbdev, 1);
 		#endif
-#else	//#ifndef	CONFIG_BT_COEXIST
-		if(1==pwrpriv->autopm_cnt){
-		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-		usb_enable_autosuspend(dvobj->pusbdev);
-		#else
-		dvobj->pusbdev->autosuspend_disabled = 0;//autosuspend disabled by the user
-		#endif
-
-		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,33))
-			usb_autopm_put_interface(dvobj->pusbintf);
-		#elif (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,20))
-			usb_autopm_enable(dvobj->pusbintf);
-		#else
-			usb_autosuspend_device(dvobj->pusbdev, 1);
-		#endif
-			pwrpriv->autopm_cnt --;
-		}
-		else
-		DBG_871X("0!=pwrpriv->autopm_cnt[%d]   didn't usb_autopm_put_interface\n", pwrpriv->autopm_cnt);
-
-#endif	//#ifndef	CONFIG_BT_COEXIST
 	}
 	#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,32))
 	DBG_871X("...pm_usage_cnt(%d).....\n", atomic_read(&(dvobj->pusbintf->pm_usage_cnt)));
@@ -1014,7 +963,6 @@ int autoresume_enter(_adapter* padapter)
 	if(rf_off == pwrpriv->rf_pwrstate )
 	{
 		pwrpriv->ps_flag = _FALSE;
-#ifndef	CONFIG_BT_COEXIST
 		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,33))
 			if (usb_autopm_get_interface(dvobj->pusbintf) < 0)
 			{
@@ -1033,31 +981,6 @@ int autoresume_enter(_adapter* padapter)
 		#else
 		DBG_871X("...pm_usage_cnt(%d).....\n", dvobj->pusbintf->pm_usage_cnt);
 		#endif
-#else	//#ifndef	CONFIG_BT_COEXIST
-		pwrpriv->bAutoResume=_TRUE;
-		if(0==pwrpriv->autopm_cnt){
-		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,33))
-			if (usb_autopm_get_interface(dvobj->pusbintf) < 0)
-			{
-				DBG_871X( "can't get autopm: %d\n", result);
-				result = _FAIL;
-				goto error_exit;
-			}
-		#elif (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,20))
-			usb_autopm_disable(dvobj->pusbintf);
-		#else
-			usb_autoresume_device(dvobj->pusbdev, 1);
-		#endif
-		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,32))
-			DBG_871X("...pm_usage_cnt(%d).....\n", atomic_read(&(dvobj->pusbintf->pm_usage_cnt)));
-		#else
-			DBG_871X("...pm_usage_cnt(%d).....\n", dvobj->pusbintf->pm_usage_cnt);
-		#endif
-			pwrpriv->autopm_cnt++;
-		}
-		else
-			DBG_871X("0!=pwrpriv->autopm_cnt[%d]   didn't usb_autopm_get_interface\n",pwrpriv->autopm_cnt);
-#endif //#ifndef	CONFIG_BT_COEXIST
 	}
 	DBG_871X("<==== autoresume_enter \n");
 error_exit:
@@ -1130,10 +1053,6 @@ _adapter *rtw_usb_if1_init(struct dvobj_priv *dvobj,
 	//step usb endpoint mapping
 	rtw_hal_chip_configure(padapter);
 
-#ifdef CONFIG_BT_COEXIST
-	rtw_btcoex_Initialize(padapter);
-#endif // CONFIG_BT_COEXIST
-
 	//step read efuse/eeprom data and get mac_addr
 	rtw_hal_read_chip_info(padapter);
 
@@ -1190,9 +1109,6 @@ _adapter *rtw_usb_if1_init(struct dvobj_priv *dvobj,
 					DBG_871X( "can't get autopm: \n");
 				}
 	#endif
-#ifdef	CONFIG_BT_COEXIST
-	dvobj_to_pwrctl(dvobj)->autopm_cnt=1;
-#endif
 
 	// set mac addr
 	rtw_macaddr_cfg(adapter_mac_addr(padapter), get_hal_mac_addr(padapter));
@@ -1239,19 +1155,6 @@ static void rtw_usb_if1_deinit(_adapter *if1)
 	rtw_dev_unload(if1);
 
 	DBG_871X("+r871xu_dev_remove, hw_init_completed=%d\n", rtw_get_hw_init_completed(if1));
-
-#ifdef CONFIG_BT_COEXIST
-	if(1 == pwrctl->autopm_cnt){
-		#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,33))
-			usb_autopm_put_interface(adapter_to_dvobj(if1)->pusbintf);
-		#elif (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,20))
-			usb_autopm_enable(adapter_to_dvobj(if1)->pusbintf);
-		#else
-			usb_autosuspend_device(adapter_to_dvobj(if1)->pusbdev, 1);
-		#endif
-		pwrctl->autopm_cnt --;
-	}
-#endif
 
 	rtw_free_drv_sw(if1);
 
@@ -1414,10 +1317,6 @@ _func_enter_;
 #endif //CONFIG_MULTI_VIR_IFACES
 	rtw_drv_if2_stop(dvobj->padapters[IFACE_ID1]);
 #endif //CONFIG_CONCURRENT_MODE
-
-	#ifdef CONFIG_BT_COEXIST
-	rtw_btcoex_HaltNotify(padapter);
-	#endif
 
 	rtw_usb_if1_deinit(padapter);
 

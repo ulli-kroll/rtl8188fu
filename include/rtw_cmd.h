@@ -1108,10 +1108,6 @@ void rtw_dfs_master_status_apply(_adapter *adapter, u8 self_action);
 #endif /* CONFIG_DFS_MASTER */
 #endif /* CONFIG_AP_MODE */
 
-#ifdef CONFIG_BT_COEXIST
-u8 rtw_btinfo_cmd(PADAPTER padapter, u8 *pbuf, u16 length);
-#endif
-
 u8 rtw_enable_hw_update_tsf_cmd(_adapter *padapter);
 
 u8 rtw_set_ch_cmd(_adapter*padapter, u8 ch, u8 bw, u8 ch_offset, u8 enqueue);

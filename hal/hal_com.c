@@ -1662,14 +1662,6 @@ void hw_var_port_switch(_adapter *adapter)
 		rtw_write8(adapter, REG_BSSID1+i, bssid[i]);
 
 	/* write bcn ctl */
-#ifdef CONFIG_BT_COEXIST
-#if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8703B)
-	// always enable port0 beacon function for PSTDMA
-	bcn_ctrl_1 |= EN_BCN_FUNCTION;
-	// always disable port1 beacon function for PSTDMA
-	bcn_ctrl &= ~EN_BCN_FUNCTION;
-#endif
-#endif
 	rtw_write8(adapter, REG_BCN_CTRL, bcn_ctrl_1);
 	rtw_write8(adapter, REG_BCN_CTRL_1, bcn_ctrl);
 
@@ -2321,26 +2313,6 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 
 	BufIndex += (CurtPktPageNum*PageSize);
 
-#ifdef CONFIG_BT_COEXIST
-	/* BT Qos null data * 1 page */
-	RsvdPageLoc.LocBTQosNull = TotalPageNum;
-	DBG_871X("LocBTQosNull: %d\n", RsvdPageLoc.LocBTQosNull);
-	rtw_hal_construct_NullFunctionData(
-			adapter,
-			&ReservedPagePacket[BufIndex],
-			&BTQosNullLength,
-			get_my_bssid(&pmlmeinfo->network),
-			_TRUE, 0, 0, _FALSE);
-	rtw_hal_fill_fake_txdesc(adapter,
-			&ReservedPagePacket[BufIndex-TxDescLen],
-			BTQosNullLength, _FALSE, _TRUE, _FALSE);
-
-	CurtPktPageNum = (u8)PageNum(TxDescLen + BTQosNullLength, PageSize);
-
-	TotalPageNum += CurtPktPageNum;
-
-	BufIndex += (CurtPktPageNum*PageSize);
-#endif /* CONFIG_BT_COEXIT */
 
 	/* null data * 1 page */
 	RsvdPageLoc.LocNullData = TotalPageNum;

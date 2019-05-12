@@ -191,9 +191,6 @@ void rtl8188f_set_FwPsTuneParam_cmd(PADAPTER padapter);
 void rtl8188f_set_FwMacIdConfig_cmd(_adapter* padapter, u8 mac_id, u8 raid, u8 bw, u8 sgi, u32 mask);
 void rtl8188f_set_FwBtMpOper_cmd(PADAPTER padapter, u8 idx, u8 ver, u8 reqnum, u8 *param);
 void rtl8188f_download_rsvd_page(PADAPTER padapter, u8 mstatus);
-#ifdef CONFIG_BT_COEXIST
-void rtl8188f_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter);
-#endif // CONFIG_BT_COEXIST
 #ifdef CONFIG_P2P
 void rtl8188f_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
 #endif //CONFIG_P2P

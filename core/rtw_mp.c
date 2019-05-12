@@ -682,9 +682,6 @@ static void disable_dm(PADAPTER padapter)
 	pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = _FALSE;
 	rtw_phydm_func_set(padapter, ODM_RF_CALIBRATION);
 
-//#ifdef CONFIG_BT_COEXIST
-//	rtw_btcoex_Switch(padapter, 0); //remove for BT MP Down.
-//#endif
 }
 
 

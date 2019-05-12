@@ -3050,18 +3050,8 @@ void rtw_dynamic_check_timer_handlder(_adapter *adapter)
 		return;
 	}	
 
-#ifdef CONFIG_BT_COEXIST
-	if (is_primary_adapter(adapter)) {
-		if (GET_HAL_DATA(adapter)->EEPROMBluetoothCoexist == 1)
-			DBG_871X("IsBtDisabled=%d, IsBtControlLps=%d\n" , rtw_btcoex_IsBtDisabled(adapter) , rtw_btcoex_IsBtControlLps(adapter));
-	}
-#endif
-
 #ifdef CONFIG_LPS_LCLK_WD_TIMER /* to avoid leaving lps 32k frequently*/
 	if ((adapter_to_pwrctl(adapter)->bFwCurrentInPSMode ==_TRUE )
-#ifdef CONFIG_BT_COEXIST
-		&& (rtw_btcoex_IsBtControlLps(adapter) == _FALSE)
-#endif		
 		) 
 	{
 		u8 bEnterPS;	

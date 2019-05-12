@@ -3894,10 +3894,6 @@ void stop_ap_mode(_adapter *padapter)
 
 	rtw_free_mlme_priv_ie_data(pmlmepriv);
 
-#ifdef CONFIG_BT_COEXIST
-	rtw_btcoex_MediaStatusNotify(padapter, 0); //disconnect 
-#endif	
-
 }
 
 #endif //CONFIG_NATIVEAP_MLME

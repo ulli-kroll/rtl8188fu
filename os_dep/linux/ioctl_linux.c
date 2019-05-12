@@ -4447,16 +4447,6 @@ static void rtw_dbg_mode_hdl(_adapter *padapter, u32 id, u8 *pdata, u32 len)
 			DBG_871X("==> trigger gpio 0\n");
 			rtw_hal_set_hwreg(padapter, HW_VAR_TRIGGER_GPIO_0, 0);
 			break;	
-#ifdef CONFIG_BT_COEXIST
-		case GEN_MP_IOCTL_SUBCODE(SET_DM_BT):			
-			DBG_871X("==> set dm_bt_coexist:%x\n",*(u8 *)pdata);
-			rtw_hal_set_hwreg(padapter, HW_VAR_BT_SET_COEXIST, pdata);
-			break;
-		case GEN_MP_IOCTL_SUBCODE(DEL_BA):
-			DBG_871X("==> delete ba:%x\n",*(u8 *)pdata);
-			rtw_hal_set_hwreg(padapter, HW_VAR_BT_ISSUE_DELBA, pdata);
-			break;
-#endif
 #ifdef DBG_CONFIG_ERROR_DETECT
 		case GEN_MP_IOCTL_SUBCODE(GET_WIFI_STATUS):							
 			*pdata = rtw_hal_sreset_get_wifi_status(padapter);                   
@@ -12204,16 +12194,6 @@ static int rtw_test(
 	}
 #endif
 
-
-#ifdef CONFIG_BT_COEXIST
-	if (strcmp(pch, "bton") == 0) {
-		rtw_btcoex_SetManualControl(padapter, _FALSE);
-		goto free_buf;
-	} else if (strcmp(pch, "btoff") == 0) {
-		rtw_btcoex_SetManualControl(padapter, _TRUE);
-		goto free_buf;
-	}
-#endif
 
 	if (strcmp(pch, "h2c") == 0) {
 		u8 param[8];

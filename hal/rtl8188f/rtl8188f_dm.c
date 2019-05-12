@@ -469,9 +469,6 @@ rtl8188f_HalDmWatchDog(
 		/*FindMinimumRSSI_8188f(Adapter); */
 		/*ODM_CmnInfoUpdate(&pHalData->odmpriv ,ODM_CMNINFO_RSSI_MIN, pHalData->MinUndecoratedPWDBForDM); */
 
-#ifdef CONFIG_BT_COEXIST
-		bBtDisabled = rtw_btcoex_IsBtDisabled(Adapter);
-#endif /* CONFIG_BT_COEXIST */
 		ODM_CmnInfoUpdate(&pHalData->odmpriv, ODM_CMNINFO_BT_ENABLED, ((bBtDisabled == _TRUE) ? _FALSE : _TRUE));
 
 		ODM_DMWatchdog(&pHalData->odmpriv);

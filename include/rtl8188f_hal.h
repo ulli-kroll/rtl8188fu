@@ -233,13 +233,6 @@ void _8051Reset8188(PADAPTER padapter);
 void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);
 
-#if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-void rtl8188fs_init_checkbthang_workqueue(_adapter * adapter);
-void rtl8188fs_free_checkbthang_workqueue(_adapter * adapter);
-void rtl8188fs_cancle_checkbthang_workqueue(_adapter * adapter);
-void rtl8188fs_hal_check_bt_hang(_adapter * adapter);
-#endif
-
 #ifdef CONFIG_GPIO_WAKEUP
 void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
 #endif

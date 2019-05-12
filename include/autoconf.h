@@ -238,20 +238,7 @@
 	#endif
 #endif /* CONFIG_POWER_SAVING */
 
-#ifdef CONFIG_BT_COEXIST
-	/* for ODM and outsrc BT-Coex */
-	#define BT_30_SUPPORT 1
-
-	#ifndef CONFIG_LPS
-		#define CONFIG_LPS	/* download reserved page to FW */
-	#endif
-
-	#ifndef CONFIG_C2H_PACKET_EN
-		#define CONFIG_C2H_PACKET_EN
-	#endif
-#else /* !ONFIG_BT_COEXIST */
 	#define BT_30_SUPPORT 0
-#endif /* CONFIG_BT_COEXIST */
 
 #ifdef CONFIG_GPIO_WAKEUP
 	#ifndef WAKEUP_GPIO_IDX
