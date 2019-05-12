@@ -70,17 +70,6 @@ PHY_LCCalibrate_8188F(
 	IN	PVOID		pDM_VOID
 );
 
-//
-// AP calibrate
-//
-void	
-PHY_APCalibrate_8188F(		
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	IN PDM_ODM_T		pDM_Odm,
-#else
-	IN	PADAPTER	pAdapter,
-#endif
-							IN 	s1Byte		delta);
 void	
 PHY_DigitalPredistortion_8188F(		IN	PADAPTER	pAdapter);
 

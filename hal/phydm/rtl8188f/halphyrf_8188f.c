@@ -2972,59 +2972,6 @@ PHY_LCCalibrate_8188F(
 
 }
 
-VOID
-PHY_APCalibrate_8188F(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	IN PDM_ODM_T pDM_Odm,
-#else
-	IN PADAPTER pAdapter,
-#endif
-	IN s1Byte delta
-)
-{
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-#if DBG
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PDM_ODM_T pDM_Odm = &pHalData->DM_OutSrc;
-#endif
-#endif
-#endif
-#if DISABLE_BB_RF
-	return;
-#endif
-
-	return;
-#if 0
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
-		return;
-#endif
-
-#if FOR_BRAZIL_PRETEST != 1
-	if (pDM_Odm->RFCalibrateInfo.bAPKdone)
-#endif
-		return;
-
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-	if (IS_2T2R(pHalData->VersionID))
-		phy_APCalibrate_8188F(pAdapter, delta, TRUE);
-	else
-#endif
-	{
-		// For 88C 1T1R
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-		phy_APCalibrate_8188F(pAdapter, delta, FALSE);
-#else
-		phy_APCalibrate_8188F(pDM_Odm, delta, FALSE);
-#endif
-	}
-#endif
-}
-
 VOID phy_SetRFPathSwitch_8188F(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T pDM_Odm,
