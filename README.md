@@ -44,7 +44,9 @@ Run following commands for disable power management and plugging/replugging issu
 You can install rtl81188fu driver with following commands from PPA.
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
+
 `sudo apt-get update`
+
 `sudo apt install rtl8188fu-dkms`
 
 
