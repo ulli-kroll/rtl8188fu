@@ -42,7 +42,8 @@ Run following commands for disable power management and plugging/replugging issu
 ## How to install from PPA repository
 
 You can install rtl81188fu driver with following commands from PPA.
-xUbuntu 18.04-19.10 / Linux Mint 18.x-19.x 
+
+xUbuntu 16.04-19.10 / Linux Mint 18.x-19.x 
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
 
