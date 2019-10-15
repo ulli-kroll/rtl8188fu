@@ -18,7 +18,7 @@ For Kernel 4.15.x ~ 5.3.x (Linux Mint or Ubuntu Derivatives)
 
 ------------------
 
-## Run following commands for disable power mangement and plugging/replugging issues.
+Run following commands for disable power management and plugging/replugging issues.
 
 `sudo mkdir -p /etc/modprobe.d/`
 
