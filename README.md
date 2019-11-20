@@ -27,7 +27,7 @@ for load the driver
 `sudo modprobe rtl8188fu`  
 
 To load on boot add these line to /etc/module
-`cfg80211`
+`cfg80211` &
 `rtl8188fu`
 
 If you need to crosscompile use  
