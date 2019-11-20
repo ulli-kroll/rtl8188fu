@@ -18,12 +18,17 @@ Building and install driver
 for building type  
 `make`  
 
-for load the driver  
-`sudo modprobe cfg80211`  
-`sudo insmod rtl8188fu.ko`  
-
 You need to install the needed fw with  
 `sudo make installfw`  
+`sudo make install`
+
+for load the driver  
+`sudo modprobe cfg80211`  
+`sudo modprobe rtl8188fu`  
+
+To load on boot add these line to /etc/module
+`cfg80211`
+`rtl8188fu`
 
 If you need to crosscompile use  
 `ARCH= CROSS_COMPILE= KSRC=`  
