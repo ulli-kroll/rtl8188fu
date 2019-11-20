@@ -442,11 +442,11 @@ installfw:
 	cp -n firmware/* /lib/firmware/rtlwifi/.
 
 install:
-	install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
+	install -p -m 644 rt8188fu.ko  $(MODDESTDIR)
 	/sbin/depmod -a ${KVER}
 
 uninstall:
-	rm -f $(MODDESTDIR)/$(MODULE_NAME).ko
+	rm -f $(MODDESTDIR)/rtl8188fu.ko
 	/sbin/depmod -a ${KVER}
 
 config_r:
