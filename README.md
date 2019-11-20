@@ -26,7 +26,7 @@ for load the driver
 `sudo modprobe cfg80211`  
 `sudo modprobe rtl8188fu`  
 
-To load on boot add these line to /etc/module
+To load on boot add these line to /etc/modules
 `cfg80211` &
 `rtl8188fu`
 
