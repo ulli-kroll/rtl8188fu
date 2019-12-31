@@ -40,5 +40,5 @@ Please submit a issue if you encounter a problem.
 (Note: I am not a professional C and C++ programmer,  
 I only know the basics and I am still learning.)
 
-Based on rtl8188fu <github.com/ulli-kroll/rtl8188fu>  
+Based on rtl8188fu <https://github.com/ulli-kroll/rtl8188fu>  
 developed by Hans Ulli Kroll <https://github.com/ulli-kroll/>.
