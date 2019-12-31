@@ -27,7 +27,7 @@ for load the driver
 `sudo modprobe rtl8188fu`  
 
 To load on boot add these line to /etc/modules
-`cfg80211` &
+`cfg80211`  
 `rtl8188fu`
 
 If you need to crosscompile use  
@@ -36,8 +36,8 @@ while calling `make` i.e.
 
 `make ARCH="arm" CROSS_COMPILE=armv5tel-softfloat-linux-gnueabi- KSRC=/home/linux-master modules`  
 
-Please submit a issue if you encounter a problem.
-(Note: I am not a professional C and C++ programmer,
+Please submit a issue if you encounter a problem.  
+(Note: I am not a professional C and C++ programmer,  
 I only know the basics and I am still learning.)
 
 Mainly developed by Hans Ulli Kroll <https://github.com/ulli-kroll/>.
