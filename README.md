@@ -8,7 +8,7 @@ This is an USB2 only adapter,
 Source is ripped out of firefly source tree found at  
 <https://gitlab.com/TeeFirefly/linux-kernel> 
 
-<u>If one USB-ID is missing, please submit a issue.</u>  
+<u>If one USB-ID is missing, please submit a issue<br/>and specify the branch name.</u>  
 
 Tested with v4.19 and v5.0  
 
@@ -36,7 +36,8 @@ while calling `make` i.e.
 
 `make ARCH="arm" CROSS_COMPILE=armv5tel-softfloat-linux-gnueabi- KSRC=/home/linux-master modules`  
 
-Please submit a issue if you encounter a problem.  
+Please submit a issue if you encounter a problem  
+and also mention the branch name.  
 (Note: I am not a professional C and C++ programmer,  
 I only know the basics and I am still learning.)
 
