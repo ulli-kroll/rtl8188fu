@@ -36,8 +36,8 @@ while calling `make` i.e.
 
 `make ARCH="arm" CROSS_COMPILE=armv5tel-softfloat-linux-gnueabi- KSRC=/home/linux-master modules`  
 
-Please use prefix **rtl8188fu** if you want to mail me  
-But please please don't, I have enough to do.  
-TIA  
+Please submit a issue if you encounter a problem.
+(Note: I am not a professional C and C++ programmer,
+I only know the basics and I am still learning.)
 
-Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Mainly developed by Hans Ulli Kroll <https://github.com/ulli-kroll/>.
