@@ -1,4 +1,4 @@
-For Kernel 4.15.x ~ 5.3.x (Linux Mint or Ubuntu Derivatives)
+For Kernel 4.15.x ~ 5.7.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 ------------------
 
@@ -55,3 +55,9 @@ xUbuntu 16.04-19.10 / Linux Mint 18.x-19.x
 You can purge packages with following commands
 
 `sudo apt purge rtl8188fu-dkms`
+
+------------------
+
+##How to install (for arm devices)
+
+https://github.com/kelebek333/rtl8188fu/tree/arm#how-to-install-for-arm-devices
