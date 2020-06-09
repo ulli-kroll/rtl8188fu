@@ -58,6 +58,6 @@ You can purge packages with following commands
 
 ------------------
 
-##How to install (for arm devices)
+## How to install (for arm devices)
 
 https://github.com/kelebek333/rtl8188fu/tree/arm#how-to-install-for-arm-devices
