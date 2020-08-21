@@ -32,6 +32,10 @@ atomic_t _malloc_size = ATOMIC_INIT(0);
 #endif
 #endif /* DBG_MEMORY_LEAK */
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
+#define __vfs_read vfs_read
+#endif
+
 
 #if defined(PLATFORM_LINUX)
 /*
@@ -2514,4 +2518,3 @@ inline char alpha_to_upper(char c)
 		c = 'A' + (c - 'a');
 	return c;
 }
-
