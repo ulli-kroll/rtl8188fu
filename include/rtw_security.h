@@ -238,7 +238,7 @@ struct security_priv
 #endif /* DBG_SW_SEC_CNT */
 };
 
-struct sha256_state {
+struct rtw_sha256_state {
 	u64 length;
 	u32 state[8], curlen;
 	u8 buf[64];
@@ -484,4 +484,3 @@ u8 rtw_handle_tkip_countermeasure(_adapter* adapter, const char *caller);
 
 
 #endif	//__RTL871X_SECURITY_H_
-
