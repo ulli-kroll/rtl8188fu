@@ -35,4 +35,4 @@ Please use prefix **rtl8188fu** if you want to mail me
 But please please don't, I have enough to do.  
 TIA  
 
-Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Hans Ulli Kroll <linux@ulli-kroll.de>
