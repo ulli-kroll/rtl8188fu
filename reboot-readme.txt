@@ -15,7 +15,3 @@ and make this file read and write for root and your username respectively by goi
 now open startup applications =>add custom command=> name 'wifi' and browse 'yourchoice-anyname.sh' file and click add
 now reboot and it should enable wifi with boot automatically
 enjoy !!
-
-if some error occur mail me at
-'rikkusain14@gmail.com'
-with subject rtl8188fu reboot problem
