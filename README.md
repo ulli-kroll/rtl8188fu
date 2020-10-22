@@ -1,4 +1,4 @@
-For Kernel 4.15.x ~ 5.8.x (Linux Mint, Ubuntu or Debian Derivatives)
+For Kernel 4.15.x ~ 5.9.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 ------------------
 
@@ -27,7 +27,7 @@ Run following commands for disable power management and plugging/replugging issu
 `echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
 
 
-Run following commands for disable MAC Address Spoofing (No need Ubuntu based distributions. MAC Address Spoofing is already disable on Ubuntu base).
+Run following commands for disabling MAC Address Spoofing (Note: No need this on Ubuntu based distributions. MAC Address Spoofing is already disable on Ubuntu base).
 
 `sudo mkdir -p /etc/NetworkManager/conf.d/`
 
@@ -51,7 +51,7 @@ Run following commands for disable MAC Address Spoofing (No need Ubuntu based di
 
 ## How to install from PPA repository
 
-You can install rtl81188fu driver with following commands from PPA.
+You can install rtl8188fu driver with following commands from PPA.
 
 for xUbuntu 16.04-18.04-19.10-20.04 / Linux Mint 18.x-19.x-20.x
 
