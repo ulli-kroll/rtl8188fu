@@ -1,4 +1,4 @@
-For Kernel 4.15.x ~ 5.9.x (Linux Mint, Ubuntu or Debian Derivatives)
+RTL8188FU driver for Linux kernel 4.15.x ~ 5.10.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 ------------------
 
@@ -53,7 +53,7 @@ Run following commands for disabling MAC Address Spoofing (Note: No need this on
 
 You can install rtl8188fu driver with following commands from PPA.
 
-for xUbuntu 16.04-18.04-19.10-20.04 / Linux Mint 18.x-19.x-20.x
+for xUbuntu 16.04-18.04-20.04-20.10 / Linux Mint 18.x-19.x-20.x
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
 
