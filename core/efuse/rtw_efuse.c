@@ -1590,7 +1590,9 @@ int storeAdaptorInfoFile(char *path, u8* efuse_data)
 int retriveAdaptorInfoFile(char *path, u8* efuse_data)
 {
 	int ret = _SUCCESS;
+#ifdef set_fs
 	mm_segment_t oldfs;
+#endif
 	struct file *fp;
 	
 	if(path && efuse_data) {
@@ -1626,7 +1628,9 @@ u32 rtw_read_efuse_from_file(const char *path, u8 *buf)
 	u32 ret = _FAIL;
 
 	struct file *fp;
+#ifdef set_fs
 	mm_segment_t fs;
+#endif
 	loff_t pos = 0;
 
 	fp = filp_open(path, O_RDONLY, 0);
@@ -1643,8 +1647,10 @@ u32 rtw_read_efuse_from_file(const char *path, u8 *buf)
 
 	temp[2] = 0; /* add end of string '\0' */
 
+#ifdef set_fs
 	fs = get_fs();
 	set_fs(KERNEL_DS);
+#endif
 
 	for (i = 0 ; i < HWSET_MAX_SIZE ; i++) {
 		vfs_read(fp, temp, 2, &pos);
@@ -1690,7 +1696,9 @@ exit:
 u32 rtw_read_macaddr_from_file(const char *path, u8 *buf)
 {
 	struct file *fp;
+#ifdef set_fs
 	mm_segment_t fs;
+#endif
 	loff_t pos = 0;
 
 	u8 source_addr[18];
@@ -1712,8 +1720,10 @@ u32 rtw_read_macaddr_from_file(const char *path, u8 *buf)
 		goto exit;
 	}
 
+#ifdef set_fs
 	fs = get_fs();
 	set_fs(KERNEL_DS);
+#endif
 
 	vfs_read(fp, source_addr, 18, &pos);
 	source_addr[17] = ':';
