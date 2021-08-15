@@ -6484,8 +6484,6 @@ void rtw_cfg80211_init_wiphy(_adapter *padapter)
 			rtw_cfg80211_init_ht_capab(padapter, &bands->ht_cap, IEEE80211_BAND_5GHZ, rf_type);
 	}
 #endif
-	/* init regulary domain */
-	rtw_regd_init(padapter);
 
 	/* copy mac_addr to wiphy */
 	_rtw_memcpy(wiphy->perm_addr, adapter_mac_addr(padapter), ETH_ALEN);
@@ -6720,6 +6718,9 @@ struct wiphy *rtw_wiphy_alloc(_adapter *padapter, struct device *dev)
 	*((_adapter**)wiphy_priv(wiphy)) = padapter;
 
 	rtw_cfg80211_preinit_wiphy(padapter, wiphy);
+
+	/* init regulary domain */
+	rtw_regd_init(wiphy);
 
 	DBG_871X(FUNC_WIPHY_FMT"\n", FUNC_WIPHY_ARG(wiphy));
 

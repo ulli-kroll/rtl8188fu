@@ -15274,7 +15274,8 @@ u8 set_chplan_hdl(_adapter *padapter, unsigned char *pbuf)
 	rtw_hal_set_odm_var(padapter,HAL_ODM_REGULATION,NULL,_TRUE);
 	
 #ifdef CONFIG_IOCTL_CFG80211
-	rtw_reg_notify_by_driver(padapter);
+ 	if (padapter->rtw_wdev != NULL)
+ 		rtw_reg_notify_by_driver(padapter->rtw_wdev->wiphy);
 #endif //CONFIG_IOCTL_CFG80211
 
 	return 	H2C_SUCCESS;
