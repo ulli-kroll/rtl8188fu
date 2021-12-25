@@ -467,9 +467,6 @@ typedef struct hal_com_data
 	// Add for dual MAC  0--Mac0 1--Mac1
 	u32	interfaceIndex;
 
-#ifdef CONFIG_P2P
-	u8	p2p_ps_offload;
-#endif
 	/* Auto FSM to Turn On, include clock, isolation, power control for MAC only */
 	u8	bMacPwrCtrlOn;
 	u8 hci_sus_state;

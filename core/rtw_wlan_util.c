@@ -1552,41 +1552,6 @@ void flush_all_cam_entry(_adapter *padapter)
 	}
 }
 
-#if defined(CONFIG_P2P) && defined(CONFIG_WFD)
-void rtw_process_wfd_ie(_adapter *adapter, u8 *wfd_ie, u8 wfd_ielen, const char *tag)
-{
-	struct wifidirect_info *wdinfo = &adapter->wdinfo;
-
-	u8 *attr_content;
-	u32 attr_contentlen = 0;
-
-	if (!hal_chk_wl_func(adapter, WL_FUNC_MIRACAST))
-		return;
-
-	DBG_871X("[%s] Found WFD IE\n", tag);
-	attr_content = rtw_get_wfd_attr_content(wfd_ie, wfd_ielen, WFD_ATTR_DEVICE_INFO, NULL, &attr_contentlen);
-	if (attr_content && attr_contentlen) {
-		wdinfo->wfd_info->peer_rtsp_ctrlport = RTW_GET_BE16(attr_content + 2);
-		DBG_871X("[%s] Peer PORT NUM = %d\n", tag, wdinfo->wfd_info->peer_rtsp_ctrlport);
-	}
-}
-
-void rtw_process_wfd_ies(_adapter *adapter, u8 *ies, u8 ies_len, const char *tag)
-{
-	u8 *wfd_ie;
-	u32	wfd_ielen;
-
-	if (!hal_chk_wl_func(adapter, WL_FUNC_MIRACAST))
-		return;
-
-	wfd_ie = rtw_get_wfd_ie(ies, ies_len, NULL, &wfd_ielen);
-	while (wfd_ie) {
-		rtw_process_wfd_ie(adapter, wfd_ie, wfd_ielen, tag);
-		wfd_ie = rtw_get_wfd_ie(wfd_ie + wfd_ielen, (ies + ies_len) - (wfd_ie + wfd_ielen), NULL, &wfd_ielen);
-	}
-}
-#endif /* defined(CONFIG_P2P) && defined(CONFIG_WFD) */
-
 int WMM_param_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs	pIE)
 {
 	//struct registry_priv	*pregpriv = &padapter->registrypriv;
@@ -3081,15 +3046,6 @@ void update_tx_basic_rate(_adapter *padapter, u8 wirelessmode)
 {
 	NDIS_802_11_RATES_EX	supported_rates;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-#ifdef CONFIG_P2P
-	struct wifidirect_info*	pwdinfo = &padapter->wdinfo;
-
-	//	Added by Albert 2011/03/22
-	//	In the P2P mode, the driver should not support the b mode.
-	//	So, the Tx packet shouldn't use the CCK rate
-	if(!rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE))
-		return;
-#endif //CONFIG_P2P
 #ifdef CONFIG_INTEL_WIDI
 	if (padapter->mlmepriv.widi_state != INTEL_WIDI_STATE_NONE)
 		return;
@@ -3291,9 +3247,6 @@ void update_wireless_mode(_adapter *padapter)
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	WLAN_BSSID_EX 		*cur_network = &(pmlmeinfo->network);
 	unsigned char			*rate = cur_network->SupportedRates;
-#ifdef CONFIG_P2P
-	struct wifidirect_info	*pwdinfo= &(padapter->wdinfo);
-#endif //CONFIG_P2P
 
 	ratelen = rtw_get_rateset_len(cur_network->SupportedRates);
 
@@ -3350,9 +3303,6 @@ void update_wireless_mode(_adapter *padapter)
 	rtw_hal_set_hwreg( padapter, HW_VAR_WIRELESS_MODE,  (u8 *)&(pmlmeext->cur_wireless_mode));
 
 	if ((pmlmeext->cur_wireless_mode & WIRELESS_11B)
-#ifdef CONFIG_P2P
-		&& rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE)
-#endif /* CONFIG_P2P */
 		)
 		update_mgnt_tx_rate(padapter, IEEE80211_CCK_RATE_1MB);
 	else

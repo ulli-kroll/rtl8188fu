@@ -4470,13 +4470,6 @@ static void rtl8188f_fill_default_txdesc(
 		SET_TX_DESC_SEC_TYPE_8188F(pbuf, fill_txdesc_sectype(pattrib));
 		fill_txdesc_vcs_8188f(padapter, pattrib, pbuf);
 
-#ifdef CONFIG_P2P
-		if (!rtw_p2p_chk_state(&padapter->wdinfo, P2P_STATE_NONE)) {
-			if (pattrib->icmp_pkt == 1 && padapter->registrypriv.wifi_spec == 1)
-				drv_userate = 1;
-		}
-#endif
-
 		if ((pattrib->ether_type != 0x888e) &&
 			(pattrib->ether_type != 0x0806) &&
 			(pattrib->ether_type != 0x88B4) &&
@@ -5832,11 +5825,6 @@ void SetHwReg8188F(PADAPTER padapter, u8 variable, u8 *val)
 		rtl8188f_set_FwJoinBssRpt_cmd(padapter, *val);
 		break;
 
-#ifdef CONFIG_P2P
-	case HW_VAR_H2C_FW_P2P_PS_OFFLOAD:
-		rtl8188f_set_p2p_ps_offload_cmd(padapter, *val);
-		break;
-#endif /*CONFIG_P2P */
 #ifdef CONFIG_TDLS
 	case HW_VAR_TDLS_WRCR:
 		rtw_write32(padapter, REG_RCR, rtw_read32(padapter, REG_RCR) & (~RCR_CBSSID_DATA));

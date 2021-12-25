@@ -536,10 +536,6 @@ ssize_t proc_set_wowlan_gpio_info(struct file *file, const char __user *buffer,
 		size_t count, loff_t *pos, void *data);
 #endif /*CONFIG_GPIO_WAKEUP*/
 
-#ifdef CONFIG_P2P_WOWLAN
-int proc_get_p2p_wowlan_info(struct seq_file *m, void *v);
-#endif /* CONFIG_P2P_WOWLAN */
-
 int proc_get_new_bcn_max(struct seq_file *m, void *v);
 ssize_t proc_set_new_bcn_max(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data);
 

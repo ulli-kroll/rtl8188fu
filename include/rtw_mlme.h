@@ -95,13 +95,8 @@ void rtw_wfd_st_switch(struct sta_info *sta, bool on);
 #define MLME_IS_ADHOC_MASTER(adapter) (MLME_STATE((adapter)) & WIFI_ADHOC_MASTER_STATE)
 #define MLME_IS_MONITOR(adapter) (MLME_STATE((adapter)) & WIFI_MONITOR_STATE)
 #define MLME_IS_MP(adapter) (MLME_STATE((adapter)) & WIFI_MP_STATE)
-#ifdef CONFIG_P2P
-#define MLME_IS_GC(adapter) rtw_p2p_chk_role(&(adapter)->wdinfo, P2P_ROLE_CLIENT)
-#define MLME_IS_GO(adapter) rtw_p2p_chk_role(&(adapter)->wdinfo, P2P_ROLE_GO)
-#else /* !CONFIG_P2P */
 #define MLME_IS_GC(adapter) 0
 #define MLME_IS_GO(adapter) 0
-#endif /* !CONFIG_P2P */
 #define MLME_IS_MSRC(adapter) rtw_chk_miracast_mode((adapter), MIRACAST_SOURCE)
 #define MLME_IS_MSINK(adapter) rtw_chk_miracast_mode((adapter), MIRACAST_SINK)
 
@@ -283,11 +278,7 @@ struct group_id_info{
 
 struct scan_limit_info{
 	u8					scan_op_ch_only;			//	When this flag is set, the driver should just scan the operation channel
-#ifndef CONFIG_P2P_OP_CHK_SOCIAL_CH
-	u8					operation_ch[2];				//	Store the operation channel of invitation request frame
-#else
 	u8					operation_ch[5];				//	Store additional channel 1,6,11  for Android 4.2 IOT & Nexus 4
-#endif //CONFIG_P2P_OP_CHK_SOCIAL_CH
 };
 
 #ifdef CONFIG_IOCTL_CFG80211
@@ -302,27 +293,6 @@ struct cfg80211_wifidirect_info{
 	u32 last_ro_ch_time; /* this will be updated at the beginning and end of ro_ch */
 };
 #endif //CONFIG_IOCTL_CFG80211
-
-#ifdef CONFIG_P2P_WOWLAN
-
-enum P2P_WOWLAN_RECV_FRAME_TYPE
-{
-	P2P_WOWLAN_RECV_NEGO_REQ = 0,
-	P2P_WOWLAN_RECV_INVITE_REQ = 1,
-	P2P_WOWLAN_RECV_PROVISION_REQ = 2,
-};
-
-struct p2p_wowlan_info{
-
-	u8 						is_trigger;
-	enum P2P_WOWLAN_RECV_FRAME_TYPE	wowlan_recv_frame_type;
-	u8 						wowlan_peer_addr[ETH_ALEN];
-	u16						wowlan_peer_wpsconfig;
-	u8						wowlan_peer_is_persistent;
-	u8						wowlan_peer_invitation_type;
-};
-
-#endif //CONFIG_P2P_WOWLAN
 
 struct wifidirect_info{
 	_adapter*				padapter;
@@ -345,10 +315,6 @@ struct wifidirect_info{
 #ifdef CONFIG_WFD
 	struct wifi_display_info		*wfd_info;
 #endif	
-
-#ifdef CONFIG_P2P_WOWLAN
-	struct p2p_wowlan_info		p2p_wow_info;
-#endif //CONFIG_P2P_WOWLAN
 
 	enum P2P_ROLE			role;
 	enum P2P_STATE			pre_p2p_state;
@@ -405,18 +371,6 @@ struct wifidirect_info{
 														//	We will use the channel_cnt and channel_list fields when constructing the group negotitation confirm frame.
 	u8						driver_interface;			//	Indicate DRIVER_WEXT or DRIVER_CFG80211
 
-#ifdef CONFIG_P2P_PS
-	enum P2P_PS_MODE		p2p_ps_mode; // indicate p2p ps mode
-	enum P2P_PS_STATE		p2p_ps_state; // indicate p2p ps state
-	u8						noa_index; // Identifies and instance of Notice of Absence timing.
-	u8						ctwindow; // Client traffic window. A period of time in TU after TBTT.
-	u8						opp_ps; // opportunistic power save.
-	u8						noa_num; // number of NoA descriptor in P2P IE.
-	u8						noa_count[P2P_MAX_NOA_NUM]; // Count for owner, Type of client.
-	u32						noa_duration[P2P_MAX_NOA_NUM]; // Max duration for owner, preferred or min acceptable duration for client.
-	u32						noa_interval[P2P_MAX_NOA_NUM]; // Length of interval for owner, preferred or max acceptable interval of client.
-	u32						noa_start_time[P2P_MAX_NOA_NUM]; // schedule expressed in terms of the lower 4 bytes of the TSF timer.
-#endif // CONFIG_P2P_PS
 };
 
 struct tdls_ss_record{	//signal strength record

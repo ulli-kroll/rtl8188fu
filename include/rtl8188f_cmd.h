@@ -191,9 +191,6 @@ void rtl8188f_set_FwPsTuneParam_cmd(PADAPTER padapter);
 void rtl8188f_set_FwMacIdConfig_cmd(_adapter* padapter, u8 mac_id, u8 raid, u8 bw, u8 sgi, u32 mask);
 void rtl8188f_set_FwBtMpOper_cmd(PADAPTER padapter, u8 idx, u8 ver, u8 reqnum, u8 *param);
 void rtl8188f_download_rsvd_page(PADAPTER padapter, u8 mstatus);
-#ifdef CONFIG_P2P
-void rtl8188f_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
-#endif //CONFIG_P2P
 
 void CheckFwRsvdPageContent(PADAPTER padapter);
 
@@ -201,10 +198,6 @@ void CheckFwRsvdPageContent(PADAPTER padapter);
 #ifdef CONFIG_TDLS_CH_SW
 void rtl8188f_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable);
 #endif
-#endif
-
-#ifdef CONFIG_P2P_WOWLAN
-void rtl8188f_set_p2p_wowlan_offload_cmd(PADAPTER padapter);
 #endif
 
 void rtl8188f_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param);

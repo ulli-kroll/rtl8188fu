@@ -718,14 +718,6 @@ _func_enter_;
 	
 _func_exit_;			
 
-#ifdef CONFIG_P2P
-	if ((feature == 1) && // 1: P2P supported
-		(_rtw_memcmp(src->MacAddress, dst->MacAddress, ETH_ALEN) == _TRUE)
-		) {
-		return _TRUE;
-	}
-#endif
-
 	return ((src->Ssid.SsidLength == dst->Ssid.SsidLength) &&
 		//	(src->Configuration.DSConfig == dst->Configuration.DSConfig) &&
 			( (_rtw_memcmp(src->MacAddress, dst->MacAddress, ETH_ALEN)) == _TRUE) &&
@@ -963,9 +955,6 @@ void rtw_update_scanned_network(_adapter *adapter, WLAN_BSSID_EX *target)
 	ULONG	bssid_ex_sz;
 	struct mlme_priv	*pmlmepriv = &(adapter->mlmepriv);
 	struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
-#ifdef CONFIG_P2P
-	struct wifidirect_info *pwdinfo= &(adapter->wdinfo);
-#endif // CONFIG_P2P
 	_queue	*queue	= &(pmlmepriv->scanned_queue);
 	struct wlan_network	*pnetwork = NULL;
 	struct wlan_network	*oldest = NULL;
@@ -978,11 +967,6 @@ _func_enter_;
 	phead = get_list_head(queue);
 	plist = get_next(phead);
 
-#ifdef CONFIG_P2P
-	if (!rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE))
-		feature = 1; // p2p enable
-#endif
-
 	while(1)
 	{
 		if (rtw_end_of_queue_search(phead,plist)== _TRUE)
@@ -991,15 +975,6 @@ _func_enter_;
 		pnetwork = LIST_CONTAINOR(plist, struct wlan_network, list);
 
 		rtw_bug_check(pnetwork, pnetwork, pnetwork, pnetwork);
-
-#ifdef CONFIG_P2P
-		if (!rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE) &&
-			(_rtw_memcmp(pnetwork->network.MacAddress, target->MacAddress, ETH_ALEN) == _TRUE))
-		{
-			target_find = 1;
-			break;
-		}
-#endif
 
 		if (is_same_network(&(pnetwork->network), target, feature))
 		{
@@ -1118,11 +1093,7 @@ _func_enter_;
 
 	//_enter_critical_bh(&queue->lock, &irqL);
 
-	#if defined(CONFIG_P2P) && defined(CONFIG_P2P_REMOVE_GROUP_INFO)
-	if (adapter->registrypriv.wifi_spec == 0)
-		rtw_bss_ex_del_p2p_attr(pnetwork, P2P_ATTR_GROUP_INFO);
-	#endif
-	
+
 	if (!hal_chk_wl_func(adapter, WL_FUNC_MIRACAST))
 		rtw_bss_ex_del_wfd_ie(pnetwork);
 
@@ -1433,12 +1404,6 @@ _func_enter_;
 
 	_exit_critical_bh(&pmlmepriv->lock, &irqL);
 
-#ifdef CONFIG_P2P_PS
-	if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
-		p2p_ps_wk_cmd(adapter, P2P_PS_SCAN_DONE, 0);
-	}
-#endif // CONFIG_P2P_PS
-
 	rtw_os_xmit_schedule(adapter);
 
 #ifdef CONFIG_DRVEXT_MODULE_WSC
@@ -1583,13 +1548,6 @@ _func_enter_;
 		DBG_871X("free disconnecting network of scanned_queue\n");
 
 		rtw_free_network_nolock(adapter, pwlan);
-#ifdef CONFIG_P2P
-		if(!rtw_p2p_chk_state(&adapter->wdinfo, P2P_STATE_NONE))
-		{
-			rtw_set_scan_deny(adapter, 2000);
-			//rtw_clear_scan_deny(adapter);			
-		}
-#endif //CONFIG_P2P
 	} else {
 		if (pwlan == NULL)
 			DBG_871X("free disconnecting network of scanned_queue failed due to pwlan== NULL\n\n");
@@ -1741,10 +1699,6 @@ _func_enter_;
 
 		rtw_clear_scan_deny(padapter);
 	}
-
-#ifdef CONFIG_P2P_PS
-	p2p_ps_wk_cmd(padapter, P2P_PS_DISABLE, 1);
-#endif // CONFIG_P2P_PS
 
 #ifdef CONFIG_LPS
 	rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_DISCONNECT, 1);
@@ -2877,13 +2831,6 @@ void rtw_mlme_reset_auto_scan_int(_adapter *adapter)
 	struct mlme_priv *mlme = &adapter->mlmepriv;
 	struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-
-#ifdef CONFIG_P2P
-	if(!rtw_p2p_chk_state(&adapter->wdinfo, P2P_STATE_NONE)) {
-		mlme->auto_scan_int_ms = 0; /* disabled */
-		goto exit;
-	}
-#endif	
 
 #ifdef CONFIG_TDLS
 	if (adapter->tdlsinfo.link_established == _TRUE) {
