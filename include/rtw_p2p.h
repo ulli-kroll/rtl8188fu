@@ -26,31 +26,6 @@ u32 build_probe_resp_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
 u32 build_prov_disc_request_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf, u8* pssid, u8 ussidlen, u8* pdev_raddr );
 u32 build_assoc_resp_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf, u8 status_code);
 u32 build_deauth_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-#ifdef CONFIG_WFD
-int rtw_init_wifi_display_info(_adapter *padapter);
-void rtw_wfd_enable(_adapter *adapter, bool on);
-void rtw_wfd_set_ctrl_port(_adapter *adapter, u16 port);
-void rtw_tdls_wfd_enable(_adapter *adapter, bool on);
-
-u32 build_probe_req_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_probe_resp_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf, u8 tunneled);
-u32 build_beacon_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_nego_req_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_nego_resp_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_nego_confirm_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_invitation_req_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_invitation_resp_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_assoc_req_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_assoc_resp_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_provdisc_req_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-u32 build_provdisc_resp_wfd_ie(struct wifidirect_info *pwdinfo, u8 *pbuf);
-
-u32 rtw_append_beacon_wfd_ie(_adapter *adapter, u8 *pbuf);
-u32 rtw_append_probe_req_wfd_ie(_adapter *adapter, u8 *pbuf);
-u32 rtw_append_probe_resp_wfd_ie(_adapter *adapter, u8 *pbuf);
-u32 rtw_append_assoc_req_wfd_ie(_adapter *adapter, u8 *pbuf);
-u32 rtw_append_assoc_resp_wfd_ie(_adapter *adapter, u8 *pbuf);
-#endif /*CONFIG_WFD */
 
 void rtw_xframe_chk_wfd_ie(struct xmit_frame *xframe);
 

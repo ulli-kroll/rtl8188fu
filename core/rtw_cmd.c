@@ -3937,18 +3937,6 @@ void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
 		if (st->status != ST_STATUS_ESTABLISH)
 			continue;
 
-		#ifdef CONFIG_WFD
-		if (0)
-			DBG_871X(FUNC_ADPT_FMT" local:%u, remote:%u, rtsp:%u, %u, %u\n", FUNC_ADPT_ARG(adapter)
-				, ntohs(st->local_port), ntohs(st->remote_port), adapter->wfd_info.rtsp_ctrlport, adapter->wfd_info.tdls_rtsp_ctrlport
-				, adapter->wfd_info.peer_rtsp_ctrlport);
-		if (ntohs(st->local_port) == adapter->wfd_info.rtsp_ctrlport)
-			op_wfd_mode |= MIRACAST_SINK;
-		if (ntohs(st->local_port) == adapter->wfd_info.tdls_rtsp_ctrlport)
-			op_wfd_mode |= MIRACAST_SINK;
-		if (ntohs(st->remote_port) == adapter->wfd_info.peer_rtsp_ctrlport)
-			op_wfd_mode |= MIRACAST_SOURCE;
-		#endif
 	}
 
 	_exit_critical_bh(&st_ctl->tracker_q.lock, &irqL);
@@ -3997,9 +3985,6 @@ void session_tracker_chk_for_adapter(_adapter *adapter)
 
 	_exit_critical_bh(&stapriv->sta_hash_lock, &irqL);
 
-#ifdef CONFIG_WFD
-	adapter->wfd_info.op_wfd_mode = MIRACAST_MODE_REVERSE(op_wfd_mode);
-#endif
 }
 
 void session_tracker_cmd_hdl(_adapter *adapter, struct st_cmd_parm *parm)

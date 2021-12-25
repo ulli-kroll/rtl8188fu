@@ -5291,12 +5291,6 @@ void issue_assocreq(_adapter *padapter)
 	rtw_build_assoc_req_wapi_ie(padapter, pframe, pattrib);
 #endif
 
-#ifdef CONFIG_WFD
-	wfdielen = rtw_append_assoc_req_wfd_ie(padapter, pframe);
-	pframe += wfdielen;
-	pattrib->pktlen += wfdielen;
-#endif
-
 	pattrib->last_txcmdsz = pattrib->pktlen;
 	dump_mgntframe(padapter, pmgntframe);
 

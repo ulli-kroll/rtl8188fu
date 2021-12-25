@@ -221,34 +221,6 @@ struct tx_invite_resp_info{
 	u8					token;	//	Used to record the dialog token of p2p invitation request frame.
 };
 
-#ifdef CONFIG_WFD
-
-struct wifi_display_info{
-	u16							wfd_enable;			//	Eanble/Disable the WFD function.
-	u16							init_rtsp_ctrlport;	/* init value of rtsp_ctrlport when WFD enable */
-	u16							rtsp_ctrlport;		/* TCP port number at which the this WFD device listens for RTSP messages, 0 when WFD disable */
-	u16							tdls_rtsp_ctrlport;	/* rtsp_ctrlport used by tdls, will sync when rtsp_ctrlport is changed by user */
-	u16							peer_rtsp_ctrlport;	//	TCP port number at which the peer WFD device listens for RTSP messages
-													//	This filed should be filled when receiving the gropu negotiation request
-
-	u8							peer_session_avail;	//	WFD session is available or not for the peer wfd device.
-													//	This variable will be set when sending the provisioning discovery request to peer WFD device.
-													//	And this variable will be reset when it is read by using the iwpriv p2p_get wfd_sa command.
-	u8							ip_address[4];
-	u8							peer_ip_address[4];
-	u8							wfd_pc;				//	WFD preferred connection
-													//	0 -> Prefer to use the P2P for WFD connection on peer side.
-													//	1 -> Prefer to use the TDLS for WFD connection on peer side.
-											
-	u8							wfd_device_type;	//	WFD Device Type
-													//	0 -> WFD Source Device
-													//	1 -> WFD Primary Sink Device
-	enum	SCAN_RESULT_TYPE	scan_result_type;	//	Used when P2P is enable. This parameter will impact the scan result.
-	u8 op_wfd_mode;
-	u8 stack_wfd_mode;
-};
-#endif //CONFIG_WFD
-
 struct tx_provdisc_req_info{
 	u16					wps_config_method_request;	//	Used when sending the provisioning request frame
 	u16					peer_channel_num[2];		//	The channel number which the receiver stands.
@@ -312,9 +284,6 @@ struct wifidirect_info{
 	struct group_id_info		groupid_info;	//	Store the group id information when doing the group negotiation handshake.
 	struct scan_limit_info		rx_invitereq_info;	//	Used for get the limit scan channel from the Invitation procedure
 	struct scan_limit_info		p2p_info;		//	Used for get the limit scan channel from the P2P negotiation handshake
-#ifdef CONFIG_WFD
-	struct wifi_display_info		*wfd_info;
-#endif	
 
 	enum P2P_ROLE			role;
 	enum P2P_STATE			pre_p2p_state;
@@ -420,9 +389,6 @@ struct tdls_info{
 
 	/* Let wpa_supplicant to setup*/
 	u8					driver_setup;
-#ifdef CONFIG_WFD
-	struct wifi_display_info		*wfd_info;
-#endif		
 };
 
 struct tdls_txmgmt {
@@ -634,24 +600,6 @@ struct mlme_priv {
 	u8 ori_bw;
 	u8 ori_offset;
 #endif //#if defined (CONFIG_AP_MODE) && defined (CONFIG_NATIVEAP_MLME)
-
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
-	
-	u8 *wfd_beacon_ie;
-	u8 *wfd_probe_req_ie;
-	u8 *wfd_probe_resp_ie;	
-	u8 *wfd_go_probe_resp_ie; //for GO	
-	u8 *wfd_assoc_req_ie;
-	u8 *wfd_assoc_resp_ie;
-
-	u32 wfd_beacon_ie_len;
-	u32 wfd_probe_req_ie_len;
-	u32 wfd_probe_resp_ie_len;
-	u32 wfd_go_probe_resp_ie_len; //for GO
-	u32 wfd_assoc_req_ie_len;
-	u32 wfd_assoc_resp_ie_len;
-
-#endif
 
 #ifdef RTK_DMP_PLATFORM
 	// DMP kobject_hotplug function  signal need in passive level
@@ -885,10 +833,6 @@ void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv);
 #define MLME_GO_PROBE_RESP_IE	3
 #define MLME_ASSOC_REQ_IE		4
 #define MLME_ASSOC_RESP_IE		5
-
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
-int rtw_mlme_update_wfd_ie_data(struct mlme_priv *mlme, u8 type, u8 *ie, u32 ie_len);
-#endif
 
 extern int _rtw_init_mlme_priv(_adapter *padapter);
 extern void _rtw_free_mlme_priv(struct mlme_priv *pmlmepriv);

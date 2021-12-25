@@ -770,10 +770,6 @@ int is_IBSS_empty(_adapter *padapter);
 unsigned char check_assoc_AP(u8 *pframe, uint len);
 
 int WMM_param_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs	pIE);
-#ifdef CONFIG_WFD
-void rtw_process_wfd_ie(_adapter *adapter, u8 *ie, u8 ie_len, const char *tag);
-void rtw_process_wfd_ies(_adapter *adapter, u8 *ies, u8 ies_len, const char *tag);
-#endif
 void WMMOnAssocRsp(_adapter *padapter);
 
 void HT_caps_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs pIE);

@@ -1012,9 +1012,6 @@ sint OnTDLS(_adapter *adapter, union recv_frame *precv_frame)
 	sint ret = _SUCCESS;
 	u8 *paction = get_recvframe_data(precv_frame);
 	u8 category_field = 1;
-#ifdef CONFIG_WFD
-	u8 WFA_OUI[3] = { 0x50, 0x6f, 0x9a };
-#endif /* CONFIG_WFD */
 	struct tdls_info *ptdlsinfo = &(adapter->tdlsinfo);
 
 	/* point to action field */
@@ -1070,26 +1067,6 @@ sint OnTDLS(_adapter *adapter, union recv_frame *precv_frame)
 		ret=On_TDLS_Ch_Switch_Rsp(adapter, precv_frame);
 		break;
 #endif		
-#ifdef CONFIG_WFD			
-	/* First byte of WFA OUI */
-	case 0x50:
-		if (_rtw_memcmp(WFA_OUI, paction, 3)) {
-			/* Probe request frame */
-			if (*(paction + 3) == 0x04) {
-				/* WFDTDLS: for sigma test, do not setup direct link automatically */
-				ptdlsinfo->dev_discovered = _TRUE;
-				DBG_871X("recv tunneled probe request frame\n");
-				issue_tunneled_probe_rsp(adapter, precv_frame);
-			}
-			/* Probe response frame */ 
-			if (*(paction + 3) == 0x05) {
-				/* WFDTDLS: for sigma test, do not setup direct link automatically */
-				ptdlsinfo->dev_discovered = _TRUE;
-				DBG_871X("recv tunneled probe response frame\n");
-			}
-		}
-		break;
-#endif /* CONFIG_WFD */
 	default:
 		DBG_871X("receive TDLS frame %d but not support\n", *paction);
 		ret=_FAIL;

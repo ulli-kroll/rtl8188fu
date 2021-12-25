@@ -965,10 +965,6 @@ struct _ADAPTER{
 #endif
 
 
-#ifdef CONFIG_WFD
-	struct wifi_display_info wfd_info;
-#endif //CONFIG_WFD
-
 	ERROR_CODE		LastError; /* <20130613, Kordan> Only the functions associated with MP records the error code by now. */
 	
 	PVOID			HalData;

@@ -76,9 +76,6 @@
 #ifdef CONFIG_TDLS
 	#define CONFIG_TDLS_DRIVER_SETUP
 /*
-	#ifndef CONFIG_WFD
-		#define CONFIG_WFD
-	#endif
 	#define CONFIG_TDLS_AUTOSETUP
 */
 	#define CONFIG_TDLS_AUTOCHECKALIVE
