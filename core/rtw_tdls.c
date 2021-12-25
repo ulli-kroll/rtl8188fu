@@ -1141,10 +1141,6 @@ int _issue_tdls_teardown(_adapter *padapter, struct tdls_txmgmt *ptxmgmt, u8 wai
 	rtw_set_scan_deny(padapter, 550);
 
 	rtw_scan_abort(padapter);
-#ifdef CONFIG_CONCURRENT_MODE		
-	if (rtw_buddy_adapter_up(padapter))	
-		rtw_scan_abort(padapter->pbuddy_adapter);
-#endif /* CONFIG_CONCURRENT_MODE */
 
 	pattrib = &pmgntframe->attrib;
 

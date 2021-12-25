@@ -103,12 +103,6 @@ struct rtw_wdev_priv
 
 	/* report mgmt_frame registered */
 	u16 report_mgmt;
-
-#ifdef CONFIG_CONCURRENT_MODE
-	ATOMIC_T ro_ch_to;
-	ATOMIC_T switch_ch_to;	
-#endif	
-	
 };
 
 #define wiphy_to_adapter(x) (*((_adapter**)wiphy_priv(x)))

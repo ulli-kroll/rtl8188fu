@@ -102,17 +102,6 @@
 	#define CONFIG_TDLS_CH_SW	/* Enable this flag only when we confirm that TDLS CH SW is supported in FW */
 #endif
 
-/* #define CONFIG_CONCURRENT_MODE */	/* Set from Makefile */
-#ifdef CONFIG_CONCURRENT_MODE
-	#define CONFIG_TSF_RESET_OFFLOAD			/* For 2 PORT TSF SYNC. */
-	/* #define CONFIG_HWPORT_SWAP	*/			/* Port0->Sec , Port1 -> Pri */
-	#define CONFIG_RUNTIME_PORT_SWITCH
-	/* #define DBG_RUNTIME_PORT_SWITCH */
-	#define CONFIG_SCAN_BACKOP
-
-	/* #define CONFIG_MULTI_VIR_IFACES */ /* besides primary&secondary interfaces, extend to support more interfaces */
-#endif /* CONFIG_CONCURRENT_MODE */
-
 #define CONFIG_LAYER2_ROAMING
 #define CONFIG_LAYER2_ROAMING_RESUME
 
@@ -248,9 +237,6 @@
 
 #ifdef CONFIG_AP_MODE
 	/* #define CONFIG_INTERRUPT_BASED_TXBCN */ /* Tx Beacon when driver BCN_OK ,BCN_ERR interrupt occurs */
-	#if defined(CONFIG_CONCURRENT_MODE) && defined(CONFIG_INTERRUPT_BASED_TXBCN)
-		#undef CONFIG_INTERRUPT_BASED_TXBCN
-	#endif
 	#ifdef CONFIG_INTERRUPT_BASED_TXBCN
 		/* #define CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT */
 		#define CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR

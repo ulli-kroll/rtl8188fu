@@ -576,10 +576,6 @@ void	rtw_hal_dm_watchdog(_adapter *padapter)
 #ifdef CONFIG_LPS_LCLK_WD_TIMER
 void	rtw_hal_dm_watchdog_in_lps(_adapter *padapter)
 {
-#if defined(CONFIG_CONCURRENT_MODE)
-	if (padapter->iface_type != IFACE_PORT0)
-		return;
-#endif	
 
 	if (adapter_to_pwrctl(padapter)->bFwCurrentInPSMode ==_TRUE ) {
 		padapter->HalFunc.hal_dm_watchdog_in_lps(padapter);//this fuction caller is in interrupt context				 	

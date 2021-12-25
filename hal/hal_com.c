@@ -677,10 +677,6 @@ Hal_MappingOutPipe(
 void hal_init_macaddr(_adapter *adapter)
 {
 	rtw_hal_set_hwreg(adapter, HW_VAR_MAC_ADDR, adapter_mac_addr(adapter));
-#ifdef  CONFIG_CONCURRENT_MODE
-	if (adapter->pbuddy_adapter)
-		rtw_hal_set_hwreg(adapter->pbuddy_adapter, HW_VAR_MAC_ADDR, adapter_mac_addr(adapter->pbuddy_adapter));
-#endif
 }
 
 void rtw_init_hal_com_default_value(PADAPTER Adapter)
@@ -1546,193 +1542,6 @@ bool rtw_sec_read_cam_is_gk(_adapter *adapter, u8 id)
 
 void hw_var_port_switch(_adapter *adapter)
 {
-#ifdef CONFIG_CONCURRENT_MODE
-#ifdef CONFIG_RUNTIME_PORT_SWITCH
-/*
-0x102: MSR
-0x550: REG_BCN_CTRL
-0x551: REG_BCN_CTRL_1
-0x55A: REG_ATIMWND
-0x560: REG_TSFTR
-0x568: REG_TSFTR1
-0x570: REG_ATIMWND_1
-0x610: REG_MACID
-0x618: REG_BSSID
-0x700: REG_MACID1
-0x708: REG_BSSID1
-*/
-
-	int i;
-	u8 msr;
-	u8 bcn_ctrl;
-	u8 bcn_ctrl_1;
-	u8 atimwnd[2];
-	u8 atimwnd_1[2];
-	u8 tsftr[8];
-	u8 tsftr_1[8];
-	u8 macid[6];
-	u8 bssid[6];
-	u8 macid_1[6];
-	u8 bssid_1[6];
-
-	u8 iface_type;
-
-	msr = rtw_read8(adapter, MSR);
-	bcn_ctrl = rtw_read8(adapter, REG_BCN_CTRL);
-	bcn_ctrl_1 = rtw_read8(adapter, REG_BCN_CTRL_1);
-
-	for (i=0; i<2; i++)
-		atimwnd[i] = rtw_read8(adapter, REG_ATIMWND+i);
-	for (i=0; i<2; i++)
-		atimwnd_1[i] = rtw_read8(adapter, REG_ATIMWND_1+i);
-
-	for (i=0; i<8; i++)
-		tsftr[i] = rtw_read8(adapter, REG_TSFTR+i);
-	for (i=0; i<8; i++)
-		tsftr_1[i] = rtw_read8(adapter, REG_TSFTR1+i);
-
-	for (i=0; i<6; i++)
-		macid[i] = rtw_read8(adapter, REG_MACID+i);
-
-	for (i=0; i<6; i++)
-		bssid[i] = rtw_read8(adapter, REG_BSSID+i);
-
-	for (i=0; i<6; i++)
-		macid_1[i] = rtw_read8(adapter, REG_MACID1+i);
-
-	for (i=0; i<6; i++)
-		bssid_1[i] = rtw_read8(adapter, REG_BSSID1+i);
-
-#ifdef DBG_RUNTIME_PORT_SWITCH
-	DBG_871X(FUNC_ADPT_FMT" before switch\n"
-		"msr:0x%02x\n"
-		"bcn_ctrl:0x%02x\n"
-		"bcn_ctrl_1:0x%02x\n"
-		"atimwnd:0x%04x\n"
-		"atimwnd_1:0x%04x\n"
-		"tsftr:%llu\n"
-		"tsftr1:%llu\n"
-		"macid:"MAC_FMT"\n"
-		"bssid:"MAC_FMT"\n"
-		"macid_1:"MAC_FMT"\n"
-		"bssid_1:"MAC_FMT"\n"
-		, FUNC_ADPT_ARG(adapter)
-		, msr
-		, bcn_ctrl
-		, bcn_ctrl_1
-		, *((u16*)atimwnd)
-		, *((u16*)atimwnd_1)
-		, *((u64*)tsftr)
-		, *((u64*)tsftr_1)
-		, MAC_ARG(macid)
-		, MAC_ARG(bssid)
-		, MAC_ARG(macid_1)
-		, MAC_ARG(bssid_1)
-	);
-#endif /* DBG_RUNTIME_PORT_SWITCH */
-
-	/* disable bcn function, disable update TSF  */
-	rtw_write8(adapter, REG_BCN_CTRL, (bcn_ctrl & (~EN_BCN_FUNCTION)) | DIS_TSF_UDT);
-	rtw_write8(adapter, REG_BCN_CTRL_1, (bcn_ctrl_1 & (~EN_BCN_FUNCTION)) | DIS_TSF_UDT);
-
-	/* switch msr */
-	msr = (msr&0xf0) |((msr&0x03) << 2) | ((msr&0x0c) >> 2);
-	rtw_write8(adapter, MSR, msr);
-
-	/* write port0 */
-	rtw_write8(adapter, REG_BCN_CTRL, bcn_ctrl_1 & ~EN_BCN_FUNCTION);
-	for (i=0; i<2; i++)
-		rtw_write8(adapter, REG_ATIMWND+i, atimwnd_1[i]);
-	for (i=0; i<8; i++)
-		rtw_write8(adapter, REG_TSFTR+i, tsftr_1[i]);
-	for (i=0; i<6; i++)
-		rtw_write8(adapter, REG_MACID+i, macid_1[i]);
-	for (i=0; i<6; i++)
-		rtw_write8(adapter, REG_BSSID+i, bssid_1[i]);
-
-	/* write port1 */
-	rtw_write8(adapter, REG_BCN_CTRL_1, bcn_ctrl & ~EN_BCN_FUNCTION);
-	for (i=0; i<2; i++)
-		rtw_write8(adapter, REG_ATIMWND_1+1, atimwnd[i]);
-	for (i=0; i<8; i++)
-		rtw_write8(adapter, REG_TSFTR1+i, tsftr[i]);
-	for (i=0; i<6; i++)
-		rtw_write8(adapter, REG_MACID1+i, macid[i]);
-	for (i=0; i<6; i++)
-		rtw_write8(adapter, REG_BSSID1+i, bssid[i]);
-
-	/* write bcn ctl */
-	rtw_write8(adapter, REG_BCN_CTRL, bcn_ctrl_1);
-	rtw_write8(adapter, REG_BCN_CTRL_1, bcn_ctrl);
-
-	if (adapter->iface_type == IFACE_PORT0) {
-		adapter->iface_type = IFACE_PORT1;
-		adapter->pbuddy_adapter->iface_type = IFACE_PORT0;
-		DBG_871X_LEVEL(_drv_always_, "port switch - port0("ADPT_FMT"), port1("ADPT_FMT")\n",
-			ADPT_ARG(adapter->pbuddy_adapter), ADPT_ARG(adapter));
-	} else {
-		adapter->iface_type = IFACE_PORT0;
-		adapter->pbuddy_adapter->iface_type = IFACE_PORT1;
-		DBG_871X_LEVEL(_drv_always_, "port switch - port0("ADPT_FMT"), port1("ADPT_FMT")\n",
-			ADPT_ARG(adapter), ADPT_ARG(adapter->pbuddy_adapter));
-	}
-
-#ifdef DBG_RUNTIME_PORT_SWITCH
-	msr = rtw_read8(adapter, MSR);
-	bcn_ctrl = rtw_read8(adapter, REG_BCN_CTRL);
-	bcn_ctrl_1 = rtw_read8(adapter, REG_BCN_CTRL_1);
-
-	for (i=0; i<2; i++)
-		atimwnd[i] = rtw_read8(adapter, REG_ATIMWND+i);
-	for (i=0; i<2; i++)
-		atimwnd_1[i] = rtw_read8(adapter, REG_ATIMWND_1+i);
-
-	for (i=0; i<8; i++)
-		tsftr[i] = rtw_read8(adapter, REG_TSFTR+i);
-	for (i=0; i<8; i++)
-		tsftr_1[i] = rtw_read8(adapter, REG_TSFTR1+i);
-
-	for (i=0; i<6; i++)
-		macid[i] = rtw_read8(adapter, REG_MACID+i);
-
-	for (i=0; i<6; i++)
-		bssid[i] = rtw_read8(adapter, REG_BSSID+i);
-
-	for (i=0; i<6; i++)
-		macid_1[i] = rtw_read8(adapter, REG_MACID1+i);
-
-	for (i=0; i<6; i++)
-		bssid_1[i] = rtw_read8(adapter, REG_BSSID1+i);
-
-	DBG_871X(FUNC_ADPT_FMT" after switch\n"
-		"msr:0x%02x\n"
-		"bcn_ctrl:0x%02x\n"
-		"bcn_ctrl_1:0x%02x\n"
-		"atimwnd:%u\n"
-		"atimwnd_1:%u\n"
-		"tsftr:%llu\n"
-		"tsftr1:%llu\n"
-		"macid:"MAC_FMT"\n"
-		"bssid:"MAC_FMT"\n"
-		"macid_1:"MAC_FMT"\n"
-		"bssid_1:"MAC_FMT"\n"
-		, FUNC_ADPT_ARG(adapter)
-		, msr
-		, bcn_ctrl
-		, bcn_ctrl_1
-		, *((u16*)atimwnd)
-		, *((u16*)atimwnd_1)
-		, *((u64*)tsftr)
-		, *((u64*)tsftr_1)
-		, MAC_ARG(macid)
-		, MAC_ARG(bssid)
-		, MAC_ARG(macid_1)
-		, MAC_ARG(bssid_1)
-	);
-#endif /* DBG_RUNTIME_PORT_SWITCH */
-
-#endif /* CONFIG_RUNTIME_PORT_SWITCH */
-#endif /* CONFIG_CONCURRENT_MODE */
 }
 
 const char * const _h2c_msr_role_str[] = {
@@ -3797,9 +3606,6 @@ void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer)
 	struct mlme_ext_priv	*pmlmeextpriv = &(padapter->mlmeextpriv);
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	u8 cur_wireless_mode = pmlmeextpriv->cur_wireless_mode;
-#ifdef CONFIG_CONCURRENT_MODE
-	struct mlme_ext_priv	*pbuddymlmeextpriv = &(padapter->pbuddy_adapter->mlmeextpriv);
-#endif //CONFIG_CONCURRENT_MODE
 
 #ifdef CONFIG_USB_RX_AGGREGATION	
 	if(IS_HARDWARE_TYPE_8821U(padapter) )//|| IS_HARDWARE_TYPE_8192EU(padapter))
@@ -3819,23 +3625,7 @@ void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer)
 	}
 	else if(IS_HARDWARE_TYPE_8812(padapter))
 	{
-#ifdef CONFIG_CONCURRENT_MODE
-		if(rtw_linked_check(padapter) == _TRUE && rtw_linked_check(padapter->pbuddy_adapter) == _TRUE)
-		{
-			if(pbuddymlmeextpriv->cur_wireless_mode >= pmlmeextpriv->cur_wireless_mode)
-				cur_wireless_mode = pbuddymlmeextpriv->cur_wireless_mode;
-			else
-				cur_wireless_mode = pmlmeextpriv->cur_wireless_mode;
-
-			rtw_set_usb_agg_by_mode(padapter,cur_wireless_mode);
-		}
-		else if (rtw_linked_check(padapter) == _TRUE && rtw_linked_check(padapter->pbuddy_adapter) == _FALSE)
-		{
-			rtw_set_usb_agg_by_mode(padapter,cur_wireless_mode);
-		}
-#else //!CONFIG_CONCURRENT_MODE
 		rtw_set_usb_agg_by_mode(padapter,cur_wireless_mode);
-#endif //CONFIG_CONCURRENT_MODE
 #ifdef CONFIG_PLATFORM_NOVATEK_NT72668
 	} else {
 		rtw_set_usb_agg_by_mode(padapter, cur_wireless_mode);

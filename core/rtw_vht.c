@@ -176,16 +176,8 @@ void	rtw_vht_use_default_setting(_adapter *padapter)
 	rtw_hal_get_def_var(padapter, HAL_DEF_EXPLICIT_BEAMFORMEE, (u8 *)&bHwSupportBeamformee);
 	CLEAR_FLAGS(pvhtpriv->beamform_cap);
 	if (TEST_FLAG(pregistrypriv->beamform_cap, BIT0) && bHwSupportBeamformer) {
-		#ifdef CONFIG_CONCURRENT_MODE
-			if ((pmlmeinfo->state&0x03) == WIFI_FW_AP_STATE) {
-				SET_FLAG(pvhtpriv->beamform_cap, BEAMFORMING_VHT_BEAMFORMER_ENABLE);
-				DBG_871X("[VHT] CONCURRENT AP Support Beamformer\n");
-			} else
-			DBG_871X("[VHT] CONCURRENT not AP ;not allow  Support Beamformer\n");
-		#else
 			SET_FLAG(pvhtpriv->beamform_cap, BEAMFORMING_VHT_BEAMFORMER_ENABLE);
 			DBG_871X("[VHT] Support Beamformer\n");
-		#endif
 	}
 	if(TEST_FLAG(pregistrypriv->beamform_cap, BIT1) && bHwSupportBeamformee)
 	{

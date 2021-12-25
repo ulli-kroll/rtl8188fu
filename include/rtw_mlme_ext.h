@@ -998,11 +998,6 @@ extern void correct_TSF(_adapter *padapter, struct mlme_ext_priv *pmlmeext);
 extern void adaptive_early_32k(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len);
 extern u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer);
 
-
-#ifdef CONFIG_CONCURRENT_MODE
-sint check_buddy_mlmeinfo_state(_adapter *padapter, u32 state);
-#endif
-
 void rtw_join_done_chk_ch(_adapter *padapter, int join_res);
 
 int rtw_chk_start_clnt_join(_adapter *padapter, u8 *ch, u8 *bw, u8 *offset);

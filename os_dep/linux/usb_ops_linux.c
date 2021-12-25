@@ -47,15 +47,6 @@ int usbctrl_vendorreq(struct intf_hdl *pintfhdl, u8 request, u16 value, u16 inde
 	u8 tmp_buf[MAX_USB_IO_CTL_SIZE];
 	#endif
 
-#ifdef CONFIG_CONCURRENT_MODE
-	if(padapter->adapter_type > PRIMARY_ADAPTER)
-	{
-		padapter = padapter->pbuddy_adapter;
-		pdvobjpriv = adapter_to_dvobj(padapter);
-		udev = pdvobjpriv->pusbdev;
-	}
-#endif
-
 	//DBG_871X("%s %s:%d\n",__FUNCTION__, current->comm, current->pid);
 
 	if (RTW_CANNOT_IO(padapter)){

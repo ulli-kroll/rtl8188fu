@@ -92,10 +92,6 @@ void dump_drv_cfg(void *sel)
 	DBG_871X_SEL_NL(sel, "CONFIG_DEBUG\n");
 #endif
 
-#ifdef CONFIG_CONCURRENT_MODE
-	DBG_871X_SEL_NL(sel, "CONFIG_CONCURRENT_MODE\n");
-#endif
-
 #ifdef CONFIG_POWER_SAVING
 	DBG_871X_SEL_NL(sel, "CONFIG_POWER_SAVING\n");
 #endif
@@ -1117,9 +1113,6 @@ ssize_t proc_set_survey_info(struct file *file, const char __user *buffer, size_
 	}
 	
 	if ((pmlmepriv->LinkDetectInfo.bBusyTraffic == _TRUE)
-#ifdef CONFIG_CONCURRENT_MODE
-	|| (rtw_get_buddy_bBusyTraffic(padapter) == _TRUE)
-#endif
 	) {
 		DBG_871X("scan abort!! BusyTraffic == _TRUE\n");
 		goto exit;
@@ -1130,14 +1123,6 @@ ssize_t proc_set_survey_info(struct file *file, const char __user *buffer, size_
 		goto exit;
 	}
 
-#ifdef CONFIG_CONCURRENT_MODE
-	if (check_buddy_fwstate(padapter,
-		_FW_UNDER_SURVEY|_FW_UNDER_LINKING|WIFI_UNDER_WPS) == _TRUE) {
-		DBG_871X("scan abort!! buddy_fwstate=0x%x\n",
-				get_fwstate(&(padapter->pbuddy_adapter->mlmepriv)));
-		goto exit;
-	}
-#endif
 	_status = rtw_set_802_11_bssid_list_scan(padapter, NULL, 0);
 
 exit:

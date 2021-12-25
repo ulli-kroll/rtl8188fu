@@ -246,9 +246,6 @@ static void _InitQueueReservedPage(PADAPTER padapter)
 static void _InitTxBufferBoundary(PADAPTER padapter)
 {
 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
-#ifdef CONFIG_CONCURRENT_MODE
-	u8 val8;
-#endif /* CONFIG_CONCURRENT_MODE */
 
 	/*u16	txdmactrl; */
 	u8	txpktbuf_bndy;
@@ -266,15 +263,6 @@ static void _InitTxBufferBoundary(PADAPTER padapter)
 	rtw_write8(padapter, REG_TRXFF_BNDY, txpktbuf_bndy);
 	rtw_write8(padapter, REG_TDECTRL + 1, txpktbuf_bndy);
 
-#ifdef CONFIG_CONCURRENT_MODE
-	val8 = txpktbuf_bndy + 8;
-	rtw_write8(padapter, REG_BCNQ1_BDNY, val8);
-	rtw_write8(padapter, REG_DWBCN1_CTRL_8188F + 1, val8); /* BCN1_HEAD */
-
-	val8 = rtw_read8(padapter, REG_DWBCN1_CTRL_8188F + 2);
-	val8 |= BIT(1); /* BIT1- BIT_SW_BCN_SEL_EN */
-	rtw_write8(padapter, REG_DWBCN1_CTRL_8188F + 2, val8);
-#endif /* CONFIG_CONCURRENT_MODE */
 }
 
 
@@ -1267,23 +1255,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 #ifdef ENABLE_USB_DROP_INCORRECT_OUT
 	_InitHardwareDropIncorrectBulkOut(padapter);
 #endif
-
-#if defined(CONFIG_CONCURRENT_MODE) || defined(CONFIG_TX_MCAST2UNI)
-
-#ifdef CONFIG_CHECK_AC_LIFETIME
-	/* Enable lifetime check for the four ACs */
-	rtw_write8(padapter, REG_LIFETIME_CTRL, 0x0F);
-#endif	/* CONFIG_CHECK_AC_LIFETIME	 */
-
-#ifdef CONFIG_TX_MCAST2UNI
-	rtw_write16(padapter, REG_PKT_VO_VI_LIFE_TIME, 0x0400);	/* unit: 256us. 256ms */
-	rtw_write16(padapter, REG_PKT_BE_BK_LIFE_TIME, 0x0400);	/* unit: 256us. 256ms */
-#else	/* CONFIG_TX_MCAST2UNI */
-	rtw_write16(padapter, REG_PKT_VO_VI_LIFE_TIME, 0x3000);	/* unit: 256us. 3s */
-	rtw_write16(padapter, REG_PKT_BE_BK_LIFE_TIME, 0x3000);	/* unit: 256us. 3s */
-#endif	/* CONFIG_TX_MCAST2UNI */
-#endif	/* CONFIG_CONCURRENT_MODE || CONFIG_TX_MCAST2UNI */
-
 
 #ifdef CONFIG_LED
 	_InitHWLed(padapter);

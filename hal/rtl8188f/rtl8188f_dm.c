@@ -331,37 +331,6 @@ FindMinimumRSSI_8188f(
 	/*1 1.Determine the minimum RSSI */
 
 
-#ifdef CONFIG_CONCURRENT_MODE
-	/*	FindMinimumRSSI()	per-adapter */
-	{
-		PADAPTER pbuddy_adapter = pAdapter->pbuddy_adapter;
-		PHAL_DATA_TYPE	pbuddy_HalData = GET_HAL_DATA(pbuddy_adapter);
-		struct dm_priv *pbuddy_dmpriv = &pbuddy_HalData->dmpriv;
-
-		if ((pHalData->EntryMinUndecoratedSmoothedPWDB != 0) &&
-			(pbuddy_dmpriv->EntryMinUndecoratedSmoothedPWDB != 0)) {
-
-			if (pHalData->EntryMinUndecoratedSmoothedPWDB > pbuddy_dmpriv->EntryMinUndecoratedSmoothedPWDB)
-				pHalData->EntryMinUndecoratedSmoothedPWDB = pbuddy_dmpriv->EntryMinUndecoratedSmoothedPWDB;
-		} else {
-			if (pHalData->EntryMinUndecoratedSmoothedPWDB == 0)
-				pHalData->EntryMinUndecoratedSmoothedPWDB = pbuddy_dmpriv->EntryMinUndecoratedSmoothedPWDB;
-
-		}
-#if 0
-		if ((pHalData->UndecoratedSmoothedPWDB != (-1)) &&
-			(pbuddy_dmpriv->UndecoratedSmoothedPWDB != (-1))) {
-
-			if ((pHalData->UndecoratedSmoothedPWDB > pbuddy_dmpriv->UndecoratedSmoothedPWDB) &&
-				(pbuddy_dmpriv->UndecoratedSmoothedPWDB != 0))
-				pHalData->UndecoratedSmoothedPWDB = pbuddy_dmpriv->UndecoratedSmoothedPWDB;
-		} else {
-			if ((pHalData->UndecoratedSmoothedPWDB == (-1)) && (pbuddy_dmpriv->UndecoratedSmoothedPWDB != 0))
-				pHalData->UndecoratedSmoothedPWDB = pbuddy_dmpriv->UndecoratedSmoothedPWDB;
-		}
-#endif
-	}
-#endif
 
 	if ((check_fwstate(pmlmepriv, _FW_LINKED) == _FALSE) &&
 		(pHalData->EntryMinUndecoratedSmoothedPWDB == 0)) {
@@ -402,9 +371,6 @@ rtl8188f_HalDmWatchDog(
 	BOOLEAN		bFwPSAwake = _TRUE;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-#ifdef CONFIG_CONCURRENT_MODE
-	PADAPTER pbuddy_adapter = Adapter->pbuddy_adapter;
-#endif /*CONFIG_CONCURRENT_MODE */
 
 	if (!rtw_is_hw_init_completed(Adapter))
 		goto skip_dm;
@@ -454,14 +420,6 @@ rtl8188f_HalDmWatchDog(
 			if (check_fwstate(&Adapter->mlmepriv, WIFI_STATION_STATE))
 				bsta_state = _TRUE;
 		}
-
-#ifdef CONFIG_CONCURRENT_MODE
-		if (pbuddy_adapter && rtw_linked_check(pbuddy_adapter)) {
-			bLinked = _TRUE;
-			if (pbuddy_adapter && check_fwstate(&pbuddy_adapter->mlmepriv, WIFI_STATION_STATE))
-				bsta_state = _TRUE;
-		}
-#endif /*CONFIG_CONCURRENT_MODE */
 
 		ODM_CmnInfoUpdate(&pHalData->odmpriv , ODM_CMNINFO_LINK, bLinked);
 		ODM_CmnInfoUpdate(&pHalData->odmpriv , ODM_CMNINFO_STATION_STATE, bsta_state);
@@ -524,9 +482,6 @@ void rtl8188f_HalDmWatchDog_in_LPS(IN	PADAPTER	Adapter)
 	pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 	struct sta_priv *pstapriv = &Adapter->stapriv;
 	struct sta_info *psta = NULL;
-#ifdef CONFIG_CONCURRENT_MODE
-	PADAPTER pbuddy_adapter = Adapter->pbuddy_adapter;
-#endif /*CONFIG_CONCURRENT_MODE */
 
 	if (!rtw_is_hw_init_completed(Adapter))
 		goto skip_lps_dm;
@@ -534,11 +489,6 @@ void rtl8188f_HalDmWatchDog_in_LPS(IN	PADAPTER	Adapter)
 
 	if (rtw_linked_check(Adapter))
 		bLinked = _TRUE;
-
-#ifdef CONFIG_CONCURRENT_MODE
-	if (pbuddy_adapter && rtw_linked_check(pbuddy_adapter))
-		bLinked = _TRUE;
-#endif /*CONFIG_CONCURRENT_MODE */
 
 	ODM_CmnInfoUpdate(&pHalData->odmpriv , ODM_CMNINFO_LINK, bLinked);
 

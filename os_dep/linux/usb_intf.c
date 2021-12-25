@@ -1023,17 +1023,6 @@ _adapter *rtw_usb_if1_init(struct dvobj_priv *dvobj,
 	dvobj->padapters[dvobj->iface_nums++] = padapter;
 	padapter->iface_id = IFACE_ID0;
 
-#if defined(CONFIG_CONCURRENT_MODE) 
-	//set adapter_type/iface type for primary padapter
-	padapter->isprimary = _TRUE;
-	padapter->adapter_type = PRIMARY_ADAPTER;
-	#ifndef CONFIG_HWPORT_SWAP
-	padapter->iface_type = IFACE_PORT0;
-	#else
-	padapter->iface_type = IFACE_PORT1;
-	#endif
-#endif
-
 	//step 2. hook HalFunc, allocate HalData
 	//hal_set_hal_ops(padapter);
 	if(rtw_set_hal_ops(padapter) ==_FAIL) 
@@ -1196,22 +1185,6 @@ static int rtw_drv_init(struct usb_interface *pusb_intf, const struct usb_device
 	if (usb_reprobe_to_usb3(if1) == _TRUE)
 		goto free_if1;
 	
-#ifdef CONFIG_CONCURRENT_MODE
-	if((if2 = rtw_drv_if2_init(if1, usb_set_intf_ops)) == NULL) {
-		goto free_if1;
-	}
-#ifdef CONFIG_MULTI_VIR_IFACES
-	for(i=0; i<if1->registrypriv.ext_iface_num;i++)
-	{
-		if(rtw_drv_add_vir_if(if1, usb_set_intf_ops) == NULL)
-		{
-			DBG_871X("rtw_drv_add_iface failed! (%d)\n", i);
-			goto free_if2;
-		}
-	}
-#endif //CONFIG_MULTI_VIR_IFACES
-#endif
-
 #ifdef CONFIG_INTEL_PROXIM
 	rtw_sw_export=if1;
 #endif
@@ -1247,10 +1220,6 @@ os_ndevs_deinit:
 #endif
 free_if2:
 	if(status != _SUCCESS && if2) {
-		#ifdef CONFIG_CONCURRENT_MODE
-		rtw_drv_if2_stop(if2);
-		rtw_drv_if2_free(if2);
-		#endif
 	}
 free_if1:
 	if (status != _SUCCESS && if1) {
@@ -1311,21 +1280,8 @@ _func_enter_;
 
 	/* stop cmd thread */
 	rtw_stop_cmd_thread(padapter);
-#ifdef CONFIG_CONCURRENT_MODE
-#ifdef CONFIG_MULTI_VIR_IFACES
-	rtw_drv_stop_vir_ifaces(dvobj);
-#endif //CONFIG_MULTI_VIR_IFACES
-	rtw_drv_if2_stop(dvobj->padapters[IFACE_ID1]);
-#endif //CONFIG_CONCURRENT_MODE
 
 	rtw_usb_if1_deinit(padapter);
-
-#ifdef CONFIG_CONCURRENT_MODE
-#ifdef CONFIG_MULTI_VIR_IFACES
-	rtw_drv_free_vir_ifaces(dvobj);
-#endif //CONFIG_MULTI_VIR_IFACES
-	rtw_drv_if2_free(dvobj->padapters[IFACE_ID1]);
-#endif //CONFIG_CONCURRENT_MODE
 
 	usb_dvobj_deinit(pusb_intf);
 

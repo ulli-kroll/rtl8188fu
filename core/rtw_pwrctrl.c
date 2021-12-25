@@ -1093,9 +1093,6 @@ _func_enter_;
 	}
 
 	if ((check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE)
-#ifdef CONFIG_CONCURRENT_MODE
-		|| (check_buddy_fwstate(Adapter,_FW_LINKED) == _TRUE)
-#endif
 		)
 	{ //connect
 
@@ -1786,13 +1783,6 @@ _func_enter_;
 	{
 		pslv = PS_STATE_S2;
 	}
-#ifdef CONFIG_CONCURRENT_MODE
-	else if(rtw_buddy_adapter_up(padapter))
-	{
-		if(padapter->pbuddy_adapter->wdinfo.p2p_ps_mode > P2P_PS_NONE)
-			pslv = PS_STATE_S2;
-	}
-#endif
 #endif
 
 	_enter_pwrlock(&pwrctrl->lock);
@@ -1840,13 +1830,6 @@ _func_enter_;
 	{
 		pslv = PS_STATE_S2;
 	}
-#ifdef CONFIG_CONCURRENT_MODE
-	else if(rtw_buddy_adapter_up(padapter))
-	{
-		if(padapter->pbuddy_adapter->wdinfo.p2p_ps_mode > P2P_PS_NONE)
-			pslv = PS_STATE_S2;
-	}
-#endif
 #endif
 
 	_enter_pwrlock(&pwrctrl->lock);
@@ -1925,11 +1908,6 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(padapter);
 	int i = 0;
 	u8 val8 = 0;
-
-#if defined(CONFIG_CONCURRENT_MODE)
-	if (padapter->adapter_type != PRIMARY_ADAPTER)
-		return;
-#endif
 
 _func_enter_;
 
@@ -2025,10 +2003,6 @@ void rtw_free_pwrctrl_priv(PADAPTER adapter)
 {
 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(adapter);
 
-#if defined(CONFIG_CONCURRENT_MODE)
-	if (adapter->adapter_type != PRIMARY_ADAPTER)
-		return;
-#endif	
 
 _func_enter_;
 
