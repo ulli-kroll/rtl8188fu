@@ -764,6 +764,9 @@ static void usb_AggSettingRxUpdate(PADAPTER padapter)
 		aggctrl &= ~RXDMA_AGG_EN;
 		aggrx &= ~BIT_USB_RXDMA_AGG_EN;
 		rxdmamode &= ~BIT_DMA_MODE;
+#if defined(fallthrough)
+		fallthrough;
+#endif
 	default:
 		DBG_8192C("%s: RX Aggregation Disable!\n", __func__);
 		break;
