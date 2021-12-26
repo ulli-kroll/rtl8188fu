@@ -305,8 +305,6 @@ void Set_802_3_MULTICAST_LIST(ADAPTER *pAdapter, UCHAR *MCListbuf, ULONG MCListl
 extern struct iw_handler_def  rtw_handlers_def;
 #endif
 
-extern void rtw_request_wps_pbc_event(_adapter *padapter);
-
 extern	NDIS_STATUS drv_query_info(
 	IN	_nic_hdl		MiniportAdapterContext,
 	IN	NDIS_OID		Oid,

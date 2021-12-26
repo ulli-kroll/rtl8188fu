@@ -185,14 +185,6 @@ static void request_wps_pbc_event(_adapter *padapter)
 
 }
 
-#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-void rtw_request_wps_pbc_event(_adapter *padapter)
-{
-
-	rtw_led_control(padapter, LED_CTL_START_WPS_BOTTON);
-}
-#endif//#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-
 void indicate_wx_scan_complete_event(_adapter *padapter)
 {	
 	union iwreq_data wrqu;
