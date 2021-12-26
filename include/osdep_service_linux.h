@@ -68,13 +68,6 @@
 	#include <linux/limits.h>
 #endif
 
-#ifdef RTK_DMP_PLATFORM
-#if (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,12))
-	#include <linux/pageremap.h>
-#endif
-	#include <asm/io.h>
-#endif
-
 #ifdef CONFIG_NET_RADIO
 	#define CONFIG_WIRELESS_EXT
 #endif

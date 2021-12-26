@@ -601,12 +601,6 @@ struct mlme_priv {
 	u8 ori_offset;
 #endif //#if defined (CONFIG_AP_MODE) && defined (CONFIG_NATIVEAP_MLME)
 
-#ifdef RTK_DMP_PLATFORM
-	// DMP kobject_hotplug function  signal need in passive level
-	_workitem	Linkup_workitem;
-	_workitem	Linkdown_workitem;
-#endif
-
 #ifdef CONFIG_INTEL_WIDI
 	int	widi_state;
 	int	listen_state;

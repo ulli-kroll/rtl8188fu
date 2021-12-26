@@ -123,12 +123,6 @@ void rtw_init_mlme_timer(_adapter *padapter)
 	#ifdef CONFIG_SET_SCAN_DENY_TIMER
 	_init_timer(&(pmlmepriv->set_scan_deny_timer), padapter->pnetdev, _rtw_set_scan_deny_timer_hdl, padapter);
 	#endif
-
-#ifdef RTK_DMP_PLATFORM
-	_init_workitem(&(pmlmepriv->Linkup_workitem), Linkup_workitem_callback, padapter);
-	_init_workitem(&(pmlmepriv->Linkdown_workitem), Linkdown_workitem_callback, padapter);
-#endif
-
 }
 
 extern void rtw_indicate_wx_assoc_event(_adapter *padapter);
@@ -154,10 +148,6 @@ _func_enter_;
 
 	if(adapter->pid[2] !=0)
 		rtw_signal_process(adapter->pid[2], SIGALRM);
-
-#ifdef RTK_DMP_PLATFORM
-	_set_workitem(&adapter->mlmepriv.Linkup_workitem);
-#endif
 
 _func_exit_;	
 
@@ -253,10 +243,7 @@ _func_enter_;
 
 	rtw_indicate_wx_disassoc_event(adapter);
 
-#ifdef RTK_DMP_PLATFORM
-	_set_workitem(&adapter->mlmepriv.Linkdown_workitem);
-#endif
-	 //modify for CONFIG_IEEE80211W, none 11w also can use the same command
+	//modify for CONFIG_IEEE80211W, none 11w also can use the same command
 	 rtw_reset_securitypriv_cmd(adapter);
 
 _func_exit_;
