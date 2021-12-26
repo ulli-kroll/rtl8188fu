@@ -77,72 +77,6 @@ u32 rtw_atoi(u8* s)
 
 }
 
-inline u8* _rtw_vmalloc(u32 sz)
-{
-	u8 	*pbuf;
-#ifdef PLATFORM_LINUX	
-	pbuf = vmalloc(sz);
-#endif	
-#ifdef PLATFORM_FREEBSD
-	pbuf = malloc(sz,M_DEVBUF,M_NOWAIT);	
-#endif	
-	
-#ifdef PLATFORM_WINDOWS
-	NdisAllocateMemoryWithTag(&pbuf,sz, RT_TAG);	
-#endif
-
-#ifdef DBG_MEMORY_LEAK
-#ifdef PLATFORM_LINUX
-	if ( pbuf != NULL) {
-		atomic_inc(&_malloc_cnt);
-		atomic_add(sz, &_malloc_size);
-	}
-#endif
-#endif /* DBG_MEMORY_LEAK */
-
-	return pbuf;	
-}
-
-inline u8* _rtw_zvmalloc(u32 sz)
-{
-	u8 	*pbuf;
-#ifdef PLATFORM_LINUX
-	pbuf = _rtw_vmalloc(sz);
-	if (pbuf != NULL)
-		memset(pbuf, 0, sz);
-#endif	
-#ifdef PLATFORM_FREEBSD
-	pbuf = malloc(sz,M_DEVBUF,M_ZERO|M_NOWAIT);	
-#endif	
-#ifdef PLATFORM_WINDOWS
-	NdisAllocateMemoryWithTag(&pbuf,sz, RT_TAG);
-	if (pbuf != NULL)
-		NdisFillMemory(pbuf, sz, 0);
-#endif
-
-	return pbuf;	
-}
-
-inline void _rtw_vmfree(u8 *pbuf, u32 sz)
-{
-#ifdef	PLATFORM_LINUX
-	vfree(pbuf);
-#endif	
-#ifdef PLATFORM_FREEBSD
-	free(pbuf,M_DEVBUF);	
-#endif	
-#ifdef PLATFORM_WINDOWS
-	NdisFreeMemory(pbuf,sz, 0);
-#endif
-
-#ifdef DBG_MEMORY_LEAK
-#ifdef PLATFORM_LINUX
-	atomic_dec(&_malloc_cnt);
-	atomic_sub(sz, &_malloc_size);
-#endif
-#endif /* DBG_MEMORY_LEAK */
-}
-
 u8* _rtw_malloc(u32 sz)
 {
 
@@ -523,57 +457,6 @@ bool match_mstat_sniff_rules(const enum mstat_f flags, const size_t size)
 	}
 
 	return _FALSE;
-}
-
-inline u8* dbg_rtw_vmalloc(u32 sz, const enum mstat_f flags, const char *func, const int line)
-{
-	u8  *p;
-
-	if (match_mstat_sniff_rules(flags, sz))
-		DBG_871X("DBG_MEM_ALLOC %s:%d %s(%d)\n", func, line, __FUNCTION__, (sz));
-	
-	p=_rtw_vmalloc((sz));
-
-	rtw_mstat_update(
-		flags
-		, p ? MSTAT_ALLOC_SUCCESS : MSTAT_ALLOC_FAIL
-		, sz
-	);
-	
-	return p;
-}
-
-inline u8* dbg_rtw_zvmalloc(u32 sz, const enum mstat_f flags, const char *func, const int line)
-{
-	u8 *p;
-
-	if (match_mstat_sniff_rules(flags, sz))
-		DBG_871X("DBG_MEM_ALLOC %s:%d %s(%d)\n", func, line, __FUNCTION__, (sz));
-
-	p=_rtw_zvmalloc((sz)); 
-
-	rtw_mstat_update(
-		flags
-		, p ? MSTAT_ALLOC_SUCCESS : MSTAT_ALLOC_FAIL
-		, sz
-	);
-
-	return p;
-}
-
-inline void dbg_rtw_vmfree(u8 *pbuf, u32 sz, const enum mstat_f flags, const char *func, const int line)
-{
-
-	if (match_mstat_sniff_rules(flags, sz))
-		DBG_871X("DBG_MEM_ALLOC %s:%d %s(%d)\n", func, line, __FUNCTION__, (sz));
-
-	_rtw_vmfree((pbuf), (sz)); 
-
-	rtw_mstat_update(
-		flags
-		, MSTAT_FREE
-		, sz
-	);
 }
 
 inline u8* dbg_rtw_malloc(u32 sz, const enum mstat_f flags, const char *func, const int line) 
