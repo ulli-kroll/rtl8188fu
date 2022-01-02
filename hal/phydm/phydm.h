@@ -50,14 +50,12 @@
 #endif
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-#include "phydm_beamforming.h"
 #include "phydm_noisemonitor.h"
 #include "halphyrf_ce.h"
 #include "phydm_powertracking_ce.h"
 #endif
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-#include "phydm_beamforming.h"
 #include "phydm_rxhp.h"
 #include "halphyrf_win.h"
 #include "phydm_powertracking_win.h"
@@ -1000,12 +998,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	RT_WORK_ITEM			RaRptWorkitem;
 	RT_WORK_ITEM			sbdcnt_workitem;
 #endif
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (BEAMFORMING_SUPPORT == 1)
-	RT_BEAMFORMING_INFO BeamformingInfo;
-#endif 
 #endif
 
 #if(DM_ODM_SUPPORT_TYPE & ODM_WIN)

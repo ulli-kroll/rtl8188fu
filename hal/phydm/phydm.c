@@ -437,9 +437,6 @@ ODM_DMInit(
 	odm_AntennaDiversityInit(pDM_Odm);
 	odm_AutoChannelSelectInit(pDM_Odm);
 	odm_PathDiversityInit(pDM_Odm);
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-	phydm_Beamforming_Init(pDM_Odm);
-#endif	
 
 	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 	{
@@ -640,9 +637,6 @@ ODM_DMWatchdog(
 	ODM_CfoTracking(pDM_Odm);
 	odm_DynamicTxPower(pDM_Odm);
 	odm_AntennaDiversity(pDM_Odm);
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-	phydm_Beamforming_Watchdog(pDM_Odm);
-#endif
 
 	phydm_rf_watchdog(pDM_Odm);
 
@@ -1411,13 +1405,6 @@ ODM_InitAllTimers(
 		(RT_TIMER_CALL_BACK)halComTxbf_FwNdpaTimerCallback, NULL, "Txbf_FwNdpaTimer");
 #endif
 #endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.BeamformingTimer,
-		(RT_TIMER_CALL_BACK)Beamforming_SWTimerCallback, NULL, "BeamformingTimer");
-#endif
-#endif
 }
 
 VOID
@@ -1457,13 +1444,6 @@ ODM_CancelAllTimers(
 	ODM_CancelTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaTimer);
 #endif
 #endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.BeamformingTimer);
-#endif
-#endif
-
 }
 
 
@@ -1494,12 +1474,6 @@ ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
 	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->sbdcnt_timer);
 #if (BEAMFORMING_SUPPORT == 1)
 	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaTimer);
-#endif
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.BeamformingTimer);
 #endif
 #endif
 }
