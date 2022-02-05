@@ -1,4 +1,4 @@
-RTL8188FU driver for Linux kernel 4.15.x ~ 5.15.x (Linux Mint, Ubuntu or Debian Derivatives)
+RTL8188FU driver for Linux kernel 4.15.x ~ 5.17.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 ------------------
 
@@ -40,9 +40,9 @@ Run following commands for disabling MAC Address Spoofing (Note: This is not nee
 
 `echo -e "[device]\nwifi.scan-rand-mac-address=no" | sudo tee /etc/NetworkManager/conf.d/disable-random-mac.conf`
 
-#### Blacklist for kernel 5.15 and newer
+#### Blacklist for kernel 5.15 and 5.16 (No needed for kernel 5.17 and up)
 
-If you are using kernel 5.15 and newer, you must create a configuration file with following commands for preventing to conflict rtl8188fu module with built-in r8188eu module.
+If you are using kernel 5.15 and 5.16, you must create a configuration file with following commands for preventing to conflict rtl8188fu module with built-in r8188eu module.
 
 `echo 'alias usb:v0BDApF179d*dc*dsc*dp*icFFiscFFipFFin* rtl8188fu' | sudo tee /etc/modprobe.d/r8188eu-blacklist.conf`
 
