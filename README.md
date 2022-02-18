@@ -61,6 +61,7 @@ If you are using kernel 5.15 and 5.16, you must create a configuration file with
 ------------------
 
 ## How to install from PPA repository
+(Note: PPA has no support for ARM)
 
 You can install rtl8188fu driver with following commands from PPA.
 
@@ -79,6 +80,6 @@ You can purge packages with following commands
 
 ------------------
 
-## How to install (for arm devices)
+## How to install (for ARM devices)
 
 https://github.com/kelebek333/rtl8188fu/tree/arm#how-to-install-for-arm-devices
