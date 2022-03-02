@@ -1,7 +1,20 @@
 rtl8188fu for linux
 ===================
 
+
+**PSA** public service announcement  
+-------------------------------------
+This driver will only work with kernels <= v5.10  
+.. there no use for a new kernel  
+.. sorry for that  
+
+the purpose of this repository is to rip/strip unneeded parts from the vendor driver  
+because of ..  
+
 rtl8188fu linux driver for wireless bgn device
+
+end of PSA
+----------
 
 Note:
 This is an USB2 only adapter,  
