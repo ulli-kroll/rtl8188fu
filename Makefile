@@ -397,7 +397,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_xmit.o	\
 		core/rtw_p2p.o \
 		core/rtw_tdls.o \
-		core/rtw_br_ext.o \
 		core/rtw_iol.o \
 		core/rtw_sreset.o \
 		core/rtw_beamforming.o \
