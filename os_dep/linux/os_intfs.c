@@ -1446,12 +1446,6 @@ u8 rtw_init_default_value(_adapter *padapter)
 	padapter->driver_rx_ampdu_spacing = 0xFF;
 	padapter->fix_rx_ampdu_accept = RX_AMPDU_ACCEPT_INVALID;
 	padapter->fix_rx_ampdu_size = RX_AMPDU_SIZE_INVALID;
-#ifdef DBG_RX_COUNTER_DUMP
-	padapter->dump_rx_cnt_mode = 0;
-	padapter->drv_rx_cnt_ok = 0;
-	padapter->drv_rx_cnt_crcerror = 0;
-	padapter->drv_rx_cnt_drop = 0;
-#endif	
 	return ret;
 }
 
@@ -1655,12 +1649,6 @@ _func_enter_;
 	padapter->data_fb = 0;
 	padapter->fix_rx_ampdu_accept = RX_AMPDU_ACCEPT_INVALID;
 	padapter->fix_rx_ampdu_size = RX_AMPDU_SIZE_INVALID;
-#ifdef DBG_RX_COUNTER_DUMP
-	padapter->dump_rx_cnt_mode = 0;
-	padapter->drv_rx_cnt_ok = 0;
-	padapter->drv_rx_cnt_crcerror = 0;
-	padapter->drv_rx_cnt_drop = 0;
-#endif	
 	rtw_init_bcmc_stainfo(padapter);
 
 	rtw_init_pwrctrl_priv(padapter);

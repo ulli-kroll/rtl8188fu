@@ -2577,10 +2577,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 #endif //CONFIG_LPS_SLOW_TRANSITION
 			)
 		{
-#ifdef DBG_RX_COUNTER_DUMP
-			if( padapter->dump_rx_cnt_mode & DUMP_DRV_TRX_COUNTER_DATA)
-				DBG_871X("(-)Tx = %d, Rx = %d \n",pmlmepriv->LinkDetectInfo.NumTxOkInPeriod,pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod);
-#endif	
 			bEnterPS= _FALSE;
 #ifdef CONFIG_LPS_SLOW_TRANSITION
 			if(bBusyTraffic == _TRUE)
@@ -2602,10 +2598,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 		}
 		else
 		{
-#ifdef DBG_RX_COUNTER_DUMP		
-			if( padapter->dump_rx_cnt_mode & DUMP_DRV_TRX_COUNTER_DATA)
-				DBG_871X("(+)Tx = %d, Rx = %d \n",pmlmepriv->LinkDetectInfo.NumTxOkInPeriod,pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod);
-#endif			
 #ifdef CONFIG_LPS_SLOW_TRANSITION
 			if(pmlmepriv->LinkDetectInfo.TrafficTransitionCount>=2)
 				pmlmepriv->LinkDetectInfo.TrafficTransitionCount -=2;
@@ -2734,9 +2726,6 @@ void dynamic_chk_wk_hdl(_adapter *padapter)
 	{
 		linked_status_chk(padapter, 0);
 		traffic_status_watchdog(padapter, 0);
-		#ifdef DBG_RX_COUNTER_DUMP
-		rtw_dump_rx_counters(padapter);
-		#endif
 		dm_DynamicUsbTxAgg(padapter, 0);
 	}
 

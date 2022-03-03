@@ -4260,16 +4260,6 @@ int recv_func_prehandle(_adapter *padapter, union recv_frame *rframe)
 	struct recv_priv *precvpriv = &padapter->recvpriv;
 	_queue *pfree_recv_queue = &padapter->recvpriv.free_recv_queue;
 
-#ifdef DBG_RX_COUNTER_DUMP
-	if( padapter->dump_rx_cnt_mode & DUMP_DRV_RX_COUNTER )
-	{
-		if (pattrib->crc_err == 1)
-			padapter->drv_rx_cnt_crcerror++;
-		else
-			padapter->drv_rx_cnt_ok++;
-	}
-#endif
-
 	{
 	//check the frame crtl field and decache
 	ret = validate_recv_frame(padapter, rframe);

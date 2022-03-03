@@ -1098,12 +1098,6 @@ struct _ADAPTER{
 	u8 fix_rx_ampdu_accept;
 	u8 fix_rx_ampdu_size; /* 0~127, TODO:consider each sta and each TID */
 	unsigned char     in_cta_test;
-#ifdef DBG_RX_COUNTER_DUMP		
-	u8 dump_rx_cnt_mode;/*BIT0:drv,BIT1:mac,BIT2:phy*/
-	u32 drv_rx_cnt_ok;
-	u32 drv_rx_cnt_crcerror;
-	u32 drv_rx_cnt_drop;
-#endif
 
 #ifdef CONFIG_DBG_COUNTER	
 	struct rx_logs rx_logs;
