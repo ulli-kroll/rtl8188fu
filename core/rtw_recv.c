@@ -3621,52 +3621,6 @@ int process_recv_indicatepkts(_adapter *padapter, union recv_frame *prframe)
 
 }
 
-#ifdef CONFIG_MP_INCLUDED
-int validate_mp_recv_frame(_adapter *adapter, union recv_frame *precv_frame)
-{
-	int ret = _SUCCESS;
-	u8 *ptr = precv_frame->u.hdr.rx_data;	
-	u8 type,subtype;
-	struct mp_priv *pmppriv = &adapter->mppriv;
-	struct mp_tx		*pmptx;
-
-	pmptx = &pmppriv->tx;
-
-#if 0	
-	if (1){
-		u8 bDumpRxPkt;
-		type =  GetFrameType(ptr);
-		subtype = GetFrameSubType(ptr); //bit(7)~bit(2)	
-		
-		rtw_hal_get_def_var(adapter, HAL_DEF_DBG_DUMP_RXPKT, &(bDumpRxPkt));
-		if(bDumpRxPkt ==1){//dump all rx packets
-			int i;
-			DBG_871X("############ type:0x%02x subtype:0x%02x ################# \n",type,subtype);
-			
-			for(i=0; i<64;i=i+8)
-				DBG_871X("%02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X:\n", *(ptr+i),
-				*(ptr+i+1), *(ptr+i+2) ,*(ptr+i+3) ,*(ptr+i+4),*(ptr+i+5), *(ptr+i+6), *(ptr+i+7));
-			DBG_871X("#############################\n");
-		}
-	}
-#endif
-	if (pmppriv->bloopback) {
-		if (_rtw_memcmp(ptr + 24, pmptx->buf + 24, precv_frame->u.hdr.len - 24) == _FALSE) {
-			DBG_871X("Compare payload content Fail !!!\n");
-			ret = _FAIL;
-		}
-	}
-
-	if (!adapter->mppriv.bmac_filter)
-		return ret;
-
-	if(_rtw_memcmp( GetAddr2Ptr(ptr), adapter->mppriv.mac_filter, ETH_ALEN) == _FALSE )
-		ret = _FAIL;
-
-	return ret;
-}
-#endif
-
 static sint MPwlanhdr_to_ethhdr ( union recv_frame *precvframe)
 {
 	sint	rmv_len;

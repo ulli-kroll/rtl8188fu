@@ -36,7 +36,6 @@ CONFIG_RTL8188F = y
 ######################### Interface ###########################
 CONFIG_USB_HCI = y
 ########################## Features ###########################
-CONFIG_MP_INCLUDED = n
 CONFIG_POWER_SAVING = y
 CONFIG_USB_AUTOSUSPEND = n
 CONFIG_HW_PWRP_DETECTION = n
@@ -137,7 +136,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com_phycfg.o \
 			hal/hal_phy.o \
 			hal/hal_dm.o \
-			hal/hal_mp.o \
 			hal/hal_hci/hal_usb.o \
 			hal/led/hal_usb_led.o
 
@@ -210,11 +208,6 @@ ifeq ($(CONFIG_USB_HCI), y)
 ifeq ($(CONFIG_USB_AUTOSUSPEND), y)
 EXTRA_CFLAGS += -DCONFIG_USB_AUTOSUSPEND
 endif
-endif
-
-ifeq ($(CONFIG_MP_INCLUDED), y)
-#MODULE_NAME := $(MODULE_NAME)_mp
-EXTRA_CFLAGS += -DCONFIG_MP_INCLUDED
 endif
 
 ifeq ($(CONFIG_POWER_SAVING), y)
@@ -409,13 +402,6 @@ rtl8188fu-y += $(_OS_INTFS_FILES)
 rtl8188fu-y += $(_HAL_INTFS_FILES)
 rtl8188fu-y += $(_OUTSRC_FILES)
 rtl8188fu-y += $(_PLATFORM_FILES)
-
-rtl8188fu-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o \
-					core/rtw_mp_ioctl.o
-
-ifeq ($(CONFIG_RTL8723B), y)
-rtl8188fu-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
-endif
 
 obj-$(CONFIG_RTL8188FU) := rtl8188fu.o
 
