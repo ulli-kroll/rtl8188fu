@@ -247,10 +247,6 @@ struct dbg_rx_counter
 	u32	rx_cck_fa;
 	u32	rx_ht_fa;
 };
-void rtw_dump_mac_rx_counters(_adapter* padapter,struct dbg_rx_counter *rx_counter);
-void rtw_dump_phy_rx_counters(_adapter* padapter,struct dbg_rx_counter *rx_counter);
-void rtw_reset_mac_rx_counters(_adapter* padapter);
-void rtw_reset_phy_rx_counters(_adapter* padapter);
 void rtw_reset_phy_trx_ok_counters(_adapter *padapter);
 
 void dump_chip_info(HAL_VERSION	ChipVersion);
