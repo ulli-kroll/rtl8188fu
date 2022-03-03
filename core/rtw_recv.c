@@ -1461,9 +1461,6 @@ _func_enter_;
 		_rtw_memcpy(pattrib->ta, pattrib->src, ETH_ALEN);
 
 		//
-		if(adapter->mppriv.bRTWSmbCfg==_FALSE)
-			_rtw_memcpy(pattrib->bssid,  mybssid, ETH_ALEN);
-
 
 		*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); // get sta_info
 		if (*psta == NULL) {
@@ -1583,8 +1580,6 @@ _func_enter_;
 		_rtw_memcpy(pattrib->ra, pattrib->dst, ETH_ALEN);
 		_rtw_memcpy(pattrib->ta, pattrib->src, ETH_ALEN);
 		//
-		if(adapter->mppriv.bRTWSmbCfg == _FALSE)
-			_rtw_memcpy(pattrib->bssid,  mybssid, ETH_ALEN);
 
 		*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); // get sta_info
 		if (*psta == NULL) {
@@ -3737,170 +3732,12 @@ _func_enter_;
 		len = htons(pattrib->seq_num);
 		//DBG_871X("wlan seq = %d ,seq_num =%x\n",len,pattrib->seq_num);
 		_rtw_memcpy(ptr+12,&len, 2);
-	if(adapter->mppriv.bRTWSmbCfg==_TRUE)
-	{
-//		if(_rtw_memcmp(mcastheadermac, pattrib->dst, 3) == _TRUE)//SimpleConfig Dest.
-//			_rtw_memcpy(ptr+ETH_ALEN, pattrib->bssid, ETH_ALEN);
-
-		if(_rtw_memcmp(mcastheadermac, pattrib->bssid, 3) == _TRUE) //SimpleConfig Dest.
-			_rtw_memcpy(ptr, pattrib->bssid, ETH_ALEN);
-
-	}
-
 	
 _func_exit_;	
 	return ret;
 
 }
 
-
-int mp_recv_frame(_adapter *padapter, union recv_frame *rframe)
-{
-	int ret = _SUCCESS;
-	struct rx_pkt_attrib *pattrib = &rframe->u.hdr.attrib;
-	struct recv_priv *precvpriv = &padapter->recvpriv;
-	_queue *pfree_recv_queue = &padapter->recvpriv.free_recv_queue;
-#ifdef CONFIG_MP_INCLUDED
-	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	struct mp_priv *pmppriv = &padapter->mppriv;
-#endif //CONFIG_MP_INCLUDED
-	u8 type;
-	u8 *ptr = rframe->u.hdr.rx_data;
-	u8 *psa, *pda, *pbssid;
-	struct sta_info *psta = NULL;
-    	DBG_COUNTER(padapter->rx_logs.core_rx_pre);
-    	
-	if ( (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) )//&&(padapter->mppriv.check_mp_pkt == 0))
-	{
-		if (pattrib->crc_err == 1){
-			padapter->mppriv.rx_crcerrpktcount++;
-		}
-		else{
-			if(_SUCCESS == validate_mp_recv_frame(padapter, rframe))
-				padapter->mppriv.rx_pktcount++;
-			else
-				padapter->mppriv.rx_pktcount_filter_out++;
-		}
-
-		if(pmppriv->rx_bindicatePkt == _FALSE)
-		{
-			//RT_TRACE(_module_rtl871x_recv_c_, _drv_alert_, ("MP - Not in loopback mode , drop pkt \n"));
-			ret = _FAIL;
-			rtw_free_recvframe(rframe, pfree_recv_queue);//free this recv_frame
-			goto exit;
-		}
-		else 
-		{				
-			type =	GetFrameType(ptr);
-			pattrib->to_fr_ds = get_tofr_ds(ptr);
-			pattrib->frag_num = GetFragNum(ptr);
-			pattrib->seq_num = GetSequence(ptr);
-			pattrib->pw_save = GetPwrMgt(ptr);
-			pattrib->mfrag = GetMFrag(ptr);
-			pattrib->mdata = GetMData(ptr);
-			pattrib->privacy = GetPrivacy(ptr);
-			pattrib->order = GetOrder(ptr);
-	
-			if(type ==WIFI_DATA_TYPE)
-			{
-				pda = get_da(ptr);
-				psa = get_sa(ptr);
-				pbssid = get_hdr_bssid(ptr);
-				
-				_rtw_memcpy(pattrib->dst, pda, ETH_ALEN);
-				_rtw_memcpy(pattrib->src, psa, ETH_ALEN);
-				_rtw_memcpy(pattrib->bssid, pbssid, ETH_ALEN);
-			
-			switch(pattrib->to_fr_ds)
-			{
-			case 0:
-				_rtw_memcpy(pattrib->ra, pda, ETH_ALEN);
-				_rtw_memcpy(pattrib->ta, psa, ETH_ALEN);
-				ret = sta2sta_data_frame(padapter, rframe, &psta);
-				break;
-
-			case 1:
-		
-				_rtw_memcpy(pattrib->ra, pda, ETH_ALEN);
-				_rtw_memcpy(pattrib->ta, pbssid, ETH_ALEN);
-				ret = ap2sta_data_frame(padapter, rframe, &psta);
-		
-				break;
-
-			case 2:
-				_rtw_memcpy(pattrib->ra, pbssid, ETH_ALEN);
-				_rtw_memcpy(pattrib->ta, psa, ETH_ALEN);
-				ret = sta2ap_data_frame(padapter, rframe, &psta);
-				break;
-
-			case 3:
-				_rtw_memcpy(pattrib->ra, GetAddr1Ptr(ptr), ETH_ALEN);
-				_rtw_memcpy(pattrib->ta, GetAddr2Ptr(ptr), ETH_ALEN);
-				ret =_FAIL;
-				RT_TRACE(_module_rtl871x_recv_c_,_drv_err_,(" case 3\n"));
-				break;
-
-			default:
-				ret =_FAIL;
-				break;
-			}
-		
-			ret = MPwlanhdr_to_ethhdr (rframe);
-				
-			if (ret != _SUCCESS)
-			{
-				RT_TRACE(_module_rtl871x_recv_c_,_drv_err_,("wlanhdr_to_ethhdr: drop pkt \n"));
-				#ifdef DBG_RX_DROP_FRAME
-					DBG_871X("DBG_RX_DROP_FRAME %s wlanhdr_to_ethhdr: drop pkt\n", __FUNCTION__);
-				#endif
-					rtw_free_recvframe(rframe, pfree_recv_queue);//free this recv_frame
-					ret = _FAIL;
-					goto exit;
-				}
-				if (!RTW_CANNOT_RUN(padapter)) {
-					RT_TRACE(_module_rtl871x_recv_c_, _drv_alert_, ("@@@@ recv_func: recv_func rtw_recv_indicatepkt\n" ));
-							//indicate this recv_frame
-					ret = rtw_recv_indicatepkt(padapter, rframe);
-					if (ret != _SUCCESS)
-					{	
-					#ifdef DBG_RX_DROP_FRAME
-								DBG_871X("DBG_RX_DROP_FRAME %s rtw_recv_indicatepkt fail!\n", __FUNCTION__);
-					#endif
-								rtw_free_recvframe(rframe, pfree_recv_queue);//free this recv_frame
-								ret = _FAIL;
-
-								goto exit;
-					}
-				}
-				else
-				{
-					RT_TRACE(_module_rtl871x_recv_c_, _drv_alert_, ("@@@@  recv_func: rtw_free_recvframe\n" ));
-					RT_TRACE(_module_rtl871x_recv_c_, _drv_debug_, ("recv_func:bDriverStopped(%s) OR bSurpriseRemoved(%s)"
-						, rtw_is_drv_stopped(padapter)?"True":"False"
-						, rtw_is_surprise_removed(padapter)?"True":"False"));
-					#ifdef DBG_RX_DROP_FRAME
-						DBG_871X("DBG_RX_DROP_FRAME %s ecv_func:bDriverStopped(%s) OR bSurpriseRemoved(%s)\n", __func__,
-									rtw_is_drv_stopped(padapter)?"True":"False",
-									rtw_is_surprise_removed(padapter)?"True":"False");
-					#endif
-					ret = _FAIL;
-					rtw_free_recvframe(rframe, pfree_recv_queue);//free this recv_frame
-						goto exit;
-				}
-
-			}
-		}
-				
-	}
-
-	RT_TRACE(_module_rtl871x_recv_c_, _drv_info_, ("recv_func: validate_recv_frame fail! drop pkt\n"));
-	rtw_free_recvframe(rframe, pfree_recv_queue);//free this recv_frame
-	ret = _FAIL;
-
-exit:
-		return ret;
-
-}
 
 static sint fill_radiotap_hdr(_adapter *padapter, union recv_frame *precvframe, u8 *buf)
 {
