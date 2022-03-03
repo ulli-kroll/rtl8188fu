@@ -143,9 +143,6 @@ void dump_drv_cfg(void *sel)
 	#endif
 #endif /*CONFIG_SDIO_HCI*/
 
-#ifdef CONFIG_PCI_HCI
-#endif
-	
 	DBG_871X_SEL_NL(sel, "MAX_XMITBUF_SZ = %d\n", MAX_XMITBUF_SZ);
 	DBG_871X_SEL_NL(sel, "MAX_RECVBUF_SZ = %d\n", MAX_RECVBUF_SZ);
 	

@@ -404,13 +404,8 @@ int rtw_tx_pwr_by_rate = 1;
 int rtw_tx_pwr_lmt_enable = 0;
 int rtw_tx_pwr_by_rate = 1;
 #else //eFuse: Regulatory selection=2
-#ifdef CONFIG_PCI_HCI
-int rtw_tx_pwr_lmt_enable = 2; // 2- Depend on efuse
-int rtw_tx_pwr_by_rate = 2;// 2- Depend on efuse
-#else // USB & SDIO
 int rtw_tx_pwr_lmt_enable = 0;
 int rtw_tx_pwr_by_rate = 0;
-#endif 
 #endif
 
 module_param(rtw_tx_pwr_lmt_enable, int, 0644);
@@ -1078,12 +1073,6 @@ int rtw_os_ndev_alloc(_adapter *adapter)
 	}
 	#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0)
 	SET_NETDEV_DEV(ndev, dvobj_to_dev(adapter_to_dvobj(adapter)));
-	#endif
-
-	#ifdef CONFIG_PCI_HCI
-	if (adapter_to_dvobj(adapter)->bdma64)
-		ndev->features |= NETIF_F_HIGHDMA;
-	ndev->irq = adapter_to_dvobj(adapter)->irq;
 	#endif
 
 #if defined(CONFIG_IOCTL_CFG80211)

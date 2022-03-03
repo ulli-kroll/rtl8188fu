@@ -79,10 +79,6 @@ _BlockWrite(
 	u32			remainSize_p1 = 0, remainSize_p2 = 0;
 	u8			*bufferPtr	= (u8 *)buffer;
 	u32			i = 0, offset = 0;
-#ifdef CONFIG_PCI_HCI
-	u8			remainFW[4] = {0, 0, 0, 0};
-	u8			*p = NULL;
-#endif
 
 #ifdef CONFIG_USB_HCI
 	blockSize_p1 = 196; // the same as 8188e
@@ -111,25 +107,6 @@ _BlockWrite(
 			goto exit;
 		}
 	}
-
-#ifdef CONFIG_PCI_HCI
-	p = (u8 *)((u32 *)(bufferPtr + blockCount_p1 * blockSize_p1));
-	if (remainSize_p1) {
-		switch (remainSize_p1) {
-		case 0:
-			break;
-		case 3:
-			remainFW[2] = *(p + 2);
-		case 2:
-			remainFW[1] = *(p + 1);
-		case 1:
-			remainFW[0] = *(p);
-			ret = rtw_write32(padapter, (FW_8188F_START_ADDRESS + blockCount_p1 * blockSize_p1),
-							  le32_to_cpu(*(u32 *)remainFW));
-		}
-		return ret;
-	}
-#endif
 
 	/*3 Phase #2 */
 	if (remainSize_p1) {
@@ -226,12 +203,6 @@ _WriteFW(
 	u32		pageNums, remainSize;
 	u32		page, offset;
 	u8		*bufferPtr = (u8 *)buffer;
-
-#ifdef CONFIG_PCI_HCI
-	/* 20100120 Joseph: Add for 88CE normal chip. */
-	/* Fill in zero to make firmware image to dword alignment. */
-	_FillDummy(bufferPtr, &size);
-#endif
 
 	pageNums = size / MAX_DLFW_PAGE_SIZE;
 	/*RT_ASSERT((pageNums <= 4), ("Page numbers should not greater then 4\n")); */
@@ -2850,7 +2821,7 @@ void rtl8188f_init_default_value(PADAPTER padapter)
 	for (i = 0; i < HP_THERMAL_NUM; i++)
 		pHalData->odmpriv.RFCalibrateInfo.ThermalValue_HP[i] = 0;
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
+#if defined(CONFIG_USB_HCI)
 	pHalData->IntrMask[0] = (u32)(
 								/* IMR_ROK				| */
 								/* IMR_RDU				| */
@@ -4327,9 +4298,6 @@ static void hw_var_set_opmode(PADAPTER padapter, u8 variable, u8 *val)
 		if ((mode == _HW_STATE_STATION_) || (mode == _HW_STATE_NOLINK_)) {
 			{
 				StopTxBeacon(padapter);
-#ifdef CONFIG_PCI_HCI
-				UpdateInterruptMask8188FE(padapter, 0, 0, RT_BCN_INT_MASKS, 0);
-#else /* !CONFIG_PCI_HCI */
 #ifdef CONFIG_INTERRUPT_BASED_TXBCN
 #ifdef CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT
 				rtw_write8(padapter, REG_DRVERLYINT, 0x05); /* restore early int time to 5ms */
@@ -4341,7 +4309,6 @@ static void hw_var_set_opmode(PADAPTER padapter, u8 variable, u8 *val)
 #endif /* CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR */
 
 #endif /* CONFIG_INTERRUPT_BASED_TXBCN */
-#endif /* !CONFIG_PCI_HCI */
 			}
 
 			/* disable atim wnd */
@@ -4351,9 +4318,6 @@ static void hw_var_set_opmode(PADAPTER padapter, u8 variable, u8 *val)
 			ResumeTxBeacon(padapter);
 			rtw_write8(padapter, REG_BCN_CTRL, DIS_TSF_UDT | EN_BCN_FUNCTION | DIS_BCNQ_SUB);
 		} else if (mode == _HW_STATE_AP_) {
-#ifdef CONFIG_PCI_HCI
-			UpdateInterruptMask8188FE(padapter, RT_BCN_INT_MASKS, 0, 0, 0);
-#else /* !CONFIG_PCI_HCI */
 #ifdef CONFIG_INTERRUPT_BASED_TXBCN
 #ifdef CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT
 			UpdateInterruptMask8188FU(padapter, _TRUE , IMR_BCNDMAINT0_8188F, 0);
@@ -4364,7 +4328,6 @@ static void hw_var_set_opmode(PADAPTER padapter, u8 variable, u8 *val)
 #endif /* CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR */
 
 #endif /* CONFIG_INTERRUPT_BASED_TXBCN */
-#endif
 
 			ResumeTxBeacon(padapter);
 

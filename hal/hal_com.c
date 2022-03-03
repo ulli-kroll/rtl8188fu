@@ -955,7 +955,7 @@ int hal_read_mac_hidden_rpt(_adapter *adapter)
 	u8 id = C2H_DEFEATURE_RSVD;
 	int i;
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
+#if defined(CONFIG_USB_HCI)
 	u8 hci_type = rtw_get_intf_type(adapter);
 
 	if (!rtw_is_hw_init_completed(adapter))
@@ -998,7 +998,7 @@ mac_hidden_rpt_hdl:
 
 exit:
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
+#if defined(CONFIG_USB_HCI)
 	if (!rtw_is_hw_init_completed(adapter))
 		rtw_hal_power_off(adapter);
 #endif
@@ -2172,11 +2172,7 @@ download_page:
 		pattrib->qsel = QSLT_BEACON;
 		pattrib->pktlen = TotalPacketLen - TxDescOffset;
 		pattrib->last_txcmdsz = TotalPacketLen - TxDescOffset;
-#ifdef CONFIG_PCI_HCI
-		dump_mgntframe(adapter, pcmdframe);
-#else
 		dump_mgntframe_and_wait(adapter, pcmdframe, 100);
-#endif
 	}
 
 	DBG_871X("%s: Set RSVD page location to Fw ,TotalPacketLen(%d), TotalPageNum(%d)\n",

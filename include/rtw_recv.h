@@ -295,12 +295,7 @@ struct rx_pkt_attrib	{
 #define RECVBUFF_ALIGN_SZ 8
 
 #if defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A)
-	#ifdef CONFIG_PCI_HCI
-		#define RXDESC_SIZE 16
-		#define RX_WIFI_INFO_SIZE	24
-	#else
 		#define RXDESC_SIZE	24
-	#endif
 #else
 #define RXDESC_SIZE	24
 #endif
@@ -312,38 +307,20 @@ struct recv_stat
 
 	unsigned int rxdw1;
 
-#if !((defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A)) && defined(CONFIG_PCI_HCI))  /* exclude 8192ee, 8814ae */
 	unsigned int rxdw2;
 
 	unsigned int rxdw3;
-#endif
 
 #ifndef BUF_DESC_ARCH
 	unsigned int rxdw4;
 
 	unsigned int rxdw5;
 
-#ifdef CONFIG_PCI_HCI
-	unsigned int rxdw6;
-
-	unsigned int rxdw7;
-#endif
 #endif //if BUF_DESC_ARCH is defined, rx_buf_desc occupy 4 double words
 };
 
 #define EOR BIT(30)
 
-#ifdef CONFIG_PCI_HCI
-#define PCI_MAX_RX_QUEUE		1// MSDU packet queue, Rx Command Queue
-#define PCI_MAX_RX_COUNT		128
-
-struct rtw_rx_ring {
-	struct recv_stat	*desc;
-	dma_addr_t		dma;
-	unsigned int		idx;
-	struct sk_buff	*rx_buf[PCI_MAX_RX_COUNT];
-};
-#endif
 
 
 
@@ -427,13 +404,6 @@ struct recv_priv
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI) || defined(CONFIG_USB_HCI) 
 	_queue	recv_buf_pending_queue;
-#endif
-
-#ifdef CONFIG_PCI_HCI
-	// Rx
-	struct rtw_rx_ring	rx_ring[PCI_MAX_RX_QUEUE];
-	int 	rxringcount;
-	u16	rxbuffersize;
 #endif
 
 	//For display the phy informatiom

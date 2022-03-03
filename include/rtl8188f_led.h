@@ -40,10 +40,6 @@ void rtl8188fs_DeInitSwLeds(PADAPTER padapter);
 void rtl8188fs_InitSwLeds(PADAPTER padapter);
 void rtl8188fs_DeInitSwLeds(PADAPTER padapter);
 #endif
-#ifdef CONFIG_PCI_HCI
-void rtl8188fe_InitSwLeds(PADAPTER padapter);
-void rtl8188fe_DeInitSwLeds(PADAPTER padapter);
-#endif
 
 #endif
 

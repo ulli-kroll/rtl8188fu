@@ -318,17 +318,6 @@ s32 rtl8188fu_xmitframe_complete(_adapter *padapter, struct xmit_priv *pxmitpriv
 void _dbg_dump_tx_info(_adapter	*padapter,int frame_tag,struct tx_desc *ptxdesc);
 #endif
 
-#ifdef CONFIG_PCI_HCI
-s32 rtl8188fe_init_xmit_priv(PADAPTER padapter);
-void rtl8188fe_free_xmit_priv(PADAPTER padapter);
-struct xmit_buf *rtl8188fe_dequeue_xmitbuf(struct rtw_tx_ring *ring);
-void	rtl8188fe_xmitframe_resume(_adapter *padapter);
-s32 rtl8188fe_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
-s32 rtl8188fe_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
-s32	rtl8188fe_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
-void rtl8188fe_xmit_tasklet(void *priv);
-#endif
-
 u8	BWMapping_8188F(PADAPTER Adapter, struct pkt_attrib *pattrib);
 u8	SCMapping_8188F(PADAPTER Adapter, struct pkt_attrib	*pattrib);
 

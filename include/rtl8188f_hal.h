@@ -239,10 +239,5 @@ s32 c2h_handler_8188f(PADAPTER padapter, u8 *pC2hEvent);
 u8 MRateToHwRate8188F(u8  rate);
 u8 HwRateToMRate8188F(u8	 rate);
 
-#ifdef CONFIG_PCI_HCI
-BOOLEAN	InterruptRecognized8188FE(PADAPTER Adapter);
-VOID	UpdateInterruptMask8188FE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
-#endif
-
 #endif
 

@@ -270,15 +270,6 @@
 #define	IMR_TXFOVW_8188F					BIT9			// Transmit FIFO Overflow
 #define	IMR_RXFOVW_8188F					BIT8			// Receive FIFO Overflow
 
-#ifdef CONFIG_PCI_HCI
-//#define IMR_RX_MASK		(IMR_ROK_8188F|IMR_RDU_8188F|IMR_RXFOVW_8188F)
-#define IMR_TX_MASK			(IMR_VODOK_8188F|IMR_VIDOK_8188F|IMR_BEDOK_8188F|IMR_BKDOK_8188F|IMR_MGNTDOK_8188F|IMR_HIGHDOK_8188F)
-
-#define RT_BCN_INT_MASKS	(IMR_BCNDMAINT0_8188F | IMR_TXBCN0OK_8188F | IMR_TXBCN0ERR_8188F | IMR_BCNDERR0_8188F)
-
-#define RT_AC_INT_MASKS	(IMR_VIDOK_8188F | IMR_VODOK_8188F | IMR_BEDOK_8188F|IMR_BKDOK_8188F)
-#endif
-
 //========================================================
 // General definitions
 //========================================================
