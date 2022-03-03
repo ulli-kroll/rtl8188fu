@@ -181,15 +181,8 @@ _HAL_INTFS_FILES +=	\
 			hal/rtl8188f/usb/rtl8188fu_xmit.o \
 			hal/rtl8188f/usb/rtl8188fu_recv.o
 
-ifeq ($(CONFIG_PCI_HCI), y)
-_HAL_INTFS_FILES += hal/rtl8188f/usb/usb_ops_linux.o
-else
 _HAL_INTFS_FILES += hal/rtl8188f/usb/usb_ops.o
-endif
-
-ifeq ($(CONFIG_USB_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_USB.o
-endif
 
 _OUTSRC_FILES += hal/phydm/rtl8188f/halhwimg8188f_bb.o\
 			hal/phydm/rtl8188f/halhwimg8188f_mac.o\
