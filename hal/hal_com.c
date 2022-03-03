@@ -2024,15 +2024,7 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 	u32	TotalPacketLen = 0, MaxRsvdPageBufSize = 0, PageSize = 0;
 	RSVDPAGE_LOC	RsvdPageLoc;
 
-#ifdef DBG_CONFIG_ERROR_DETECT
-	struct sreset_priv *psrtpriv;
-#endif /* DBG_CONFIG_ERROR_DETECT */
-
-
 	pHalData = GET_HAL_DATA(adapter);
-#ifdef DBG_CONFIG_ERROR_DETECT
-	psrtpriv = &pHalData->srestpriv;
-#endif
 	pxmitpriv = &adapter->xmitpriv;
 	pmlmeext = &adapter->mlmeextpriv;
 	pmlmeinfo = &pmlmeext->mlmext_info;

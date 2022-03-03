@@ -569,10 +569,6 @@ typedef struct hal_com_data
 #endif //CONFIG_PCI_HCI
 	
 
-#ifdef DBG_CONFIG_ERROR_DETECT
-	struct sreset_priv srestpriv;
-#endif //#ifdef DBG_CONFIG_ERROR_DETECT
-
 #if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8703B) || defined(CONFIG_RTL8188F)
 	#ifndef CONFIG_PCI_HCI	// mutual exclusive with PCI -- so they're SDIO and GSPI 
 	// Interrupt relatd register information.

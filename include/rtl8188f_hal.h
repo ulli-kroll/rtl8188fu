@@ -32,9 +32,6 @@
 #include "Hal8188FPwrSeq.h"
 #include "Hal8188FPhyReg.h"
 #include "Hal8188FPhyCfg.h"
-#ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8188f_sreset.h"
-#endif
 
 #define FW_8188F_SIZE			0x8000
 #define FW_8188F_START_ADDRESS	0x1000

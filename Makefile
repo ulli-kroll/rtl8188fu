@@ -168,7 +168,6 @@ EXTRA_CFLAGS += -DCONFIG_RTL8188F
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
 			hal/rtl8188f/Hal8188FPwrSeq.o\
-			hal/rtl8188f/rtl8188f_sreset.o
 
 _HAL_INTFS_FILES +=	hal/rtl8188f/rtl8188f_hal_init.o \
 			hal/rtl8188f/rtl8188f_phycfg.o \
@@ -395,7 +394,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_p2p.o \
 		core/rtw_tdls.o \
 		core/rtw_iol.o \
-		core/rtw_sreset.o \
 		core/rtw_beamforming.o \
 		core/rtw_odm.o \
 		core/efuse/rtw_efuse.o 

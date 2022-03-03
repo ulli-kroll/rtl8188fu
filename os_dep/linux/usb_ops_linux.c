@@ -20,7 +20,6 @@
 
 #include <drv_types.h>
 #include <hal_data.h>
-#include <rtw_sreset.h>
 
 struct rtw_async_write_data {
 	u8 data[VENDOR_CMD_MAX_DATA_LEN];
@@ -124,12 +123,6 @@ int usbctrl_vendorreq(struct intf_hdl *pintfhdl, u8 request, u16 value, u16 inde
 				{			
 					rtw_set_surprise_removed(padapter);
 				} else {
-					#ifdef DBG_CONFIG_ERROR_DETECT
-					{
-						HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-						pHalData->srestpriv.Wifi_Error_Status = USB_VEN_REQ_CMD_FAIL;
-					}
-					#endif
 				}
 			}
 			else // status != len && status >= 0
@@ -480,7 +473,6 @@ _func_enter_;
 		{
 			//usb_clear_halt(pusbdev, purb->pipe);	
 			//msleep(10);
-			sreset_set_wifi_error_status(padapter, USB_WRITE_PORT_FAIL);
 		} else if (purb->status == -EINPROGRESS) {
 			RT_TRACE(_module_hci_ops_os_c_,_drv_err_,("usb_write_port_complete: EINPROGESS\n"));
 			goto check_completion;
@@ -509,13 +501,6 @@ _func_enter_;
 			goto check_completion;
 		}
 	}
-
-	#ifdef DBG_CONFIG_ERROR_DETECT
-	{	
-		HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-		pHalData->srestpriv.last_tx_complete_time = rtw_get_current_time();		
-	}
-	#endif
 
 check_completion:
 	_enter_critical(&pxmitpriv->lock_sctx, &irqL);
@@ -639,12 +624,6 @@ _func_enter_;
 
 	status = usb_submit_urb(purb, GFP_ATOMIC);
 	if (!status) {
-		#ifdef DBG_CONFIG_ERROR_DETECT	
-		{	
-			HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-			pHalData->srestpriv.last_tx_time = rtw_get_current_time();		
-		}
-		#endif
 	} else {
 		rtw_sctx_done_err(&pxmitbuf->sctx, RTW_SCTX_DONE_WRITE_PORT_ERR);
 		DBG_871X("usb_write_port, status=%d\n", status);
@@ -814,12 +793,6 @@ void usb_read_port_complete(struct urb *purb, struct pt_regs *regs)
 			case -ETIME:
 			case -ECOMM:
 			case -EOVERFLOW:
-				#ifdef DBG_CONFIG_ERROR_DETECT	
-				{	
-					HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-					pHalData->srestpriv.Wifi_Error_Status = USB_READ_PORT_FAIL;			
-				}
-				#endif
 				rtw_read_port(padapter, precvpriv->ff_hwaddr, 0, (unsigned char *)precvbuf);			
 				break;
 			case -EINPROGRESS:
@@ -994,12 +967,6 @@ void usb_read_port_complete(struct urb *purb, struct pt_regs *regs)
 			case -ETIME:
 			case -ECOMM:
 			case -EOVERFLOW:
-				#ifdef DBG_CONFIG_ERROR_DETECT	
-				{	
-					HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-					pHalData->srestpriv.Wifi_Error_Status = USB_READ_PORT_FAIL;			
-				}
-				#endif
 				rtw_read_port(padapter, precvpriv->ff_hwaddr, 0, (unsigned char *)precvbuf);			
 				break;
 			case -EINPROGRESS:
