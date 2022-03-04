@@ -291,17 +291,6 @@
 void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pmem);
 void rtl8188f_fill_fake_txdesc(PADAPTER padapter, u8 *pDesc, u32 BufferLen, u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-s32 rtl8188fs_init_xmit_priv(PADAPTER padapter);
-void rtl8188fs_free_xmit_priv(PADAPTER padapter);
-s32 rtl8188fs_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
-s32 rtl8188fs_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
-s32	rtl8188fs_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
-s32 rtl8188fs_xmit_buf_handler(PADAPTER padapter);
-thread_return rtl8188fs_xmit_thread(thread_context context);
-#define hal_xmit_handler rtl8188fs_xmit_buf_handler
-#endif
-
 #ifdef CONFIG_USB_HCI
 s32 rtl8188fu_xmit_buf_handler(PADAPTER padapter);
 #define hal_xmit_handler rtl8188fu_xmit_buf_handler

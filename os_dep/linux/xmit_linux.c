@@ -277,15 +277,6 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 {
 	_adapter *pri_adapter = padapter;
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	if(!padapter)
-		return;
-
-	if (_rtw_queue_empty(&padapter->xmitpriv.pending_xmitbuf_queue) == _FALSE)
-		_rtw_up_sema(&pri_adapter->xmitpriv.xmit_sema);
-
-
-#else
 	_irqL  irqL;
 	struct xmit_priv *pxmitpriv;
 
@@ -302,7 +293,6 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 	}
 
 	_exit_critical_bh(&pxmitpriv->lock, &irqL);
-#endif
 }
 
 static bool rtw_check_xmit_resource(_adapter *padapter, _pkt *pkt)

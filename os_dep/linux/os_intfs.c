@@ -1282,9 +1282,6 @@ u32 rtw_start_drv_threads(_adapter *padapter)
 	RT_TRACE(_module_os_intfs_c_,_drv_info_,("+rtw_start_drv_threads\n"));
 
 #ifdef CONFIG_XMIT_THREAD_MODE
-#if defined(CONFIG_SDIO_HCI)
-	if (is_primary_adapter(padapter))
-#endif		
 	{
 		padapter->xmitThread = kthread_run(rtw_xmit_thread, padapter, "RTW_XMIT_THREAD");
 		if(IS_ERR(padapter->xmitThread))
@@ -1334,10 +1331,6 @@ void rtw_stop_drv_threads (_adapter *padapter)
 
 #ifdef CONFIG_XMIT_THREAD_MODE
 	// Below is to termindate tx_thread...
-#if defined(CONFIG_SDIO_HCI) 
-	// Only wake-up primary adapter
-	if (is_primary_adapter(padapter))
-#endif  /*SDIO_HCI */
 	{
 		_rtw_up_sema(&padapter->xmitpriv.xmit_sema);
 		_rtw_down_sema(&padapter->xmitpriv.terminate_xmitthread_sema);

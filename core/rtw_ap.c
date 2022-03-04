@@ -1629,7 +1629,7 @@ change_chbw:
 		update_beacon(padapter, _TIM_IE_, NULL, _TRUE);
 
 		#if !defined(CONFIG_INTERRUPT_BASED_TXBCN)
-		#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+		#if defined(CONFIG_USB_HCI)
 		/* other case will  tx beacon when bcn interrupt coming in. */
 		if (send_beacon(padapter) == _FAIL)
 			DBG_871X("issue_beacon, fail!\n");
@@ -2959,7 +2959,7 @@ void _update_beacon(_adapter *padapter, u8 ie_id, u8 *oui, u8 tx, const char *ta
 	_exit_critical_bh(&pmlmepriv->bcn_update_lock, &irqL);		
 	
 #ifndef CONFIG_INTERRUPT_BASED_TXBCN 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_HCI)
 	if(tx)
 	{
 		//send_beacon(padapter);//send_beacon must execute on TSR level

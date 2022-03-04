@@ -356,14 +356,6 @@ struct registry_priv
 #define REGSTY_IS_11AC_ENABLE(regsty) ((regsty)->vht_enable != 0)
 #define REGSTY_IS_11AC_AUTO(regsty) ((regsty)->vht_enable == 2)
 
-#ifdef CONFIG_SDIO_HCI
-#include <drv_types_sdio.h>
-#define INTF_DATA SDIO_DATA
-#elif defined(CONFIG_GSPI_HCI)
-#include <drv_types_gspi.h>
-#define INTF_DATA GSPI_DATA
-#endif
-
 #define is_primary_adapter(adapter) (1)
 #define is_vir_adapter(adapter) (0)
 #define get_iface_type(adapter) (IFACE_PORT0)
@@ -814,12 +806,6 @@ static struct device *dvobj_to_dev(struct dvobj_priv *dvobj)
 #ifdef CONFIG_USB_HCI
 	return &dvobj->pusbintf->dev;
 #endif
-#ifdef CONFIG_SDIO_HCI
-	return &dvobj->intf_data.func->dev;
-#endif
-#ifdef CONFIG_GSPI_HCI
-	return &dvobj->intf_data.func->dev;
-#endif
 }
 #endif
 
@@ -1151,18 +1137,6 @@ void rtw_dev_pno_debug(struct net_device *net);
 #include <usb_osintf.h>
 #include <usb_ops.h>
 #include <usb_hal.h>
-#endif
-
-#ifdef CONFIG_SDIO_HCI
-#include <sdio_osintf.h>
-#include <sdio_ops.h>
-#include <sdio_hal.h>
-#endif
-
-#ifdef CONFIG_GSPI_HCI
-#include <gspi_osintf.h>
-#include <gspi_ops.h>
-#include <gspi_hal.h>
 #endif
 
 #endif //__DRV_TYPES_H__

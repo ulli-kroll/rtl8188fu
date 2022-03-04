@@ -134,15 +134,6 @@ void dump_drv_cfg(void *sel)
 	#endif
 #endif /*CONFIG_USB_HCI*/
 	
-#ifdef CONFIG_SDIO_HCI
-	#ifdef CONFIG_TX_AGGREGATION
-	DBG_871X_SEL_NL(sel, "CONFIG_TX_AGGREGATION\n");
-	#endif
-	#ifdef CONFIG_RX_AGGREGATION
-	DBG_871X_SEL_NL(sel, "CONFIG_RX_AGGREGATION\n");
-	#endif
-#endif /*CONFIG_SDIO_HCI*/
-
 	DBG_871X_SEL_NL(sel, "MAX_XMITBUF_SZ = %d\n", MAX_XMITBUF_SZ);
 	DBG_871X_SEL_NL(sel, "MAX_RECVBUF_SZ = %d\n", MAX_RECVBUF_SZ);
 	
@@ -152,39 +143,6 @@ void dump_log_level(void *sel)
 {
 	DBG_871X_SEL_NL(sel, "log_level:%d\n", GlobalDebugLevel);
 }
-
-#ifdef CONFIG_SDIO_HCI
-void sd_f0_reg_dump(void *sel, _adapter *adapter)
-{
-	int i;
-
-	for(i=0x0;i<=0xff;i++)
-	{	
-		if(i%16==0)
-			DBG_871X_SEL_NL(sel, "0x%02x ",i);
-
-		DBG_871X_SEL(sel, "%02x ", rtw_sd_f0_read8(adapter, i));
-
-		if(i%16==15)
-			DBG_871X_SEL(sel, "\n");
-		else if(i%8==7)
-			DBG_871X_SEL(sel, "\t");
-	}
-}
-
-void sdio_local_reg_dump(void *sel, _adapter *adapter)
-{
-	int i, j = 1;
-
-	for (i = 0x0; i < 0x100; i += 4) {
-		if (j % 4 == 1)
-			DBG_871X_SEL_NL(sel, "0x%02x", i);
-		DBG_871X_SEL(sel, " 0x%08x ", rtw_read32(adapter, (0x1025 << 16) | i));
-		if ((j++) % 4 == 0)
-			DBG_871X_SEL(sel, "\n");
-	}
-}
-#endif /* CONFIG_SDIO_HCI */
 
 void mac_reg_dump(void *sel, _adapter *adapter)
 {

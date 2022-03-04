@@ -42,17 +42,10 @@
 			#endif
 		#endif
 	#endif //!MAX_RECVBUF_SZ
-#elif defined(CONFIG_SDIO_HCI)
-	#define MAX_RECVBUF_SZ (RX_DMA_BOUNDARY_8188F + 1)
-#endif /* CONFIG_SDIO_HCI */
+#endif
 
 // Rx smooth factor
 #define	Rx_Smooth_Factor (20)
-
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-s32 rtl8188fs_init_recv_priv(PADAPTER padapter);
-void rtl8188fs_free_recv_priv(PADAPTER padapter);
-#endif
 
 #ifdef CONFIG_USB_HCI
 int rtl8188fu_init_recv_priv(_adapter *padapter);

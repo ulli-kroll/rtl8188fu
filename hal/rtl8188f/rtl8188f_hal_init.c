@@ -384,7 +384,7 @@ extern char *rtw_fw_wow_file_path;
 u8 FwBuffer[FW_8188F_SIZE];
 #endif /* CONFIG_FILE_FWIMG */
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_HCI)
 void rtl8188f_cal_txdesc_chksum(struct tx_desc *ptxdesc)
 {
 	u16	*usPtr = (u16 *)ptxdesc;
@@ -963,40 +963,6 @@ Hal_EfusePowerSwitch(
 
 
 	if (PwrState == _TRUE) {
-#ifdef CONFIG_SDIO_HCI
-		/* To avoid cannot access efuse regsiters after disable/enable several times during DTM test. */
-		/* Suggested by SD1 IsaacHsu. 2013.07.08, added by tynli. */
-		tempval = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HSUS_CTRL);
-		if (tempval & BIT(0)) { /* SDIO local register is suspend */
-			u8 count = 0;
-
-
-			tempval &= ~BIT(0);
-			rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HSUS_CTRL, tempval);
-
-			/* check 0x86[1:0]=10'2h, wait power state to leave suspend */
-			do {
-				tempval = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HSUS_CTRL);
-				tempval &= 0x3;
-				if (tempval == 0x02)
-					break;
-
-				count++;
-				if (count >= 100)
-					break;
-
-				rtw_mdelay_os(10);
-			} while (1);
-
-			if (count >= 100) {
-				DBG_8192C(FUNC_ADPT_FMT ": Leave SDIO local register suspend fail! Local 0x86=%#X\n",
-						  FUNC_ADPT_ARG(padapter), tempval);
-			} else {
-				DBG_8192C(FUNC_ADPT_FMT ": Leave SDIO local register suspend OK! Local 0x86=%#X\n",
-						  FUNC_ADPT_ARG(padapter), tempval);
-			}
-		}
-#endif /* CONFIG_SDIO_HCI */
 
 		rtw_write8(padapter, REG_EFUSE_ACCESS_8188, EFUSE_ACCESS_ON_8188);
 
@@ -2668,7 +2634,7 @@ void rtl8188f_fill_fake_txdesc(
 		}
 	}
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_HCI)
 	/* USB interface drop packet if the checksum of descriptor isn't correct. */
 	/* Using this checksum can let hardware recovery from packet bulk out error (e.g. Cancel URC, Bulk out error.). */
 	rtl8188f_cal_txdesc_chksum((struct tx_desc *)pDesc);
@@ -2946,7 +2912,7 @@ s32 rtl8188f_InitLLTTable(PADAPTER padapter)
 	return ret;
 }
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_HCI)
 void _DisableGPIO(PADAPTER	padapter)
 {
 	/*
@@ -3259,7 +3225,7 @@ s32 CardDisableWithoutHWSM(PADAPTER padapter)
 	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("<====== Card Disable Without HWSM .\n")); */
 	return rtStatus;
 }
-#endif /* CONFIG_USB_HCI || CONFIG_SDIO_HCI || CONFIG_GSPI_HCI */
+#endif /* CONFIG_USB_HCI */
 
 BOOLEAN
 Hal_GetChnlGroup8188F(
@@ -4068,7 +4034,7 @@ static void rtl8188f_fill_default_txdesc(
 					  FUNC_ADPT_ARG(padapter), pattrib->ether_type, MRateToHwRate(pmlmeext->tx_rate));
 		}
 
-#if defined(CONFIG_USB_TX_AGGREGATION) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_TX_AGGREGATION)
 		SET_TX_DESC_USB_TXAGG_NUM_8188F(pbuf, pxmitframe->agg_num);
 #endif
 
@@ -4191,7 +4157,7 @@ void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 	ODM_SetTxAntByTxInfo(&GET_HAL_DATA(padapter)->odmpriv, pbuf, pxmitframe->attrib.mac_id);
 #endif /* CONFIG_ANTENNA_DIVERSITY */
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_USB_HCI)
 	rtl8188f_cal_txdesc_chksum((struct tx_desc *)pbuf);
 #endif
 }
@@ -4594,7 +4560,7 @@ static void hw_var_set_mlme_sitesurvey(PADAPTER padapter, u8 variable, u8 *val)
 				) {
 					iface->mlmepriv.update_bcn = _TRUE;
 					#ifndef CONFIG_INTERRUPT_BASED_TXBCN
-					#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+					#if defined(CONFIG_USB_HCI)
 					tx_beacon_hdl(iface, NULL);
 					#endif
 					#endif
@@ -4953,54 +4919,6 @@ void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
 static void C2HCommandHandler(PADAPTER padapter)
 {
 	C2H_EVT_HDR 	C2hEvent;
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-
-	u8				*tmpBuf = NULL;
-	u8				index = 0;
-	u8				bCmdMsgReady = _FALSE;
-	u8				U1bTmp = 0;
-	/*u8				QueueID = 0; */
-
-	_rtw_memset(&C2hEvent, 0, sizeof(C2H_EVT_HDR));
-
-	C2hEvent.CmdID = rtw_read8(padapter, REG_C2HEVT_CMD_ID_8188F);
-	C2hEvent.CmdLen = rtw_read8(padapter, REG_C2HEVT_CMD_LEN_8188F);
-	C2hEvent.CmdSeq = rtw_read8(padapter, REG_C2HEVT_CMD_ID_8188F + 1);
-
-	RT_PRINT_DATA(_module_hal_init_c_, _drv_info_, "C2HCommandHandler(): ",
-				  &C2hEvent , sizeof(C2hEvent));
-
-	U1bTmp = rtw_read8(padapter, REG_C2HEVT_CLEAR);
-	DBG_871X("%s C2hEvent.CmdID:%x C2hEvent.CmdLen:%x C2hEvent.CmdSeq:%x\n",
-			 __func__, C2hEvent.CmdID, C2hEvent.CmdLen, C2hEvent.CmdSeq);
-
-	if (U1bTmp == C2H_EVT_HOST_CLOSE) {
-		/* Not ready. */
-		return;
-	} else if (U1bTmp == C2H_EVT_FW_CLOSE)
-		bCmdMsgReady = _TRUE;
-	else {
-		/* Not a valid value, reset the clear event. */
-		goto exit;
-	}
-
-	if (C2hEvent.CmdLen == 0)
-		goto exit;
-	tmpBuf = rtw_zmalloc(C2hEvent.CmdLen);
-	if (tmpBuf == NULL)
-		goto exit;
-
-	/* Read the content */
-	for (index = 0; index < C2hEvent.CmdLen; index++)
-		tmpBuf[index] = rtw_read8(padapter, REG_C2HEVT_CMD_ID_8188F + 2 + index);
-
-	RT_PRINT_DATA(_module_hal_init_c_, _drv_notice_, "C2HCommandHandler(): Command Content:\n", tmpBuf, C2hEvent.CmdLen);
-
-	/*process_c2h_event(padapter,&C2hEvent, tmpBuf); */
-	c2h_handler_8188f(padapter, &C2hEvent);
-	if (tmpBuf)
-		rtw_mfree(tmpBuf, C2hEvent.CmdLen);
-#endif /* CONFIG_SDIO_HCI || CONFIG_GSPI_HCI */
 
 #ifdef CONFIG_USB_HCI
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
@@ -5929,31 +5847,10 @@ u8 GetHalDefVar8188F(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval)
 
 void rtl8188f_start_thread(_adapter *padapter)
 {
-#if (defined CONFIG_SDIO_HCI) || (defined CONFIG_GSPI_HCI)
-#ifndef CONFIG_SDIO_TX_TASKLET
-	struct xmit_priv *xmitpriv = &padapter->xmitpriv;
-
-	xmitpriv->SdioXmitThread = kthread_run(rtl8188fs_xmit_thread, padapter, "RTWHALXT");
-	if (IS_ERR(xmitpriv->SdioXmitThread))
-		RT_TRACE(_module_hal_xmit_c_, _drv_err_, ("%s: start rtl8188fs_xmit_thread FAIL!!\n", __func__));
-#endif
-#endif
 }
 
 void rtl8188f_stop_thread(_adapter *padapter)
 {
-#if (defined CONFIG_SDIO_HCI) || (defined CONFIG_GSPI_HCI)
-#ifndef CONFIG_SDIO_TX_TASKLET
-	struct xmit_priv *xmitpriv = &padapter->xmitpriv;
-
-	/* stop xmit_buf_thread */
-	if (xmitpriv->SdioXmitThread) {
-		_rtw_up_sema(&xmitpriv->SdioXmitSema);
-		_rtw_down_sema(&xmitpriv->SdioXmitTerminateSema);
-		xmitpriv->SdioXmitThread = 0;
-	}
-#endif
-#endif
 }
 
 

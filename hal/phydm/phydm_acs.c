@@ -1205,13 +1205,6 @@ choose_ch:
 	}
 //-----------------------
 
-#if defined(__ECOS) && defined(CONFIG_SDIO_HCI)
-	panic_printk("Auto channel choose ch:%d\n", minChan);
-#else
-#ifdef _DEBUG_RTL8192CD_
-	panic_printk("Auto channel choose ch:%d\n", minChan);
-#endif
-#endif
 #ifdef ACS_DEBUG_INFO//for debug
 	printk("7. minChan:%d 2nd_offset:%d\n", minChan, priv->pshare->offset_2nd_chan);
 #endif

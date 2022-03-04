@@ -21,17 +21,9 @@
 #define _RTW_RECV_H_
 
 #ifdef PLATFORM_OS_XP
-	#ifdef CONFIG_SDIO_HCI
-		#define NR_RECVBUFF 1024//512//128
-	#else
 		#define NR_RECVBUFF (16)
-	#endif
 #elif defined(PLATFORM_OS_CE)
-	#ifdef CONFIG_SDIO_HCI
-		#define NR_RECVBUFF (128)
-	#else
 		#define NR_RECVBUFF (4)
-	#endif
 #else //PLATFORM_LINUX /PLATFORM_BSD
 
 	#ifdef CONFIG_SINGLE_RECV_BUF
@@ -39,8 +31,6 @@
 	#else
 		#if defined(CONFIG_GSPI_HCI)
 			#define NR_RECVBUFF (32)
-		#elif defined(CONFIG_SDIO_HCI)
-			#define NR_RECVBUFF (8)	
 		#else
 			#define NR_RECVBUFF (8)
 		#endif	
@@ -402,9 +392,7 @@ struct recv_priv
 	_queue	free_recv_buf_queue;
 	u32	free_recv_buf_queue_cnt;
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI) || defined(CONFIG_USB_HCI) 
 	_queue	recv_buf_pending_queue;
-#endif
 
 	//For display the phy informatiom
 	u8 is_signal_dbg;	// for debug

@@ -32,14 +32,6 @@
 void rtl8188fu_InitSwLeds(PADAPTER padapter);
 void rtl8188fu_DeInitSwLeds(PADAPTER padapter);
 #endif
-#ifdef CONFIG_SDIO_HCI
-void rtl8188fs_InitSwLeds(PADAPTER padapter);
-void rtl8188fs_DeInitSwLeds(PADAPTER padapter);
-#endif
-#ifdef CONFIG_GSPI_HCI
-void rtl8188fs_InitSwLeds(PADAPTER padapter);
-void rtl8188fs_DeInitSwLeds(PADAPTER padapter);
-#endif
 
 #endif
 

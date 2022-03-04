@@ -63,16 +63,6 @@ The protection mechanism is through the pending queue.
 #endif
 
 #ifdef PLATFORM_OS_XP
-	#ifdef CONFIG_SDIO_HCI
-		// below is for io_rwmem...
-		PMDL pmdl;
-		PSDBUS_REQUEST_PACKET  sdrp;
-		PSDBUS_REQUEST_PACKET  recv_sdrp;
-		PSDBUS_REQUEST_PACKET  xmit_sdrp;
-
-			PIRP		piorw_irp;
-
-	#endif
 	#ifdef CONFIG_USB_HCI
 		PURB	piorw_urb;
 		PIRP		piorw_irp;

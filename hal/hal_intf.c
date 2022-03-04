@@ -277,17 +277,11 @@ void	rtw_hal_get_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID p
 /* FOR SDIO & PCIE */
 void rtw_hal_enable_interrupt(_adapter *padapter)
 {
-#if defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	padapter->HalFunc.enable_interrupt(padapter);	
-#endif //#if defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
 }
 
 /* FOR SDIO & PCIE */
 void rtw_hal_disable_interrupt(_adapter *padapter)
 {
-#if defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	padapter->HalFunc.disable_interrupt(padapter);
-#endif //#if defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
 }
 
 
@@ -435,22 +429,10 @@ void	rtw_hal_add_ra_tid(_adapter *padapter, u64 bitmap, u8 *arg, u8 rssi_level)
 /*	Start specifical interface thread		*/
 void	rtw_hal_start_thread(_adapter *padapter)
 {
-#if defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-#ifndef CONFIG_SDIO_TX_TASKLET	
-	padapter->HalFunc.run_thread(padapter);	
-#endif
-#endif
 }
 /*	Start specifical interface thread		*/
 void	rtw_hal_stop_thread(_adapter *padapter)
 {
-#if defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-#ifndef CONFIG_SDIO_TX_TASKLET
-	
-	padapter->HalFunc.cancel_thread(padapter);
-	
-#endif
-#endif	
 }
 
 u32	rtw_hal_read_bbreg(_adapter *padapter, u32 RegAddr, u32 BitMask)
@@ -804,18 +786,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		rtw_hal_error_msg("hal_xmitframe_enqueue");
 		ret = _FAIL;
 	}
-	#if defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	#ifndef CONFIG_SDIO_TX_TASKLET
-	if (NULL == padapter->HalFunc.run_thread) {
-		rtw_hal_error_msg("run_thread");
-		ret = _FAIL;
-	}
-	if (NULL == padapter->HalFunc.cancel_thread) {
-		rtw_hal_error_msg("cancel_thread");
-		ret = _FAIL;
-	}
-	#endif
-	#endif
 	
 	/*** recv section ***/
 	if (NULL == padapter->HalFunc.init_recv_priv) {
@@ -840,18 +810,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 	
 	/*** interrupt hdl section ***/
 
-	#if defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)	
-	if (NULL == padapter->HalFunc.enable_interrupt) {
-		rtw_hal_error_msg("enable_interrupt");
-		ret = _FAIL;
-	}
-	if (NULL == padapter->HalFunc.disable_interrupt) {
-		rtw_hal_error_msg("disable_interrupt");
-		ret = _FAIL;
-	}
-	#endif //defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-		
-	
 	/*** DM section ***/
 	if (NULL == padapter->HalFunc.dm_init) {
 		rtw_hal_error_msg("dm_init");
