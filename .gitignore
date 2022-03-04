@@ -6,3 +6,4 @@
 *.swp
 *.ko
 *.mod.c
+*.mod
