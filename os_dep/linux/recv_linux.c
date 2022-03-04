@@ -537,52 +537,6 @@ void rtw_hostapd_mlme_rx(_adapter *padapter, union recv_frame *precv_frame)
 #endif
 }
 
-#ifdef CONFIG_AUTO_AP_MODE
-static void rtw_os_ksocket_send(_adapter *padapter, union recv_frame *precv_frame)
-{	
-	_pkt *skb = precv_frame->u.hdr.pkt;	
-	struct rx_pkt_attrib *pattrib = &precv_frame->u.hdr.attrib;
-	struct sta_info *psta = precv_frame->u.hdr.psta;
-		
-	DBG_871X("eth rx: got eth_type=0x%x\n", pattrib->eth_type);					
-		
-	if (psta && psta->isrc && psta->pid>0)
-	{
-		u16 rx_pid;
-
-		rx_pid = *(u16*)(skb->data+ETH_HLEN);
-			
-		DBG_871X("eth rx(pid=0x%x): sta("MAC_FMT") pid=0x%x\n", 
-			rx_pid, MAC_ARG(psta->hwaddr), psta->pid);
-
-		if(rx_pid == psta->pid)
-		{
-			int i;
-			u16 len = *(u16*)(skb->data+ETH_HLEN+2);
-			//u16 ctrl_type = *(u16*)(skb->data+ETH_HLEN+4);
-
-			//DBG_871X("eth, RC: len=0x%x, ctrl_type=0x%x\n", len, ctrl_type); 
-			DBG_871X("eth, RC: len=0x%x\n", len);
-
-			for(i=0;i<len;i++)
-				DBG_871X("0x%x\n", *(skb->data+ETH_HLEN+4+i));
-				//DBG_871X("0x%x\n", *(skb->data+ETH_HLEN+6+i));
-
-			DBG_871X("eth, RC-end\n"); 
-
-#if 0
-			//send_sz = ksocket_send(padapter->ksock_send, &padapter->kaddr_send, (skb->data+ETH_HLEN+2), len);				
-			rtw_recv_ksocket_send_cmd(padapter, (skb->data+ETH_HLEN+2), len);
-
-			//DBG_871X("ksocket_send size=%d\n", send_sz); 
-#endif			
-		}
-		
-	}		
-
-}
-#endif //CONFIG_AUTO_AP_MODE
-
 int rtw_recv_monitor(_adapter *padapter, union recv_frame *precv_frame)
 {
 	int ret = _FAIL;
@@ -681,26 +635,6 @@ int rtw_recv_indicatepkt(_adapter *padapter, union recv_frame *precv_frame)
 
 	if (pattrib->eth_type == 0x888e)
 		DBG_871X_LEVEL(_drv_always_, "recv eapol packet\n");
-
-#ifdef CONFIG_AUTO_AP_MODE	
-#if 1 //for testing
-#if 1
-	if (0x8899 == pattrib->eth_type)
-	{
-		rtw_os_ksocket_send(padapter, precv_frame);
-
-		//goto _recv_indicatepkt_drop;
-	}
-#else
-	if (0x8899 == pattrib->eth_type)
-	{
-		rtw_auto_ap_mode_rx(padapter, precv_frame);
-		
-		goto _recv_indicatepkt_end;
-	}
-#endif
-#endif
-#endif //CONFIG_AUTO_AP_MODE
 
 	/* TODO: move to core */
 	{

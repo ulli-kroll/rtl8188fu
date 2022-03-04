@@ -67,7 +67,6 @@
 	/* #define CONFIG_FIND_BEST_CHANNEL */
 	#define CONFIG_TX_MCAST2UNI /* Support IP multicast to unicast */
 
-	/* #define CONFIG_AUTO_AP_MODE */
 #endif
 
 /*

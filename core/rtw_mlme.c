@@ -2241,8 +2241,6 @@ _func_enter_;
 		
 			rtw_sta_media_status_rpt(adapter, psta, 1);
 		
-#ifndef CONFIG_AUTO_AP_MODE
-
 			ap_sta_info_defer_update(adapter, psta);
 
 			//report to upper layer 
@@ -2273,7 +2271,6 @@ _func_enter_;
 #else //!CONFIG_IOCTL_CFG80211	
 			rtw_indicate_sta_assoc_event(adapter, psta);
 #endif //!CONFIG_IOCTL_CFG80211
-#endif //!CONFIG_AUTO_AP_MODE
 
 #ifdef CONFIG_BEAMFORMING
 			beamforming_wk_cmd(adapter, BEAMFORMING_CTRL_ENTER, (u8 *)psta, sizeof(struct sta_info), 0);

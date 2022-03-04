@@ -66,10 +66,6 @@ void stop_ap_mode(_adapter *padapter);
 void rtw_ap_update_bss_chbw(_adapter *adapter, WLAN_BSSID_EX *bss, u8 ch, u8 bw, u8 offset);
 bool rtw_ap_chbw_decision(_adapter *adapter, u8 req_ch, u8 req_bw, u8 req_offset, u8 *ch, u8 *bw, u8 *offset);
 
-#ifdef CONFIG_AUTO_AP_MODE
-extern void rtw_start_auto_ap(_adapter *adapter);
-#endif //CONFIG_AUTO_AP_MODE
-
 #endif //end of CONFIG_AP_MODE
 
 #endif
