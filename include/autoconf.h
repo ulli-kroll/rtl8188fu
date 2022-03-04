@@ -157,8 +157,6 @@
 
 /* #define CONFIG_ADAPTOR_INFO_CACHING_FILE */ /* now just applied on 8192cu only, should make it general... */
 
-/* #define CONFIG_RESUME_IN_WORKQUEUE */
-
 /* #define CONFIG_SET_SCAN_DENY_TIMER */
 
 #define CONFIG_NEW_SIGNAL_STAT_PROCESS
