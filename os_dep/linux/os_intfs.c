@@ -227,11 +227,7 @@ char* ifname = "wlan%d";
 module_param(ifname, charp, 0644);
 MODULE_PARM_DESC(ifname, "The default name to allocate for first interface");
 
-#ifdef CONFIG_PLATFORM_ANDROID
-char* if2name = "p2p%d";
-#else //CONFIG_PLATFORM_ANDROID
 char* if2name = "wlan%d";
-#endif //CONFIG_PLATFORM_ANDROID
 module_param(if2name, charp, 0644);
 MODULE_PARM_DESC(if2name, "The default name to allocate for second interface");
 
@@ -2218,7 +2214,6 @@ static int netdev_close(struct net_device *pnetdev)
 			rtw_netif_stop_queue(pnetdev);
 		}
 
-#ifndef CONFIG_ANDROID
 		//s2.
 		LeaveAllPowerSaveMode(padapter);
 		rtw_disassoc_cmd(padapter, 500, _FALSE);
@@ -2228,7 +2223,6 @@ static int netdev_close(struct net_device *pnetdev)
 		rtw_free_assoc_resources(padapter, 1);
 		//s2-4.
 		rtw_free_network_queue(padapter,_TRUE);
-#endif
 		// Close LED
 		rtw_led_control(padapter, LED_CTL_POWER_OFF);
 	}

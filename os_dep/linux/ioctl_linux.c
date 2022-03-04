@@ -2691,9 +2691,7 @@ static int rtw_wx_get_scan(struct net_device *dev, struct iw_request_info *a,
 
 #if 1 // Wireless Extension use EAGAIN to try
 	wait_status = _FW_UNDER_SURVEY
-#ifndef CONFIG_ANDROID
 		| _FW_UNDER_LINKING
-#endif
 	;
 
 	while (check_fwstate(pmlmepriv, wait_status) == _TRUE)
@@ -2702,10 +2700,8 @@ static int rtw_wx_get_scan(struct net_device *dev, struct iw_request_info *a,
 	}
 #else
 	wait_status = _FW_UNDER_SURVEY
-		#ifndef CONFIG_ANDROID
 		|_FW_UNDER_LINKING
-		#endif
-	;
+		
 
  	while(check_fwstate(pmlmepriv, wait_status) == _TRUE)
 	{	
@@ -3579,20 +3575,6 @@ static int rtw_wx_set_auth(struct net_device *dev,
 		}
 
 	case IW_AUTH_80211_AUTH_ALG:
-
-		#if defined(CONFIG_ANDROID) || 1
-		/*
-		 *  It's the starting point of a link layer connection using wpa_supplicant
-		*/
-		if(check_fwstate(&padapter->mlmepriv, _FW_LINKED)) {
-			LeaveAllPowerSaveMode(padapter);
-			rtw_disassoc_cmd(padapter, 500, _FALSE);
-			DBG_871X("%s...call rtw_indicate_disconnect\n ",__FUNCTION__);
-			rtw_indicate_disconnect(padapter, 0, _FALSE);
-			rtw_free_assoc_resources(padapter, 1);
-		}
-		#endif
-
 
 		ret = wpa_set_auth_algs(dev, (u32)param->value);		
 	

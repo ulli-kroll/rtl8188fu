@@ -1259,7 +1259,7 @@ _func_enter_;
 	}*/
 
 
-#if defined(CONFIG_HAS_EARLYSUSPEND) || defined(CONFIG_ANDROID_POWER)
+#if defined(CONFIG_HAS_EARLYSUSPEND)
 	rtw_unregister_early_suspend(pwrctl);
 #endif
 
@@ -1421,13 +1421,8 @@ module_init(rockchip_wifi_init_module_rtkwifi);
 module_exit(rockchip_wifi_exit_module_rtkwifi);
 #endif
 #else
-#ifdef CONFIG_ANDROID_4_2
-module_init(rockchip_wifi_init_module);
-module_exit(rockchip_wifi_exit_module);
-#else
 EXPORT_SYMBOL(rockchip_wifi_init_module);
 EXPORT_SYMBOL(rockchip_wifi_exit_module);
-#endif
 #endif
 #endif
 //module_init(rtw_drv_entry);
