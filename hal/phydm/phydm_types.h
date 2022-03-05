@@ -22,7 +22,6 @@
 
 
 /*Define Different SW team support*/
-#define	ODM_ADSL		0x02
 #define	ODM_CE			0x04	/*BIT2*/
 
 /*Deifne HW endian support*/

@@ -107,16 +107,6 @@ typedef		struct rtl8192cd_priv {
 #endif
 
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-typedef		struct _ADAPTER{
-	u1Byte		temp;
-	#ifdef AP_BUILD_WORKAROUND
-	HAL_DATA_TYPE*		temp2;
-	prtl8192cd_priv		priv;
-	#endif
-}ADAPTER, *PADAPTER;
-#endif
-
 typedef struct _Dynamic_Primary_CCA{
 	u1Byte		PriCCA_flag;
 	u1Byte		intf_flag;
@@ -482,10 +472,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	rtl8192cd_priv		fake_priv;
-#endif
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	// ADSL_AP_BUILD_WORKAROUND
-	ADAPTER			fake_adapter;
 #endif
 	
 	PHY_REG_PG_TYPE		PhyRegPgValueType;
@@ -1004,11 +990,7 @@ typedef enum tag_RF_Type_Definition
 //
 // check Sta pointer valid or not
 //
-#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-#define IS_STA_VALID(pSta)		(pSta && pSta->expire_to)
-#else
 #define IS_STA_VALID(pSta)		(pSta)
-#endif
 
 //Remove DIG by yuchen
 
@@ -1017,31 +999,6 @@ typedef enum tag_RF_Type_Definition
 //remove PT by yuchen
 
 //ODM_RAStateCheck() Remove by RS_James
-
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-//============================================================
-// function prototype
-//============================================================
-//#define DM_ChangeDynamicInitGainThresh		ODM_ChangeDynamicInitGainThresh
-//void	ODM_ChangeDynamicInitGainThresh(IN	PADAPTER	pAdapter,
-//											IN	INT32		DM_Type,
-//											IN	INT32		DM_Value);
-
-//Remove DIG by yuchen
-
-
-BOOLEAN
-ODM_CheckPowerStatus(
-	IN	PADAPTER		Adapter
-	);
-
-
-//Remove ODM_RateAdaptiveStateApInit() by RS_James
-
-//Remove Edca by YuChen
-
-#endif
-
 
 
 u4Byte odm_ConvertTo_dB(u4Byte Value);

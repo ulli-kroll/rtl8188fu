@@ -100,9 +100,6 @@ odm_DynamicTxPower(
 		case	ODM_CE:
 			odm_DynamicTxPowerNIC(pDM_Odm);
 			break;	
-		case	ODM_ADSL:
-			//odm_DIGAP(pDM_Odm);
-			break;	
 	}
 
 	

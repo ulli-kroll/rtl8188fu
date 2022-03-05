@@ -645,9 +645,6 @@ odm_RSSIMonitorCheck(
 		odm_RSSIMonitorCheckCE(pDM_Odm);
 		break;
 
-	case	ODM_ADSL:
-		//odm_DIGAP(pDM_Odm);
-		break;
 	}
 
 }	// odm_RSSIMonitorCheck
@@ -928,9 +925,6 @@ odm_RefreshRateAdaptiveMask(
 		odm_RefreshRateAdaptiveMaskCE(pDM_Odm);
 		break;
 
-	case	ODM_ADSL:
-		odm_RefreshRateAdaptiveMaskAPADSL(pDM_Odm);
-		break;
 	}
 
 }
@@ -1034,11 +1028,6 @@ ODM_RAStateCheck(
 	// Threshold Adjustment:
 	// when RSSI state trends to go up one or two levels, make sure RSSI is high enough.
 	// Here GoUpGap is added to solve the boundary's level alternation issue.
-#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	u1Byte UltraLowRSSIThreshForRA = pRA->UltraLowRSSIThresh;
-	if (pDM_Odm->SupportICType == ODM_RTL8881A)
-		LowRSSIThreshForRA = 30;		// for LDPC / BCC switch
-#endif
 
 	switch (*pRATRState) {
 	case DM_RATR_STA_INIT:
@@ -1054,13 +1043,6 @@ ODM_RAStateCheck(
 		LowRSSIThreshForRA += GoUpGap;
 		break;
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	case DM_RATR_STA_ULTRA_LOW:
-		HighRSSIThreshForRA += GoUpGap;
-		LowRSSIThreshForRA += GoUpGap;
-		UltraLowRSSIThreshForRA += GoUpGap;
-		break;
-#endif
 
 	default:
 		ODM_RT_ASSERT(pDM_Odm, FALSE, ("wrong rssi level setting %d !", *pRATRState));
@@ -1073,15 +1055,8 @@ ODM_RAStateCheck(
 	else if (RSSI > LowRSSIThreshForRA)
 		RATRState = DM_RATR_STA_MIDDLE;
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	else if (RSSI > UltraLowRSSIThreshForRA)
-		RATRState = DM_RATR_STA_LOW;
-	else
-		RATRState = DM_RATR_STA_ULTRA_LOW;
-#else
 	else
 		RATRState = DM_RATR_STA_LOW;
-#endif
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_RA_MASK, ODM_DBG_LOUD, ("[Mod RA RSSI Thresh]  High= (( %d )), Low = (( %d ))\n", HighRSSIThreshForRA, LowRSSIThreshForRA));
 	/*printk("==>%s,RATRState:0x%02x ,RSSI:%d\n",__FUNCTION__,RATRState,RSSI);*/
 

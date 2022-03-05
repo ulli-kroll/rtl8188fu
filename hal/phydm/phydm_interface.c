@@ -35,10 +35,7 @@ ODM_Read1Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	return	RTL_R8(RegAddr);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read8(Adapter,RegAddr);
 #endif	
@@ -52,10 +49,7 @@ ODM_Read2Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	return	RTL_R16(RegAddr);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read16(Adapter,RegAddr);
 #endif	
@@ -69,10 +63,7 @@ ODM_Read4Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	return	RTL_R32(RegAddr);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read32(Adapter,RegAddr);
 #endif	
@@ -87,10 +78,7 @@ ODM_Write1Byte(
 	IN	u1Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	RTL_W8(RegAddr, Data);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write8(Adapter,RegAddr, Data);
 #endif
@@ -105,10 +93,7 @@ ODM_Write2Byte(
 	IN	u2Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	RTL_W16(RegAddr, Data);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write16(Adapter,RegAddr, Data);
 #endif	
@@ -123,10 +108,7 @@ ODM_Write4Byte(
 	IN	u4Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	prtl8192cd_priv	priv	= pDM_Odm->priv;
-	RTL_W32(RegAddr, Data);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write32(Adapter,RegAddr, Data);
 #endif	
@@ -142,9 +124,7 @@ ODM_SetMACReg(
 	IN	u4Byte		Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	PHY_SetBBReg(pDM_Odm->priv, RegAddr, BitMask, Data);
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	PHY_SetBBReg(Adapter, RegAddr, BitMask, Data);
 #endif	
@@ -158,9 +138,7 @@ ODM_GetMACReg(
 	IN	u4Byte		BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return PHY_QueryBBReg(pDM_Odm->priv, RegAddr, BitMask);
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	return PHY_QueryMacReg(pDM_Odm->Adapter, RegAddr, BitMask);
 #endif	
 }
@@ -174,9 +152,7 @@ ODM_SetBBReg(
 	IN	u4Byte		Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	PHY_SetBBReg(pDM_Odm->priv, RegAddr, BitMask, Data);
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	PHY_SetBBReg(Adapter, RegAddr, BitMask, Data);
 #endif	
@@ -190,9 +166,7 @@ ODM_GetBBReg(
 	IN	u4Byte		BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return PHY_QueryBBReg(pDM_Odm->priv, RegAddr, BitMask);
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return PHY_QueryBBReg(Adapter, RegAddr, BitMask);
 #endif	
@@ -222,9 +196,7 @@ ODM_GetRFReg(
 	IN	u4Byte				BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return PHY_QueryRFReg(pDM_Odm->priv, eRFPath, RegAddr, BitMask, 1);
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return PHY_QueryRFReg(Adapter, eRFPath, RegAddr, BitMask);
 #endif	
@@ -243,9 +215,7 @@ ODM_AllocateMemory(
 	IN	u4Byte		length
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	*pPtr = kmalloc(length, GFP_ATOMIC);
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE )
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE )
 	*pPtr = rtw_zvmalloc(length);
 #endif	
 }
@@ -258,9 +228,7 @@ ODM_FreeMemory(
 	IN	u4Byte		length
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	kfree(pPtr);
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE )	
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	rtw_vmfree(pPtr, length);
 #endif	
 }
@@ -296,9 +264,7 @@ s4Byte ODM_CompareMemory(
 	IN	u4Byte          length
        )
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return memcmp(pBuf1,pBuf2,length);
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE )	
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	return _rtw_memcmp(pBuf1,pBuf2,length);
 #endif	
 }
@@ -314,9 +280,7 @@ ODM_AcquireSpinLock(
 	IN	RT_SPINLOCK_TYPE	type
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	rtw_odm_acquirespinlock(Adapter, type);
 #endif	
@@ -327,9 +291,7 @@ ODM_ReleaseSpinLock(
 	IN	RT_SPINLOCK_TYPE	type
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE )
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE )
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	rtw_odm_releasespinlock(Adapter, type);
 #endif	
@@ -347,9 +309,7 @@ ODM_InitializeWorkItem(
 	IN	const char*					szID
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	
 #endif	
 }
@@ -360,9 +320,7 @@ ODM_StartWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif	
 }
@@ -373,9 +331,7 @@ ODM_StopWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif	
 }
@@ -386,9 +342,7 @@ ODM_FreeWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif	
 }
@@ -399,9 +353,7 @@ ODM_ScheduleWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif	
 }
@@ -412,9 +364,7 @@ ODM_IsWorkItemScheduled(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif	
 }
@@ -429,9 +379,7 @@ ODM_StallExecution(
 	IN	u4Byte	usDelay
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_udelay_os(usDelay);
 #endif	
 }
@@ -439,9 +387,7 @@ ODM_StallExecution(
 VOID
 ODM_delay_ms(IN u4Byte	ms)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	delay_ms(ms);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_mdelay_os(ms);
 #endif			
 }
@@ -449,9 +395,7 @@ ODM_delay_ms(IN u4Byte	ms)
 VOID
 ODM_delay_us(IN u4Byte	us)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	delay_us(us);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_udelay_os(us);
 #endif			
 }
@@ -459,9 +403,7 @@ ODM_delay_us(IN u4Byte	us)
 VOID
 ODM_sleep_ms(IN u4Byte	ms)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_msleep_os(ms);
 #endif		
 }
@@ -469,9 +411,7 @@ ODM_sleep_ms(IN u4Byte	ms)
 VOID
 ODM_sleep_us(IN u4Byte	us)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_usleep_os(us);
 #endif		
 }
@@ -523,9 +463,7 @@ ODM_ReleaseTimer(
 	IN	PRT_TIMER		pTimer
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 #endif
 }
@@ -741,9 +679,7 @@ ODM_GetCurrentTime(
 	IN 	PDM_ODM_T		pDM_Odm
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return  0;
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	return (u8Byte)rtw_get_current_time();
 #endif
 }
@@ -754,9 +690,7 @@ ODM_GetProgressingTime(
 	IN	u8Byte			Start_Time
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
-	return  0;
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	return rtw_get_passing_time_ms((u4Byte)Start_Time);
 #endif
 }
