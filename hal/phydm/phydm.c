@@ -289,25 +289,6 @@ PhyDM_Get_Structure(
 
 {
 	PVOID	pStruct = NULL;
-#if RTL8195A_SUPPORT
-	switch (Structure_Type){
-		case	PHYDM_FALSEALMCNT:
-			pStruct = &FalseAlmCnt;
-		break;
-		
-		case	PHYDM_CFOTRACK:
-			pStruct = &DM_CfoTrack;
-		break;
-
-		case	PHYDM_ADAPTIVITY:
-			pStruct = &(pDM_Odm->Adaptivity);
-		break;
-		
-		default:
-		break;
-	}
-
-#else
 	switch (Structure_Type){
 		case	PHYDM_FALSEALMCNT:
 			pStruct = &(pDM_Odm->FalseAlmCnt);
@@ -325,7 +306,6 @@ PhyDM_Get_Structure(
 		break;
 	}
 
-#endif
 	return	pStruct;
 }
 
