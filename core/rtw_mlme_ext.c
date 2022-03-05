@@ -787,7 +787,7 @@ static void init_mlme_ext_priv_value(_adapter* padapter)
 	pmlmeext->sitesurvey_res.scan_cnt_max = RTW_SCAN_NUM_OF_CH;
 	pmlmeext->sitesurvey_res.backop_ms = RTW_BACK_OP_CH_MS;
 	#endif
-	#if defined(CONFIG_ANTENNA_DIVERSITY) || defined(DBG_SCAN_SW_ANTDIV_BL)
+	#if defined(CONFIG_ANTENNA_DIVERSITY)
 	pmlmeext->sitesurvey_res.is_sw_antdiv_bl_scan = 0;
 	#endif
 	pmlmeext->scan_abort = _FALSE;
@@ -9196,7 +9196,7 @@ static void sitesurvey_res_reset(_adapter *adapter, struct sitesurvey_parm *parm
 #ifdef CONFIG_SCAN_BACKOP
 	ss->scan_cnt = 0;
 #endif
-#if defined(CONFIG_ANTENNA_DIVERSITY) || defined(DBG_SCAN_SW_ANTDIV_BL)
+#if defined(CONFIG_ANTENNA_DIVERSITY)
 	ss->is_sw_antdiv_bl_scan = 0;
 #endif
 	
@@ -9286,30 +9286,6 @@ static u8 sitesurvey_pick_ch_behavior(_adapter *padapter, u8 *ch, RT_SCAN_TYPE *
 	} else {
 		next_state = SCAN_COMPLETE;
 
-		#if defined(DBG_SCAN_SW_ANTDIV_BL)
-		{
-			/* for SCAN_SW_ANTDIV_BL state testing */
-			struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
-			int i;
-			bool is_linked = _FALSE;
-
-			for (i = 0; i < dvobj->iface_nums; i++) {
-				if (rtw_linked_check(dvobj->padapters[i]))
-					is_linked = _TRUE;
-			}
-
-			if (!is_linked) {
-				static bool fake_sw_antdiv_bl_state = 0;
-
-				if (fake_sw_antdiv_bl_state == 0) {
-					next_state = SCAN_SW_ANTDIV_BL;
-					fake_sw_antdiv_bl_state = 1;
-				} else {
-					fake_sw_antdiv_bl_state = 0;
-				}
-			}
-		}
-		#endif /* defined(DBG_SCAN_SW_ANTDIV_BL) */
 	}
 
 	#ifdef CONFIG_SCAN_BACKOP
@@ -9628,7 +9604,7 @@ operation_by_state:
 		scan_ms = ss->scan_ch_ms;
 		#endif
 
-		#if defined(CONFIG_ANTENNA_DIVERSITY) || defined(DBG_SCAN_SW_ANTDIV_BL)
+		#if defined(CONFIG_ANTENNA_DIVERSITY)
 		if (ss->is_sw_antdiv_bl_scan)
 			scan_ms = scan_ms/2;
 		#endif
@@ -9743,7 +9719,7 @@ operation_by_state:
 
 	#endif /* CONFIG_SCAN_BACKOP */
 
-	#if defined(CONFIG_ANTENNA_DIVERSITY) || defined(DBG_SCAN_SW_ANTDIV_BL)
+	#if defined(CONFIG_ANTENNA_DIVERSITY)
 	case SCAN_SW_ANTDIV_BL:
 		/*
 		* 20100721
