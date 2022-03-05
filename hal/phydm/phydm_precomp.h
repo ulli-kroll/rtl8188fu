@@ -306,7 +306,6 @@ PHY_SetTxPowerLimit(
 #include "rtl8188f/halhwimg8188f_mac.h"
 #include "rtl8188f/halhwimg8188f_rf.h"
 #include "rtl8188f/halhwimg8188f_bb.h"
-#include "rtl8188f/halhwimg8188f_fw.h"
 #include "rtl8188f/hal8188freg.h"
 #include "rtl8188f/phydm_rtl8188f.h"
 #include "rtl8188f/phydm_regconfig8188f.h"

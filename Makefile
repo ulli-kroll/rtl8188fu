@@ -137,7 +137,6 @@ _HAL_INTFS_FILES +=hal/efuse/rtl8188f/HalEfuseMask8188F_USB.o
 _OUTSRC_FILES += hal/phydm/rtl8188f/halhwimg8188f_bb.o\
 			hal/phydm/rtl8188f/halhwimg8188f_mac.o\
 			hal/phydm/rtl8188f/halhwimg8188f_rf.o\
-			hal/phydm/rtl8188f/halhwimg8188f_fw.o\
 			hal/phydm/rtl8188f/phydm_regconfig8188f.o\
 			hal/phydm/rtl8188f/halphyrf_8188f.o \
 			hal/phydm/rtl8188f/phydm_rtl8188f.o
