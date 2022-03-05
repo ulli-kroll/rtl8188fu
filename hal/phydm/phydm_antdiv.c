@@ -29,16 +29,6 @@
 // when antenna test utility is on or some testing need to disable antenna diversity
 // call this function to disable all ODM related mechanisms which will switch antenna.
 //======================================================
-VOID
-ODM_StopAntennaSwitchDm(
-	IN		PVOID			pDM_VOID
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	// disable ODM antenna diversity
-	pDM_Odm->SupportAbility &= ~ODM_BB_ANT_DIV;
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("STOP Antenna Diversity \n"));
-}
 
 VOID
 ODM_SetAntConfig(

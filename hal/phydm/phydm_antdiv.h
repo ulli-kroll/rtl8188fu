@@ -283,10 +283,6 @@ typedef enum _ANT_DIV_TYPE
 
 
 VOID
-ODM_StopAntennaSwitchDm(
-	IN	PVOID	pDM_VOID
-	);
-VOID
 ODM_SetAntConfig(
 	IN	PVOID	pDM_VOID,
 	IN	u1Byte		antSetting	// 0=A, 1=B, 2=C, ....
