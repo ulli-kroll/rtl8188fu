@@ -394,24 +394,6 @@ typedef enum _HARDWARE_TYPE{
 #define	IS_HARDWARE_TYPE_8188E(_Adapter)	\
 (IS_HARDWARE_TYPE_8188EE(_Adapter) || IS_HARDWARE_TYPE_8188EU(_Adapter) || IS_HARDWARE_TYPE_8188ES(_Adapter))
 
-// RTL8812 Series
-#define IS_HARDWARE_TYPE_8812E(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8812E)
-#define IS_HARDWARE_TYPE_8812AU(_Adapter)	(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8812AU)
-#define IS_HARDWARE_TYPE_8812(_Adapter)			\
-(IS_HARDWARE_TYPE_8812E(_Adapter) || IS_HARDWARE_TYPE_8812AU(_Adapter))
-
-// RTL8821 Series
-#define IS_HARDWARE_TYPE_8821E(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821E)
-#define IS_HARDWARE_TYPE_8811AU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8811AU)
-#define IS_HARDWARE_TYPE_8821U(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821U ||	\
-													rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8811AU)
-#define IS_HARDWARE_TYPE_8821S(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821S)
-#define IS_HARDWARE_TYPE_8821(_Adapter)			\
-(IS_HARDWARE_TYPE_8821E(_Adapter) || IS_HARDWARE_TYPE_8821U(_Adapter)|| IS_HARDWARE_TYPE_8821S(_Adapter))
-
-#define IS_HARDWARE_TYPE_JAGUAR(_Adapter)		\
-(IS_HARDWARE_TYPE_8812(_Adapter) || IS_HARDWARE_TYPE_8821(_Adapter))
-
 //RTL8192E Series
 #define IS_HARDWARE_TYPE_8192EE(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8192EE)
 #define IS_HARDWARE_TYPE_8192EU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8192EU)
@@ -427,20 +409,6 @@ typedef enum _HARDWARE_TYPE{
 #define IS_HARDWARE_TYPE_8723B(_Adapter) \
 	(IS_HARDWARE_TYPE_8723BE(_Adapter) || IS_HARDWARE_TYPE_8723BU(_Adapter) ||IS_HARDWARE_TYPE_8723BS(_Adapter))
 
-/* RTL8814A Series */
-#define IS_HARDWARE_TYPE_8814AE(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8814AE)
-#define IS_HARDWARE_TYPE_8814AU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8814AU)
-#define IS_HARDWARE_TYPE_8814AS(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8814AS)
-
-#define IS_HARDWARE_TYPE_8814A(_Adapter)		\
-(IS_HARDWARE_TYPE_8814AE(_Adapter) || IS_HARDWARE_TYPE_8814AU(_Adapter) || IS_HARDWARE_TYPE_8814AS(_Adapter))
-
-#define IS_HARDWARE_TYPE_JAGUAR2(_Adapter)		\
-(IS_HARDWARE_TYPE_8814A(_Adapter) || IS_HARDWARE_TYPE_8821B(_Adapter) || IS_HARDWARE_TYPE_8822B(_Adapter))
-
-#define IS_HARDWARE_TYPE_JAGUAR_AND_JAGUAR2(_Adapter)		\
-(IS_HARDWARE_TYPE_JAGUAR(_Adapter) || IS_HARDWARE_TYPE_JAGUAR2(_Adapter))
-
 /* RTL8703B Series */
 #define IS_HARDWARE_TYPE_8703BE(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8703BE)
 #define IS_HARDWARE_TYPE_8703BS(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8703BS)
@@ -454,21 +422,6 @@ typedef enum _HARDWARE_TYPE{
 #define IS_HARDWARE_TYPE_8188FU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8188FU)
 #define	IS_HARDWARE_TYPE_8188F(_Adapter)			\
 (IS_HARDWARE_TYPE_8188FE(_Adapter) || IS_HARDWARE_TYPE_8188FU(_Adapter) || IS_HARDWARE_TYPE_8188FS(_Adapter))
-
-#define IS_HARDWARE_TYPE_8821BE(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821BE)
-#define IS_HARDWARE_TYPE_8821BU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821BU)
-#define IS_HARDWARE_TYPE_8821BS(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8821BS)
-
-#define IS_HARDWARE_TYPE_8821B(_Adapter)		\
-(IS_HARDWARE_TYPE_8821BE(_Adapter) || IS_HARDWARE_TYPE_8821BU(_Adapter) || IS_HARDWARE_TYPE_8821BS(_Adapter))
-
-#define IS_HARDWARE_TYPE_8822BE(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8822BE)
-#define IS_HARDWARE_TYPE_8822BU(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8822BU)
-#define IS_HARDWARE_TYPE_8822BS(_Adapter)		(rtw_get_hw_type(_Adapter) == HARDWARE_TYPE_RTL8822BS)
-#define IS_HARDWARE_TYPE_8822B(_Adapter)		\
-(IS_HARDWARE_TYPE_8822BE(_Adapter) || IS_HARDWARE_TYPE_8822BU(_Adapter) || IS_HARDWARE_TYPE_8822BS(_Adapter))
-
-
 
 typedef enum _wowlan_subcode {
 	WOWLAN_ENABLE			= 0,

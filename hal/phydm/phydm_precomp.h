@@ -61,8 +61,6 @@
 
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_CE)
-#define RTL8821B_SUPPORT		0
-#define RTL8822B_SUPPORT		0
 
 VOID
 PHY_SetTxPowerLimit(
@@ -121,43 +119,6 @@ PHY_SetTxPowerLimit(
 #endif
 #endif  //92E END
 
-#if (RTL8812A_SUPPORT==1)
-
-    #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-        #include "rtl8812a/halphyrf_8812a_ce.h"
-    #endif
-
-    //#include "rtl8812a/HalPhyRf_8812A.h" //FOR_8812_IQK
-        #include "rtl8812a/halhwimg8812a_bb.h"
-        #include "rtl8812a/halhwimg8812a_mac.h"
-        #include "rtl8812a/halhwimg8812a_rf.h"
-        #include "rtl8812a/phydm_regconfig8812a.h"
-        #include "rtl8812a/halhwimg8812a_fw.h"
-        #include "rtl8812a/phydm_rtl8812a.h"
-
-    #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	    #include "rtl8812a_hal.h"
-    #endif
-
-#endif //8812 END
-
-#if (RTL8814A_SUPPORT==1)
-
-#include "rtl8814a/halhwimg8814a_mac.h"
-#include "rtl8814a/halhwimg8814a_rf.h"
-#include "rtl8814a/halhwimg8814a_bb.h"
-	#include "rtl8814a/halhwimg8814a_fw.h"
-	#include "rtl8814a/phydm_rtl8814a.h"
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	#include "rtl8814a/halphyrf_8814a_ce.h"
-#endif
-	#include "rtl8814a/phydm_regconfig8814a.h"
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	#include "rtl8814a_hal.h"
-	#include "rtl8814a/phydm_iqk_8814a.h"
-#endif
-#endif //8814 END
-
 #if (RTL8881A_SUPPORT==1)//FOR_8881_IQK
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #include "rtl8821a/phydm_iqk_8821a_ce.h"
@@ -185,46 +146,6 @@ PHY_SetTxPowerLimit(
 #endif
 #endif
 
-#if (RTL8821A_SUPPORT==1) 
-#include "rtl8821a/halhwimg8821a_mac.h"
-#include "rtl8821a/halhwimg8821a_rf.h"
-#include "rtl8821a/halhwimg8821a_bb.h"
-#include "rtl8821a/halhwimg8821a_fw.h"
-#include "rtl8821a/phydm_regconfig8821a.h"
-#include "rtl8821a/phydm_rtl8821a.h"
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	#include "rtl8821a/halphyrf_8821a_ce.h"
-	#include "rtl8821a/phydm_iqk_8821a_ce.h"/*for IQK*/
-	#include "rtl8812a/halphyrf_8812a_ce.h"/*for IQK,LCK,Power-tracking*/
-	#include "rtl8812a_hal.h"
-#else
-#endif
-#endif
-
-#if (RTL8821B_SUPPORT==1) 
-#include "rtl8821b/halhwimg8821b_mac.h"
-#include "rtl8821b/halhwimg8821b_rf.h"
-#include "rtl8821b/halhwimg8821b_bb.h"
-#include "rtl8821b/halhwimg8821b_fw.h"
-#include "rtl8821b/phydm_regconfig8821b.h"
-#include "rtl8821b/halhwimg8821b_testchip_mac.h"
-#include "rtl8821b/halhwimg8821b_testchip_rf.h"
-#include "rtl8821b/halhwimg8821b_testchip_bb.h"
-#include "rtl8821b/halhwimg8821b_testchip_fw.h"
-#include "rtl8821b/halphyrf_8821b.h"
-#endif
-
-#if (RTL8822B_SUPPORT==1) 
-#include "rtl8822b/halhwimg8822b_mac.h"
-#include "rtl8822b/halhwimg8822b_rf.h"
-#include "rtl8822b/halhwimg8822b_bb.h"
-/*#include "rtl8822b/halhwimg8822b_fw.h"*/
-#include "rtl8822b/phydm_regconfig8822b.h"
-#include "rtl8822b/halphyrf_8822b.h"
-#include "rtl8822b/phydm_rtl8822b.h"
-#include "rtl8822b/phydm_hal_api8822b.h"
-#include "rtl8822b/version_rtl8822b.h"
-#endif
 
 #if (RTL8703B_SUPPORT==1) 
 #include "rtl8703b/phydm_regconfig8703b.h"

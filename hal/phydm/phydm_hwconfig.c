@@ -808,54 +808,6 @@ odm_Process_RSSIForDM(
 
 		if(!isCCKrate)//ofdm rate
 		{
-#if (RTL8814A_SUPPORT == 1) || (RTL8822B_SUPPORT == 1)
-			if (pDM_Odm->SupportICType & (ODM_RTL8814A|ODM_RTL8822B)) {
-				u1Byte RX_count = 0;
-				u4Byte RSSI_linear = 0;
-
-				if (pDM_Odm->RXAntStatus & ODM_RF_A) {
-					pDM_Odm->RSSI_A = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_A];
-					RX_count++;
-					RSSI_linear += odm_ConvertTo_linear(pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_A]);
-				} else
-					pDM_Odm->RSSI_A = 0;
-
-				if (pDM_Odm->RXAntStatus & ODM_RF_B) {
-					pDM_Odm->RSSI_B = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_B];
-					RX_count++;
-					RSSI_linear += odm_ConvertTo_linear(pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_B]);
-				} else
-					pDM_Odm->RSSI_B = 0;
-				
-				if (pDM_Odm->RXAntStatus & ODM_RF_C) {
-					pDM_Odm->RSSI_C = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_C];
-					RX_count++;
-					RSSI_linear += odm_ConvertTo_linear(pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_C]);
-				} else
-					pDM_Odm->RSSI_C = 0;
-
-				if (pDM_Odm->RXAntStatus & ODM_RF_D) {
-					pDM_Odm->RSSI_D = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_D];
-					RX_count++;
-					RSSI_linear += odm_ConvertTo_linear(pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_D]);
-				} else
-					pDM_Odm->RSSI_D = 0;
-
-				/* Calculate average RSSI */
-				switch (RX_count) {
-				case 2:
-					RSSI_linear = (RSSI_linear >> 1);
-					break;
-				case 3:
-					RSSI_linear = ((RSSI_linear) + (RSSI_linear << 1) + (RSSI_linear << 3)) >> 5;	/* RSSI_linear/3 ~ RSSI_linear*11/32 */
-					break;
-				case 4:
-					RSSI_linear = (RSSI_linear >> 2);
-					break;
-				}			
-				RSSI_Ave = odm_ConvertTo_dB(RSSI_linear);
-			} else
-#endif
 			{
 				if (pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_B] == 0) {
 					RSSI_Ave = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_A];
@@ -1014,13 +966,6 @@ ODM_PhyStatusQuery(
 	IN		PODM_PACKET_INFO_T			pPktinfo
 	)
 {
-#if (RTL8822B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType & ODM_RTL8822B) {
-		phydm_RxPhyStatusJaguarSeries2(pDM_Odm, pPhyStatus, pPktinfo, pPhyInfo);
-		return;
-	}
-#endif
-
 #if	ODM_IC_11N_SERIES_SUPPORT
 	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES )
 		ODM_PhyStatusQuery_92CSeries(pDM_Odm,pPhyInfo,pPhyStatus,pPktinfo);
@@ -1071,44 +1016,6 @@ ODM_ConfigRFWithHeaderFile(
 		}
 	}
 #endif
-#if (RTL8812A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8812)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A){
-				READ_AND_CONFIG_MP(8812A,_RadioA);
-			}
-			else if(eRFPath == ODM_RF_PATH_B){
-				READ_AND_CONFIG_MP(8812A,_RadioB);
-			}
-		}
-		else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
-			READ_AND_CONFIG_MP(8812A,_TXPWR_LMT);
-		}
-	}
-#endif
-#if (RTL8821A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8821)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-	 		if(eRFPath == ODM_RF_PATH_A){
-				READ_AND_CONFIG_MP(8821A,_RadioA);
-			}
-		}
-		else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
-			if (pDM_Odm->SupportInterface == ODM_ITRF_USB) {
-				if (pDM_Odm->ExtPA5G || pDM_Odm->ExtLNA5G)
-					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8811AU_FEM);
-				else
-					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8811AU_IPA);				
-			} 
-			else {
-					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8821A);			
-			}
-		}
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("<===8821_ODM_ConfigRFWithHeaderFile\n"));
-	}
-#endif
 
 #if (RTL8723B_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723B)
@@ -1144,23 +1051,6 @@ ODM_ConfigRFWithHeaderFile(
 		}
 		else if(ConfigType == CONFIG_RF_TXPWR_LMT)
 			READ_AND_CONFIG_MP(8188E,_TXPWR_LMT);
-	}
-#endif
-#if (RTL8814A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8814A)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-		 	if(eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8814A,_RadioA);
-			else if(eRFPath == ODM_RF_PATH_B)
-				READ_AND_CONFIG_MP(8814A,_RadioB);
-			else if(eRFPath == ODM_RF_PATH_C)
-				READ_AND_CONFIG_MP(8814A,_RadioC);
-			else if(eRFPath == ODM_RF_PATH_D)
-				READ_AND_CONFIG_MP(8814A,_RadioD);
-		}	
-		else if(ConfigType == CONFIG_RF_TXPWR_LMT) 
-			READ_AND_CONFIG_MP(8814A,_TXPWR_LMT);
 	}
 #endif
 #if (RTL8703B_SUPPORT == 1)
@@ -1200,31 +1090,6 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
-#if RTL8821A_SUPPORT
-	if(pDM_Odm->SupportICType == ODM_RTL8821)
-	{
-		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
-			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_PCIE);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_USB);			
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_SDIO);
-	}
-#endif	
-#if RTL8812A_SUPPORT	
-	if(pDM_Odm->SupportICType == ODM_RTL8812)
-	{
-		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
-			READ_AND_CONFIG_MP(8812A,_TxPowerTrack_PCIE);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB) {
-			if (pDM_Odm->RFEType == 3 && pDM_Odm->bIsMPChip) 
-				READ_AND_CONFIG_MP(8812A,_TxPowerTrack_RFE3);	
-			else
-				READ_AND_CONFIG_MP(8812A,_TxPowerTrack_USB);	
-		}
-		
-	}
-#endif	
 #if RTL8192E_SUPPORT 	
 	if(pDM_Odm->SupportICType == ODM_RTL8192E)
 	{
@@ -1260,19 +1125,6 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 #endif
 
 //1 All platforms support
-#if RTL8814A_SUPPORT
-	if(pDM_Odm->SupportICType == ODM_RTL8814A) 
-	{
-		if(pDM_Odm->RFEType == 0)
-			READ_AND_CONFIG_MP(8814A,_TxPowerTrack_Type0);
-		else if(pDM_Odm->RFEType == 2)
-			READ_AND_CONFIG_MP(8814A,_TxPowerTrack_Type2);
-		else if (pDM_Odm->RFEType == 5)
-			READ_AND_CONFIG_MP(8814A, _TxPowerTrack_Type5);
-		else
-			READ_AND_CONFIG_MP(8814A,_TxPowerTrack);
-	}
-#endif	
 #if RTL8703B_SUPPORT
 	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
@@ -1313,49 +1165,6 @@ ODM_ConfigBBWithHeaderFile(
 		}		
 	}		
 #endif
-#if (RTL8812A_SUPPORT == 1) 
-	if(pDM_Odm->SupportICType == ODM_RTL8812)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8812A,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8812A,_AGC_TAB);
-		}
-		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
-		{
-			if (pDM_Odm->RFEType == 3 && pDM_Odm->bIsMPChip) 
-				READ_AND_CONFIG_MP(8812A,_PHY_REG_PG_ASUS);
-			else
-				READ_AND_CONFIG_MP(8812A,_PHY_REG_PG);
-		}
-		else if(ConfigType == CONFIG_BB_PHY_REG_MP){
-			READ_AND_CONFIG_MP(8812A,_PHY_REG_MP);
-		}
-		else if(ConfigType == CONFIG_BB_AGC_TAB_DIFF)
-		{
-			if ((36 <= *pDM_Odm->pChannel)  && (*pDM_Odm->pChannel  <= 64)) 
-				AGC_DIFF_CONFIG_MP(8812A,LB);
-			else if (100 <= *pDM_Odm->pChannel) 
-				AGC_DIFF_CONFIG_MP(8812A,HB);
-		}
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_LOUD, (" ===> phy_ConfigBBWithHeaderFile() phy:Rtl8812AGCTABArray\n"));
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_LOUD, (" ===> phy_ConfigBBWithHeaderFile() agc:Rtl8812PHY_REGArray\n"));
-	}		
-#endif
-#if (RTL8821A_SUPPORT == 1) 
-	if(pDM_Odm->SupportICType == ODM_RTL8821)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8821A,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8821A,_AGC_TAB);
-		}else if(ConfigType == CONFIG_BB_PHY_REG_PG){
-			READ_AND_CONFIG_MP(8821A,_PHY_REG_PG);
-		}		
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_LOUD, (" ===> phy_ConfigBBWithHeaderFile() phy:Rtl8821AGCTABArray\n"));
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_LOUD, (" ===> phy_ConfigBBWithHeaderFile() agc:Rtl8821PHY_REGArray\n"));
-	}		
-#endif
 #if (RTL8723B_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8723B)
 	{
@@ -1392,20 +1201,6 @@ ODM_ConfigBBWithHeaderFile(
 			READ_AND_CONFIG_MP(8188E,_AGC_TAB);
 		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
 			READ_AND_CONFIG_MP(8188E,_PHY_REG_PG);
-	}
-#endif
-#if (RTL8814A_SUPPORT == 1)
-	if(pDM_Odm->SupportICType == ODM_RTL8814A)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8814A,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8814A,_AGC_TAB);
-		}else if(ConfigType == CONFIG_BB_PHY_REG_PG){
-			READ_AND_CONFIG_MP(8814A,_PHY_REG_PG);
-		}else if(ConfigType == CONFIG_BB_PHY_REG_MP){
-			READ_AND_CONFIG_MP(8814A,_PHY_REG_MP);
-		}
 	}
 #endif
 #if (RTL8703B_SUPPORT == 1)
@@ -1453,18 +1248,6 @@ ODM_ConfigMACWithHeaderFile(
 		READ_AND_CONFIG_MP(8723A,_MAC_REG);
 	}
 #endif
-#if (RTL8812A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8812){
-		READ_AND_CONFIG_MP(8812A,_MAC_REG);
-	}
-#endif
-#if (RTL8821A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8821){
-		READ_AND_CONFIG_MP(8821A,_MAC_REG);
-
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("<===8821_ODM_ConfigMACwithHeaderFile\n"));
-	}
-#endif
 #if (RTL8723B_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8723B){
 		READ_AND_CONFIG_MP(8723B,_MAC_REG);
@@ -1480,11 +1263,6 @@ ODM_ConfigMACWithHeaderFile(
 #if (RTL8188E_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8188E){
 		READ_AND_CONFIG_MP(8188E,_MAC_REG);
-	}
-#endif
-#if (RTL8814A_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8814A){
-		READ_AND_CONFIG_MP(8814A,_MAC_REG);
 	}
 #endif
 #if (RTL8703B_SUPPORT == 1)  
@@ -1518,27 +1296,14 @@ ODM_GetHWImgVersion(
 	if (pDM_Odm->SupportICType == ODM_RTL8723B)
 		Version = GET_VERSION_MP(8723B,_MAC_REG);
 #endif
-#if (RTL8821A_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8821)
-		Version = GET_VERSION_MP(8821A,_MAC_REG);
-#endif
 #if (RTL8192E_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8192E)
 		Version = GET_VERSION_MP(8192E,_MAC_REG);
 #endif
-#if (RTL8812A_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8812)
-		Version = GET_VERSION_MP(8812A,_MAC_REG);
-#endif
-
 /*1 All platforms support*/
 #if (RTL8188E_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8188E)
 		Version = GET_VERSION_MP(8188E,_MAC_REG);
-#endif
-#if (RTL8814A_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8814A)
-		Version = GET_VERSION_MP(8814A,_MAC_REG);
 #endif
 #if (RTL8703B_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8703B)
@@ -1554,482 +1319,4 @@ ODM_GetHWImgVersion(
 	return Version;
 }
 
-#if (RTL8822B_SUPPORT == 1)
-/* For 8822B only!! need to move to FW finally */
-/*==============================================*/
-
-VOID
-phydm_ResetPhyInfo(
-	IN		PDM_ODM_T					pPhydm,
-	OUT		PODM_PHY_INFO_T			pPhyInfo
-)
-{
-	pPhyInfo->RxPWDBAll = 0;
-	pPhyInfo->SignalQuality = 0;
-	pPhyInfo->BandWidth = 0;
-#if (RTL8822B_SUPPORT == 1)
-	pPhyInfo->RxCount = 0;
-#endif
-	ODM_Memory_Set(pPhydm, pPhyInfo->RxMIMOSignalQuality, 0 , 4);
-	ODM_Memory_Set(pPhydm, pPhyInfo->RxMIMOSignalStrength, 0, 4);
-	ODM_Memory_Set(pPhydm, pPhyInfo->RxSNR, 0, 4);
-
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))	
-	pPhyInfo->RxPower = -110;
-	pPhyInfo->RecvSignalPower = -110;
-	pPhyInfo->BTRxRSSIPercentage = 0;
-	pPhyInfo->SignalStrength = 0;
-	pPhyInfo->btCoexPwrAdjust = 0;
-#if (RTL8822B_SUPPORT == 1)
-	pPhyInfo->channel = 0;
-	pPhyInfo->bMuPacket = 0;
-	pPhyInfo->bBeamformed = 0;
-	pPhyInfo->rxsc = 0;
-#endif
-	ODM_Memory_Set(pPhydm, pPhyInfo->RxPwr, -110, 4);
-	ODM_Memory_Set(pPhydm, pPhyInfo->RxMIMOEVMdbm, 0, 4);
-	ODM_Memory_Set(pPhydm, pPhyInfo->Cfo_short, 0, 8);
-	ODM_Memory_Set(pPhydm, pPhyInfo->Cfo_tail, 0, 8);
-#endif
-}
-
-VOID
-phydm_SetPerPathPhyInfo(
-	IN		u1Byte							RxPath,
-	IN		s1Byte							RxPwr,
-	IN		s1Byte							RxEVM,
-	IN		s1Byte							Cfo_tail,
-	IN		s1Byte							RxSNR,
-	OUT		PODM_PHY_INFO_T				pPhyInfo
-)
-{
-	u1Byte			EVMdBm = 0;
-	u1Byte			EVMPercentage = 0;
-
-	/* SNR is S(8,1), EVM is S(8,1), CFO is S(8,7) */
-	
-	if (RxEVM < 0) {
-		/* Calculate EVM in dBm */
-		EVMdBm = ((u1Byte)(0 - RxEVM) >> 1);
-
-		/* Calculate EVM in percentage */
-		if (EVMdBm >= 33)
-			EVMPercentage = 100;
-		else 
-			EVMPercentage = (EVMdBm << 1) + (EVMdBm);
-	}
-	
-
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
-	pPhyInfo->RxPwr[RxPath] = RxPwr;
-	pPhyInfo->RxMIMOEVMdbm[RxPath] = EVMdBm;
-
-	/* CFO = CFO_tail * 312.5 / 2^7 ~= CFO tail * 39/512 (kHz)*/
-	pPhyInfo->Cfo_tail[RxPath] = Cfo_tail;
-	pPhyInfo->Cfo_tail[RxPath] = ((pPhyInfo->Cfo_tail[RxPath] << 5) + (pPhyInfo->Cfo_tail[RxPath] << 2) +
-		(pPhyInfo->Cfo_tail[RxPath] << 1) + (pPhyInfo->Cfo_tail[RxPath])) >> 9;
-#endif
-
-	pPhyInfo->RxMIMOSignalStrength[RxPath] = odm_QueryRxPwrPercentage(RxPwr);
-	pPhyInfo->RxMIMOSignalQuality[RxPath] = EVMPercentage;
-	pPhyInfo->RxSNR[RxPath] = RxSNR >> 1;
-
-/*
-	//if (pPktinfo->bPacketMatchBSSID) 
-	{
-		DbgPrint("Path (%d)--------\n", RxPath);
-		DbgPrint("RxPwr = %d, Signal strength = %d\n", pPhyInfo->RxPwr[RxPath], pPhyInfo->RxMIMOSignalStrength[RxPath]);
-		DbgPrint("EVMdBm = %d, Signal quality = %d\n", pPhyInfo->RxMIMOEVMdbm[RxPath], pPhyInfo->RxMIMOSignalQuality[RxPath]);
-		DbgPrint("CFO = %d, SNR = %d\n", pPhyInfo->Cfo_tail[RxPath], pPhyInfo->RxSNR[RxPath]);
-	}	
-*/
-}
-
-VOID
-phydm_SetCommonPhyInfo(
-	IN		s1Byte							RxPower,
-	IN		u1Byte							channel,
-	IN		BOOLEAN							bBeamformed,
-	IN		BOOLEAN							bMuPacket,
-	IN		u1Byte							bandwidth,
-	IN		u1Byte							signalQuality,
-	IN		u1Byte							rxsc,
-	OUT		PODM_PHY_INFO_T				pPhyInfo
-)
-{
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
-	pPhyInfo->RxPower = RxPower;											/* RSSI in dB */
-	pPhyInfo->RecvSignalPower = RxPower;										/* RSSI in dB */
-	pPhyInfo->channel = channel;												/* channel number */
-	pPhyInfo->bBeamformed = bBeamformed;									/* apply BF */
-	pPhyInfo->bMuPacket = bMuPacket;										/* MU packet */
-	pPhyInfo->rxsc = rxsc;
-#endif
-	pPhyInfo->RxPWDBAll = odm_QueryRxPwrPercentage(RxPower);				/* RSSI in percentage */
-	pPhyInfo->SignalQuality = signalQuality;										/* signal quality */
-	pPhyInfo->BandWidth = bandwidth;											/* bandwidth */
-
-/*
-	//if (pPktinfo->bPacketMatchBSSID)
-	{
-		DbgPrint("RxPWDBAll = %d, RxPower = %d, RecvSignalPower = %d\n", pPhyInfo->RxPWDBAll, pPhyInfo->RxPower, pPhyInfo->RecvSignalPower);
-		DbgPrint("SignalQuality = %d\n", pPhyInfo->SignalQuality);
-		DbgPrint("bBeamformed = %d, bMuPacket = %d, RxCount = %d\n", pPhyInfo->bBeamformed, pPhyInfo->bMuPacket, pPhyInfo->RxCount + 1);
-		DbgPrint("channel = %d, rxsc = %d, BandWidth = %d\n", channel, rxsc, bandwidth);
-	}
-*/
-}
-
-VOID
-phydm_GetRxPhyStatusType0(
-	IN		PDM_ODM_T						pDM_Odm,
-	IN		pu1Byte							pPhyStatus,
-	IN		PODM_PACKET_INFO_T				pPktinfo,
-	OUT		PODM_PHY_INFO_T				pPhyInfo
-)
-{
-	/* Type 0 is used for cck packet */
-	
-	PPHY_STATUS_RPT_JAGUAR2_TYPE0	pPhyStaRpt = (PPHY_STATUS_RPT_JAGUAR2_TYPE0)pPhyStatus;
-	u1Byte							i, SQ = 0;
-
-	/* Calculate Signal Quality*/
-	if (pPktinfo->bPacketMatchBSSID) {
-		if (pPhyStaRpt->signal_quality >= 64)
-			SQ = 0;
-		else if (pPhyStaRpt->signal_quality <= 20)
-			SQ = 100;
-		else {
-			/* mapping to 2~99% */
-			SQ = 64 - pPhyStaRpt->signal_quality;
-			SQ = ((SQ << 3) + SQ) >> 2;
-		}
-	}
-
-	/* Update CCK packet counter */
-	pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK++;
-
-	/* Update Common information */
-	phydm_SetCommonPhyInfo((pPhyStaRpt->pwdb - 110), pPhyStaRpt->channel, FALSE, 
-		FALSE, ODM_BW20M, SQ, pPhyStaRpt->rxsc, pPhyInfo);
-
-	/* Update CCK pwdb */
-	phydm_SetPerPathPhyInfo(ODM_RF_PATH_A, (pPhyStaRpt->pwdb - 110), 0, 0, 0, pPhyInfo);					/* Update per-path information */
-
-/*
-	//if (pPktinfo->bPacketMatchBSSID)
-	{
-		DbgPrint("pwdb = 0x%x, MP gain index = 0x%x, TRSW = 0x%x\n", pPhyStaRpt->pwdb, pPhyStaRpt->gain, pPhyStaRpt->trsw);
-		DbgPrint("channel = %d, band = %d, rxsc = %d\n", pPhyStaRpt->channel, pPhyStaRpt->band, pPhyStaRpt->rxsc);
-		DbgPrint("agc_table = 0x%x, agc_rpt 0x%x, bb_power = 0x%x\n", pPhyStaRpt->agc_table, pPhyStaRpt->agc_rpt, pPhyStaRpt->bb_power);
-		DbgPrint("length = %d, SQ = %d\n", pPhyStaRpt->length, pPhyStaRpt->signal_quality);
-		DbgPrint("antidx a = 0x%x, b = 0x%x, c = 0x%x, d = 0x%x\n", pPhyStaRpt->antidx_a, pPhyStaRpt->antidx_b, pPhyStaRpt->antidx_c, pPhyStaRpt->antidx_d);
-		DbgPrint("rsvd_0 = 0x%x, rsvd_1 = 0x%x, rsvd_2 = 0x%x\n", pPhyStaRpt->rsvd_0, pPhyStaRpt->rsvd_1, pPhyStaRpt->rsvd_2);
-		DbgPrint("rsvd_3 = 0x%x, rsvd_4 = 0x%x, rsvd_5 = 0x%x\n", pPhyStaRpt->rsvd_3, pPhyStaRpt->rsvd_4, pPhyStaRpt->rsvd_5);
-		DbgPrint("rsvd_6 = 0x%x, rsvd_7 = 0x%x, rsvd_8 = 0x%x\n", pPhyStaRpt->rsvd_6, pPhyStaRpt->rsvd_7, pPhyStaRpt->rsvd_8);
-	}
-*/
-}
-
-VOID
-phydm_GetRxPhyStatusType1(
-	IN		PDM_ODM_T						pDM_Odm,
-	IN		pu1Byte							pPhyStatus,
-	IN		PODM_PACKET_INFO_T				pPktinfo,
-	OUT		PODM_PHY_INFO_T				pPhyInfo
-)
-{
-	/* Type 1 is used for ofdm packet */
-
-	PPHY_STATUS_RPT_JAGUAR2_TYPE1	pPhyStaRpt = (PPHY_STATUS_RPT_JAGUAR2_TYPE1)pPhyStatus;
-	s1Byte							rx_pwr_db = -120;
-	u1Byte							i, rxsc, bw, RxCount = 0;
-	BOOLEAN							bMU;
-
-	/* Update OFDM packet counter */
-	pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM++;
-
-	/* Update per-path information */
-	for (i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX_JAGUAR; i++) {
-		if (pDM_Odm->RXAntStatus & BIT(i)) {
-			s1Byte	rx_path_pwr_db;
-
-			/* RX path counter */
-			RxCount++;
-
-			/* Update per-path information (RSSI_dB RSSI_percentage EVM SNR CFO SQ) */
-			/* EVM report is reported by stream, not path */
-			rx_path_pwr_db = pPhyStaRpt->pwdb[i] - 110;					/* per-path pwdb in dB domain */
-			phydm_SetPerPathPhyInfo(i, rx_path_pwr_db, pPhyStaRpt->rxevm[RxCount - 1], 
-				pPhyStaRpt->cfo_tail[i], pPhyStaRpt->rxsnr[i], pPhyInfo);
-
-			/* search maximum pwdb */
-			if (rx_path_pwr_db > rx_pwr_db)
-				rx_pwr_db = rx_path_pwr_db;
-		}
-	}
-
-	/* mapping RX counter from 1~4 to 0~3 */
-	if (RxCount > 0)
-		pPhyInfo->RxCount = RxCount - 1;
-	
-	/* Check if MU packet or not */
-	if ((pPhyStaRpt->gid != 0) && (pPhyStaRpt->gid != 63)) {
-		bMU = TRUE;
-		pDM_Odm->PhyDbgInfo.NumQryMuPkt++;
-	} else
-		bMU = FALSE;
-
-	/* Count BF packet */
-	pDM_Odm->PhyDbgInfo.NumQryBfPkt = pDM_Odm->PhyDbgInfo.NumQryBfPkt + pPhyStaRpt->beamformed;
-
-	/* Check sub-channel */
-	if ((pPktinfo->DataRate > ODM_RATE11M) && (pPktinfo->DataRate < ODM_RATEMCS0))
-		rxsc = pPhyStaRpt->l_rxsc;
-	else
-		rxsc = pPhyStaRpt->ht_rxsc;
-
-	/* Check RX bandwidth */
-	if ((rxsc >= 1) && (rxsc <= 8))
-		bw = ODM_BW20M;
-	else if ((rxsc >= 9) && (rxsc <= 12))
-		bw = ODM_BW40M;
-	else if (rxsc >= 13)
-		bw = ODM_BW80M;
-	else
-		bw = pPhyStaRpt->rf_mode;
-
-	/* Update packet information */
-	phydm_SetCommonPhyInfo(rx_pwr_db, pPhyStaRpt->channel, (BOOLEAN)pPhyStaRpt->beamformed,
-		bMU, bw, odm_EVMdbToPercentage(pPhyStaRpt->rxevm[0]), rxsc, pPhyInfo);
-
-/*
-	//if (pPktinfo->bPacketMatchBSSID)
-	{
-		DbgPrint("channel = %d, band = %d, l_rxsc = %d, ht_rxsc = %d, rf_mode = %d\n", pPhyStaRpt->channel, pPhyStaRpt->band, pPhyStaRpt->l_rxsc, pPhyStaRpt->ht_rxsc, pPhyStaRpt->rf_mode);
-		DbgPrint("Antidx A = %d, B = %d, C = %d, D = %d\n", pPhyStaRpt->antidx_a, pPhyStaRpt->antidx_b, pPhyStaRpt->antidx_c, pPhyStaRpt->antidx_d);
-		DbgPrint("pwdb A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->pwdb[0], pPhyStaRpt->pwdb[1], pPhyStaRpt->pwdb[2], pPhyStaRpt->pwdb[3]);
-		DbgPrint("EVM  A: %d, B: %d, C: %d, D: %d\n", pPhyStaRpt->rxevm[0], pPhyStaRpt->rxevm[1], pPhyStaRpt->rxevm[2], pPhyStaRpt->rxevm[3]);
-		DbgPrint("SNR  A: %d, B: %d, C: %d, D: %d\n", pPhyStaRpt->rxsnr[0], pPhyStaRpt->rxsnr[1], pPhyStaRpt->rxsnr[2], pPhyStaRpt->rxsnr[3]);
-		DbgPrint("CFO  A: %d, B: %d, C: %d, D: %d\n", pPhyStaRpt->cfo_tail[0], pPhyStaRpt->cfo_tail[1], pPhyStaRpt->cfo_tail[2], pPhyStaRpt->cfo_tail[3]);
-		DbgPrint("paid = %d, gid = %d, length = %d\n", (pPhyStaRpt->paid + (pPhyStaRpt->paid_msb<<8)), pPhyStaRpt->gid, pPhyStaRpt->lsig_length);
-		DbgPrint("ldpc: %d, stbc: %d, bf: %d, gnt_bt: %d, antsw: %d\n", pPhyStaRpt->ldpc, pPhyStaRpt->stbc, pPhyStaRpt->beamformed, pPhyStaRpt->gnt_bt, pPhyStaRpt->hw_antsw_occu);
-		DbgPrint("NBI: %d, pos: %d\n", pPhyStaRpt->nb_intf_flag, (pPhyStaRpt->intf_pos + (pPhyStaRpt->intf_pos_msb<<8)));
-		DbgPrint("rsvd_0 = %d, rsvd_1 = %d, rsvd_2 = %d, rsvd_3 = %d, rsvd_4 = %d, rsvd_5 = %d\n", pPhyStaRpt->rsvd_0, pPhyStaRpt->rsvd_1, pPhyStaRpt->rsvd_2, pPhyStaRpt->rsvd_3, pPhyStaRpt->rsvd_4, pPhyStaRpt->rsvd_5);
-	}
-	DbgPrint("phydm_GetRxPhyStatusType1   pPktinfo->bPacketMatchBSSID = %d\n", pPktinfo->bPacketMatchBSSID);
-	DbgPrint("pPktinfo->DataRate = 0x%x\n", pPktinfo->DataRate);
-*/
-}
-
-VOID
-phydm_GetRxPhyStatusType2(
-	IN		PDM_ODM_T						pDM_Odm,
-	IN		pu1Byte							pPhyStatus,
-	IN		PODM_PACKET_INFO_T				pPktinfo,
-	OUT		PODM_PHY_INFO_T				pPhyInfo
-)
-{
-	PPHY_STATUS_RPT_JAGUAR2_TYPE2	pPhyStaRpt = (PPHY_STATUS_RPT_JAGUAR2_TYPE2)pPhyStatus;
-	s1Byte							rx_pwr_db = -120;
-	u1Byte							i, rxsc, bw, RxCount = 0;
-
-	/* Update OFDM packet counter */
-	pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM++;
-
-	/* Update per-path information */
-	for (i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX_JAGUAR; i++) {
-		if (pDM_Odm->RXAntStatus & BIT(i)) {
-			s1Byte	rx_path_pwr_db;
-
-			/* RX path counter */
-			RxCount++;
-
-			/* Update per-path information (RSSI_dB RSSI_percentage EVM SNR CFO SQ) */
-			rx_path_pwr_db = pPhyStaRpt->pwdb[i] - 110;					/* per-path pwdb in dB domain */
-			phydm_SetPerPathPhyInfo(i, rx_path_pwr_db, 0, 0, 0, pPhyInfo);
-
-			/* search maximum pwdb */
-			if (rx_path_pwr_db > rx_pwr_db)
-				rx_pwr_db = rx_path_pwr_db;
-		}
-	}
-
-	/* mapping RX counter from 1~4 to 0~3 */
-	if (RxCount > 0)
-		pPhyInfo->RxCount = RxCount - 1;
-	
-	/* Check RX sub-channel */
-	if ((pPktinfo->DataRate > ODM_RATE11M) && (pPktinfo->DataRate < ODM_RATEMCS0))
-		rxsc = pPhyStaRpt->l_rxsc;
-	else
-		rxsc = pPhyStaRpt->ht_rxsc;
-
-	/* Check RX bandwidth */
-	/* the BW information of sc=0 is useless, because there is no information of RF mode*/
-	if ((rxsc >= 1) && (rxsc <= 8))
-		bw = ODM_BW20M;
-	else if ((rxsc >= 9) && (rxsc <= 12))
-		bw = ODM_BW40M;
-	else if (rxsc >= 13)
-		bw = ODM_BW80M;
-	else
-		bw = ODM_BW20M;
-
-	/* Update packet information */
-	phydm_SetCommonPhyInfo(rx_pwr_db, pPhyStaRpt->channel, (BOOLEAN)pPhyStaRpt->beamformed,
-		FALSE, bw, 0, rxsc, pPhyInfo);
-
-/*
-	//if (pPktinfo->bPacketMatchBSSID)
-	{
-		DbgPrint("channel = %d, band = %d, l_rxsc = %d, ht_rxsc = %d\n", pPhyStaRpt->channel, pPhyStaRpt->band, pPhyStaRpt->l_rxsc, pPhyStaRpt->ht_rxsc);
-		DbgPrint("pwdb A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->pwdb[0], pPhyStaRpt->pwdb[1], pPhyStaRpt->pwdb[2], pPhyStaRpt->pwdb[3]);
-		DbgPrint("Agc table A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->agc_table_a, pPhyStaRpt->agc_table_b, pPhyStaRpt->agc_table_c, pPhyStaRpt->agc_table_d);
-		DbgPrint("Gain A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->gain_a, pPhyStaRpt->gain_b, pPhyStaRpt->gain_c, pPhyStaRpt->gain_d);
-		DbgPrint("TRSW A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->trsw_a, pPhyStaRpt->trsw_b, pPhyStaRpt->trsw_c, pPhyStaRpt->trsw_d);
-		DbgPrint("AAGC step A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->aagc_step_a, pPhyStaRpt->aagc_step_b, pPhyStaRpt->aagc_step_c, pPhyStaRpt->aagc_step_d);
-		DbgPrint("HT AAGC gain A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->ht_aagc_gain[0], pPhyStaRpt->ht_aagc_gain[1], pPhyStaRpt->ht_aagc_gain[2], pPhyStaRpt->ht_aagc_gain[3]);
-		DbgPrint("DAGC gain A: 0x%x, B: 0x%x, C: 0x%x, D: 0x%x\n", pPhyStaRpt->dagc_gain[0], pPhyStaRpt->dagc_gain[1], pPhyStaRpt->dagc_gain[2], pPhyStaRpt->dagc_gain[3]);
-		DbgPrint("ldpc: %d, stbc: %d, bf: %d, gnt_bt: %d, antsw: %d\n", pPhyStaRpt->ldpc, pPhyStaRpt->stbc, pPhyStaRpt->beamformed, pPhyStaRpt->gnt_bt, pPhyStaRpt->hw_antsw_occu);
-		DbgPrint("counter: %d, syn_count: %d\n", pPhyStaRpt->counter, pPhyStaRpt->syn_count);
-		DbgPrint("cnt_cca2agc_rdy: %d, cnt_pw2cca: %d, shift_l_map\n", pPhyStaRpt->cnt_cca2agc_rdy, pPhyStaRpt->cnt_pw2cca, pPhyStaRpt->shift_l_map);
-		DbgPrint("rsvd_0 = %d, rsvd_1 = %d, rsvd_2 = %d, rsvd_3 = %d, rsvd_4 = %d, rsvd_5 = %d\n", pPhyStaRpt->rsvd_0, pPhyStaRpt->rsvd_1, pPhyStaRpt->rsvd_2, pPhyStaRpt->rsvd_3, pPhyStaRpt->rsvd_4);
-		DbgPrint("rsvd_5 = %d, rsvd_6 = %d, rsvd_6 = %d\n", pPhyStaRpt->rsvd_5, pPhyStaRpt->rsvd_6, pPhyStaRpt->rsvd_7);
-	}
-*/
-}
-
-VOID
-phydm_GetRxPhyStatusType5(
-	IN		pu1Byte				pPhyStatus
-)
-{
-/*
-	DbgPrint("DW0: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 3), *(pPhyStatus + 2), *(pPhyStatus + 1), *(pPhyStatus + 0));
-	DbgPrint("DW1: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 7), *(pPhyStatus + 6), *(pPhyStatus + 5), *(pPhyStatus + 4));
-	DbgPrint("DW2: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 11), *(pPhyStatus + 10), *(pPhyStatus + 9), *(pPhyStatus + 8));
-	DbgPrint("DW3: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 15), *(pPhyStatus + 14), *(pPhyStatus + 13), *(pPhyStatus + 12));
-	DbgPrint("DW4: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 19), *(pPhyStatus + 18), *(pPhyStatus + 17), *(pPhyStatus + 16));
-	DbgPrint("DW5: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 23), *(pPhyStatus + 22), *(pPhyStatus + 21), *(pPhyStatus + 20));
-	DbgPrint("DW6: 0x%02x%02x%02x%02x\n", *(pPhyStatus + 27), *(pPhyStatus + 26), *(pPhyStatus + 25), *(pPhyStatus + 24));
-*/
-}
-
-VOID
-phydm_Process_RSSIForDM_Jaguar2(	
-	IN OUT	PDM_ODM_T					pDM_Odm,
-	IN		PODM_PHY_INFO_T			pPhyInfo,
-	IN		PODM_PACKET_INFO_T			pPktinfo
-	)
-{
-	u4Byte				UndecoratedSmoothedPWDB, RSSI_Ave;
-	u1Byte				i;
-	PSTA_INFO_T			pEntry;
-
-	if (pPktinfo->StationID >= ODM_ASSOCIATE_ENTRY_NUM)
-		return;
-
-	pEntry = pDM_Odm->pODM_StaInfo[pPktinfo->StationID];							
-
-	if (!IS_STA_VALID(pEntry))
-		return;
-
-	if ((!pPktinfo->bPacketMatchBSSID))/*data frame only*/
-		return;
-
-	if (pPktinfo->bPacketBeacon)
-		pDM_Odm->PhyDbgInfo.NumQryBeaconPkt++;
-	
-	if (pPktinfo->bPacketToSelf || pPktinfo->bPacketBeacon) {
-		u4Byte RSSI_linear = 0;
-
-		UndecoratedSmoothedPWDB = (u4Byte)pEntry->rssi_stat.UndecoratedSmoothedPWDB;
-		pDM_Odm->RSSI_A = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_A];
-		pDM_Odm->RSSI_B = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_B];
-		pDM_Odm->RSSI_C = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_C];
-		pDM_Odm->RSSI_D = pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_D];
-
-		for (i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX_JAGUAR; i++) {
-			if (pPhyInfo->RxMIMOSignalStrength[i] != 0)
-				RSSI_linear += odm_ConvertTo_linear(pPhyInfo->RxMIMOSignalStrength[i]);
-		}
-
-		switch (pPhyInfo->RxCount + 1) {
-		case 2:
-			RSSI_linear = (RSSI_linear >> 1);
-			break;
-		case 3:
-			RSSI_linear = ((RSSI_linear) + (RSSI_linear << 1) + (RSSI_linear << 3)) >> 5;	/* RSSI_linear/3 ~ RSSI_linear*11/32 */
-			break;
-		case 4:
-			RSSI_linear = (RSSI_linear >> 2);
-			break;
-		}
-		RSSI_Ave = odm_ConvertTo_dB(RSSI_linear);
-
-		if (UndecoratedSmoothedPWDB <= 0)
-			UndecoratedSmoothedPWDB = pPhyInfo->RxPWDBAll;
-		else
-			UndecoratedSmoothedPWDB = (RSSI_Ave + ((UndecoratedSmoothedPWDB<<4) - UndecoratedSmoothedPWDB))>>4;
-
-		#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-		if (pEntry->rssi_stat.UndecoratedSmoothedPWDB == -1)
-			phydm_ra_rssi_rpt_wk(pDM_Odm);
-		#endif
-
-		pEntry->rssi_stat.UndecoratedSmoothedPWDB = (s4Byte)UndecoratedSmoothedPWDB;
-	}
-}
-
-VOID
-phydm_RxPhyStatusJaguarSeries2(
-	IN		PDM_ODM_T					pPhydm,
-	IN		pu1Byte						pPhyStatus,
-	IN		PODM_PACKET_INFO_T			pPktinfo,
-	OUT		PODM_PHY_INFO_T			pPhyInfo
-)
-{
-	u1Byte		phy_status_type = (*pPhyStatus & 0xf);
-
-	/*DbgPrint("phydm_RxPhyStatusJaguarSeries2================> (page: %d)\n", phy_status_type);*/
-	
-	/* Memory reset */
-	phydm_ResetPhyInfo(pPhydm, pPhyInfo);
-
-	/* Phy status parsing */
-	switch (phy_status_type) {
-	case 0:
-	{
-		phydm_GetRxPhyStatusType0(pPhydm, pPhyStatus, pPktinfo, pPhyInfo);
-		break;
-	}
-	case 1:
-	{
-		phydm_GetRxPhyStatusType1(pPhydm, pPhyStatus, pPktinfo, pPhyInfo);
-		break;
-	}
-	case 2:
-	{
-		phydm_GetRxPhyStatusType2(pPhydm, pPhyStatus, pPktinfo, pPhyInfo);
-		break;
-	}
-	case 5:
-	{
-		phydm_GetRxPhyStatusType5(pPhyStatus);
-		return;
-	}
-	default:
-		return;
-	}
-
-	/* Update signal strength to UI, and pPhyInfo->RxPWDBAll is the maximum RSSI of all path */
-	pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pPhydm, pPhyInfo->RxPWDBAll));
-
-	/* Calculate average RSSI and smoothed RSSI */
-	phydm_Process_RSSIForDM_Jaguar2(pPhydm, pPhyInfo, pPktinfo);
-
-}
-/*==============================================*/
-#endif
 

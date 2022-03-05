@@ -144,17 +144,6 @@ PHYDM_InitTRXAntennaSetting(
 	IN		PDM_ODM_T		pDM_Odm
 )
 {
-#if (RTL8814A_SUPPORT == 1)
-
-	if (pDM_Odm->SupportICType & (ODM_RTL8814A)) {
-		u1Byte	RxAnt = 0, TxAnt = 0;
-
-		RxAnt = (u1Byte)ODM_GetBBReg(pDM_Odm, ODM_REG(BB_RX_PATH, pDM_Odm), ODM_BIT(BB_RX_PATH, pDM_Odm));
-		TxAnt = (u1Byte)ODM_GetBBReg(pDM_Odm, ODM_REG(BB_TX_PATH, pDM_Odm), ODM_BIT(BB_TX_PATH, pDM_Odm));
-		pDM_Odm->TXAntStatus =  (TxAnt & 0xf);
-		pDM_Odm->RXAntStatus =  (RxAnt & 0xf);
-	}
-#endif
 }
 
 VOID
@@ -345,11 +334,6 @@ odm_HWSetting(
 	IN		PDM_ODM_T		pDM_Odm
 	)
 {
-#if (RTL8821A_SUPPORT == 1)
-	if(pDM_Odm->SupportICType & ODM_RTL8821)
-		odm_HWSetting_8821A(pDM_Odm);
-#endif
-
 }
 
 //

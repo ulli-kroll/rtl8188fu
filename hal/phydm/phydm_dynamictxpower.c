@@ -169,7 +169,5 @@ odm_DynamicTxPower_8821(
 	IN		u1Byte			macId	
 	)
 {
-#if (RTL8821A_SUPPORT == 1)
-#endif	/*#if (RTL8821A_SUPPORT==1)*/
 }
 

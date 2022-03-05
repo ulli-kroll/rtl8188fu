@@ -234,11 +234,6 @@ VOID phydm_BasicProfile(
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "Auto Channel Selection", ACS_VERSION));
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "EDCA Turbo", EDCATURBO_VERSION));
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "Path Diversity", PATHDIV_VERSION));
-#if (RTL8822B_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType & ODM_RTL8822B)
-		PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "PHY config 8822B", PHY_CONFIG_VERSION_8822B));
-	
-#endif
 	*_used = used;
 	*_out_len = out_len;
 
@@ -283,38 +278,6 @@ phydm_get_per_path_txagc(
 	u4Byte			used = *_used;
 	u4Byte			out_len = *_out_len;
 
-#if (RTL8822B_SUPPORT == 1)
-	if ((pDM_Odm->SupportICType & ODM_RTL8822B) && (path <= ODM_RF_PATH_B)) {
-		for (rate_idx = 0; rate_idx <= 0x53; rate_idx++) {
-			if (rate_idx == ODM_RATE1M)
-				PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s\n", "CCK====>"));
-			else if (rate_idx == ODM_RATE6M)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "OFDM====>"));
-			else if (rate_idx == ODM_RATEMCS0)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "HT 1ss====>"));
-			else if (rate_idx == ODM_RATEMCS8)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "HT 2ss====>"));
-			else if (rate_idx == ODM_RATEMCS16)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "HT 3ss====>"));
-			else if (rate_idx == ODM_RATEMCS24)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "HT 4ss====>"));
-			else if (rate_idx == ODM_RATEVHTSS1MCS0)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "VHT 1ss====>"));
-			else if (rate_idx == ODM_RATEVHTSS2MCS0)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "VHT 2ss====>"));
-			else if (rate_idx == ODM_RATEVHTSS3MCS0)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "VHT 3ss====>"));
-			else if (rate_idx == ODM_RATEVHTSS4MCS0)
-				PHYDM_SNPRINTF((output + used, out_len - used, "\n  %-35s\n", "VHT 4ss====>"));
-			
-			txagc = config_phydm_read_txagc_8822b(pDM_Odm, path, rate_idx);
-			if (config_phydm_read_txagc_check_8822b(txagc))
-				PHYDM_SNPRINTF((output + used, out_len - used, "  0x%02x    ", txagc));
-			else
-				PHYDM_SNPRINTF((output + used, out_len - used, "  0x%s    ", "xx"));
-		}
-	}
-#endif
 }
 
 
@@ -361,18 +324,6 @@ phydm_set_txagc(
 	u4Byte			used = *_used;
 	u4Byte			out_len = *_out_len;
 
-#if (RTL8822B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType & ODM_RTL8822B) {
-		if (dm_value[0] <= 1) {
-			if (phydm_write_txagc_1byte_8822b(pDM_Odm, dm_value[2], dm_value[0], (u1Byte)dm_value[1]))
-				PHYDM_SNPRINTF((output + used, out_len - used, "  %s%d   %s%x%s%x\n", "Write path-", dm_value[0], "rate index-0x", dm_value[1], " = 0x", dm_value[2]));
-			else
-				PHYDM_SNPRINTF((output + used, out_len - used, "  %s%d   %s%x%s\n", "Write path-", (dm_value[0] & 0x1), "rate index-0x", (dm_value[1] & 0x7f), " fail"));
-		} else {
-			PHYDM_SNPRINTF((output + used, out_len - used, "  %s%d   %s%x%s\n", "Write path-", (dm_value[0] & 0x1), "rate index-0x", (dm_value[1] & 0x7f), " fail"));
-		}
-	}
-#endif
 }
 
 VOID
@@ -722,37 +673,7 @@ phydm_cmd_parser(
 		break;
 
 	case PHYDM_API:
-#if (RTL8822B_SUPPORT == 1)
-	{
-		if (pDM_Odm->SupportICType & ODM_RTL8822B) {
-			BOOLEAN	bEnableDbgMode;
-			u1Byte central_ch, primary_ch_idx, bandwidth;
-			
-			for (i = 0; i < 4; i++) {
-				if (input[i + 1])
-					PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-			}
-			
-			bEnableDbgMode = (BOOLEAN)var1[0];
-			central_ch = (u1Byte) var1[1];
-			primary_ch_idx = (u1Byte) var1[2];
-			bandwidth = (ODM_BW_E) var1[3];
-
-			if (bEnableDbgMode) {
-				pDM_Odm->bDisablePhyApi = FALSE;
-			config_phydm_switch_channel_bw_8822b(pDM_Odm, central_ch, primary_ch_idx, bandwidth);
-				pDM_Odm->bDisablePhyApi = TRUE;
-			PHYDM_SNPRINTF((output+used, out_len-used, "central_ch = %d, primary_ch_idx = %d, bandwidth = %d\n", central_ch, primary_ch_idx, bandwidth));
-			} else {
-				pDM_Odm->bDisablePhyApi = FALSE;
-				PHYDM_SNPRINTF((output+used, out_len-used, "Disable API debug mode\n"));
-			}
-		} else
-			PHYDM_SNPRINTF((output+used, out_len-used, "This IC doesn't support PHYDM API function\n"));
-	}
-#else
 		PHYDM_SNPRINTF((output+used, out_len-used, "This IC doesn't support PHYDM API function\n"));
-#endif
 		break;	
 		
 	case PHYDM_PROFILE: /*echo profile, >cmd*/
@@ -777,37 +698,7 @@ phydm_cmd_parser(
 		break;
 		
 	case PHYDM_TRX_PATH:
-#if (RTL8822B_SUPPORT == 1)
-	{
-		if (pDM_Odm->SupportICType & ODM_RTL8822B) {
-			u1Byte		TxPath, RxPath;
-			BOOLEAN		bEnableDbgMode, bTx2Path;
-			
-			for (i = 0; i < 4; i++) {
-				if (input[i + 1])
-					PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-			}
-
-			bEnableDbgMode = (BOOLEAN)var1[0];
-			TxPath = (u1Byte) var1[1];
-			RxPath = (u1Byte) var1[2];
-			bTx2Path = (BOOLEAN) var1[3];
-
-			if (bEnableDbgMode) {
-				pDM_Odm->bDisablePhyApi = FALSE;
-				config_phydm_trx_mode_8822b(pDM_Odm, TxPath, RxPath, bTx2Path);
-				pDM_Odm->bDisablePhyApi = TRUE;
-				PHYDM_SNPRINTF((output+used, out_len-used, "TxPath = 0x%x, RxPath = 0x%x, bTx2Path = %d\n", TxPath, RxPath, bTx2Path));
-			} else {
-				pDM_Odm->bDisablePhyApi = FALSE;
-				PHYDM_SNPRINTF((output+used, out_len-used, "Disable API debug mode\n"));
-			}
-		} else
-			PHYDM_SNPRINTF((output+used, out_len-used, "This IC doesn't support PHYDM API function\n"));
-	}
-#else
 		PHYDM_SNPRINTF((output+used, out_len-used, "This IC doesn't support PHYDM API function\n"));
-#endif
 		break;
 
 	case PHYDM_LA_MODE:

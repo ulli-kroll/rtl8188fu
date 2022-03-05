@@ -888,13 +888,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 
-	if ((IS_HARDWARE_TYPE_8814A(padapter)
-		|| IS_HARDWARE_TYPE_8822BU(padapter) || IS_HARDWARE_TYPE_8822BS(padapter))
-		&& NULL == padapter->HalFunc.fw_correct_bcn) {
-		rtw_hal_error_msg("fw_correct_bcn");
-		ret = _FAIL;
-	}
-	
 	
 	/*** SReset section ***/
 

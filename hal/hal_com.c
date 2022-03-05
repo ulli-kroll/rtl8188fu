@@ -3571,25 +3571,6 @@ void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer)
 	u8 cur_wireless_mode = pmlmeextpriv->cur_wireless_mode;
 
 #ifdef CONFIG_USB_RX_AGGREGATION	
-	if(IS_HARDWARE_TYPE_8821U(padapter) )//|| IS_HARDWARE_TYPE_8192EU(padapter))
-	{
-		//This AGG_PH_TH only for UsbRxAggMode == USB_RX_AGG_USB
-		if((pHalData->UsbRxAggMode == USB_RX_AGG_USB) && (check_fwstate(pmlmepriv, _FW_LINKED)== _TRUE))
-		{
-			if(pdvobjpriv->traffic_stat.cur_tx_tp > 2 && pdvobjpriv->traffic_stat.cur_rx_tp < 30)
-				rtw_write16(padapter , REG_RXDMA_AGG_PG_TH , 0x1010);
-			else if (pdvobjpriv->traffic_stat.last_tx_bytes > 220000 && pdvobjpriv->traffic_stat.cur_rx_tp < 30)
-				rtw_write16(padapter , REG_RXDMA_AGG_PG_TH , 0x1006);			
-			else
-				rtw_write16(padapter, REG_RXDMA_AGG_PG_TH,0x2005); //dmc agg th 20K
-			
-			//DBG_871X("TX_TP=%u, RX_TP=%u \n", pdvobjpriv->traffic_stat.cur_tx_tp, pdvobjpriv->traffic_stat.cur_rx_tp);
-		}
-	}
-	else if(IS_HARDWARE_TYPE_8812(padapter))
-	{
-		rtw_set_usb_agg_by_mode(padapter,cur_wireless_mode);
-	}
 #endif
 }
 
@@ -3891,10 +3872,6 @@ void rtw_hal_ch_sw_iqk_info_restore(_adapter* padapter, u8 ch_sw_use_case) {
 
 void rtw_reset_phy_trx_ok_counters(_adapter *padapter)
 {
-	if (IS_HARDWARE_TYPE_JAGUAR(padapter) || IS_HARDWARE_TYPE_JAGUAR2(padapter)) {
-		PHY_SetBBReg(padapter, 0xB58, BIT0, 0x1);
-		PHY_SetBBReg(padapter, 0xB58, BIT0, 0x0);
-	}
 }
 void rtw_get_noise(_adapter* padapter)
 {

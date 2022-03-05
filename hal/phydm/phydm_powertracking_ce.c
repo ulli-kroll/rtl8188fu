@@ -404,15 +404,6 @@ getSwingIndex(
 		pSwingTable = OFDMSwingTable_New;
 		swingTableSize = OFDM_TABLE_SIZE;
 	} else {
-#if ((RTL8812A_SUPPORT==1)||(RTL8821A_SUPPORT==1))
-		if (pDM_Odm->SupportICType == ODM_RTL8812 || pDM_Odm->SupportICType == ODM_RTL8821)
-		{
-			bbSwing = PHY_GetTxBBSwing_8812A(Adapter, pHalData->CurrentBandType, ODM_RF_PATH_A);
-			pSwingTable = TxScalingTable_Jaguar;
-			swingTableSize = TXSCALE_TABLE_SIZE;
-		}
-		else
-#endif
 		{
 			bbSwing = 0;
 			pSwingTable = OFDMSwingTable;
@@ -533,7 +524,6 @@ odm_TXPowerTrackingCheckCE(
 		//pHalData->TxPowerCheckCnt++;	//cosa add for debug
 		if (IS_HARDWARE_TYPE_8188E(Adapter) || IS_HARDWARE_TYPE_8188F(Adapter) || IS_HARDWARE_TYPE_8192E(Adapter)
 			|| IS_HARDWARE_TYPE_8723B(Adapter)
-			|| IS_HARDWARE_TYPE_JAGUAR(Adapter) || IS_HARDWARE_TYPE_8814A(Adapter)
 			|| IS_HARDWARE_TYPE_8703B(Adapter)
 		) {
 			ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_T_METER_NEW, (BIT17 | BIT16), 0x03);

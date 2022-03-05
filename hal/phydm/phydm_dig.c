@@ -756,10 +756,6 @@ odm_DIG(
 				}
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-#if (RTL8812A_SUPPORT==1) 
-				if(pDM_Odm->SupportICType == ODM_RTL8812)
-					ODM_ConfigBBWithHeaderFile(pDM_Odm, CONFIG_BB_AGC_TAB_DIFF);
-#endif
 #endif
 			}
 
