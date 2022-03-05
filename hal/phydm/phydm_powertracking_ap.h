@@ -23,15 +23,7 @@
 
 #define POWRTRACKING_VERSION	"1.1"
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#ifdef RTK_AC_SUPPORT
 #define ODM_IC_11AC_SERIES_SUPPORT		1
-#else
-#define ODM_IC_11AC_SERIES_SUPPORT		0
-#endif
-#else
-#define ODM_IC_11AC_SERIES_SUPPORT		1
-#endif
 
 #define		DPK_DELTA_MAPPING_NUM	13
 #define		index_mapping_HP_NUM	15

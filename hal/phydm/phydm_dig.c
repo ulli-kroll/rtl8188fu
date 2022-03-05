@@ -108,8 +108,8 @@ odm_FAThresholdCheck(
 			dm_FA_thres[1] = DM_DIG_FA_TH1_92D;
 			dm_FA_thres[2] = DM_DIG_FA_TH2_92D;
 		}
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-		else if(pDM_Odm->SupportPlatform & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
+		else if(pDM_Odm->SupportPlatform & (ODM_ADSL))
 		{
 			// For AP
 			if((RxTp>>2) > TxTp && RxTp < 10000 && RxTp > 500)			// 10Mbps & 0.5Mbps
@@ -144,7 +144,7 @@ odm_FAThresholdCheck(
 	}
 	else
 	{
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 		if(bDFSBand)
 		{
 			// For DFS band and no link
@@ -238,7 +238,7 @@ odm_InbandNoiseCalculate (
 	IN		PVOID		pDM_VOID
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	PDM_ODM_T			pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pDIG_T				pDM_DigTable = &pDM_Odm->DM_DigTable;
 	u1Byte				IGIBackup, TimeCnt = 0, ValidCnt = 0;
@@ -415,7 +415,7 @@ ODM_Write_DIG(
 				ODM_SetBBReg(pDM_Odm, ODM_REG(IGI_D,pDM_Odm), ODM_BIT(IGI,pDM_Odm), CurrentIGI);
 			}
 		}
-		else if(pDM_Odm->SupportPlatform & (ODM_AP|ODM_ADSL))
+		else if(pDM_Odm->SupportPlatform & (ODM_ADSL))
 		{
 			switch(*(pDM_Odm->pOnePathCCA))
 			{
@@ -569,7 +569,7 @@ odm_DigAbort(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pDIG_T			pDM_DigTable = &pDM_Odm->DM_DigTable;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	prtl8192cd_priv	priv = pDM_Odm->priv;
 #endif
 
@@ -635,9 +635,6 @@ odm_DIGInit(
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pDIG_T						pDM_DigTable = &pDM_Odm->DM_DigTable;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm, PHYDM_FALSEALMCNT);
-#endif
 
 	pDM_DigTable->bStopDIG = FALSE;
 	pDM_DigTable->bIgnoreDIG = FALSE;
@@ -661,26 +658,6 @@ odm_DIGInit(
 	//To Initialize pDM_Odm->bDMInitialGainEnable == FALSE to avoid DIG error
 	pDM_Odm->bDMInitialGainEnable = TRUE;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	pDM_DigTable->DIG_Dynamic_MIN_0 = 0x25;
-	pDM_DigTable->DIG_Dynamic_MIN_1 = 0x25;
-
-	// For AP\ ADSL modified DIG
-	pDM_DigTable->bTpTarget = FALSE;
-	pDM_DigTable->bNoiseEst = TRUE;
-	pDM_DigTable->IGIOffset_A = 0;
-	pDM_DigTable->IGIOffset_B = 0;
-	pDM_DigTable->TpTrainTH_min = 0;
-
-	// For RTL8881A
-	FalseAlmCnt->Cnt_Ofdm_fail_pre = 0;
-
-	//Dyanmic EDCCA
-	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-	{
-		ODM_SetBBReg(pDM_Odm, 0xC50, 0xFFFF0000, 0xfafd);
-	}
-#else
 	pDM_DigTable->DIG_Dynamic_MIN_0 = DM_DIG_MIN_NIC;
 	pDM_DigTable->DIG_Dynamic_MIN_1 = DM_DIG_MIN_NIC;
 
@@ -691,7 +668,6 @@ odm_DIGInit(
 	pDM_DigTable->pause_dig_level = 0;
 	ODM_Memory_Set(pDM_Odm, pDM_DigTable->pause_cckpd_value, 0, (DM_DIG_MAX_PAUSE_TYPE + 1));
 	pDM_DigTable->pause_cckpd_level = 0;
-#endif
 
 	if(pDM_Odm->BoardType & (ODM_BOARD_EXT_PA|ODM_BOARD_EXT_LNA))
 	{
@@ -713,7 +689,7 @@ odm_DIG(
 	)
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	prtl8192cd_priv				priv = pDM_Odm->priv;
 	PSTA_INFO_T   				pEntry;
 #endif
@@ -730,7 +706,7 @@ odm_DIG(
 	u4Byte						TxTp = 0, RxTp = 0;
 	BOOLEAN						bDFSBand = FALSE;
 	BOOLEAN						bPerformance = TRUE, bFirstTpTarget = FALSE, bFirstCoverage = FALSE;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	u4Byte						TpTrainTH_MIN = DM_DIG_TP_Target_TH0;
 	static		u1Byte			TimeCnt = 0;
 	u1Byte						i;
@@ -785,7 +761,7 @@ odm_DIG(
 		FirstDisConnect = (!pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == TRUE);
 	}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	//1 Noise Floor Estimate
 	//pDM_DigTable->bNoiseEst = (FirstConnect)?TRUE:pDM_DigTable->bNoiseEst;
 	//odm_InbandNoiseCalculate (pDM_Odm);
@@ -897,7 +873,7 @@ odm_DIG(
 	if((pDM_Odm->SupportICType & ODM_RTL8192C) && (pDM_Odm->BoardType & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA)))
 	{
 		//2 High power case
-		if(pDM_Odm->SupportPlatform & (ODM_AP|ODM_ADSL))
+		if(pDM_Odm->SupportPlatform & (ODM_ADSL))
 		{
 			dm_dig_max = DM_DIG_MAX_AP_HP;
 			dm_dig_min = DM_DIG_MIN_AP_HP;
@@ -912,7 +888,7 @@ odm_DIG(
 	else
 #endif
 	{
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 		//2 For AP\ADSL
 		if(!bPerformance)
 		{
@@ -973,7 +949,7 @@ odm_DIG(
 	if(pDM_Odm->bLinked && bPerformance)
 	{
 		//2 Modify DIG upper bound
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 		offset = 15;
 #else
 		//4 Modify DIG upper bound for 92E, 8723A\B, 8821 & 8812 BT
@@ -1031,7 +1007,7 @@ odm_DIG(
 	}
 	else
 	{
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 		if(bPerformance && bDFSBand)
 		{
 			pDM_DigTable->rx_gain_range_max = 0x28;
@@ -1067,7 +1043,7 @@ odm_DIG(
 
 	//1 Modify DIG lower bound, deal with abnormal case
 	//2 Abnormal false alarm case
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	if(bDFSBand)
 	{
 		pDM_DigTable->rx_gain_range_min = DIG_Dynamic_MIN;
@@ -1122,7 +1098,7 @@ odm_DIG(
 		{	
 			pDM_DigTable->LargeFAHit = 0;
 			
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 			if(bDFSBand)
 			{
 				if(pDM_Odm->RSSI_Min > 0x28)
@@ -1317,14 +1293,6 @@ odm_FalseAlarmCounterStatistics(
 	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm, PHYDM_FALSEALMCNT);
 	u4Byte 						ret_value;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-//Mark there, and check this in odm_DMWatchDog
-#if 0 //(DM_ODM_SUPPORT_TYPE == ODM_AP)
-	prtl8192cd_priv priv		= pDM_Odm->priv;
-	if( (priv->auto_channel != 0) && (priv->auto_channel != 2) )
-		return;
-#endif
-#endif
 
 	if(!(pDM_Odm->SupportAbility & ODM_BB_FA_CNT))
 		return;
@@ -1710,7 +1678,7 @@ ODM_Write_CCK_CCA_Thres(
 	pDM_DigTable->CurCCK_CCAThres = CurCCK_CCAThres;
 }
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 VOID
 odm_MPT_DIGCallback(
 	IN		PVOID					pDM_VOID
@@ -1774,7 +1742,7 @@ ODM_MPT_DIG(
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("===> ODM_MPT_DIG, pBandType = %d\n", *pDM_Odm->pBandType));
 	
-#if (ODM_FIX_2G_DIG || (DM_ODM_SUPPORT_TYPE & ODM_AP))
+#if (ODM_FIX_2G_DIG)
 	if (*pDM_Odm->pBandType == ODM_BAND_5G || (pDM_Odm->SupportICType & (ODM_RTL8814A|ODM_RTL8822B))) // for 5G or 8814
 #else
 	if (1) // for both 2G/5G

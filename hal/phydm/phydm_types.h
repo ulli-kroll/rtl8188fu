@@ -22,7 +22,6 @@
 
 
 /*Define Different SW team support*/
-#define	ODM_AP			0x01	/*BIT0*/
 #define	ODM_ADSL		0x02
 #define	ODM_CE			0x04	/*BIT2*/
 
@@ -49,9 +48,6 @@ typedef enum _HAL_STATUS{
 	RT_STATUS_OS_API_FAILED,*/
 }HAL_STATUS,*PHAL_STATUS;
 
-#if( DM_ODM_SUPPORT_TYPE == ODM_AP)
-#define		MP_DRIVER		0
-#endif
 
 #define		VISTA_USB_RX_REVISE			0
 
@@ -107,42 +103,7 @@ typedef enum _RT_SPINLOCK_TYPE{
 
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-	// To let ADSL/AP project compile ok; it should be removed after all conflict are solved. Added by Annie, 2011-10-07.
-	#define ADSL_AP_BUILD_WORKAROUND
-	#define AP_BUILD_WORKAROUND
-
-	#ifdef AP_BUILD_WORKAROUND
-	#include "../typedef.h"
-	#else
-	typedef void					VOID,*PVOID;
-	typedef unsigned char			BOOLEAN,*PBOOLEAN;
-	typedef unsigned char			u1Byte,*pu1Byte;
-	typedef unsigned short			u2Byte,*pu2Byte;
-	typedef unsigned int			u4Byte,*pu4Byte;
-	typedef unsigned long long		u8Byte,*pu8Byte;
-#if 1
-/* In ARM platform, system would use the type -- "char" as "unsigned char"
- * And we only use s1Byte/ps1Byte as INT8 now, so changes the type of s1Byte.*/
-    typedef signed char				s1Byte,*ps1Byte;
-#else
-	typedef char					s1Byte,*ps1Byte;
-#endif
-	typedef short					s2Byte,*ps2Byte;
-	typedef long					s4Byte,*ps4Byte;
-	typedef long long				s8Byte,*ps8Byte;
-	#endif
-
-	typedef struct rtl8192cd_priv	*prtl8192cd_priv;
-	typedef struct stat_info		STA_INFO_T,*PSTA_INFO_T;
-	typedef _timer 				RT_TIMER, *PRT_TIMER;
-	typedef  void *				RT_TIMER_CALL_BACK;
-
-	#define _TRUE				1
-	#define _FALSE				0
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#include <drv_types.h>
 #if 0
 	typedef u8					u1Byte, *pu1Byte;

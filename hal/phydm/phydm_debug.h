@@ -238,7 +238,7 @@ VOID phydm_BasicProfile(
 	OUT		char				*output,
 	IN		u4Byte			*_out_len
 	);
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 s4Byte
 phydm_cmd(
 	IN PDM_ODM_T	pDM_Odm,

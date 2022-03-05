@@ -78,11 +78,7 @@ ODM_ClearTxPowerTrackingState(
 
 VOID
 ODM_TXPowerTrackingCallback_ThermalMeter(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	IN		PVOID					pDM_VOID
-#else
 	IN PADAPTER	Adapter
-#endif
 	);
 
 

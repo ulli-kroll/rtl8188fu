@@ -44,24 +44,7 @@
 
 //2 Config Flags and Structs - defined by each ODM Type
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	#include "../8192cd_cfg.h"
-	#include "../odm_inc.h"
-
-	#include "../8192cd.h"
-	#include "../8192cd_util.h"
-	#ifdef _BIG_ENDIAN_
-	#define	ODM_ENDIAN_TYPE				ODM_ENDIAN_BIG
-	#else
-	#define	ODM_ENDIAN_TYPE				ODM_ENDIAN_LITTLE
-	#endif
-
-	#ifdef AP_BUILD_WORKAROUND
-	#include "../8192cd_headers.h"
-	#include "../8192cd_debug.h"		
-	#endif
-
-#elif (DM_ODM_SUPPORT_TYPE ==ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE ==ODM_CE)
 	#define __PACK
 	#define __WLAN_ATTRIB_PACK__
 #endif
@@ -95,13 +78,6 @@ PHY_SetTxPowerLimit(
 
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-#define RTL8821B_SUPPORT		0
-#define RTL8822B_SUPPORT		0
-#define RTL8703B_SUPPORT		0
-#define RTL8188F_SUPPORT		0
-#endif
-
 #if RTL8188E_SUPPORT == 1
 #define RTL8188E_T_SUPPORT 1
 #ifdef CONFIG_SFW_SUPPORTED
@@ -125,28 +101,21 @@ PHY_SetTxPowerLimit(
 	#include "rtl8188e_hal.h" 
 	#include "rtl8188e/halphyrf_8188e_ce.h"
 #endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	#include "rtl8188e/halphyrf_8188e_ap.h"
-#endif
 #endif  //88E END
 
 #if (RTL8192E_SUPPORT==1) 
 
-	#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-		#include "rtl8192e/halphyrf_8192e_ap.h" /*FOR_8192E_IQK*/
-	#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+	#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 		#include "rtl8192e/halphyrf_8192e_ce.h" /*FOR_8192E_IQK*/
 	#endif
 	
 #include "rtl8192e/phydm_rtl8192e.h" //FOR_8192E_IQK
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 	#include "rtl8192e/halhwimg8192e_bb.h"
 	#include "rtl8192e/halhwimg8192e_mac.h"
 	#include "rtl8192e/halhwimg8192e_rf.h"
 	#include "rtl8192e/phydm_regconfig8192e.h"
 	#include "rtl8192e/halhwimg8192e_fw.h"
 	#include "rtl8192e/hal8192ereg.h"
-#endif
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#include "rtl8192e_hal.h"
 #endif
@@ -154,21 +123,17 @@ PHY_SetTxPowerLimit(
 
 #if (RTL8812A_SUPPORT==1)
 
-    #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-        #include "rtl8812a/halphyrf_8812a_ap.h"
-    #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+    #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
         #include "rtl8812a/halphyrf_8812a_ce.h"
     #endif
 
     //#include "rtl8812a/HalPhyRf_8812A.h" //FOR_8812_IQK
-    #if (DM_ODM_SUPPORT_TYPE != ODM_AP)
         #include "rtl8812a/halhwimg8812a_bb.h"
         #include "rtl8812a/halhwimg8812a_mac.h"
         #include "rtl8812a/halhwimg8812a_rf.h"
         #include "rtl8812a/phydm_regconfig8812a.h"
         #include "rtl8812a/halhwimg8812a_fw.h"
         #include "rtl8812a/phydm_rtl8812a.h"
-    #endif
 
     #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	    #include "rtl8812a_hal.h"
@@ -181,14 +146,10 @@ PHY_SetTxPowerLimit(
 #include "rtl8814a/halhwimg8814a_mac.h"
 #include "rtl8814a/halhwimg8814a_rf.h"
 #include "rtl8814a/halhwimg8814a_bb.h"
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 	#include "rtl8814a/halhwimg8814a_fw.h"
 	#include "rtl8814a/phydm_rtl8814a.h"
-#endif
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#include "rtl8814a/halphyrf_8814a_ce.h"
-#elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	#include "rtl8814a/halphyrf_8814a_ap.h"
 #endif
 	#include "rtl8814a/phydm_regconfig8814a.h"
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)

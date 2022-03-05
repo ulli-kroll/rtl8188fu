@@ -316,475 +316,6 @@ odm_UpdateTxAnt(
 }
 
 #ifdef BEAMFORMING_SUPPORT
-#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-VOID
-odm_BDC_Init(
-	IN 		PVOID 		pDM_VOID
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pBDC_T	pDM_BdcTable=&pDM_Odm->DM_BdcTable;
-
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("\n[ BDC Initialization......] \n"));
-	pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-	pDM_BdcTable->BDC_Mode=BDC_MODE_NULL;
-	pDM_BdcTable->BDC_Try_flag=0;
-	pDM_BdcTable->BDCcoexType_wBfer=0;
-	pDM_Odm->bdc_holdstate=0xff;
-	
-	if(pDM_Odm->SupportICType == ODM_RTL8192E)
-	{
-		ODM_SetBBReg(pDM_Odm, 0xd7c , 0x0FFFFFFF, 0x1081008); 
-		ODM_SetBBReg(pDM_Odm, 0xd80 , 0x0FFFFFFF, 0); 
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8812)
-	{
-		ODM_SetBBReg(pDM_Odm, 0x9b0 , 0x0FFFFFFF, 0x1081008);     //0x9b0[30:0] = 01081008
-		ODM_SetBBReg(pDM_Odm, 0x9b4 , 0x0FFFFFFF, 0);                 //0x9b4[31:0] = 00000000
-	}
-	
-}
-
-
-VOID
-odm_CSI_on_off(
-	IN 		PVOID 		pDM_VOID, 
-	IN 		u1Byte 			CSI_en
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	if(CSI_en==CSI_ON)
-	{
-		if(pDM_Odm->SupportICType == ODM_RTL8192E)
-		{
-			ODM_SetMACReg(pDM_Odm, 0xd84 , BIT11, 1);  //0xd84[11]=1
-		}
-		else if(pDM_Odm->SupportICType == ODM_RTL8812)
-		{
-			ODM_SetMACReg(pDM_Odm, 0x9b0 , BIT31, 1);  //0x9b0[31]=1
-		}
-	
-	}
-	else if(CSI_en==CSI_OFF)
-	{
-		if(pDM_Odm->SupportICType == ODM_RTL8192E)
-		{
-			ODM_SetMACReg(pDM_Odm, 0xd84 , BIT11, 0);  //0xd84[11]=0
-		}
-		else if(pDM_Odm->SupportICType == ODM_RTL8812)
-		{
-			ODM_SetMACReg(pDM_Odm, 0x9b0 , BIT31, 0);  //0x9b0[31]=0
-		}
-	}	
-}
-
-VOID
-odm_BDCcoexType_withBferClient(
-	IN 		PVOID 		pDM_VOID, 
-	IN 		u1Byte 			swch
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pBDC_T 	pDM_BdcTable = &pDM_Odm->DM_BdcTable;
-	u1Byte     BDCcoexType_wBfer;
-	
-	if(swch==DIVON_CSIOFF)
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[BDCcoexType: 1] {DIV,CSI} ={1,0} \n"));
-		BDCcoexType_wBfer=1;
-
-		if(BDCcoexType_wBfer != pDM_BdcTable->BDCcoexType_wBfer)
-		{
-			odm_AntDiv_on_off(pDM_Odm, ANTDIV_ON);
-			odm_CSI_on_off(pDM_Odm,CSI_OFF);
-			pDM_BdcTable->BDCcoexType_wBfer=1;
-		}
-	}
-	else if(swch==DIVOFF_CSION)
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[BDCcoexType: 2] {DIV,CSI} ={0,1}\n"));
-		BDCcoexType_wBfer=2;
-
-		if(BDCcoexType_wBfer != pDM_BdcTable->BDCcoexType_wBfer)
-		{
-			odm_AntDiv_on_off(pDM_Odm, ANTDIV_OFF);
-			odm_CSI_on_off(pDM_Odm,CSI_ON);
-			pDM_BdcTable->BDCcoexType_wBfer=2;
-		}
-	}
-}
-
-VOID
-odm_BF_AntDiv_ModeArbitration(
-	IN 		PVOID 		pDM_VOID
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pBDC_T 			pDM_BdcTable = &pDM_Odm->DM_BdcTable;
-	u1Byte			current_BDC_Mode;
-
-	#if(DM_ODM_SUPPORT_TYPE  == ODM_AP)
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("\n"));
-	
-		//2 Mode 1
-		if((pDM_BdcTable->num_Txbfee_Client !=0) && (pDM_BdcTable->num_Txbfer_Client == 0))
-		{
-			current_BDC_Mode=BDC_MODE_1;
-			
-			if(current_BDC_Mode != pDM_BdcTable->BDC_Mode)
-			{
-				pDM_BdcTable->BDC_Mode=BDC_MODE_1;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF);
-				pDM_BdcTable->BDC_RxIdleUpdate_counter=1;
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Change to (( Mode1 ))\n"));
-			}
-
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[Antdiv + BF coextance Mode] : (( Mode1 ))\n"));
-		}
-		//2 Mode 2
-		else if((pDM_BdcTable->num_Txbfee_Client ==0) && (pDM_BdcTable->num_Txbfer_Client != 0))
-		{
-			current_BDC_Mode=BDC_MODE_2;
-			
-			if(current_BDC_Mode != pDM_BdcTable->BDC_Mode)
-			{
-				pDM_BdcTable->BDC_Mode=BDC_MODE_2;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				pDM_BdcTable->BDC_Try_flag=0;
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Change to (( Mode2 ))\n"));
-				
-			}
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[Antdiv + BF coextance Mode] : (( Mode2 ))\n"));
-		}
-		//2 Mode 3
-		else if((pDM_BdcTable->num_Txbfee_Client !=0) && (pDM_BdcTable->num_Txbfer_Client != 0))
-		{
-			current_BDC_Mode=BDC_MODE_3;
-			
-			if(current_BDC_Mode != pDM_BdcTable->BDC_Mode)
-			{
-				pDM_BdcTable->BDC_Mode=BDC_MODE_3;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_RxIdleUpdate_counter=1;
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Change to (( Mode3 ))\n"));
-			}
-
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[Antdiv + BF coextance Mode] : (( Mode3 ))\n"));
-		}
-		//2 Mode 4
-		else if((pDM_BdcTable->num_Txbfee_Client ==0) && (pDM_BdcTable->num_Txbfer_Client == 0))
-		{
-			current_BDC_Mode=BDC_MODE_4;
-			
-			if(current_BDC_Mode != pDM_BdcTable->BDC_Mode)
-			{
-				pDM_BdcTable->BDC_Mode=BDC_MODE_4;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF);
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Change to (( Mode4 ))\n"));
-			}
-
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[Antdiv + BF coextance Mode] : (( Mode4 ))\n"));
-		}
-	#endif
-
-}
-
-VOID
-odm_DivTrainState_setting( 
-	IN		PVOID 		pDM_VOID
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pBDC_T	pDM_BdcTable=&pDM_Odm->DM_BdcTable;
-
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("\n*****[S T A R T ]*****  [2-0. DIV_TRAIN_STATE] \n"));
-	pDM_BdcTable->BDC_Try_counter =2;
-	pDM_BdcTable->BDC_Try_flag=1; 
-	pDM_BdcTable->BDC_state=BDC_BFer_TRAIN_STATE;					
-	odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF);
-}
-
-VOID
-odm_BDCcoex_BFeeRxDiv_Arbitration(
-	IN		PVOID		pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pBDC_T    pDM_BdcTable = &pDM_Odm->DM_BdcTable;
-	BOOLEAN StopBF_flag;
-	u1Byte 	BDC_active_Mode;
-
-
-	#if(DM_ODM_SUPPORT_TYPE  == ODM_AP)
-
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("***{ num_BFee,  num_BFer , num_Client}  = (( %d  ,  %d  ,  %d))  \n",pDM_BdcTable->num_Txbfee_Client,pDM_BdcTable->num_Txbfer_Client,pDM_BdcTable->num_Client));
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("***{ num_BF_tars,  num_DIV_tars }  = ((  %d  ,  %d ))  \n",pDM_BdcTable->num_BfTar , pDM_BdcTable->num_DivTar ));
-
-		//2 [ MIB control ]
-		if (pDM_Odm->bdc_holdstate==2) 
-		{
-			odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION); 
-			pDM_BdcTable->BDC_state=BDC_BF_HOLD_STATE;
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Force in [ BF STATE] \n"));
-			return;	
-		}
-		else if (pDM_Odm->bdc_holdstate==1) 
-		{
-			pDM_BdcTable->BDC_state=BDC_DIV_HOLD_STATE;
-			odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF); 
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Force in [ DIV STATE] \n"));
-			return;	
-		}
-
-		//------------------------------------------------------------
-
-
-		
-		//2 Mode 2 & 3
-		if(pDM_BdcTable->BDC_Mode==BDC_MODE_2 ||pDM_BdcTable->BDC_Mode==BDC_MODE_3)
-		{
-
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("\n{ Try_flag ,  Try_counter } = {  %d , %d  } \n",pDM_BdcTable->BDC_Try_flag,pDM_BdcTable->BDC_Try_counter));
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BDCcoexType = (( %d ))  \n\n", pDM_BdcTable->BDCcoexType_wBfer));
-			
-                        // All Client have Bfer-Cap-------------------------------
-			if(pDM_BdcTable->num_Txbfer_Client == pDM_BdcTable->num_Client) //BFer STA Only?: yes
-			{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BFer STA only?  (( Yes ))\n"));
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION);
-				return;
-			}
-			else
-			{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BFer STA only?  (( No ))\n"));
-			}
-			//
-			if(pDM_BdcTable->bAll_BFSta_Idle==FALSE && pDM_BdcTable->bAll_DivSta_Idle==TRUE)
-			{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("All DIV-STA are idle, but BF-STA not\n"));
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_state=BDC_BFer_TRAIN_STATE;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION);
-				return;
-			}
-			else if(pDM_BdcTable->bAll_BFSta_Idle==TRUE && pDM_BdcTable->bAll_DivSta_Idle==FALSE)
-			{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("All BF-STA are idle, but DIV-STA not\n"));
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF);
-				return;
-			}
-
-			//Select active mode--------------------------------------
-			if(pDM_BdcTable->num_BfTar ==0) //  Selsect_1,  Selsect_2
-			{
-				if(pDM_BdcTable->num_DivTar ==0)  // Selsect_3
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Select active mode (( 1 )) \n"));
-					pDM_BdcTable->BDC_active_Mode=1;
-				}
-				else
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Select active mode  (( 2 ))\n"));
-					pDM_BdcTable->BDC_active_Mode=2;
-				}
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF);
-				return;
-			}
-			else // num_BfTar > 0
-			{			
-				if(pDM_BdcTable->num_DivTar ==0)  // Selsect_3
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Select active mode (( 3 ))\n"));		
-					pDM_BdcTable->BDC_active_Mode=3;
-					pDM_BdcTable->BDC_Try_flag=0;
-					pDM_BdcTable->BDC_state=BDC_BFer_TRAIN_STATE;
-					odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION);
-					return;
-				}
-				else // Selsect_4
-				{
-					BDC_active_Mode=4;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Select active mode (( 4 ))\n"));	
-					
-					if(BDC_active_Mode!=pDM_BdcTable->BDC_active_Mode)
-					{
-						pDM_BdcTable->BDC_active_Mode=4;
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Change to active mode (( 4 ))  &  return!!! \n"));	
-						return;
-					}
-				}
-			}
-
-#if 1
-		if (pDM_Odm->bdc_holdstate==0xff) 
-		{
-			pDM_BdcTable->BDC_state=BDC_DIV_HOLD_STATE;
-			odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF); 
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Force in [ DIV STATE] \n"));	
-			return;
-		}
-#endif
-
-			// Does Client number changed ? -------------------------------
-			if(pDM_BdcTable->num_Client !=pDM_BdcTable->pre_num_Client)
-			{ 
-				pDM_BdcTable->BDC_Try_flag=0;
-				pDM_BdcTable->BDC_state=BDC_DIV_TRAIN_STATE;
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[  The number of client has been changed !!!]   return to (( BDC_DIV_TRAIN_STATE )) \n"));	
-			}
-			pDM_BdcTable->pre_num_Client=pDM_BdcTable->num_Client;
-
-			if( pDM_BdcTable->BDC_Try_flag==0)
-			{
-				//2 DIV_TRAIN_STATE (Mode 2-0)
-				if(pDM_BdcTable->BDC_state==BDC_DIV_TRAIN_STATE)
-				{
-					odm_DivTrainState_setting( pDM_Odm);
-				}
-				//2 BFer_TRAIN_STATE (Mode 2-1)
-				else if(pDM_BdcTable->BDC_state==BDC_BFer_TRAIN_STATE) 
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*****[2-1. BFer_TRAIN_STATE ]*****  \n"));
-					
-					//if(pDM_BdcTable->num_BfTar==0) 
-					//{
-					//	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BF_tars exist?  : (( No )),   [ BDC_BFer_TRAIN_STATE ] >> [BDC_DIV_TRAIN_STATE] \n"));
-					//	odm_DivTrainState_setting( pDM_Odm);
-					//}
-					//else //num_BfTar != 0
-					//{
-						pDM_BdcTable->BDC_Try_counter=2;
-						pDM_BdcTable->BDC_Try_flag=1;
-						pDM_BdcTable->BDC_state=BDC_DECISION_STATE;
-						odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION); 
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BF_tars exist?  : (( Yes )),   [ BDC_BFer_TRAIN_STATE ] >> [BDC_DECISION_STATE] \n"));
-					//}
-				}
-				//2 DECISION_STATE (Mode 2-2)
-				else if(pDM_BdcTable->BDC_state==BDC_DECISION_STATE)
-				{			
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*****[2-2. DECISION_STATE]***** \n"));
-					//if(pDM_BdcTable->num_BfTar==0) 
-					//{
-					//	ODM_AntDiv_Printk(("BF_tars exist?  : (( No )),   [ DECISION_STATE ] >> [BDC_DIV_TRAIN_STATE] \n"));
-					//	odm_DivTrainState_setting( pDM_Odm);
-					//}
-					//else //num_BfTar != 0
-					//{
-						if(pDM_BdcTable->BF_pass==FALSE || pDM_BdcTable->DIV_pass == FALSE)
-							StopBF_flag=TRUE;
-						else
-							StopBF_flag=FALSE;
-						
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BF_tars exist?  : (( Yes )),  {BF_pass, DIV_pass, StopBF_flag }  = { %d, %d, %d } \n" ,pDM_BdcTable->BF_pass,pDM_BdcTable->DIV_pass,StopBF_flag));
-					
-						if(StopBF_flag==TRUE) //DIV_en
-						{
-							pDM_BdcTable->BDC_Hold_counter=10; //20
-							odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF); 
-							pDM_BdcTable->BDC_state=BDC_DIV_HOLD_STATE;
-							ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ StopBF_flag= ((TRUE)),   BDC_DECISION_STATE ] >> [BDC_DIV_HOLD_STATE] \n"));
-						}
-						else //BF_en
-						{
-							pDM_BdcTable->BDC_Hold_counter=10; //20
-							odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION); 
-							pDM_BdcTable->BDC_state=BDC_BF_HOLD_STATE;
-							ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[StopBF_flag= ((FALSE)),   BDC_DECISION_STATE ] >> [BDC_BF_HOLD_STATE] \n"));
-						}
-					//}
-				}
-				//2 BF-HOLD_STATE (Mode 2-3)
-				else if(pDM_BdcTable->BDC_state==BDC_BF_HOLD_STATE)
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*****[2-3. BF_HOLD_STATE ]*****\n"));	
-
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BDC_Hold_counter = (( %d )) \n",pDM_BdcTable->BDC_Hold_counter ));	
-
-					if(pDM_BdcTable->BDC_Hold_counter==1)
-					{
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ BDC_BF_HOLD_STATE ] >> [BDC_DIV_TRAIN_STATE] \n"));	
-						odm_DivTrainState_setting( pDM_Odm);
-					}
-					else
-					{
-						pDM_BdcTable->BDC_Hold_counter--;
-						
-						//if(pDM_BdcTable->num_BfTar==0) 
-						//{
-						//	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BF_tars exist?  : (( No )),   [ BDC_BF_HOLD_STATE ] >> [BDC_DIV_TRAIN_STATE] \n"));	
-						//	odm_DivTrainState_setting( pDM_Odm);
-						//}
-						//else //num_BfTar != 0
-						//{
-							//ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BF_tars exist?  : (( Yes ))\n"));	
-							pDM_BdcTable->BDC_state=BDC_BF_HOLD_STATE;
-							odm_BDCcoexType_withBferClient( pDM_Odm, DIVOFF_CSION);
-							ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ BDC_BF_HOLD_STATE ] >> [BDC_BF_HOLD_STATE] \n"));	
-						//}
-					}
-				
-				}
-				//2 DIV-HOLD_STATE (Mode 2-4)
-				else if(pDM_BdcTable->BDC_state==BDC_DIV_HOLD_STATE)
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*****[2-4. DIV_HOLD_STATE ]*****\n"));	
-					
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("BDC_Hold_counter = (( %d )) \n",pDM_BdcTable->BDC_Hold_counter ));
-					
-					if(pDM_BdcTable->BDC_Hold_counter==1)
-					{
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ BDC_DIV_HOLD_STATE ] >> [BDC_DIV_TRAIN_STATE] \n"));	
-						odm_DivTrainState_setting( pDM_Odm);
-					}
-					else
-					{
-						pDM_BdcTable->BDC_Hold_counter--;
-						pDM_BdcTable->BDC_state=BDC_DIV_HOLD_STATE;
-						odm_BDCcoexType_withBferClient( pDM_Odm, DIVON_CSIOFF); 
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ BDC_DIV_HOLD_STATE ] >> [BDC_DIV_HOLD_STATE] \n"));	
-					}
-				
-				}
-				
-			}
-			else if( pDM_BdcTable->BDC_Try_flag==1)
-			{
-				//2 Set Training Counter
-				if(pDM_BdcTable->BDC_Try_counter >1)
-				{
-					pDM_BdcTable->BDC_Try_counter--;
-					if(pDM_BdcTable->BDC_Try_counter ==1)
-						pDM_BdcTable->BDC_Try_flag=0; 
-						
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Training !!\n"));
-					//return ;
-				}
-				
-			}
-			
-		}
-
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("\n[end]\n"));
-
-	#endif //#if(DM_ODM_SUPPORT_TYPE  == ODM_AP)
-
-
-
-
-	
-
-}
-
-#endif
 #endif //#ifdef BEAMFORMING_SUPPORT
 
 
@@ -1972,21 +1503,6 @@ odm_HW_AntDiv(
 	PSTA_INFO_T   	pEntry;
 
 	#ifdef BEAMFORMING_SUPPORT
-	#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-	pBDC_T    pDM_BdcTable = &pDM_Odm->DM_BdcTable;
-	u4Byte	TH1=500000;
-	u4Byte	TH2=10000000; 
-	u4Byte	MA_rx_Temp, degrade_TP_temp, improve_TP_temp;
-	u1Byte	Monitor_RSSI_threshold=30;
-
-	pDM_BdcTable->BF_pass=TRUE;
-	pDM_BdcTable->DIV_pass=TRUE;
-	pDM_BdcTable->bAll_DivSta_Idle=TRUE;
-	pDM_BdcTable->bAll_BFSta_Idle=TRUE;
-	pDM_BdcTable->num_BfTar=0 ;
-	pDM_BdcTable->num_DivTar=0;
-	pDM_BdcTable->num_Client=0;
-	#endif
 	#endif
 
 	if(!pDM_Odm->bLinked) //bLinked==False
@@ -2014,10 +1530,6 @@ odm_HW_AntDiv(
 			//if(pDM_Odm->SupportICType == ODM_RTL8821 )
 				//ODM_SetBBReg(pDM_Odm, 0x800 , BIT25, 0); //CCK AntDiv function disable
 				
-			//#if(DM_ODM_SUPPORT_TYPE  == ODM_AP)
-			//else if(pDM_Odm->SupportICType == ODM_RTL8881A)
-			//	ODM_SetBBReg(pDM_Odm, 0x800 , BIT25, 0); //CCK AntDiv function disable
-			//#endif
 			
 			//else if(pDM_Odm->SupportICType == ODM_RTL8723B ||pDM_Odm->SupportICType == ODM_RTL8812)
 				//ODM_SetBBReg(pDM_Odm, 0xA00 , BIT15, 0); //CCK AntDiv function disable
@@ -2032,9 +1544,6 @@ odm_HW_AntDiv(
 			
 			//2 BDC Init
 			#ifdef BEAMFORMING_SUPPORT
-			#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-				odm_BDC_Init(pDM_Odm);
-			#endif
 			#endif
 			
 			#ifdef ODM_EVM_ENHANCE_ANTDIV
@@ -2066,12 +1575,6 @@ odm_HW_AntDiv(
 	
 	//2 BDC Mode Arbitration
 	#ifdef BEAMFORMING_SUPPORT
-	#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if(pDM_Odm->antdiv_evm_en == 0 ||pDM_FatTable->EVM_method_enable==0)
-	{
-		odm_BF_AntDiv_ModeArbitration(pDM_Odm);
-	}
-	#endif
 	#endif
 
 	for (i=0; i<ODM_ASSOCIATE_ENTRY_NUM; i++)
@@ -2120,9 +1623,6 @@ odm_HW_AntDiv(
 			if(pDM_Odm->AntDivType != CGCS_RX_HW_ANTDIV)
 			{
 				#ifdef BEAMFORMING_SUPPORT
-				#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-					if(pDM_BdcTable->w_BFee_Client[i]==0)
-				#endif	
 				#endif
 					{
 						odm_UpdateTxAnt(pDM_Odm, TargetAnt, i);
@@ -2132,85 +1632,11 @@ odm_HW_AntDiv(
 			//------------------------------------------------------------
 
 			#ifdef BEAMFORMING_SUPPORT
-			#if(DM_ODM_SUPPORT_TYPE  == ODM_AP) 
-
-			pDM_BdcTable->num_Client++;
-
-			if(pDM_BdcTable->BDC_Mode==BDC_MODE_2 ||pDM_BdcTable->BDC_Mode==BDC_MODE_3)
-			{
-				//2 Byte Counter
-
-				MA_rx_Temp=  (pEntry->rx_byte_cnt_LowMAW)<<3 ; //  RX  TP   ( bit /sec)
-				
-				if(pDM_BdcTable->BDC_state==BDC_BFer_TRAIN_STATE)
-				{
-					pDM_BdcTable->MA_rx_TP_DIV[i]=  MA_rx_Temp ;
-				}
-				else
-				{
-					pDM_BdcTable->MA_rx_TP[i] =MA_rx_Temp ;
-				}
-
-				if( (MA_rx_Temp < TH2)   &&  (MA_rx_Temp > TH1) && (LocalMaxRSSI<=Monitor_RSSI_threshold))
-				{
-					if(pDM_BdcTable->w_BFer_Client[i]==1) // Bfer_Target
-					{
-						pDM_BdcTable->num_BfTar++;
-						
-						if(pDM_BdcTable->BDC_state==BDC_DECISION_STATE && pDM_BdcTable->BDC_Try_flag==0)
-						{
-						        improve_TP_temp = (pDM_BdcTable->MA_rx_TP_DIV[i] * 9)>>3 ; //* 1.125
-					        	pDM_BdcTable->BF_pass = (pDM_BdcTable->MA_rx_TP[i] > improve_TP_temp)?TRUE:FALSE;
-							ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** Client[ %d ] :  { MA_rx_TP,improve_TP_temp , MA_rx_TP_DIV,  BF_pass}={ %d,  %d, %d , %d }  \n" ,i,pDM_BdcTable->MA_rx_TP[i],improve_TP_temp,pDM_BdcTable->MA_rx_TP_DIV[i], pDM_BdcTable->BF_pass ));
-						}		
-					}		
-					else// DIV_Target
-					{
-						pDM_BdcTable->num_DivTar++;
-						
-						if(pDM_BdcTable->BDC_state==BDC_DECISION_STATE && pDM_BdcTable->BDC_Try_flag==0)
-						{
-					        	degrade_TP_temp=(pDM_BdcTable->MA_rx_TP_DIV[i]*5)>>3;//* 0.625
-					        	pDM_BdcTable->DIV_pass = (pDM_BdcTable->MA_rx_TP[i] >degrade_TP_temp)?TRUE:FALSE;
-							ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** Client[ %d ] :  { MA_rx_TP, degrade_TP_temp , MA_rx_TP_DIV,  DIV_pass}=\n{ %d,  %d, %d , %d }  \n" ,i,pDM_BdcTable->MA_rx_TP[i],degrade_TP_temp,pDM_BdcTable->MA_rx_TP_DIV[i], pDM_BdcTable->DIV_pass ));
-						}							
-					}
-				}
-
-				if(MA_rx_Temp > TH1)
-				{
-					if(pDM_BdcTable->w_BFer_Client[i]==1) // Bfer_Target
-					{
-						pDM_BdcTable->bAll_BFSta_Idle=FALSE;
-					}		
-					else// DIV_Target
-					{
-						pDM_BdcTable->bAll_DivSta_Idle=FALSE;
-					}
-				}
-		
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** Client[ %d ] :  { BFmeeCap , BFmerCap}  = { %d , %d } \n" ,i, pDM_BdcTable->w_BFee_Client[i] , pDM_BdcTable->w_BFer_Client[i]));
-
-				if(pDM_BdcTable->BDC_state==BDC_BFer_TRAIN_STATE)
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** Client[ %d ] :    MA_rx_TP_DIV = (( %d ))  \n",i,pDM_BdcTable->MA_rx_TP_DIV[i]  ));
-					
-				}
-				else
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** Client[ %d ] :    MA_rx_TP = (( %d ))  \n",i,pDM_BdcTable->MA_rx_TP[i]  ));
-				}
-			
-			}
-			#endif
 			#endif
 
 		}
 
 		#ifdef BEAMFORMING_SUPPORT
-		#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-		if(pDM_BdcTable->BDC_Try_flag==0)
-		#endif
 		#endif	
 		{
         		pDM_FatTable->MainAnt_Sum[i] = 0;
@@ -2223,47 +1649,14 @@ odm_HW_AntDiv(
 
 	
 	//2 Set RX Idle Antenna & TX Antenna(Because of HW Bug )	
-	#if(DM_ODM_SUPPORT_TYPE  == ODM_AP ) 
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** RxIdleAnt = (( %s ))\n\n", ( RxIdleAnt ==MAIN_ANT)?"MAIN_ANT":"AUX_ANT"));
-		
-		#ifdef BEAMFORMING_SUPPORT
-		#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-			if(pDM_BdcTable->BDC_Mode==BDC_MODE_1 ||pDM_BdcTable->BDC_Mode==BDC_MODE_3)
-			{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("*** BDC_RxIdleUpdate_counter = (( %d ))\n", pDM_BdcTable->BDC_RxIdleUpdate_counter));
-			
-				if(pDM_BdcTable->BDC_RxIdleUpdate_counter==1)
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("***Update RxIdle Antenna!!! \n"));
-					pDM_BdcTable->BDC_RxIdleUpdate_counter=30;
-					ODM_UpdateRxIdleAnt(pDM_Odm, RxIdleAnt);
-				}
-				else
-				{
-					pDM_BdcTable->BDC_RxIdleUpdate_counter--;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("***NOT update RxIdle Antenna because of BF  ( need to fix TX-ant)\n"));
-				}
-			}
-			else
-		#endif
-		#endif	
-				ODM_UpdateRxIdleAnt(pDM_Odm, RxIdleAnt);
-	#else
 	
 		ODM_UpdateRxIdleAnt(pDM_Odm, RxIdleAnt);
 	
-	#endif//#if(DM_ODM_SUPPORT_TYPE  == ODM_AP)
 
 
 
 	//2 BDC Main Algorithm
 	#ifdef BEAMFORMING_SUPPORT
-	#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if(pDM_Odm->antdiv_evm_en ==0 ||pDM_FatTable->EVM_method_enable==0)
-	{
-		odm_BDCcoex_BFeeRxDiv_Arbitration(pDM_Odm);
-	}
-	#endif
 	#endif
 
 	if(AntDivMaxRSSI == 0)
@@ -2879,7 +2272,7 @@ odm_SetNextMACAddrTarget(
 			if (IS_STA_VALID(pEntry)) {
 				
 				/*Match MAC ADDR*/
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_AP | ODM_CE))
+				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				value32 = (pEntry->hwaddr[5]<<8)|pEntry->hwaddr[4];
 				#else
 				value32 = (pEntry->MacAddr[5]<<8)|pEntry->MacAddr[4];
@@ -2887,7 +2280,7 @@ odm_SetNextMACAddrTarget(
 				
 				ODM_SetMACReg(pDM_Odm, 0x7b4, 0xFFFF, value32);/*0x7b4~0x7b5*/
 				
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_AP | ODM_CE))
+				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				value32 = (pEntry->hwaddr[3]<<24)|(pEntry->hwaddr[2]<<16) |(pEntry->hwaddr[1]<<8) |pEntry->hwaddr[0];
 				#else
 				value32 = (pEntry->MacAddr[3]<<24)|(pEntry->MacAddr[2]<<16) |(pEntry->MacAddr[1]<<8) |pEntry->MacAddr[0];
@@ -2896,7 +2289,7 @@ odm_SetNextMACAddrTarget(
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("pDM_FatTable->TrainIdx=%d\n", pDM_FatTable->TrainIdx));
 				
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_AP | ODM_CE))
+				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Training MAC Addr = %x:%x:%x:%x:%x:%x\n",
 					pEntry->hwaddr[5], pEntry->hwaddr[4], pEntry->hwaddr[3], pEntry->hwaddr[2], pEntry->hwaddr[1], pEntry->hwaddr[0]));
 				#else
@@ -3665,25 +3058,6 @@ ODM_AntDivInit(
 		return;
 	}
         //---
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if(pDM_FatTable->AntDiv_2G_5G == ODM_ANTDIV_2G)
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[2G AntDiv Init]: Only Support 2G Antenna Diversity Function\n"));
-		if(!(pDM_Odm->SupportICType & ODM_ANTDIV_2G_SUPPORT_IC))
-			return;
-	}
-	else 	if(pDM_FatTable->AntDiv_2G_5G == ODM_ANTDIV_5G)
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[5G AntDiv Init]: Only Support 5G Antenna Diversity Function\n"));
-		if(!(pDM_Odm->SupportICType & ODM_ANTDIV_5G_SUPPORT_IC))
-			return;
-	}
-	else 	if(pDM_FatTable->AntDiv_2G_5G == (ODM_ANTDIV_2G|ODM_ANTDIV_5G))
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[2G & 5G AntDiv Init]:Support Both 2G & 5G Antenna Diversity Function\n"));
-	}
-
-#endif	
 	//---
 
 	//2 [--General---]
@@ -3693,16 +3067,6 @@ ODM_AntDivInit(
 	pDM_FatTable->AntDiv_OnOff =0xff;
 
 	//3       -   AP   -
-	#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	
-		#ifdef BEAMFORMING_SUPPORT
-		#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-		odm_BDC_Init(pDM_Odm);
-		#endif
-		#endif
-		
-	//3     -   WIN   -
-	#endif
 
 	//2 [---Set MAIN_ANT as default antenna if Auto-Ant enable---]
 	odm_AntDiv_on_off(pDM_Odm, ANTDIV_OFF);
@@ -3912,31 +3276,6 @@ ODM_AntDiv(
 	}
 
 	//----------
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	//----------just for fool proof
-
-	if(pDM_Odm->antdiv_rssi)
-		pDM_Odm->DebugComponents |= ODM_COMP_ANT_DIV;
-	else
-		pDM_Odm->DebugComponents &= ~ODM_COMP_ANT_DIV;
-
-	if(pDM_FatTable->AntDiv_2G_5G == ODM_ANTDIV_2G)
-	{
-		//ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[ 2G AntDiv Running ]\n"));
-		if(!(pDM_Odm->SupportICType & ODM_ANTDIV_2G_SUPPORT_IC))
-			return;
-	}
-	else if(pDM_FatTable->AntDiv_2G_5G == ODM_ANTDIV_5G)
-	{
-		//ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[ 5G AntDiv Running ]\n"));
-		if(!(pDM_Odm->SupportICType & ODM_ANTDIV_5G_SUPPORT_IC))
-			return;
-	}
-	//else 	if(pDM_FatTable->AntDiv_2G_5G == (ODM_ANTDIV_2G|ODM_ANTDIV_5G))
-	//{
-		//ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[ 2G & 5G AntDiv Running ]\n"));
-	//}
-#endif
 
 	//----------
 
@@ -4294,53 +3633,6 @@ ODM_Process_RSSIForAntDiv(
 	//ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD,("antsel_tr_mux=3'b%d%d%d\n",pDM_FatTable->antsel_rx_keep_2, pDM_FatTable->antsel_rx_keep_1, pDM_FatTable->antsel_rx_keep_0));
 }
 
-#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-VOID
-ODM_SetTxAntByTxInfo(
-	struct	rtl8192cd_priv		*priv,
-	struct	tx_desc	*pdesc,
-	unsigned short			aid	
-)
-{
-	pFAT_T		pDM_FatTable = &priv->pshare->_dmODM.DM_FatTable;
-	u4Byte		SupportICType = priv->pshare->_dmODM.SupportICType;
-
-	if (SupportICType == ODM_RTL8881A) {
-		/*panic_printk("[%s] [%d]   ******ODM_SetTxAntByTxInfo_8881E******\n",__FUNCTION__,__LINE__);	*/
-		pdesc->Dword6 &= set_desc(~(BIT(18)|BIT(17)|BIT(16)));	
-		pdesc->Dword6 |= set_desc(pDM_FatTable->antsel_a[aid]<<16);
-	} else if (SupportICType == ODM_RTL8192E) {
-		/*panic_printk("[%s] [%d]   ******ODM_SetTxAntByTxInfo_8192E******\n",__FUNCTION__,__LINE__);	*/
-		pdesc->Dword6 &= set_desc(~(BIT(18)|BIT(17)|BIT(16)));	
-		pdesc->Dword6 |= set_desc(pDM_FatTable->antsel_a[aid]<<16);
-	} else if (SupportICType == ODM_RTL8188E) {
-		/*panic_printk("[%s] [%d]   ******ODM_SetTxAntByTxInfo_8188E******\n",__FUNCTION__,__LINE__);*/
-		pdesc->Dword2 &= set_desc(~BIT(24));
-		pdesc->Dword2 &= set_desc(~BIT(25));
-		pdesc->Dword7 &= set_desc(~BIT(29));
-
-		pdesc->Dword2 |= set_desc(pDM_FatTable->antsel_a[aid]<<24);
-		pdesc->Dword2 |= set_desc(pDM_FatTable->antsel_b[aid]<<25);
-		pdesc->Dword7 |= set_desc(pDM_FatTable->antsel_c[aid]<<29);
-			
-		
-	} else if (SupportICType == ODM_RTL8812) {
-		/*[path-A]*/
-		/*panic_printk("[%s] [%d]   ******ODM_SetTxAntByTxInfo_8881E******\n",__FUNCTION__,__LINE__);*/
-			
-		pdesc->Dword6 &= set_desc(~BIT(16));
-		pdesc->Dword6 &= set_desc(~BIT(17));
-		pdesc->Dword6 &= set_desc(~BIT(18));
-
-		pdesc->Dword6 |= set_desc(pDM_FatTable->antsel_a[aid]<<16);
-		pdesc->Dword6 |= set_desc(pDM_FatTable->antsel_b[aid]<<17);
-		pdesc->Dword6 |= set_desc(pDM_FatTable->antsel_c[aid]<<18);
-			
-	}
-}
-#endif
-
 
 VOID
 ODM_AntDiv_Config(
@@ -4349,119 +3641,7 @@ ODM_AntDiv_Config(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pFAT_T			pDM_FatTable = &pDM_Odm->DM_FatTable;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		/* do noting, branch only */
-#elif (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("AP Config Antenna Diversity\n"));
-
-	//2 [ NOT_SUPPORT_ANTDIV ]
-	#if(defined(CONFIG_NOT_SUPPORT_ANTDIV)) 
-		pDM_Odm->SupportAbility &= ~(ODM_BB_ANT_DIV);
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ Disable AntDiv function] : Not Support 2.4G & 5G Antenna Diversity\n"));
-		
-		//2 [ 2G&5G_SUPPORT_ANTDIV ]
-	#elif(defined(CONFIG_2G5G_SUPPORT_ANTDIV))
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ Enable AntDiv function] : 2.4G & 5G Support Antenna Diversity Simultaneously \n"));
-		pDM_FatTable->AntDiv_2G_5G = (ODM_ANTDIV_2G|ODM_ANTDIV_5G);
-
-		if(pDM_Odm->SupportICType & ODM_ANTDIV_SUPPORT)
-			pDM_Odm->SupportAbility |= ODM_BB_ANT_DIV;
-		if(*pDM_Odm->pBandType == ODM_BAND_5G )
-		{
-				#if ( defined(CONFIG_5G_CGCS_RX_DIVERSITY) )
-					pDM_Odm->AntDivType = CGCS_RX_HW_ANTDIV; 
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n"));
-					panic_printk("[ 5G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n");
-				#elif( defined(CONFIG_5G_CG_TRX_DIVERSITY)||defined(CONFIG_2G5G_CG_TRX_DIVERSITY_8881A))
-					pDM_Odm->AntDivType = CG_TRX_HW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CG_TRX_HW_ANTDIV\n"));				
-					panic_printk("[ 5G] : AntDiv Type = CG_TRX_HW_ANTDIV\n");
-				#elif( defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = CG_TRX_SMART_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CG_SMART_ANTDIV\n"));
-				#elif( defined(CONFIG_5G_S0S1_SW_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = S0S1_SW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = S0S1_SW_ANTDIV\n"));
-				#endif
-		}		
-		else if(*pDM_Odm->pBandType == ODM_BAND_2_4G )
-		 {
-				#if ( defined(CONFIG_2G_CGCS_RX_DIVERSITY) )
-						pDM_Odm->AntDivType = CGCS_RX_HW_ANTDIV;
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n"));		
-				#elif( defined(CONFIG_2G_CG_TRX_DIVERSITY) || defined(CONFIG_2G5G_CG_TRX_DIVERSITY_8881A))
-						pDM_Odm->AntDivType = CG_TRX_HW_ANTDIV;
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CG_TRX_HW_ANTDIV\n"));
-				#elif( defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY) )
-						pDM_Odm->AntDivType = CG_TRX_SMART_ANTDIV;
-						ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CG_SMART_ANTDIV\n"));
-				#elif( defined(CONFIG_2G_S0S1_SW_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = S0S1_SW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = S0S1_SW_ANTDIV\n"));
-				#endif
-		}
-		
-		//2 [ 5G_SUPPORT_ANTDIV ]
-	#elif(defined(CONFIG_5G_SUPPORT_ANTDIV))
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ Enable AntDiv function] : Only 5G Support Antenna Diversity\n"));
-		panic_printk("[ Enable AntDiv function] : Only 5G Support Antenna Diversity\n");
-		pDM_FatTable->AntDiv_2G_5G = (ODM_ANTDIV_5G);
-		if(*pDM_Odm->pBandType == ODM_BAND_5G )
-		{
-				if(pDM_Odm->SupportICType & ODM_ANTDIV_5G_SUPPORT_IC)
-				pDM_Odm->SupportAbility |= ODM_BB_ANT_DIV;	
-				#if ( defined(CONFIG_5G_CGCS_RX_DIVERSITY) )
-					pDM_Odm->AntDivType = CGCS_RX_HW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n"));
-					panic_printk("[ 5G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n");
-				#elif( defined(CONFIG_5G_CG_TRX_DIVERSITY) )
-					pDM_Odm->AntDivType = CG_TRX_HW_ANTDIV;
-					panic_printk("[ 5G] : AntDiv Type = CG_TRX_HW_ANTDIV\n");
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CG_TRX_HW_ANTDIV\n"));
-				#elif( defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = CG_TRX_SMART_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = CG_SMART_ANTDIV\n"));
-				#elif( defined(CONFIG_5G_S0S1_SW_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = S0S1_SW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 5G] : AntDiv Type = S0S1_SW_ANTDIV\n"));
-				#endif
-		}
-		else if(*pDM_Odm->pBandType == ODM_BAND_2_4G )
-		{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD,("Not Support 2G AntDivType\n"));
-				pDM_Odm->SupportAbility &= ~(ODM_BB_ANT_DIV);
-		}
-		
-		//2 [ 2G_SUPPORT_ANTDIV ]
-	#elif(defined(CONFIG_2G_SUPPORT_ANTDIV)) 
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ Enable AntDiv function] : Only 2.4G Support Antenna Diversity\n"));
-		pDM_FatTable->AntDiv_2G_5G = (ODM_ANTDIV_2G);
-		if(*pDM_Odm->pBandType == ODM_BAND_2_4G )
-		{
-				if(pDM_Odm->SupportICType & ODM_ANTDIV_2G_SUPPORT_IC)
-					pDM_Odm->SupportAbility |= ODM_BB_ANT_DIV;
-				#if ( defined(CONFIG_2G_CGCS_RX_DIVERSITY) )
-					pDM_Odm->AntDivType = CGCS_RX_HW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CGCS_RX_HW_ANTDIV\n"));		
-				#elif( defined(CONFIG_2G_CG_TRX_DIVERSITY) )
-					pDM_Odm->AntDivType = CG_TRX_HW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CG_TRX_HW_ANTDIV\n"));
-				#elif( defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = CG_TRX_SMART_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = CG_SMART_ANTDIV\n"));
-				#elif( defined(CONFIG_2G_S0S1_SW_ANT_DIVERSITY) )
-					pDM_Odm->AntDivType = S0S1_SW_ANTDIV;
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ 2.4G] : AntDiv Type = S0S1_SW_ANTDIV\n"));
-				#endif
-		}
-		else if(*pDM_Odm->pBandType == ODM_BAND_5G )
-		{
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD,("Not Support 5G AntDivType\n"));
-				pDM_Odm->SupportAbility &= ~(ODM_BB_ANT_DIV);
-		}
-	#endif	
-#endif	
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("SupportAbility = (( %x ))\n", pDM_Odm->SupportAbility ));
 

@@ -133,20 +133,14 @@ ODM_ClearTxPowerTrackingState(
 
 VOID
 ODM_TXPowerTrackingCallback_ThermalMeter(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	IN PDM_ODM_T		pDM_Odm
-#else
 	IN PADAPTER	Adapter
-#endif
 	)
 {
 
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
 	#endif
-#endif
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	u1Byte			ThermalValue = 0, delta, delta_LCK, delta_IQK, p = 0, i = 0;
@@ -475,11 +469,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			}
 		}
 
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 		if (ThermalValue > pHalData->EEPROMThermalMeter)
-#else
-		if (ThermalValue > pDM_Odm->priv->pmib->dot11RFEntry.ther)
-#endif
 		{
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 				("Temperature(%d) higher than PG value(%d)\n", ThermalValue, pHalData->EEPROMThermalMeter));			
@@ -531,8 +521,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 	}
 
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-		
 	if (!IS_HARDWARE_TYPE_8723B(Adapter) && !IS_HARDWARE_TYPE_8192E(Adapter) && !IS_HARDWARE_TYPE_8703B(Adapter)) {
 		/* Delta temperature is equal to or larger than 20 centigrade (When threshold is 8).*/
 		if (delta_IQK >= c.Threshold_IQK) {
@@ -577,7 +565,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		}
 	}
 
-#endif		
 			
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("<===ODM_TXPowerTrackingCallback_ThermalMeter End\n"));
 	
@@ -597,7 +584,6 @@ ODM_ResetIQKResult(
 	return;
 
 }
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 u1Byte ODM_GetRightChnlPlaceforIQK(u1Byte chnl)
 {
 	u1Byte	channel_all[ODM_TARGET_CHNL_NUM_2G_5G] = 
@@ -618,7 +604,6 @@ u1Byte ODM_GetRightChnlPlaceforIQK(u1Byte chnl)
 	return 0;
 
 }
-#endif
 
 VOID
 odm_IQCalibrate(
@@ -670,12 +655,10 @@ void phydm_rf_init(IN	PVOID		pDM_VOID)
 	ODM_ClearTxPowerTrackingState(pDM_Odm);	
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
 #if (RTL8814A_SUPPORT == 1)		
 	if (pDM_Odm->SupportICType & ODM_RTL8814A)
 		PHY_IQCalibrate_8814A_Init(pDM_Odm);
 #endif	
-#endif
 
 }
 

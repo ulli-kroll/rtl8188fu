@@ -159,38 +159,6 @@ typedef struct _SW_Antenna_Switch_
 }SWAT_T, *pSWAT_T;
 
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-typedef struct _BF_DIV_COEX_
-{
-	BOOLEAN w_BFer_Client[ODM_ASSOCIATE_ENTRY_NUM];
-	BOOLEAN w_BFee_Client[ODM_ASSOCIATE_ENTRY_NUM];
-	u4Byte	MA_rx_TP[ODM_ASSOCIATE_ENTRY_NUM];
-	u4Byte	MA_rx_TP_DIV[ODM_ASSOCIATE_ENTRY_NUM];
-
-	u1Byte  BDCcoexType_wBfer;
-	u1Byte num_Txbfee_Client;
-	u1Byte num_Txbfer_Client;
-	u1Byte BDC_Try_counter;
-	u1Byte BDC_Hold_counter;
-	u1Byte BDC_Mode;
-	u1Byte BDC_active_Mode;
-	u1Byte BDC_state;
-	u1Byte BDC_RxIdleUpdate_counter;
-	u1Byte num_Client;
-	u1Byte pre_num_Client;
-	u1Byte num_BfTar;
-	u1Byte num_DivTar;
-	
-	BOOLEAN bAll_DivSta_Idle;
-	BOOLEAN bAll_BFSta_Idle;
-	BOOLEAN BDC_Try_flag;
-	BOOLEAN BF_pass;
-	BOOLEAN DIV_pass;	
-}BDC_T,*pBDC_T;
-#endif
-#endif
-
 #ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
 typedef struct _SMART_ANTENNA_TRAINNING_ {
 	u4Byte	latch_time;
@@ -486,15 +454,6 @@ ODM_SetTxAntByTxInfo(
 	IN		PVOID			pDM_VOID,
 	IN		pu1Byte			pDesc,
 	IN		u1Byte			macId	
-);
-
-#elif(DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-VOID
-ODM_SetTxAntByTxInfo(
-	struct	rtl8192cd_priv		*priv,
-	struct 	tx_desc			*pdesc,
-	unsigned short			aid	
 );
 
 #endif

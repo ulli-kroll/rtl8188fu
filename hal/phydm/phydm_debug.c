@@ -216,18 +216,11 @@ VOID phydm_BasicProfile(
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "PHY Parameter Commit by", commit_by));
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %d\n", "PHY Parameter Release Version", release_ver));
 	
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	{
-		struct rtl8192cd_priv *priv = pDM_Odm->priv;
-		PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %d (Subversion: %d)\n", "FW Version", priv->pshare->fw_version, priv->pshare->fw_sub_version));
-	}
-#else
 	{
 		PADAPTER		       Adapter = pDM_Odm->Adapter;
 		HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
 		PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %d (Subversion: %d)\n", "FW Version", pHalData->FirmwareVersion, pHalData->FirmwareSubVersion));
 	}
-#endif
 	//1 PHY DM Version List
 	PHYDM_SNPRINTF((output + used, out_len - used, "%-35s\n", "% PHYDM Version %"));
 	PHYDM_SNPRINTF((output + used, out_len - used, "  %-35s: %s\n", "Adaptivity", ADAPTIVITY_VERSION));
@@ -616,7 +609,7 @@ phydm_cmd_parser(
 	case PHYDM_DEMO: /*echo demo 10 0x3a z abcde >cmd*/
 			{
 				u4Byte   directory = 0;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))				
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))				
 				char   char_temp;
 #else
 				u4Byte char_temp = ' ';
@@ -859,7 +852,7 @@ char *strsep(char **s, const char *ct)
 }
 #endif
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 s4Byte
 phydm_cmd(
 	IN PDM_ODM_T	pDM_Odm,

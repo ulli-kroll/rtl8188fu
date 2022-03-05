@@ -682,7 +682,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 		
 			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
 
-		#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE|ODM_AP))
+		#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 			//Get Rx snr value in DB		
 			pPhyInfo->RxSNR[i] = pDM_Odm->PhyDbgInfo.RxSNRdB[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
 		#endif
@@ -1057,13 +1057,11 @@ odm_RxPhyStatusJaguarSeries_Parsing(
 			else if (pDM_Odm->SupportICType & (ODM_RTL8814A | ODM_RTL8822B))
 				pPhyInfo->RxSNR[i] = pDM_Odm->PhyDbgInfo.RxSNRdB[i] = pPhyStaRpt->csi_current[i - 2] / 2;
 
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 			/*(2) CFO_short  & CFO_tail*/
 			if (i < ODM_RF_PATH_C) {
 				pPhyInfo->Cfo_short[i] = odm_Cfo((pPhyStaRpt->cfosho[i]));
 				pPhyInfo->Cfo_tail[i] = odm_Cfo((pPhyStaRpt->cfotail[i]));
 			}
-#endif
 			/* Record Signal Strength for next packet */
 			if (pPktinfo->bPacketMatchBSSID) {
 			}
@@ -1147,9 +1145,7 @@ odm_RxPhyStatusJaguarSeries_Parsing(
 							pPhyInfo->SignalQuality = EVM;
 						}
 						pPhyInfo->RxMIMOSignalQuality[i] = EVM;
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 						pPhyInfo->RxMIMOEVMdbm[i] = EVMdbm;
-#endif
 					}
 				}
 			}
@@ -1564,7 +1560,6 @@ ODM_ConfigRFWithHeaderFile(
 				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
-#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 #if (RTL8723A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723A)
 	{
@@ -1636,7 +1631,6 @@ ODM_ConfigRFWithHeaderFile(
 	}
 	}
 #endif
-#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 
 //1 All platforms support
 #if (RTL8188E_SUPPORT == 1)
@@ -1704,7 +1698,6 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
-#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 #if RTL8821A_SUPPORT
 	if(pDM_Odm->SupportICType == ODM_RTL8821)
 	{
@@ -1763,7 +1756,6 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_SDIO);
 	}
 #endif
-#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 
 //1 All platforms support
 #if RTL8814A_SUPPORT
@@ -1809,7 +1801,6 @@ ODM_ConfigBBWithHeaderFile(
 {
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)	
 #if (RTL8723A_SUPPORT == 1) 
 	if(pDM_Odm->SupportICType == ODM_RTL8723A)
 	{
@@ -1887,7 +1878,6 @@ ODM_ConfigBBWithHeaderFile(
 		}
 	}
 #endif
-#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 
 
 //1 All platforms support
@@ -1956,7 +1946,6 @@ ODM_ConfigMACWithHeaderFile(
 				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)	
 #if (RTL8723A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723A){
 		READ_AND_CONFIG_MP(8723A,_MAC_REG);
@@ -1984,7 +1973,6 @@ ODM_ConfigMACWithHeaderFile(
 		READ_AND_CONFIG_MP(8192E,_MAC_REG);
 	}
 #endif
-#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 
 //1 All platforms support
 #if (RTL8188E_SUPPORT == 1)  
@@ -2020,7 +2008,6 @@ ODM_GetHWImgVersion(
     u4Byte  Version=0;
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 #if (RTL8723A_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8723A)
 		Version = GET_VERSION_MP(8723A,_MAC_REG);
@@ -2041,7 +2028,6 @@ ODM_GetHWImgVersion(
 	if (pDM_Odm->SupportICType == ODM_RTL8812)
 		Version = GET_VERSION_MP(8812A,_MAC_REG);
 #endif
-#endif //(DM_ODM_SUPPORT_TYPE != ODM_AP)
 
 /*1 All platforms support*/
 #if (RTL8188E_SUPPORT == 1)  

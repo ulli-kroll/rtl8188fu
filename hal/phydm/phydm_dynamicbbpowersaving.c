@@ -134,7 +134,6 @@ ODM_RF_Saving(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 	pPS_T	pDM_PSTable = &pDM_Odm->DM_PSTable;
 	u1Byte	Rssi_Up_bound = 30 ;
 	u1Byte	Rssi_Low_bound = 25;
@@ -214,6 +213,5 @@ ODM_RF_Saving(
 		}
 		pDM_PSTable->PreRFState =pDM_PSTable->CurRFState;
 	}
-#endif	
 }
 

@@ -47,7 +47,7 @@
 #if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	#define	ASSOCIATE_ENTRY_NUM					MACID_NUM_SW_LIMIT  /* Max size of AsocEntry[].*/
 	#define	ODM_ASSOCIATE_ENTRY_NUM				ASSOCIATE_ENTRY_NUM
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#elif(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	#define ASSOCIATE_ENTRY_NUM					NUM_STAT
 	#define	ODM_ASSOCIATE_ENTRY_NUM				(ASSOCIATE_ENTRY_NUM+1)
 #else
@@ -275,17 +275,6 @@ typedef enum tag_ODM_Support_IC_Type_Definition
 #define ODM_IC_11N_GAIN_IDX_EDCCA		(ODM_RTL8195A|ODM_RTL8703B|ODM_RTL8188F)
 #define ODM_IC_11AC_GAIN_IDX_EDCCA		(ODM_RTL8814A|ODM_RTL8822B)
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-#ifdef RTK_AC_SUPPORT
-#define ODM_IC_11AC_SERIES_SUPPORT		1
-#else
-#define ODM_IC_11AC_SERIES_SUPPORT		0
-#endif
-
-#define ODM_IC_11N_SERIES_SUPPORT			1
-
-#else 
 
 #if((RTL8192C_SUPPORT == 1) || (RTL8192D_SUPPORT == 1) || (RTL8723A_SUPPORT == 1) || (RTL8188E_SUPPORT == 1) ||\
 (RTL8723B_SUPPORT == 1) || (RTL8192E_SUPPORT == 1) || (RTL8195A_SUPPORT == 1) || (RTL8703B_SUPPORT == 1) || \
@@ -296,9 +285,6 @@ typedef enum tag_ODM_Support_IC_Type_Definition
 #define ODM_IC_11N_SERIES_SUPPORT			0
 #define ODM_IC_11AC_SERIES_SUPPORT		1
 #endif
-
-#endif
-
 
 //ODM_CMNINFO_CUT_VER
 typedef enum tag_ODM_Cut_Version_Definition
@@ -420,15 +406,10 @@ typedef enum tag_Wireless_Mode_Definition
 // ODM_CMNINFO_BAND
 typedef enum tag_Band_Type_Definition
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	ODM_BAND_2_4G 	= BIT0,
-	ODM_BAND_5G 		= BIT1,
-#else
 	ODM_BAND_2_4G = 0,
 	ODM_BAND_5G,
 	ODM_BAND_ON_BOTH,
 	ODM_BANDMAX
-#endif
 }ODM_BAND_TYPE_E;
 
 

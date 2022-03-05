@@ -83,7 +83,7 @@ typedef struct _Dynamic_Initial_Gain_Threshold_
 	u1Byte		pause_dig_level;
 	u1Byte		pause_dig_value[DM_DIG_MAX_PAUSE_TYPE + 1];
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	BOOLEAN		bTpTarget;
 	BOOLEAN		bNoiseEst;
 	u4Byte		TpTrainTH_min;
@@ -198,7 +198,7 @@ typedef enum tag_PHYDM_Pause_Level {
 #define		DM_DIG_MAX_AP_HP				0x42
 #define		DM_DIG_MIN_AP_HP				0x30
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 #define		DM_DIG_MAX_AP_COVERAGR		0x26
 #define		DM_DIG_MIN_AP_COVERAGE		0x1c
 #define		DM_DIG_MAX_OF_MIN_COVERAGE	0x22
@@ -296,7 +296,7 @@ ODM_Write_CCK_CCA_Thres(
 	IN		u1Byte					CurCCK_CCAThres
 	);
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 VOID
 odm_MPT_DIGCallback(
 	IN		PVOID					pDM_VOID

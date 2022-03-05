@@ -56,10 +56,7 @@
 #define	RA_MASK_VHT1SS	0x3ff000
 #define	RA_MASK_VHT2SS	0xffc00000
 
-#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
-#define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8881A |ODM_RTL8192E |ODM_RTL8812 |ODM_RTL8814A|ODM_RTL8822B)
-#define		RA_FIRST_MACID 	1
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*#define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8192E|ODM_RTL8812|ODM_RTL8821|ODM_RTL8723B|ODM_RTL8814A|ODM_RTL8822B|ODM_RTL8703B) */
 #define		RA_FIRST_MACID 	0
 #endif
@@ -71,9 +68,6 @@
 #define		DM_RATR_STA_HIGH			1
 #define 		DM_RATR_STA_MIDDLE		2
 #define 		DM_RATR_STA_LOW			3
-#if(DM_ODM_SUPPORT_TYPE & ODM_AP)
-#define		DM_RATR_STA_ULTRA_LOW	4
-#endif
 
 #define		DM_RA_RATE_UP				1
 #define		DM_RA_RATE_DOWN			2
@@ -138,15 +132,6 @@ typedef struct _ODM_RA_Info_ {
 	u1Byte PTModeSS;  // decide whitch rate should do PT
 	u1Byte RAstage;  // StageRA, decide how many times RA will be done between PT
 	u1Byte PTSmoothFactor;
-#endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP) && ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-	u1Byte RateDownCounter;
-	u1Byte RateUpCounter;
-	u1Byte RateDirection;
-	u1Byte BoundingType;
-	u1Byte BoundingCounter;
-	u1Byte BoundingLearningTime;
-	u1Byte RateDownStartTime;
 #endif
 } ODM_RA_INFO_T, *PODM_RA_INFO_T;
 #endif

@@ -242,21 +242,6 @@ odm_CommonInfoSelfUpdate(
 
 
 /* THis variable cannot be used because it is wrong*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if (*(pDM_Odm->pBandWidth) == ODM_BW40M)
-	{
-		if (*(pDM_Odm->pSecChOffset) == 1)
-			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) + 2;
-		else if (*(pDM_Odm->pSecChOffset) == 2)
-			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) - 2;
-	} else if (*(pDM_Odm->pBandWidth) == ODM_BW80M)	{
-		if (*(pDM_Odm->pSecChOffset) == 1)
-			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) + 6;
-		else if (*(pDM_Odm->pSecChOffset) == 2)
-			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) - 6;
-	} else
-		pDM_Odm->ControlChannel = *(pDM_Odm->pChannel);
-#else
 	if (*(pDM_Odm->pBandWidth) == ODM_BW40M) {
 		if (*(pDM_Odm->pSecChOffset) == 1)
 			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) - 2;
@@ -264,7 +249,6 @@ odm_CommonInfoSelfUpdate(
 			pDM_Odm->ControlChannel = *(pDM_Odm->pChannel) + 2;
 	} else
 		pDM_Odm->ControlChannel = *(pDM_Odm->pChannel);
-#endif
 
 	for (i=0; i<ODM_ASSOCIATE_ENTRY_NUM; i++)
 	{
@@ -277,14 +261,6 @@ odm_CommonInfoSelfUpdate(
 				OneEntry_MACID=i;
 			}
 
-			#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-				ma_rx_tp =  (pEntry->rx_byte_cnt_LowMAW)<<3; /*  low moving average RX  TP   ( bit /sec)*/
-
-				ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, ("ClientTP[%d]: ((%d )) bit/sec\n", i, ma_rx_tp));
-				
-				if (ma_rx_tp > ACTIVE_TP_THRESHOLD)
-					num_active_client++;
-			#endif
                 }
 	}
 	
@@ -535,13 +511,6 @@ ODM_DMWatchdog(
 	phydm_BasicDbgMessage(pDM_Odm);
 	odm_HWSetting(pDM_Odm);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	{
-	prtl8192cd_priv priv		= pDM_Odm->priv;
-	if( (priv->auto_channel != 0) && (priv->auto_channel != 2) )//if ACS running, do not do FA/CCA counter read
-		return;
-	}
-#endif	
 	odm_FalseAlarmCounterStatistics(pDM_Odm);
 	phydm_NoisyDetection(pDM_Odm);
 	
@@ -925,11 +894,7 @@ ODM_CmnInfoPtrArrayHook(
 			pDM_Odm->pODM_StaInfo[Index] = (PSTA_INFO_T)pValue;
 			
 			if (IS_STA_VALID(pDM_Odm->pODM_StaInfo[Index]))
-			#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-				pDM_Odm->platform2phydm_macid_table[((PSTA_INFO_T)pValue)->aid] = Index;
-			#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 				pDM_Odm->platform2phydm_macid_table[((PSTA_INFO_T)pValue)->mac_id] = Index;
-			#endif
 			
 			break;		
 		//To remove the compiler warning, must add an empty default statement to handle the other values.				
@@ -1037,14 +1002,6 @@ ODM_CmnInfoUpdate(
 			break;
 #endif
 
-#if(DM_ODM_SUPPORT_TYPE & ODM_AP)		// for repeater mode add by YuChen 2014.06.23
-#ifdef UNIVERSAL_REPEATER
-		case	ODM_CMNINFO_VXD_LINK:
-			pDM_Odm->VXD_bLinked= (BOOLEAN)Value;
-			break;
-#endif
-#endif
-
 		case	ODM_CMNINFO_AP_TOTAL_NUM:
 			pDM_Odm->APTotalNum = (u1Byte)Value;
 			break;
@@ -1147,14 +1104,6 @@ ODM_InitAllTimers(
 	ODM_AntDivTimers(pDM_Odm,INIT_ANTDIV_TIMMER);
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#ifdef MP_TEST
-	if (pDM_Odm->priv->pshare->rf_ft_var.mp_specific) 
-		ODM_InitializeTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer, 
-			(RT_TIMER_CALL_BACK)odm_MPT_DIGCallback, NULL, "MPT_DIGTimer");	
-#endif
-#endif
-
 }
 
 VOID
@@ -1165,13 +1114,6 @@ ODM_CancelAllTimers(
 
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	ODM_AntDivTimers(pDM_Odm,CANCEL_ANTDIV_TIMMER);
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#ifdef MP_TEST
-	if (pDM_Odm->priv->pshare->rf_ft_var.mp_specific)
-		ODM_CancelTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
-#endif
 #endif
 
 }
@@ -1186,12 +1128,6 @@ ODM_ReleaseAllTimers(
 	ODM_AntDivTimers(pDM_Odm,RELEASE_ANTDIV_TIMMER);
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-    #ifdef MP_TEST
-	if (pDM_Odm->priv->pshare->rf_ft_var.mp_specific)
-		ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
-    #endif
-#endif
 
 }
 
@@ -1203,61 +1139,8 @@ ODM_ReleaseAllTimers(
 
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-VOID
-ODM_InitAllThreads(
-	IN PDM_ODM_T	pDM_Odm 
-	)
-{
-	#ifdef TPT_THREAD
-	kTPT_task_init(pDM_Odm->priv);
-	#endif
-}
-
-VOID
-ODM_StopAllThreads(
-	IN PDM_ODM_T	pDM_Odm 
-	)
-{
-	#ifdef TPT_THREAD
-	kTPT_task_stop(pDM_Odm->priv);
-	#endif
-}
-#endif	
 
 
-#if( DM_ODM_SUPPORT_TYPE == ODM_AP)
-BOOLEAN
-ODM_CheckPowerStatus(
-		IN	PADAPTER		Adapter)
-{
-	/*
-	   HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-	   PDM_ODM_T			pDM_Odm = &pHalData->DM_OutSrc;
-	   RT_RF_POWER_STATE 	rtState;
-	   PMGNT_INFO			pMgntInfo	= &(Adapter->MgntInfo);
-
-	// 2011/07/27 MH We are not testing ready~~!! We may fail to get correct value when init sequence.
-	if (pMgntInfo->init_adpt_in_progress == TRUE)
-	{
-	ODM_RT_TRACE(pDM_Odm,COMP_INIT, DBG_LOUD, ("ODM_CheckPowerStatus Return TRUE, due to initadapter"));
-	return	TRUE;
-	}
-
-	//
-	//	2011/07/19 MH We can not execute tx pwoer tracking/ LLC calibrate or IQK.
-	//
-	Adapter->HalFunc.GetHwRegHandler(Adapter, HW_VAR_RF_STATE, (pu1Byte)(&rtState));	
-	if(Adapter->bDriverStopped || Adapter->bDriverIsGoingToPnpSetPowerSleep || rtState == eRfOff)
-	{
-	ODM_RT_TRACE(pDM_Odm,COMP_INIT, DBG_LOUD, ("ODM_CheckPowerStatus Return FALSE, due to %d/%d/%d\n", 
-	Adapter->bDriverStopped, Adapter->bDriverIsGoingToPnpSetPowerSleep, rtState));
-	return	FALSE;
-	}
-	 */
-	return	TRUE;
-}
-#endif
 
 // need to ODM CE Platform
 //move to here for ANT detection mechanism using

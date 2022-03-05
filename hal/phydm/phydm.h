@@ -44,11 +44,6 @@
 #endif
 
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-#include "halphyrf_ap.h"
-#include "phydm_powertracking_ap.h"
-#endif
-
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 #include "phydm_noisemonitor.h"
 #include "halphyrf_ce.h"
@@ -112,7 +107,7 @@ typedef		struct rtl8192cd_priv {
 #endif
 
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 typedef		struct _ADAPTER{
 	u1Byte		temp;
 	#ifdef AP_BUILD_WORKAROUND
@@ -120,14 +115,6 @@ typedef		struct _ADAPTER{
 	prtl8192cd_priv		priv;
 	#endif
 }ADAPTER, *PADAPTER;
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-typedef		struct _WLAN_STA{
-	u1Byte		temp;
-} WLAN_STA, *PRT_WLAN_STA;
-
 #endif
 
 typedef struct _Dynamic_Primary_CCA{
@@ -141,40 +128,6 @@ typedef struct _Dynamic_Primary_CCA{
 }Pri_CCA_T, *pPri_CCA_T;
 
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-
-
-#ifdef ADSL_AP_BUILD_WORKAROUND
-#define MAX_TOLERANCE			5
-#define IQK_DELAY_TIME			1		//ms
-#endif
-#if 0//defined in 8192cd.h
-//
-// Indicate different AP vendor for IOT issue.
-//
-typedef enum _HT_IOT_PEER
-{
-	HT_IOT_PEER_UNKNOWN 			= 0,
-	HT_IOT_PEER_REALTEK 			= 1,
-	HT_IOT_PEER_REALTEK_92SE 		= 2,
-	HT_IOT_PEER_BROADCOM 		= 3,
-	HT_IOT_PEER_RALINK 			= 4,
-	HT_IOT_PEER_ATHEROS 			= 5,
-	HT_IOT_PEER_CISCO 				= 6,
-	HT_IOT_PEER_MERU 				= 7,	
-	HT_IOT_PEER_MARVELL 			= 8,
-	HT_IOT_PEER_REALTEK_SOFTAP 	= 9,// peer is RealTek SOFT_AP, by Bohn, 2009.12.17
-	HT_IOT_PEER_SELF_SOFTAP 		= 10, // Self is SoftAP
-	HT_IOT_PEER_AIRGO 				= 11,
-	HT_IOT_PEER_INTEL 				= 12, 
-	HT_IOT_PEER_RTK_APCLIENT 		= 13, 
-	HT_IOT_PEER_REALTEK_81XX 		= 14,	
-	HT_IOT_PEER_REALTEK_WOW 		= 15,	
-	HT_IOT_PEER_MAX 				= 16
-}HT_IOT_PEER_E, *PHTIOT_PEER_E;
-#endif
-#endif//#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-
 #define		DM_Type_ByFW			0
 #define		DM_Type_ByDriver		1
 
@@ -185,29 +138,6 @@ typedef enum _HT_IOT_PEER
 #define IQK_THRESHOLD			8
 #define DPK_THRESHOLD			4
 
-
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_AP))
-__PACK typedef struct _ODM_Phy_Status_Info_
-{
-	u1Byte		RxPWDBAll;
-	u1Byte		SignalQuality;					/* in 0-100 index. */
-	u1Byte		RxMIMOSignalStrength[4];		/* in 0~100 index */
-	s1Byte		RxMIMOSignalQuality[4];		/* EVM */
-	s1Byte		RxSNR[4];					/* per-path's SNR */
-#if (RTL8822B_SUPPORT == 1)
-	u1Byte		RxCount;						/* RX path counter---*/
-#endif
-	u1Byte		BandWidth;
-
-} __WLAN_ATTRIB_PACK__ ODM_PHY_INFO_T, *PODM_PHY_INFO_T;
-
-typedef struct _ODM_Phy_Status_Info_Append_
-{
-	u1Byte		MAC_CRC32;	
-
-}ODM_PHY_INFO_Append_T,*PODM_PHY_INFO_Append_T;
-
-#else
 
 typedef struct _ODM_Phy_Status_Info_
 {
@@ -242,7 +172,6 @@ typedef struct _ODM_Phy_Status_Info_
 	BOOLEAN		bBeamformed;				/* BF packet---*/
 #endif
 }ODM_PHY_INFO_T,*PODM_PHY_INFO_T;
-#endif
 
 typedef struct _ODM_Per_Pkt_Info_
 {
@@ -452,11 +381,6 @@ typedef enum _ODM_Common_Info_Definition
 	ODM_CMNINFO_BT_DIG,
 	ODM_CMNINFO_BT_BUSY,					//Check Bt is using or not//neil	
 	ODM_CMNINFO_BT_DISABLE_EDCA,
-#if(DM_ODM_SUPPORT_TYPE & ODM_AP)		// for repeater mode add by YuChen 2014.06.23
-#ifdef UNIVERSAL_REPEATER
-	ODM_CMNINFO_VXD_LINK,
-#endif
-#endif
 	ODM_CMNINFO_AP_TOTAL_NUM,
 	ODM_CMNINFO_POWER_TRAINING,
 //------------CALL BY VALUE-------------//
@@ -559,7 +483,7 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 #if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	rtl8192cd_priv		fake_priv;
 #endif
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 	// ADSL_AP_BUILD_WORKAROUND
 	ADAPTER			fake_adapter;
 #endif
@@ -706,11 +630,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	BOOLEAN			bWIFI_Display;
 	BOOLEAN			bLinked;
 	BOOLEAN			bsta_state;
-#if(DM_ODM_SUPPORT_TYPE & ODM_AP)		// for repeater mode add by YuChen 2014.06.23
-#ifdef UNIVERSAL_REPEATER
-	BOOLEAN			VXD_bLinked;
-#endif
-#endif									// for repeater mode add by YuChen 2014.06.23	
 	u1Byte			RSSI_Min;	
 	u1Byte			InterfaceIndex; /*Add for 92D  dual MAC: 0--Mac0 1--Mac1*/
 	BOOLEAN			bIsMPChip;
@@ -860,9 +779,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	//ODM Structure
 	//
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	BDC_T					DM_BdcTable;
-	#endif
 	
 	#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
 	SAT_T						dm_sat_table;
@@ -1088,7 +1004,7 @@ typedef enum tag_RF_Type_Definition
 //
 // check Sta pointer valid or not
 //
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 #define IS_STA_VALID(pSta)		(pSta && pSta->expire_to)
 #else
 #define IS_STA_VALID(pSta)		(pSta)
@@ -1102,7 +1018,7 @@ typedef enum tag_RF_Type_Definition
 
 //ODM_RAStateCheck() Remove by RS_James
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_ADSL))
 //============================================================
 // function prototype
 //============================================================
@@ -1208,18 +1124,6 @@ ODM_CmnInfoUpdate(
 	IN		u4Byte			CmnInfo,
 	IN		u8Byte			Value	
 	);
-
-#if(DM_ODM_SUPPORT_TYPE==ODM_AP)
-VOID 
-ODM_InitAllThreads(
-    IN PDM_ODM_T	pDM_Odm 
-    );
-
-VOID
-ODM_StopAllThreads(
-	IN PDM_ODM_T	pDM_Odm 
-	);
-#endif
 
 VOID 
 ODM_InitAllTimers(

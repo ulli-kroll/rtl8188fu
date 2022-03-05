@@ -22,52 +22,7 @@
 #define __PHYDM_FEATURES
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-	/*  [ Configure RA Debug H2C CMD ]*/
-	#define CONFIG_RA_DBG_CMD
-	
-	/*#define CONFIG_PATH_DIVERSITY*/
-	/*#define CONFIG_RA_DYNAMIC_RTY_LIMIT*/
-	#define CONFIG_RA_DYNAMIC_RATE_ID
-	
-	/* [ Configure Antenna Diversity ] */
-	#if defined(CONFIG_RTL_8881A_ANT_SWITCH) || defined(CONFIG_SLOT_0_ANT_SWITCH) || defined(CONFIG_SLOT_1_ANT_SWITCH)
-		#define CONFIG_PHYDM_ANTENNA_DIVERSITY 
-		#define ODM_EVM_ENHANCE_ANTDIV
-
-		/*----------*/
-		
-		#if (!defined(CONFIG_NO_2G_DIVERSITY) && !defined(CONFIG_2G5G_CG_TRX_DIVERSITY_8881A) && !defined(CONFIG_2G_CGCS_RX_DIVERSITY) && !defined(CONFIG_2G_CG_TRX_DIVERSITY) && !defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY))
-			#define CONFIG_NO_2G_DIVERSITY
-		#endif
-
-		#ifdef CONFIG_NO_5G_DIVERSITY_8881A
-			#define CONFIG_NO_5G_DIVERSITY
-		#elif defined(CONFIG_5G_CGCS_RX_DIVERSITY_8881A)
-			#define CONFIG_5G_CGCS_RX_DIVERSITY
-		#elif defined(CONFIG_5G_CG_TRX_DIVERSITY_8881A)
-			#define CONFIG_5G_CG_TRX_DIVERSITY
-		#elif defined(CONFIG_2G5G_CG_TRX_DIVERSITY_8881A)
-			#define CONFIG_2G5G_CG_TRX_DIVERSITY
-		#endif
-		#if (!defined(CONFIG_NO_5G_DIVERSITY) && !defined(CONFIG_5G_CGCS_RX_DIVERSITY) && !defined(CONFIG_5G_CG_TRX_DIVERSITY) && !defined(CONFIG_2G5G_CG_TRX_DIVERSITY) && !defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY))
-			#define CONFIG_NO_5G_DIVERSITY
-		#endif	
-		 /*----------*/
-		#if (defined(CONFIG_NO_2G_DIVERSITY) && defined(CONFIG_NO_5G_DIVERSITY))
-			#define CONFIG_NOT_SUPPORT_ANTDIV 
-		#elif (!defined(CONFIG_NO_2G_DIVERSITY) && defined(CONFIG_NO_5G_DIVERSITY))
-			#define CONFIG_2G_SUPPORT_ANTDIV
-		#elif (defined(CONFIG_NO_2G_DIVERSITY) && !defined(CONFIG_NO_5G_DIVERSITY))
-			#define CONFIG_5G_SUPPORT_ANTDIV
-		#elif ((!defined(CONFIG_NO_2G_DIVERSITY) && !defined(CONFIG_NO_5G_DIVERSITY)) || defined(CONFIG_2G5G_CG_TRX_DIVERSITY))
-			#define CONFIG_2G5G_SUPPORT_ANTDIV 
-		#endif
-		 /*----------*/
-	#endif
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 	/*Antenna Diversity*/
 	#ifdef CONFIG_ANTENNA_DIVERSITY

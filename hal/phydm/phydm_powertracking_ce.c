@@ -379,10 +379,6 @@ odm_TXPowerTrackingInit(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	if(!(pDM_Odm->SupportICType & (ODM_RTL8814A|ODM_IC_11N_SERIES)))
-		return;
-#endif
 
 	odm_TXPowerTrackingThermalMeterInit(pDM_Odm);
 }	
@@ -458,15 +454,6 @@ odm_TXPowerTrackingThermalMeterInit(
 
 	MSG_8192C("pDM_Odm TxPowerTrackControl = %d\n", pRFCalibrateInfo->TxPowerTrackControl);
 	
-#elif (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	#ifdef RTL8188E_SUPPORT
-	{
-		pRFCalibrateInfo->bTXPowerTracking = _TRUE;
-		pRFCalibrateInfo->TXPowercount = 0;
-		pRFCalibrateInfo->bTXPowerTrackingInit = _FALSE;
-		pRFCalibrateInfo->TxPowerTrackControl = _TRUE;
-	}
-	#endif
 #endif
 
 	//pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = TRUE;
@@ -522,10 +509,6 @@ ODM_TXPowerTrackingCheck(
 		case	ODM_CE:
 			odm_TXPowerTrackingCheckCE(pDM_Odm);
 			break;
-
-		case	ODM_AP:
-			odm_TXPowerTrackingCheckAP(pDM_Odm);		
-			break;		
 
 		default:
 			break;	
@@ -589,12 +572,6 @@ odm_TXPowerTrackingCheckAP(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	prtl8192cd_priv	priv		= pDM_Odm->priv;
-
-	return;
-
-#endif
 }
 
 
