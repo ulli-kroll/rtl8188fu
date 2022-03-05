@@ -90,7 +90,6 @@
 /*
  * Hareware/Firmware Related Configure
  */
-/* #define CONFIG_ANTENNA_DIVERSITY	 */ /* Set from Makefile */
 /* #define SUPPORT_HW_RFOFF_DETECTED */
 
 #define CONFIG_LED

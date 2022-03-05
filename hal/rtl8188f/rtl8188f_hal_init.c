@@ -2707,15 +2707,6 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 
 void rtl8188f_InitAntenna_Selection(PADAPTER padapter)
 {
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	
-	if (pHalData->AntDivCfg == 0)
-		return;
-
-	/* LED(GPIO4) disable for AntDiv */
-	PHY_SetMacReg(padapter, 0x4C, BIT21, 0x0);
-#endif
 }
 
 void rtl8188f_CheckAntenna_Selection(PADAPTER padapter)
@@ -3655,43 +3646,6 @@ Hal_EfuseParseAntennaDiversity_8188F(
 	IN	BOOLEAN			AutoLoadFail
 )
 {
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	PHAL_DATA_TYPE		pHalData = GET_HAL_DATA(pAdapter);
-	struct registry_priv	*registry_par = &pAdapter->registrypriv;
-
-	/* default:rtw_antdiv_cfg, 0:OFF, 1:ON, 2:By EFUSE */
-	if (registry_par->antdiv_cfg == 2) {
-		if (0x01 == hwinfo[EEPROM_RF_ANTENNA_OPT_8188F])
-			pHalData->AntDivCfg = 1;
-		else
-			pHalData->AntDivCfg = 0;
-	} else if (registry_par->antdiv_cfg == 1)
-		pHalData->AntDivCfg = 1;
-	else
-		pHalData->AntDivCfg = 0;
-
-	/* If TRxAntDivType is AUTO in advanced setting, use EFUSE value instead. */
-	/* default:rtw_antdiv_type */
-	if (registry_par->antdiv_type == 0) {
-#if 0
-		pHalData->TRxAntDivType = hwinfo[EEPROM_RFE_OPTION_8188F];
-		if (pHalData->TRxAntDivType == 0xFF)
-			pHalData->TRxAntDivType = S0S1_SW_ANTDIV;
-		else
-			DBG_8192C("%s: efuse[0x%x]=0x%02x is unknown type\n",
-				  __func__, EEPROM_RFE_OPTION_8188F, pHalData->TRxAntDivType);
-#else
-		/* 8188F only intrnal switch S0S1 */
-		pHalData->TRxAntDivType = S0S1_SW_ANTDIV;
-#endif
-	} else {
-		/* 8188F only intrnal switch S0S1 */
-		pHalData->TRxAntDivType = S0S1_SW_ANTDIV;
-	}
-
-	DBG_8192C("%s: AntDivCfg=%d, AntDivType=%d\n",
-			  __func__, pHalData->AntDivCfg, pHalData->TRxAntDivType);
-#endif
 }
 
 VOID
@@ -4149,10 +4103,6 @@ void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 {
 	PADAPTER padapter = pxmitframe->padapter;
 	rtl8188f_fill_default_txdesc(pxmitframe, pbuf);
-
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	ODM_SetTxAntByTxInfo(&GET_HAL_DATA(padapter)->odmpriv, pbuf, pxmitframe->attrib.mac_id);
-#endif /* CONFIG_ANTENNA_DIVERSITY */
 
 #if defined(CONFIG_USB_HCI)
 	rtl8188f_cal_txdesc_chksum((struct tx_desc *)pbuf);

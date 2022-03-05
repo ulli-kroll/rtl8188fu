@@ -157,11 +157,6 @@ static void Update_ODM_ComInfo_8188f(PADAPTER	Adapter)
 		SupportAbility |= ODM_BB_ADAPTIVITY;
 	}
 
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	if (pHalData->AntDivCfg)
-		SupportAbility |= ODM_BB_ANT_DIV;
-#endif
-
 #ifdef CONFIG_DISABLE_ODM
 	SupportAbility = 0;
 #endif/*CONFIG_DISABLE_ODM */

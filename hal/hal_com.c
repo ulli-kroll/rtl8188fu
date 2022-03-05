@@ -2626,18 +2626,6 @@ void SetHalODMVar(
 		}
 		break;
 #endif
-#ifdef CONFIG_ANTENNA_DIVERSITY
-		case HAL_ODM_ANTDIV_SELECT:
-		{
-			u8	antenna = (*(u8 *)pValue1);
-			
-			/*switch antenna*/
-			ODM_UpdateRxIdleAnt(&pHalData->odmpriv, antenna);
-			/*DBG_871X("==> HAL_ODM_ANTDIV_SELECT, Ant_(%s)\n", (antenna == MAIN_ANT) ? "MAIN_ANT" : "AUX_ANT");*/
-
-		}
-		break;
-#endif
 
 		default:
 			break;
@@ -2684,14 +2672,6 @@ void GetHalODMVar(
 				*((u8 *)(pValue1)) = ODM_GetAutoChannelSelectResult(podmpriv, BAND_ON_2_4G);
 			if (IsSupported5G(Adapter->registrypriv.wireless_mode)) 
 				*((u8 *)(pValue2)) = ODM_GetAutoChannelSelectResult(podmpriv, BAND_ON_5G);
-		}
-		break;
-#endif
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	case HAL_ODM_ANTDIV_SELECT:
-		{
-			pFAT_T	pDM_FatTable = &podmpriv->DM_FatTable;
-			*((u8 *)pValue1) = pDM_FatTable->RxIdleAnt;
 		}
 		break;
 #endif
@@ -4329,41 +4309,4 @@ u8 hal_largest_bw(_adapter *adapter, u8 in_bw)
 
 	return in_bw;
 }
-
-#ifdef CONFIG_ANTENNA_DIVERSITY
-u8	rtw_hal_antdiv_before_linked(_adapter *padapter)
-{		
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(padapter);
-	u8 cur_ant, change_ant;
-
-	if (!pHalData->AntDivCfg)
-		return _FALSE;
-
-	if (pHalData->sw_antdiv_bl_state == 0) {
-		pHalData->sw_antdiv_bl_state = 1;
-
-		rtw_hal_get_odm_var(padapter, HAL_ODM_ANTDIV_SELECT, &cur_ant, NULL);
-		change_ant = (cur_ant == MAIN_ANT) ? AUX_ANT : MAIN_ANT;
-	
-		return rtw_antenna_select_cmd(padapter, change_ant, _FALSE);
-	}
-
-	pHalData->sw_antdiv_bl_state = 0;
-	return _FALSE;
-}
-
-void	rtw_hal_antdiv_rssi_compared(_adapter *padapter, WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src)
-{
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(padapter);
-		
-	if (pHalData->AntDivCfg) {
-		/*DBG_871X("update_network=> org-RSSI(%d), new-RSSI(%d)\n", dst->Rssi, src->Rssi);*/
-		/*select optimum_antenna for before linked =>For antenna diversity*/
-		if (dst->Rssi >=  src->Rssi) {/*keep org parameter*/
-			src->Rssi = dst->Rssi;
-			src->PhyInfo.Optimum_antenna = dst->PhyInfo.Optimum_antenna;
-		}
-	}
-}
-#endif
 

@@ -533,10 +533,5 @@ void rtw_acs_start(_adapter *padapter, bool bStart);
 
 void hal_set_crystal_cap(_adapter *adapter, u8 crystal_cap);
 
-#ifdef CONFIG_ANTENNA_DIVERSITY
-u8	rtw_hal_antdiv_before_linked(_adapter *padapter);
-void	rtw_hal_antdiv_rssi_compared(_adapter *padapter, WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src);
-#endif
-
 #endif //__HAL_COMMON_H__
 

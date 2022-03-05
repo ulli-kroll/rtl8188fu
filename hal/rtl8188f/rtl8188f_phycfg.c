@@ -883,13 +883,6 @@ PHY_SetTxPowerLevel8188F(
 	u8				cur_antenna;
 	u8				RFPath = ODM_RF_PATH_A;
 
-#ifdef CONFIG_ANTENNA_DIVERSITY
-	rtw_hal_get_odm_var(Adapter, HAL_ODM_ANTDIV_SELECT, &cur_antenna, NULL);
-
-	if (pHalData->AntDivCfg)  /* antenna diversity Enable */
-		RFPath = ((cur_antenna == MAIN_ANT) ? ODM_RF_PATH_A : ODM_RF_PATH_B);
-	else   /* antenna diversity disable */
-#endif
 		RFPath = pHalData->ant_path;
 
 	RT_TRACE(_module_hal_init_c_, _drv_info_, ("==>PHY_SetTxPowerLevel8188F()\n"));

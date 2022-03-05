@@ -2260,9 +2260,6 @@ GetHalDefVar8188FUsb(
 
 	switch (eVariable) {
 	case HAL_DEF_IS_SUPPORT_ANT_DIV:
-#ifdef CONFIG_ANTENNA_DIVERSITY
-		*((u8 *)pValue) = (pHalData->AntDivCfg == 0) ? _FALSE : _TRUE;
-#endif
 		break;
 
 	case HAL_DEF_DRVINFO_SZ:

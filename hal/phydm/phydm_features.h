@@ -25,20 +25,6 @@
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 	/*Antenna Diversity*/
-	#ifdef CONFIG_ANTENNA_DIVERSITY
-		#define CONFIG_PHYDM_ANTENNA_DIVERSITY
-		
-		#ifdef CONFIG_PHYDM_ANTENNA_DIVERSITY
-		
-			#if (RTL8723B_SUPPORT == 1) || (RTL8821A_SUPPORT == 1) || (RTL8188F_SUPPORT == 1)
-			#define	CONFIG_S0S1_SW_ANTENNA_DIVERSITY
-			#endif
-			
-			#if (RTL8821A_SUPPORT == 1)
-			/*#define CONFIG_HL_SMART_ANTENNA_TYPE1*/
-			#endif
-		#endif
-	#endif
 	
 	/*#define CONFIG_RA_DBG_CMD*/
 	/*#define CONFIG_ANT_DETECTION*/
