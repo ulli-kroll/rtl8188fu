@@ -2438,11 +2438,6 @@ void phy_load_tx_power_ext_info(_adapter *adapter, u8 chk_file)
 		phy_load_tx_power_limit(adapter, chk_file);
 }
 
-inline void phy_reload_default_tx_power_ext_info(_adapter *adapter)
-{
-	phy_load_tx_power_ext_info(adapter, 0);
-}
-
 void dump_tx_power_ext_info(void *sel, _adapter *adapter)
 {
 	struct registry_priv *regsty = adapter_to_regsty(adapter);
