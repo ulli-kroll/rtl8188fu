@@ -863,11 +863,7 @@ phydm_hl_smart_ant_type1_init_8821a(
 	pdm_sat_table->data_codeword_bit_num  = 24;/*max=32*/
 	pdm_sat_table->beam_patten_num_each_ant = 4;
 
-	#if DEV_BUS_TYPE == RT_SDIO_INTERFACE
 	pdm_sat_table->latch_time = 100; /*mu sec*/
-	#elif DEV_BUS_TYPE == RT_USB_INTERFACE
-	pdm_sat_table->latch_time = 100; /*mu sec*/
-	#endif
 	pdm_sat_table->pkt_skip_statistic_en = 0;
 	
 	pdm_sat_table->ant_num  = 2;/*max=8*/
@@ -2666,12 +2662,8 @@ phydm_update_rx_idle_beam(
 		/**/
 	}
 	
-	#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-	phydm_update_beam_pattern(pDM_Odm, pdm_sat_table->update_beam_codeword, pdm_sat_table->data_codeword_bit_num);
-	#else
 	ODM_ScheduleWorkItem(&pdm_sat_table->hl_smart_antenna_workitem);
 	/*ODM_StallExecution(1);*/
-	#endif
 	
 	pdm_sat_table->pre_codeword = pdm_sat_table->update_beam_codeword;
 }
@@ -2733,12 +2725,8 @@ phydm_hl_smart_ant_cmd(
 			/*---------------------------------------------------------*/
 
 			
-			#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-			phydm_update_beam_pattern(pDM_Odm, pdm_sat_table->update_beam_codeword, pdm_sat_table->data_codeword_bit_num);
-			#else
 			ODM_ScheduleWorkItem(&pdm_sat_table->hl_smart_antenna_workitem);
 			/*ODM_StallExecution(1);*/
-			#endif
 		} else if (pdm_sat_table->fix_beam_pattern_en == 0) {
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ SmartAnt ] Smart Antenna: Enable\n"));
 		}
@@ -2781,12 +2769,7 @@ phydm_set_all_ant_same_beam_num(
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ SmartAnt ] Set all ant beam_pattern: codeword = (( 0x%x ))\n", pdm_sat_table->update_beam_codeword));
 
-	#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-	phydm_update_beam_pattern(pDM_Odm, pdm_sat_table->update_beam_codeword, pdm_sat_table->data_codeword_bit_num);
-	#else
 	ODM_ScheduleWorkItem(&pdm_sat_table->hl_smart_antenna_workitem);
-	/*ODM_StallExecution(1);*/
-	#endif
 }
 
 VOID
@@ -3522,11 +3505,7 @@ ODM_Process_RSSIForAntDiv(
 						
 						pDM_FatTable->FAT_State = FAT_DECISION_STATE;
 						
-						#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-						odm_FastAntTraining_hl_smart_antenna_type1(pDM_Odm);
-						#else
 						ODM_ScheduleWorkItem(&pdm_sat_table->hl_smart_antenna_decision_workitem);
-						#endif
 
 
 					} else {

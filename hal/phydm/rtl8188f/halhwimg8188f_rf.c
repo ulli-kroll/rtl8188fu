@@ -346,7 +346,6 @@ ODM_GetVersion_MP_8188F_RadioA(void)
 *                           TxPowerTrack_USB.TXT
 ******************************************************************************/
 
-#if DEV_BUS_TYPE == RT_USB_INTERFACE
 u1Byte gDeltaSwingTableIdx_MP_2GB_N_TxPowerTrack_USB_8188F[]    = {0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9};
 u1Byte gDeltaSwingTableIdx_MP_2GB_P_TxPowerTrack_USB_8188F[]    = {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 8, 8, 8};
 u1Byte gDeltaSwingTableIdx_MP_2GA_N_TxPowerTrack_USB_8188F[]    = {0, 1, 1, 2, 3, 4, 4, 4, 5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15};
@@ -355,14 +354,12 @@ u1Byte gDeltaSwingTableIdx_MP_2GCCKB_N_TxPowerTrack_USB_8188F[] = {0, 1, 2, 2, 3
 u1Byte gDeltaSwingTableIdx_MP_2GCCKB_P_TxPowerTrack_USB_8188F[] = {0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 6, 6, 6, 6, 7, 7};
 u1Byte gDeltaSwingTableIdx_MP_2GCCKA_N_TxPowerTrack_USB_8188F[] = {0, 1, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 14, 14, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16};
 u1Byte gDeltaSwingTableIdx_MP_2GCCKA_P_TxPowerTrack_USB_8188F[] = {0, 0, 1, 2, 2, 3, 3, 4, 6, 6, 7, 8, 8, 10, 10, 11, 13, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15};
-#endif
 
 void
 ODM_ReadAndConfig_MP_8188F_TxPowerTrack_USB(
 	IN   PDM_ODM_T  pDM_Odm
 )
 {
-#if DEV_BUS_TYPE == RT_USB_INTERFACE
 	PODM_RF_CAL_T  pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("===> ODM_ReadAndConfig_MP_MP_8188F\n"));
@@ -377,7 +374,6 @@ ODM_ReadAndConfig_MP_8188F_TxPowerTrack_USB(
 	ODM_MoveMemory(pDM_Odm, pRFCalibrateInfo->DeltaSwingTableIdx_2GCCKA_N, gDeltaSwingTableIdx_MP_2GCCKA_N_TxPowerTrack_USB_8188F, DELTA_SWINGIDX_SIZE);
 	ODM_MoveMemory(pDM_Odm, pRFCalibrateInfo->DeltaSwingTableIdx_2GCCKB_P, gDeltaSwingTableIdx_MP_2GCCKB_P_TxPowerTrack_USB_8188F, DELTA_SWINGIDX_SIZE);
 	ODM_MoveMemory(pDM_Odm, pRFCalibrateInfo->DeltaSwingTableIdx_2GCCKB_N, gDeltaSwingTableIdx_MP_2GCCKB_N_TxPowerTrack_USB_8188F, DELTA_SWINGIDX_SIZE);
-#endif
 }
 
 /******************************************************************************
