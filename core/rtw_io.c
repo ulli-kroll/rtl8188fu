@@ -48,10 +48,6 @@ jackson@realtek.com.tw
 #include <drv_types.h>
 #include <hal_data.h>
 
-#if defined (PLATFORM_LINUX) && defined (PLATFORM_WINDOWS)
-#error "Shall be Linux or Windows, but not both!\n"
-#endif
-
 #define rtw_le16_to_cpu(val) 		le16_to_cpu(val)
 #define rtw_le32_to_cpu(val)		le32_to_cpu(val)
 #define rtw_cpu_to_le16(val)		cpu_to_le16(val)
