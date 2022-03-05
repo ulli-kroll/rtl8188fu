@@ -110,23 +110,6 @@ odm_AntDiv_on_off(
 			ODM_SetBBReg(pDM_Odm, 0xc50 , BIT7, swch); //OFDM AntDiv function block enable
 			ODM_SetBBReg(pDM_Odm, 0xa00 , BIT15, swch); //CCK AntDiv function block enable
 		}
-		else if(pDM_Odm->SupportICType & ODM_AC_ANTDIV_SUPPORT)
-		{
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("(( Turn %s )) AC-Series HW-AntDiv block\n",(swch==ANTDIV_ON)?"ON" : "OFF"));
-			if (pDM_Odm->SupportICType == ODM_RTL8812) {
-				ODM_SetBBReg(pDM_Odm, 0xc50 , BIT7, swch); //OFDM AntDiv function block enable
-				ODM_SetBBReg(pDM_Odm, 0xa00 , BIT15, swch); //CCK AntDiv function block enable
-			} else {
-				ODM_SetBBReg(pDM_Odm, 0x8D4 , BIT24, swch); //OFDM AntDiv function block enable
-				
-				if( (pDM_Odm->CutVersion >= ODM_CUT_C) && (pDM_Odm->SupportICType == ODM_RTL8821) && ( pDM_Odm->AntDivType != S0S1_SW_ANTDIV))
-				{
-					ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("(( Turn %s )) CCK HW-AntDiv block\n",(swch==ANTDIV_ON)?"ON" : "OFF"));
-					ODM_SetBBReg(pDM_Odm, 0x800 , BIT25, swch); 
-					ODM_SetBBReg(pDM_Odm, 0xA00 , BIT15, swch); //CCK AntDiv function block enable
-				}
-		        }
-		}
 	}
 	pDM_FatTable->AntDiv_OnOff =swch;
 	
@@ -177,10 +160,6 @@ odm_Tx_By_TxDesc_or_Reg(
 		{
 				ODM_SetBBReg(pDM_Odm, 0x80c , BIT21, enable); 
 		}	
-		else if(pDM_Odm->SupportICType & ODM_AC_ANTDIV_SUPPORT)
-		{
-				ODM_SetBBReg(pDM_Odm, 0x900 , BIT18, enable); 
-		}
 	}
 }
 
@@ -246,24 +225,6 @@ ODM_UpdateRxIdleAnt(
 				ODM_SetBBReg(pDM_Odm, 0x864 , BIT8|BIT7|BIT6, OptionalAnt);	/*Optional RX*/
 				ODM_SetBBReg(pDM_Odm, 0x860, BIT14|BIT13|BIT12, DefaultAnt);	/*Default TX*/
 			}
-		}
-		else if(pDM_Odm->SupportICType & ODM_AC_ANTDIV_SUPPORT)
-		{
-			u2Byte	value16 = ODM_Read2Byte(pDM_Odm, ODM_REG_TRMUX_11AC+2);
-			//
-			// 2014/01/14 MH/Luke.Lee Add direct write for register 0xc0a to prevnt 
-			// incorrect 0xc08 bit0-15 .We still not know why it is changed.
-			//
-			value16 &= ~(BIT11|BIT10|BIT9|BIT8|BIT7|BIT6|BIT5|BIT4|BIT3);
-			value16 |= ((u2Byte)DefaultAnt <<3);
-			value16 |= ((u2Byte)OptionalAnt <<6);
-			value16 |= ((u2Byte)DefaultAnt <<9);
-			ODM_Write2Byte(pDM_Odm, ODM_REG_TRMUX_11AC+2, value16);
-			/*
-			ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC , BIT21|BIT20|BIT19, DefaultAnt);	 //Default RX
-			ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC , BIT24|BIT23|BIT22, OptionalAnt);//Optional RX
-			ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC , BIT27|BIT26|BIT25, DefaultAnt);	 //Default TX
-			*/
 		}
 
 		if(pDM_Odm->SupportICType==ODM_RTL8188E)
