@@ -135,10 +135,6 @@ PHY_SetSwChnlBWMode8188F(
 	IN	u8					Offset80
 );
 
-VOID PHY_SetRFPathSwitch_8188F(
-	IN	PADAPTER	pAdapter,
-	IN	BOOLEAN		bMain
-	);
 /*--------------------------Exported Function prototype End---------------------*/
 
 #endif

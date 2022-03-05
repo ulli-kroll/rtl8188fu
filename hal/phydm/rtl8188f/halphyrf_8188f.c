@@ -2074,37 +2074,3 @@ PHY_LCCalibrate_8188F(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("LCK:Finish!!!interface %d 8188F\n", pDM_Odm->InterfaceIndex));
 
 }
-
-VOID phy_SetRFPathSwitch_8188F(
-	IN PADAPTER pAdapter,
-	IN BOOLEAN bMain,
-	IN BOOLEAN is2T
-)
-{
-
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
-
-	if (bMain)   // Left antenna
-		ODM_SetBBReg(pDM_Odm, 0x92C, bMaskDWord, 0x1);
-	else
-		ODM_SetBBReg(pDM_Odm, 0x92C, bMaskDWord, 0x2);
-}
-
-VOID PHY_SetRFPathSwitch_8188F(
-	IN PADAPTER pAdapter,
-	IN BOOLEAN bMain
-)
-{
-
-#if DISABLE_BB_RF
-	return;
-#endif
-
-	phy_SetRFPathSwitch_8188F(pAdapter, bMain, TRUE);
-
-}
-
-
