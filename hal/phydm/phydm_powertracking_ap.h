@@ -23,8 +23,6 @@
 
 #define POWRTRACKING_VERSION	"1.1"
 
-#define ODM_IC_11AC_SERIES_SUPPORT		1
-
 #define		DPK_DELTA_MAPPING_NUM	13
 #define		index_mapping_HP_NUM	15
 #define		DELTA_SWINGIDX_SIZE     30
@@ -90,8 +88,6 @@ extern	u1Byte CCKSwingTable_Ch14_92E[CCK_TABLE_SIZE_92E][8];
 
 #if(RTL8814A_SUPPORT == 1)
 extern u4Byte TxScalingTable_Jaguar[TXSCALE_TABLE_SIZE];
-#elif(ODM_IC_11AC_SERIES_SUPPORT)
-extern unsigned int OFDMSwingTable_8812[OFDM_TABLE_SIZE_8812];
 #endif
 
 #define dm_CheckTXPowerTracking 	ODM_TXPowerTrackingCheck
