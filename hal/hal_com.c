@@ -3557,11 +3557,6 @@ void rtw_set_usb_agg_by_mode_customer(_adapter *padapter, u8 cur_wireless_mode, 
 
 void rtw_set_usb_agg_by_mode(_adapter *padapter, u8 cur_wireless_mode)
 {
-#ifdef CONFIG_PLATFORM_NOVATEK_NT72668
-	rtw_set_usb_agg_by_mode_customer(padapter, cur_wireless_mode, 0x3, 0x3);
-	return;
-#endif /* CONFIG_PLATFORM_NOVATEK_NT72668 */
-
 	rtw_set_usb_agg_by_mode_normal(padapter, cur_wireless_mode);
 }
 #endif //CONFIG_USB_RX_AGGREGATION
@@ -3594,10 +3589,6 @@ void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer)
 	else if(IS_HARDWARE_TYPE_8812(padapter))
 	{
 		rtw_set_usb_agg_by_mode(padapter,cur_wireless_mode);
-#ifdef CONFIG_PLATFORM_NOVATEK_NT72668
-	} else {
-		rtw_set_usb_agg_by_mode(padapter, cur_wireless_mode);
-#endif /* CONFIG_PLATFORM_NOVATEK_NT72668 */
 	}
 #endif
 }
