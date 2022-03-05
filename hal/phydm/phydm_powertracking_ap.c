@@ -805,19 +805,7 @@ odm_TXPowerTrackingThermalMeterInit(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 	u1Byte p;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PADAPTER		Adapter = pDM_Odm->Adapter;
-	PMGNT_INFO      	pMgntInfo = &Adapter->MgntInfo;
-	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-	
-	pMgntInfo->bTXPowerTracking = TRUE;
-	pHalData->TXPowercount       = 0;
-	pHalData->bTXPowerTrackingInit = FALSE;
-
-	if(pDM_Odm->mp_mode == FALSE)
-		pHalData->TxPowerTrackControl = TRUE;
-	ODM_RT_TRACE(pDM_Odm,COMP_POWER_TRACKING, DBG_LOUD, ("pMgntInfo->bTXPowerTracking = %d\n", pMgntInfo->bTXPowerTracking));
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#ifdef CONFIG_RTL8188E
 	{
 		pDM_Odm->RFCalibrateInfo.bTXPowerTracking = _TRUE;
@@ -912,10 +900,6 @@ ODM_TXPowerTrackingCheck(
 	//
 	switch	(pDM_Odm->SupportPlatform)
 	{
-		case	ODM_WIN:
-			odm_TXPowerTrackingCheckMP(pDM_Odm);
-			break;
-
 		case	ODM_CE:
 			odm_TXPowerTrackingCheckCE(pDM_Odm);
 			break;
@@ -972,16 +956,6 @@ odm_TXPowerTrackingCheckMP(
 	IN	PVOID		pDM_VOID 
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PADAPTER	Adapter = pDM_Odm->Adapter;
-
-	if (ODM_CheckPowerStatus(Adapter) == FALSE)
-		return;
-
-	if(!Adapter->bSlaveOfDMSP || Adapter->DualMacSmartConcurrent == FALSE)
-		odm_TXPowerTrackingThermalMeterCheck(Adapter);
-#endif
 	
 }
 
@@ -1006,45 +980,4 @@ odm_TXPowerTrackingCheckAP(
 
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-VOID
-odm_TXPowerTrackingThermalMeterCheck(
-	IN	PADAPTER		Adapter
-	)
-{
-#ifndef AP_BUILD_WORKAROUND
-#if (HAL_CODE_BASE==RTL8192_C)
-	PMGNT_INFO      		pMgntInfo = &Adapter->MgntInfo;
-	//HAL_DATA_TYPE			*pHalData = GET_HAL_DATA(Adapter);
-	static u1Byte			TM_Trigger = 0;
-	//u1Byte					TxPowerCheckCnt = 5;	//10 sec
-
-	if(!pMgntInfo->bTXPowerTracking /*|| (!pHalData->TxPowerTrackControl && pHalData->bAPKdone)*/)
-	{
-		return;
-	}
-
-	if(!TM_Trigger)		//at least delay 1 sec
-	{
-		if (IS_HARDWARE_TYPE_8188E(Adapter) || IS_HARDWARE_TYPE_8812(Adapter))
-			PHY_SetRFReg(Adapter, RF_PATH_A, RF_T_METER_88E, BIT17 | BIT16, 0x03);
-		else
-			PHY_SetRFReg(Adapter, RF_PATH_A, RF_T_METER, bRFRegOffsetMask, 0x60);
-		RT_TRACE(COMP_POWER_TRACKING, DBG_LOUD,("Trigger 92C Thermal Meter!!\n"));
-		
-		TM_Trigger = 1;
-		return;
-	}
-	else
-	{
-		RT_TRACE(COMP_POWER_TRACKING, DBG_LOUD,("Schedule TxPowerTracking direct call!!\n"));		
-		odm_TXPowerTrackingDirectCall(Adapter); //Using direct call is instead, added by Roger, 2009.06.18.
-		TM_Trigger = 0;
-	}
-#endif
-#endif
-}
-
-#endif
 

@@ -1275,9 +1275,7 @@ ODM_UpdateRxIdleAnt_8723B(
 
 			// Set TX AGC by S0/S1
 			// Need to consider Linux driver
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-			 pAdapter->HalFunc.SetTxPowerLevelHandler(pAdapter, pHalData->CurrentChannel);
-#elif(DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE == ODM_CE)
 			rtw_hal_set_tx_power_level(pAdapter, pHalData->CurrentChannel);
 #endif
 
@@ -1306,9 +1304,7 @@ ODM_UpdateRxIdleAnt_8723B(
 
 	/* Set TX AGC by S0/S1 */
 	/* Need to consider Linux driver */
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-		 pAdapter->HalFunc.SetTxPowerLevelHandler(pAdapter, pHalData->CurrentChannel);
-	#elif(DM_ODM_SUPPORT_TYPE == ODM_CE)
+	#if(DM_ODM_SUPPORT_TYPE == ODM_CE)
 		rtw_hal_set_tx_power_level(pAdapter, pHalData->CurrentChannel);
 	#endif
 
@@ -2705,42 +2701,7 @@ odm_S0S1_SwAntDiv(
 }
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-ODM_SW_AntDiv_Callback(
-	PRT_TIMER		pTimer
-)
-{
-	PADAPTER		Adapter = (PADAPTER)pTimer->Adapter;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	pSWAT_T			pDM_SWAT_Table = &pHalData->DM_OutSrc.DM_SWAT_Table;
-
-	#if DEV_BUS_TYPE==RT_PCI_INTERFACE
-		#if USE_WORKITEM
-			ODM_ScheduleWorkItem(&pDM_SWAT_Table->phydm_SwAntennaSwitchWorkitem);
-		#else
-			{
-			//DbgPrint("SW_antdiv_Callback");
-			odm_S0S1_SwAntDiv(&pHalData->DM_OutSrc, SWAW_STEP_DETERMINE);
-			}
-		#endif
-	#else
-	ODM_ScheduleWorkItem(&pDM_SWAT_Table->phydm_SwAntennaSwitchWorkitem);
-	#endif
-}
-VOID
-ODM_SW_AntDiv_WorkitemCallback(
-    IN PVOID            pContext
-    )
-{
-	PADAPTER		pAdapter = (PADAPTER)pContext;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	
-	//DbgPrint("SW_antdiv_Workitem_Callback");
-	odm_S0S1_SwAntDiv(&pHalData->DM_OutSrc, SWAW_STEP_DETERMINE);
-}
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 VOID
 ODM_SW_AntDiv_WorkitemCallback(
@@ -2952,18 +2913,6 @@ odm_SetNextMACAddrTarget(
 	//
 	//2012.03.26 LukeLee: This should be removed later, the MAC address is changed according to MACID in turn
 	//
-	#if( DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	{		
-		PADAPTER	Adapter =  pDM_Odm->Adapter;
-		PMGNT_INFO	pMgntInfo = &Adapter->MgntInfo;
-
-		for (i=0; i<6; i++)
-		{
-			Bssid[i] = pMgntInfo->Bssid[i];
-			//DbgPrint("Bssid[%d]=%x\n", i, Bssid[i]);
-		}
-	}
-	#endif
 
 	//odm_SetNextMACAddrTarget(pDM_Odm);
 	
@@ -3697,45 +3646,6 @@ odm_FastAntTraining_hl_smart_antenna_type1(
 		
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-VOID
-phydm_beam_switch_workitem_callback(
-	IN	PVOID	pContext
-	)
-{
-	PADAPTER		pAdapter = (PADAPTER)pContext;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
-	pSAT_T			pdm_sat_table = &(pDM_Odm->dm_sat_table);
-
-	#if DEV_BUS_TYPE != RT_PCI_INTERFACE
-	pdm_sat_table->pkt_skip_statistic_en = 1;
-	#endif
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ SmartAnt ] Beam Switch Workitem Callback, pkt_skip_statistic_en = (( %d ))\n", pdm_sat_table->pkt_skip_statistic_en));
-	
-	phydm_update_beam_pattern(pDM_Odm, pdm_sat_table->update_beam_codeword, pdm_sat_table->data_codeword_bit_num);
-
-	#if DEV_BUS_TYPE != RT_PCI_INTERFACE
-	/*ODM_StallExecution(pdm_sat_table->latch_time);*/
-	pdm_sat_table->pkt_skip_statistic_en = 0;
-	#endif
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("pkt_skip_statistic_en = (( %d )), latch_time = (( %d ))\n", pdm_sat_table->pkt_skip_statistic_en, pdm_sat_table->latch_time));
-}
-
-VOID
-phydm_beam_decision_workitem_callback(
-	IN	PVOID	pContext
-	)
-{
-	PADAPTER		pAdapter = (PADAPTER)pContext;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
-	
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ SmartAnt ] Beam decision Workitem Callback\n"));
-	odm_FastAntTraining_hl_smart_antenna_type1(pDM_Odm);
-}
-#endif
 
 #endif /*#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1*/
 
@@ -3792,13 +3702,6 @@ ODM_AntDivInit(
 		#endif
 		
 	//3     -   WIN   -
-	#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-		pDM_SWAT_Table->Ant5G = MAIN_ANT;
-		pDM_SWAT_Table->Ant2G = MAIN_ANT;
-		pDM_FatTable->CCK_counter_main=0;
-		pDM_FatTable->CCK_counter_aux=0;
-		pDM_FatTable->OFDM_counter_main=0;
-		pDM_FatTable->OFDM_counter_aux=0;
 	#endif
 
 	//2 [---Set MAIN_ANT as default antenna if Auto-Ant enable---]
@@ -4009,50 +3912,7 @@ ODM_AntDiv(
 	}
 
 	//----------
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-	if (pDM_FatTable->enable_ctrl_frame_antdiv) {
-		
-		if ((pDM_Odm->data_frame_num <= 10) && (pDM_Odm->bLinked))
-			pDM_FatTable->use_ctrl_frame_antdiv = 1;
-		else
-			pDM_FatTable->use_ctrl_frame_antdiv = 0;
-		
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("use_ctrl_frame_antdiv = (( %d )), data_frame_num = (( %d ))\n", pDM_FatTable->use_ctrl_frame_antdiv, pDM_Odm->data_frame_num));
-		pDM_Odm->data_frame_num = 0;
-	}
-
-	if(pAdapter->MgntInfo.AntennaTest)
-		return;
-	
-        {
-	#if (BEAMFORMING_SUPPORT == 1)			
-	        BEAMFORMING_CAP		BeamformCap = (pDM_Odm->BeamformingInfo.BeamformCap);
-
-		if( BeamformCap & BEAMFORMEE_CAP ) //  BFmee On  &&   Div On ->  Div Off
-		{	
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV,ODM_DBG_LOUD,("[ AntDiv : OFF ]   BFmee ==1 \n"));
-			if(pDM_FatTable->fix_ant_bfee == 0)
-			{
-				odm_AntDiv_on_off(pDM_Odm, ANTDIV_OFF);
-				pDM_FatTable->fix_ant_bfee = 1;
-			}
-			return;
-		}
-		else // BFmee Off   &&   Div Off ->  Div On
-		{
-			if((pDM_FatTable->fix_ant_bfee == 1)  &&  pDM_Odm->bLinked) 
-			{
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[ AntDiv : ON ]   BFmee ==0\n"));
-				if((pDM_Odm->AntDivType!=S0S1_SW_ANTDIV) )
-					odm_AntDiv_on_off(pDM_Odm, ANTDIV_ON);
-
-				pDM_FatTable->fix_ant_bfee = 0;
-			}
-		}
-	#endif	
-	}
-#elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
+#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 	//----------just for fool proof
 
 	if(pDM_Odm->antdiv_rssi)
@@ -4316,13 +4176,6 @@ ODM_Process_RSSIForAntDiv(
 	u4Byte			beam_tmp;
 	#endif
 
-	#if (DM_ODM_SUPPORT_TYPE &  (ODM_WIN))
-	u4Byte			RxPower_Ant0, RxPower_Ant1;	
-	u4Byte			RxEVM_Ant0, RxEVM_Ant1;
-	#else
-	u1Byte			RxPower_Ant0, RxPower_Ant1;	
-	u1Byte			RxEVM_Ant0, RxEVM_Ant1;
-	#endif
 
 	CCKMaxRate=ODM_RATE11M;
 	isCCKrate = (pPktinfo->DataRate <= CCKMaxRate)?TRUE:FALSE;
@@ -4441,48 +4294,7 @@ ODM_Process_RSSIForAntDiv(
 	//ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD,("antsel_tr_mux=3'b%d%d%d\n",pDM_FatTable->antsel_rx_keep_2, pDM_FatTable->antsel_rx_keep_1, pDM_FatTable->antsel_rx_keep_0));
 }
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
-VOID
-ODM_SetTxAntByTxInfo(
-	IN		PVOID			pDM_VOID,	
-	IN		pu1Byte			pDesc,
-	IN		u1Byte			macId	
-
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pFAT_T	pDM_FatTable = &pDM_Odm->DM_FatTable;
-
-	if (!(pDM_Odm->SupportAbility & ODM_BB_ANT_DIV))
-		return;
-
-	if (pDM_Odm->AntDivType == CGCS_RX_HW_ANTDIV)
-		return;
-
-
-	if (pDM_Odm->SupportICType == ODM_RTL8723B) {
-#if (RTL8723B_SUPPORT == 1)
-		SET_TX_DESC_ANTSEL_A_8723B(pDesc, pDM_FatTable->antsel_a[macId]);
-		/*ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[8723B] SetTxAntByTxInfo_WIN: MacID=%d, antsel_tr_mux=3'b%d%d%d\n", 
-			macId, pDM_FatTable->antsel_c[macId], pDM_FatTable->antsel_b[macId], pDM_FatTable->antsel_a[macId]));*/
-#endif
-	} else if (pDM_Odm->SupportICType == ODM_RTL8821) {
-#if (RTL8821A_SUPPORT == 1)
-		SET_TX_DESC_ANTSEL_A_8812(pDesc, pDM_FatTable->antsel_a[macId]);
-		/*ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[8821A] SetTxAntByTxInfo_WIN: MacID=%d, antsel_tr_mux=3'b%d%d%d\n", 
-			macId, pDM_FatTable->antsel_c[macId], pDM_FatTable->antsel_b[macId], pDM_FatTable->antsel_a[macId]));*/
-#endif
-	} else if (pDM_Odm->SupportICType == ODM_RTL8188E) {
-#if (RTL8188E_SUPPORT == 1)
-		SET_TX_DESC_ANTSEL_A_88E(pDesc, pDM_FatTable->antsel_a[macId]);
-		SET_TX_DESC_ANTSEL_B_88E(pDesc, pDM_FatTable->antsel_b[macId]);
-		SET_TX_DESC_ANTSEL_C_88E(pDesc, pDM_FatTable->antsel_c[macId]);
-		/*ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("[8188E] SetTxAntByTxInfo_WIN: MacID=%d, antsel_tr_mux=3'b%d%d%d\n", 
-			macId, pDM_FatTable->antsel_c[macId], pDM_FatTable->antsel_b[macId], pDM_FatTable->antsel_a[macId]));*/
-#endif
-	}
-}
-#elif(DM_ODM_SUPPORT_TYPE == ODM_AP)
+#if(DM_ODM_SUPPORT_TYPE == ODM_AP)
 
 VOID
 ODM_SetTxAntByTxInfo(
@@ -4537,14 +4349,7 @@ ODM_AntDiv_Config(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pFAT_T			pDM_FatTable = &pDM_Odm->DM_FatTable;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("WIN Config Antenna Diversity\n"));
-		if(pDM_Odm->SupportICType==ODM_RTL8723B)
-		{
-			if((!pDM_Odm->DM_SWAT_Table.ANTA_ON || !pDM_Odm->DM_SWAT_Table.ANTB_ON))
-				pDM_Odm->SupportAbility &= ~(ODM_BB_ANT_DIV);
-		}
-#elif (DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		/* do noting, branch only */
 #elif (DM_ODM_SUPPORT_TYPE & (ODM_AP))
 

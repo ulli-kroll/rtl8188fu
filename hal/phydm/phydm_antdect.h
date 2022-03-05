@@ -24,7 +24,7 @@
 #define ANTDECT_VERSION	"2.1"	/*2015.07.29 by YuChen*/
 
 #if(defined(CONFIG_ANT_DETECTION))
-//#if( DM_ODM_SUPPORT_TYPE & (ODM_WIN |ODM_CE))
+//#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 //ANT Test
 #define		ANTTESTALL		0x00	/*Ant A or B will be Testing*/   
 #define		ANTTESTA		0x01	/*Ant A will be Testing*/	

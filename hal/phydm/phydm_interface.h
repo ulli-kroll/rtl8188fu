@@ -140,7 +140,6 @@ typedef enum _PHYDM_ACTING_TYPE {
 // 2012/02/17 MH For non-MP compile pass only. Linux does not support workitem.
 // Suggest HW team to use thread instead of workitem. Windows also support the feature.
 //
-#if (DM_ODM_SUPPORT_TYPE != ODM_WIN)
 typedef  void *PRT_WORK_ITEM ;
 typedef  void RT_WORKITEM_HANDLE,*PRT_WORKITEM_HANDLE;
 typedef VOID (*RT_WORKITEM_CALL_BACK)(PVOID pContext);
@@ -164,7 +163,6 @@ typedef struct _RT_WORK_ITEM
 #endif
 
 
-#endif
 
 //
 // =========== Extern Variable ??? It should be forbidden.

@@ -59,9 +59,6 @@
 #if(DM_ODM_SUPPORT_TYPE == ODM_AP)
 #define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8881A |ODM_RTL8192E |ODM_RTL8812 |ODM_RTL8814A|ODM_RTL8822B)
 #define		RA_FIRST_MACID 	1
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8192E | ODM_RTL8812 | ODM_RTL8821 | ODM_RTL8723B | ODM_RTL8814A | ODM_RTL8822B | ODM_RTL8703B)
-#define		RA_FIRST_MACID 	0
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*#define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8192E|ODM_RTL8812|ODM_RTL8821|ODM_RTL8723B|ODM_RTL8814A|ODM_RTL8822B|ODM_RTL8703B) */
 #define		RA_FIRST_MACID 	0
@@ -157,9 +154,6 @@ typedef struct _ODM_RA_Info_ {
 
 typedef struct _Rate_Adaptive_Table_ {
 	u1Byte		firstconnect;
-#if(DM_ODM_SUPPORT_TYPE==ODM_WIN)
-	BOOLEAN		PT_collision_pre;
-#endif
 
 #if (defined(CONFIG_RA_DBG_CMD))
 	BOOLEAN		is_ra_dbg_init;
@@ -203,14 +197,12 @@ typedef struct _ODM_RATE_ADAPTIVE {
 	u1Byte				LowRSSIThresh;		// if RSSI <= LowRSSIThresh	=> RATRState is DM_RATR_STA_LOW
 	u1Byte				RATRState;			// Current RSSI level, DM_RATR_STA_HIGH/DM_RATR_STA_MIDDLE/DM_RATR_STA_LOW
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u1Byte				LdpcThres;			// if RSSI > LdpcThres => switch from LPDC to BCC
 	BOOLEAN				bLowerRtsRate;
 #endif
 
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	u1Byte				RtsThres;
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	BOOLEAN				bUseLdpc;
 #else
 	u1Byte				UltraLowRSSIThresh;
@@ -286,16 +278,6 @@ odm_RSSIMonitorCheck(
 	IN	PVOID	pDM_VOID
 );
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-s4Byte
-phydm_FindMinimumRSSI(
-IN		PDM_ODM_T		pDM_Odm,
-IN		PADAPTER		pAdapter,
-IN OUT	BOOLEAN	*pbLink_temp
-
-	);
-#endif
-
 VOID
 odm_RSSIMonitorCheckMP(
 	IN	PVOID	pDM_VOID
@@ -354,7 +336,7 @@ ODM_RAPostActionOnAssoc(
 	IN		PVOID	pDM_Odm
 );
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 
 u1Byte
 odm_Find_RTS_Rate(
@@ -383,35 +365,7 @@ ODM_UpdateInitRate(
 	IN	u1Byte		Rate
 );
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-VOID
-odm_RSSIDumpToRegister(
-	IN	PVOID	pDM_VOID
-);
-
-VOID
-odm_RefreshLdpcRtsMP(
-	IN	PADAPTER			pAdapter,
-	IN	PDM_ODM_T			pDM_Odm,
-	IN	u1Byte				mMacId,
-	IN	u1Byte				IOTPeer,
-	IN	s4Byte				UndecoratedSmoothedPWDB
-);
-
-VOID
-ODM_DynamicARFBSelect(
-	IN		PVOID		pDM_VOID,
-	IN 		u1Byte		rate,
-	IN  	BOOLEAN		Collision_State
-);
-
-VOID
-ODM_RateAdaptiveStateApInit(
-	IN	PVOID			PADAPTER_VOID,
-	IN	PRT_WLAN_STA  	pEntry
-);
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 static void
 FindMinimumRSSI(
@@ -438,7 +392,7 @@ void phydm_ra_rssi_rpt_wk(PVOID pContext);
 
 #endif/*#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)*/
 
-#endif/*#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN| ODM_CE))*/
+#endif/*#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))*/
 
 #endif /*#ifndef	__ODMRAINFO_H__*/
 

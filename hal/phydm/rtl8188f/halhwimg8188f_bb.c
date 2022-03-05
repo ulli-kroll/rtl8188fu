@@ -558,14 +558,6 @@ ODM_ReadAndConfig_MP_8188F_PHY_REG_PG(
 	u4Byte     ArrayLen    = sizeof(Array_MP_8188F_PHY_REG_PG)/sizeof(u4Byte);
 	pu4Byte    Array       = Array_MP_8188F_PHY_REG_PG;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PADAPTER		Adapter = pDM_Odm->Adapter;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
-	PlatformZeroMemory(pHalData->BufOfLinesPwrByRate, MAX_LINES_HWCONFIG_TXT*MAX_BYTES_LINE_HWCONFIG_TXT);
-	pHalData->nLinesReadPwrByRate = ArrayLen/6;
-#endif
-
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("===> ODM_ReadAndConfig_MP_8188F_PHY_REG_PG\n"));
 
 	pDM_Odm->PhyRegPgVersion = 1;
@@ -581,10 +573,6 @@ ODM_ReadAndConfig_MP_8188F_PHY_REG_PG(
 
 	    odm_ConfigBB_PHY_REG_PG_8188F(pDM_Odm, v1, v2, v3, v4, v5, v6);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	rsprintf((char *)pHalData->BufOfLinesPwrByRate[i/6], 100, "%s, %s, %s, 0x%X, 0x%08X, 0x%08X,",
-		(v1 == 0?"2.4G":"  5G"), (v2 == 0?"A":"B"), (v3 == 0?"1Tx":"2Tx"), v4, v5, v6);
-#endif
 	}
 }
 

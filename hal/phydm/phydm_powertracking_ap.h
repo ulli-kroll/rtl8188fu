@@ -188,7 +188,7 @@ typedef struct ODM_RF_Calibration_Structure
 	
 	u1Byte			BbSwingIdxOfdm[MAX_RF_PATH];
 	u1Byte			BbSwingIdxOfdmCurrent;
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_WIN|ODM_CE))	
+#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))	
 	u1Byte			BbSwingIdxOfdmBase[MAX_RF_PATH];
 #else
 	u1Byte			BbSwingIdxOfdmBase;
@@ -280,34 +280,6 @@ odm_TXPowerTrackingCheckCE(
 	);
 
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_WIN)) 
-
-VOID 
-odm_TXPowerTrackingCallbackThermalMeter92C(
-            IN PADAPTER	Adapter
-            );
-
-VOID
-odm_TXPowerTrackingCallbackRXGainThermalMeter92D(
-	IN PADAPTER 	Adapter
-	);
-
-VOID
-odm_TXPowerTrackingCallbackThermalMeter92D(
-            IN PADAPTER	Adapter
-            );
-
-VOID
-odm_TXPowerTrackingDirectCall92C(
-            IN	PADAPTER		Adapter
-            );
-
-VOID
-odm_TXPowerTrackingThermalMeterCheck(
-	IN	PADAPTER		Adapter
-	);
-
-#endif
 
 
 

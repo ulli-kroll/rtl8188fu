@@ -34,7 +34,7 @@ ODM_GetAutoChannelSelectResult(
 	PDM_ODM_T				pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS					pACS = &pDM_Odm->DM_ACS;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if(Band == ODM_BAND_2_4G)
 	{
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ACS, ODM_DBG_LOUD, ("[ACS] ODM_GetAutoChannelSelectResult(): CleanChannel_2G(%d)\n", pACS->CleanChannel_2G));
@@ -57,7 +57,7 @@ odm_AutoChannelSelectSetting(
 	IN		BOOLEAN			IsEnable
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u2Byte						period = 0x2710;// 40ms in default
 	u2Byte						NHMType = 0x7;
@@ -90,7 +90,7 @@ odm_AutoChannelSelectInit(
 	IN		PVOID			pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 	u1Byte						i;
@@ -128,7 +128,7 @@ odm_AutoChannelSelectReset(
 	IN		PVOID			pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 
@@ -151,7 +151,7 @@ odm_AutoChannelSelect(
 	IN		u1Byte			Channel
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 	u1Byte						ChannelIDX = 0, SearchIDX = 0;

@@ -91,15 +91,6 @@ odm_TXPowerTrackingCheckCE(
 	IN	PVOID		pDM_VOID
 	);
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_WIN)) 
-
-
-VOID
-odm_TXPowerTrackingThermalMeterCheck(
-	IN	PADAPTER		Adapter
-	);
-
-#endif
 
 typedef struct _IQK_MATRIX_REGS_SETTING{
 	BOOLEAN 	bIQKDone;
@@ -180,7 +171,7 @@ typedef struct ODM_RF_Calibration_Structure
 	
 	u1Byte			BbSwingIdxOfdm[MAX_RF_PATH];
 	u1Byte			BbSwingIdxOfdmCurrent;
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_WIN|ODM_CE))	
+#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))	
 	u1Byte			BbSwingIdxOfdmBase[MAX_RF_PATH];
 #else
 	u1Byte			BbSwingIdxOfdmBase;

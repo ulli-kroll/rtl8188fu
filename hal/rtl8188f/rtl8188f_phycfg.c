@@ -1234,11 +1234,7 @@ phy_SwChnl8188F(
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 	u8				channelToSW = pHalData->CurrentChannel;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
-#else  /* (DM_ODM_SUPPORT_TYPE == ODM_CE) */
 	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
-#endif
 
 	if (pHalData->rf_chip == RF_PSEUDO_11N) {
 		/*RT_TRACE(COMP_MLME,DBG_LOUD,("phy_SwChnl8188F: return for PSEUDO\n")); */

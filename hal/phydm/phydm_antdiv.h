@@ -141,12 +141,6 @@ typedef struct _SW_Antenna_Switch_
 	u4Byte		PktCnt_SWAntDivByCtrlFrame;
 	BOOLEAN		bSWAntDivByCtrlFrame;
 	
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)	
-	#if USE_WORKITEM
-	RT_WORK_ITEM	phydm_SwAntennaSwitchWorkitem;	
-	#endif
-	#endif	
-
 	/* AntDect (Before link Antenna Switch check) need to be moved*/
 	u2Byte		Single_Ant_Counter;
 	u2Byte		Dual_Ant_Counter;
@@ -220,10 +214,6 @@ typedef struct _SMART_ANTENNA_TRAINNING_ {
 	u4Byte	pre_codeword;
 	BOOLEAN	force_update_beam_en;
 
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)	
-	RT_WORK_ITEM	hl_smart_antenna_workitem;
-	RT_WORK_ITEM	hl_smart_antenna_decision_workitem;	
-	#endif
 
 } SAT_T, *pSAT_T;
 #endif
@@ -279,7 +269,7 @@ typedef struct _FAST_ANTENNA_TRAINNING_
 	u4Byte	MainCRC32_Fail_Cnt;
 	u4Byte	AuxCRC32_Fail_Cnt;
 	#endif	
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+	#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u4Byte    CCK_CtrlFrame_Cnt_main;
 	u4Byte    CCK_CtrlFrame_Cnt_aux;
 	u4Byte    OFDM_CtrlFrame_Cnt_main;
@@ -371,19 +361,7 @@ phydm_update_rx_idle_antenna_8188F(
 
 #ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-ODM_SW_AntDiv_Callback(
-	IN 	PRT_TIMER		pTimer
-	);
-
-VOID
-ODM_SW_AntDiv_WorkitemCallback(
-	IN	PVOID	pContext
-	);
-
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 VOID
 ODM_SW_AntDiv_WorkitemCallback(
@@ -451,19 +429,6 @@ odm_FastAntTrainingWorkItemCallback(
 
 #ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-phydm_beam_switch_workitem_callback(
-	IN	PVOID	pContext
-	);
-
-VOID
-phydm_beam_decision_workitem_callback(
-	IN	PVOID	pContext
-	);
-
-#endif
-
 VOID
 phydm_update_beam_pattern(
 	IN		PVOID		pDM_VOID,
@@ -515,7 +480,7 @@ ODM_Process_RSSIForAntDiv(
 
 
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 VOID
 ODM_SetTxAntByTxInfo(
 	IN		PVOID			pDM_VOID,

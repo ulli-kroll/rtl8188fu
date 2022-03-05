@@ -143,9 +143,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
-	#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+	#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
 	#endif
 #endif
@@ -276,7 +274,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	if (delta > 0 && pDM_Odm->RFCalibrateInfo.TxPowerTrackControl)
 	{
 		//"delta" here is used to record the absolute value of differrence.
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))			
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))			
 	    delta = ThermalValue > pHalData->EEPROMThermalMeter?(ThermalValue - pHalData->EEPROMThermalMeter):(pHalData->EEPROMThermalMeter - ThermalValue);		
 #else
 	    delta = (ThermalValue > pDM_Odm->priv->pmib->dot11RFEntry.ther)?(ThermalValue - pDM_Odm->priv->pmib->dot11RFEntry.ther):(pDM_Odm->priv->pmib->dot11RFEntry.ther - ThermalValue);		
@@ -286,7 +284,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 		//4 7.1 The Final Power Index = BaseIndex + PowerIndexOffset
 		
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))				
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))				
 		if(ThermalValue > pHalData->EEPROMThermalMeter) {
 #else
 		if(ThermalValue > pDM_Odm->priv->pmib->dot11RFEntry.ther) {
@@ -629,12 +627,7 @@ odm_IQCalibrate(
 {
 	PADAPTER	Adapter = pDM_Odm->Adapter;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)	
-	if (*pDM_Odm->pIsFcsModeEnable)
-		return;
-#endif
-	
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))		
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))		
 	if (!IS_HARDWARE_TYPE_JAGUAR(Adapter))
 		return;
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
@@ -659,8 +652,6 @@ odm_IQCalibrate(
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 			/*Change channel will do IQK , cancel duplicate doIQK by YiWei*/
 			/*PHY_IQCalibrate_8821A(pDM_Odm, FALSE);*/
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-			PHY_IQCalibrate(Adapter, FALSE);
 #else
 			PHY_IQCalibrate_8821A(Adapter, FALSE);
 #endif
@@ -675,7 +666,7 @@ void phydm_rf_init(IN	PVOID		pDM_VOID)
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	odm_TXPowerTrackingInit(pDM_Odm);
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_ClearTxPowerTrackingState(pDM_Odm);	
 #endif
 
@@ -691,7 +682,7 @@ void phydm_rf_init(IN	PVOID		pDM_VOID)
 void phydm_rf_watchdog(IN	PVOID		pDM_VOID)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_TXPowerTrackingCheck(pDM_Odm);
 	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
 		odm_IQCalibrate(pDM_Odm);

@@ -960,13 +960,6 @@ ODM_ReadAndConfig_MP_8188F_TXPWR_LMT(
 	u4Byte     ArrayLen    = sizeof(Array_MP_8188F_TXPWR_LMT)/sizeof(pu1Byte);
 	pu1Byte    *Array      = (pu1Byte *)Array_MP_8188F_TXPWR_LMT;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PADAPTER		Adapter = pDM_Odm->Adapter;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
-	PlatformZeroMemory(pHalData->BufOfLinesPwrLmt, MAX_LINES_HWCONFIG_TXT*MAX_BYTES_LINE_HWCONFIG_TXT);
-	pHalData->nLinesReadPwrLmt = ArrayLen/7;
-#endif
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("===> ODM_ReadAndConfig_MP_8188F_TXPWR_LMT\n"));
 
@@ -980,10 +973,6 @@ ODM_ReadAndConfig_MP_8188F_TXPWR_LMT(
 		pu1Byte val = Array[i+6];
 	
 		odm_ConfigBB_TXPWR_LMT_8188F(pDM_Odm, regulation, band, bandwidth, rate, rfPath, chnl, val);
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-		rsprintf((char *)pHalData->BufOfLinesPwrLmt[i/7], 100, "\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\",",
-			regulation, band, bandwidth, rate, rfPath, chnl, val);
-#endif
 	}
 
 }

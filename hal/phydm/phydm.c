@@ -111,16 +111,7 @@ ODM_InitMpDriverStatus(
 	IN		PDM_ODM_T		pDM_Odm
 )
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-
-	// Decide when compile time
-	#if(MP_DRIVER == 1)
-	pDM_Odm->mp_mode = TRUE;
-	#else
-	pDM_Odm->mp_mode = FALSE;
-	#endif
-
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
@@ -137,11 +128,7 @@ ODM_UpdateMpDriverStatus(
 	IN		PDM_ODM_T		pDM_Odm
 )
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-
-	// Do nothing.
-
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
 
@@ -253,31 +240,6 @@ odm_CommonInfoSelfUpdate(
 	u4Byte	i, OneEntry_MACID = 0, ma_rx_tp = 0;
 	PSTA_INFO_T   	pEntry;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-	PADAPTER	Adapter =  pDM_Odm->Adapter;
-	PMGNT_INFO	pMgntInfo = &Adapter->MgntInfo;
-
-	pEntry = pDM_Odm->pODM_StaInfo[0];
-	if(pMgntInfo->mAssoc)
-	{
-		pEntry->bUsed=TRUE;
-		for (i=0; i<6; i++)
-			pEntry->MacAddr[i] = pMgntInfo->Bssid[i];
-	}
-	else
-	{
-		pEntry->bUsed=FALSE;
-		for (i=0; i<6; i++)
-			pEntry->MacAddr[i] = 0;
-	}
-
-	//STA mode is linked to AP
-	if(IS_STA_VALID(pDM_Odm->pODM_StaInfo[0]) && !ACTING_AS_AP(Adapter))
-		pDM_Odm->bsta_state = TRUE;
-	else
-		pDM_Odm->bsta_state = FALSE;
-#endif
 
 /* THis variable cannot be used because it is wrong*/
 #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
@@ -349,7 +311,7 @@ odm_CommonInfoSelfReset(
 	IN		PDM_ODM_T		pDM_Odm
 	)
 {
-#if( DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	pDM_Odm->PhyDbgInfo.NumQryBeaconPkt = 0;
 #endif
 }
@@ -451,7 +413,7 @@ ODM_DMInit(
 		}
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	
 	#if (RTL8723B_SUPPORT == 1)
 		if(pDM_Odm->SupportICType == ODM_RTL8723B)
@@ -559,26 +521,6 @@ phydm_support_ablity_debug(
 	PHYDM_SNPRINTF((output+used, out_len-used,"%s\n", "================================"));
 }
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-//
-//tmp modify for LC Only
-//
-VOID
-ODM_DMWatchdog_LPS(
-	IN		PDM_ODM_T		pDM_Odm
-	)
-{	
-	odm_CommonInfoSelfUpdate(pDM_Odm);
-	odm_FalseAlarmCounterStatistics(pDM_Odm);
-	odm_RSSIMonitorCheck(pDM_Odm);
-	odm_DIGbyRSSI_LPS(pDM_Odm);	
-	odm_CCKPacketDetectionThresh(pDM_Odm);
-	odm_CommonInfoSelfReset(pDM_Odm);
-
-	if(*(pDM_Odm->pbPowerSaving)==TRUE)
-		return;
-}
-#endif
 //
 // 2011/09/20 MH This is the entry pointer for all team to execute HW out source DM.
 // You can not add any dummy function here, be care, you can only use DM structure
@@ -648,7 +590,7 @@ ODM_DMWatchdog(
 	                odm_DynamicPrimaryCCA(pDM_Odm);	
 #endif
 
-#if( DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 
 	#if (RTL8192E_SUPPORT == 1)
 		if(pDM_Odm->SupportICType==ODM_RTL8192E)
@@ -983,9 +925,7 @@ ODM_CmnInfoPtrArrayHook(
 			pDM_Odm->pODM_StaInfo[Index] = (PSTA_INFO_T)pValue;
 			
 			if (IS_STA_VALID(pDM_Odm->pODM_StaInfo[Index]))
-			#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-				pDM_Odm->platform2phydm_macid_table[((PSTA_INFO_T)pValue)->AssociatedMacId] = Index; /*AssociatedMacId are unique bttween different Adapter*/
-			#elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
+			#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 				pDM_Odm->platform2phydm_macid_table[((PSTA_INFO_T)pValue)->aid] = Index;
 			#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 				pDM_Odm->platform2phydm_macid_table[((PSTA_INFO_T)pValue)->mac_id] = Index;
@@ -1151,177 +1091,6 @@ ODM_CmnInfoUpdate(
 }
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-ODM_InitAllWorkItems(IN PDM_ODM_T	pDM_Odm )
-{
-
-	PADAPTER		pAdapter = pDM_Odm->Adapter;
-#if USE_WORKITEM
-	#ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
-	ODM_InitializeWorkItem(	pDM_Odm, 
-							&pDM_Odm->DM_SWAT_Table.phydm_SwAntennaSwitchWorkitem, 
-							(RT_WORKITEM_CALL_BACK)ODM_SW_AntDiv_WorkitemCallback,
-							(PVOID)pAdapter,
-							"AntennaSwitchWorkitem");
-	#endif
-	#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
-	ODM_InitializeWorkItem(pDM_Odm, 
-						&pDM_Odm->dm_sat_table.hl_smart_antenna_workitem, 
-						(RT_WORKITEM_CALL_BACK)phydm_beam_switch_workitem_callback,
-						(PVOID)pAdapter,
-						"hl_smart_ant_workitem");
-
-	ODM_InitializeWorkItem(pDM_Odm, 
-						&pDM_Odm->dm_sat_table.hl_smart_antenna_decision_workitem, 
-						(RT_WORKITEM_CALL_BACK)phydm_beam_decision_workitem_callback,
-						(PVOID)pAdapter,
-						"hl_smart_ant_decision_workitem");
-	#endif
-	
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->PathDivSwitchWorkitem), 
-		(RT_WORKITEM_CALL_BACK)odm_PathDivChkAntSwitchWorkitemCallback, 
-		(PVOID)pAdapter,
-		"SWAS_WorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->CCKPathDiversityWorkitem), 
-		(RT_WORKITEM_CALL_BACK)odm_CCKTXPathDiversityWorkItemCallback, 
-		(PVOID)pAdapter,
-		"CCKTXPathDiversityWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->MPT_DIGWorkitem), 
-		(RT_WORKITEM_CALL_BACK)odm_MPT_DIGWorkItemCallback, 
-		(PVOID)pAdapter,
-		"MPT_DIGWorkitem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->RaRptWorkitem), 
-		(RT_WORKITEM_CALL_BACK)ODM_UpdateInitRateWorkItemCallback, 
-		(PVOID)pAdapter,
-		"RaRptWorkitem");
-
-#if( defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY) ) ||( defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY) )
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->FastAntTrainingWorkitem), 
-		(RT_WORKITEM_CALL_BACK)odm_FastAntTrainingWorkItemCallback, 
-		(PVOID)pAdapter,
-		"FastAntTrainingWorkitem");
-#endif
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->DM_RXHP_Table.PSDTimeWorkitem), 
-		(RT_WORKITEM_CALL_BACK)odm_PSD_RXHPWorkitemCallback, 
-		(PVOID)pAdapter,
-		"PSDRXHP_WorkItem");
-
-#endif /*#if USE_WORKITEM*/
-
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_EnterWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_EnterWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_EnterWorkItem");
-	
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_LeaveWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_LeaveWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_LeaveWorkItem");
-	
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_FwNdpaWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_FwNdpaWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_ClkWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_ClkWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_ClkWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_RateWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_RateWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_RateWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_StatusWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_StatusWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_StatusWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_ResetTxPathWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_ResetTxPathWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_ResetTxPathWorkItem");
-
-	ODM_InitializeWorkItem(
-		pDM_Odm,
-		&(pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_GetTxRateWorkItem),
-		(RT_WORKITEM_CALL_BACK)halComTxbf_GetTxRateWorkItemCallback,
-		(PVOID)pAdapter,
-		"Txbf_GetTxRateWorkItem");
-#endif
-}
-
-VOID
-ODM_FreeAllWorkItems(IN PDM_ODM_T	pDM_Odm )
-{
-#if USE_WORKITEM
-
-#ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
-	ODM_FreeWorkItem(&(pDM_Odm->DM_SWAT_Table.phydm_SwAntennaSwitchWorkitem));
-#endif
-
-#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
-	ODM_FreeWorkItem(&(pDM_Odm->dm_sat_table.hl_smart_antenna_workitem));
-	ODM_FreeWorkItem(&(pDM_Odm->dm_sat_table.hl_smart_antenna_decision_workitem));
-#endif
-
-	ODM_FreeWorkItem(&(pDM_Odm->PathDivSwitchWorkitem));      
-	ODM_FreeWorkItem(&(pDM_Odm->CCKPathDiversityWorkitem));
-#if (defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY)) || (defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY))
-	ODM_FreeWorkItem(&(pDM_Odm->FastAntTrainingWorkitem));
-#endif
-	ODM_FreeWorkItem(&(pDM_Odm->MPT_DIGWorkitem));
-	ODM_FreeWorkItem(&(pDM_Odm->RaRptWorkitem));
-	ODM_FreeWorkItem((&pDM_Odm->DM_RXHP_Table.PSDTimeWorkitem));
-	/*ODM_FreeWorkItem((&pDM_Odm->sbdcnt_workitem));*/
-#endif
-
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_EnterWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_LeaveWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_ClkWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_RateWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_StatusWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_ResetTxPathWorkItem));
-	ODM_FreeWorkItem((&pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_GetTxRateWorkItem));
-#endif
-
-}
-#endif /*#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)*/
-
 /*
 VOID
 odm_FindMinimumRSSI(
@@ -1384,27 +1153,8 @@ ODM_InitAllTimers(
 		ODM_InitializeTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer, 
 			(RT_TIMER_CALL_BACK)odm_MPT_DIGCallback, NULL, "MPT_DIGTimer");	
 #endif
-#elif(DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer, 
-		(RT_TIMER_CALL_BACK)odm_MPT_DIGCallback, NULL, "MPT_DIGTimer");
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->PSDTimer, 
-		(RT_TIMER_CALL_BACK)dm_PSDMonitorCallback, NULL, "PSDTimer");
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->PathDivSwitchTimer, 
-		(RT_TIMER_CALL_BACK)odm_PathDivChkAntSwitchCallback, NULL, "PathDivTimer");
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->CCKPathDiversityTimer, 
-		(RT_TIMER_CALL_BACK)odm_CCKTXPathDiversityCallback, NULL, "CCKPathDiversityTimer");
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->DM_RXHP_Table.PSDTimer,
-		(RT_TIMER_CALL_BACK)odm_PSD_RXHPCallback, NULL, "PSDRXHPTimer"); 
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->sbdcnt_timer,
-		(RT_TIMER_CALL_BACK)phydm_sbd_callback, NULL, "SbdTimer"); 
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_InitializeTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaTimer,
-		(RT_TIMER_CALL_BACK)halComTxbf_FwNdpaTimerCallback, NULL, "Txbf_FwNdpaTimer");
-#endif
-#endif
 }
 
 VOID
@@ -1412,13 +1162,6 @@ ODM_CancelAllTimers(
 	IN PDM_ODM_T	pDM_Odm 
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	//
-	// 2012/01/12 MH Temp BSOD fix. We need to find NIC allocate mem fail reason in 
-	// win7 platform.
-	//
-	HAL_ADAPTER_STS_CHK(pDM_Odm)
-#endif	
 
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	ODM_AntDivTimers(pDM_Odm,CANCEL_ANTDIV_TIMMER);
@@ -1429,21 +1172,8 @@ ODM_CancelAllTimers(
 	if (pDM_Odm->priv->pshare->rf_ft_var.mp_specific)
 		ODM_CancelTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
 #endif
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->PSDTimer);	
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->PathDivSwitchTimer);
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->CCKPathDiversityTimer);
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->DM_RXHP_Table.PSDTimer);
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->sbdcnt_timer);
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_CancelTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaTimer);
-#endif
-#endif
 }
 
 
@@ -1461,21 +1191,8 @@ ODM_ReleaseAllTimers(
 	if (pDM_Odm->priv->pshare->rf_ft_var.mp_specific)
 		ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
     #endif
-#elif(DM_ODM_SUPPORT_TYPE == ODM_WIN)
-ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->PSDTimer);
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->PathDivSwitchTimer);
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->CCKPathDiversityTimer);
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->MPT_DIGTimer);
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->DM_RXHP_Table.PSDTimer);
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->sbdcnt_timer);
-#if (BEAMFORMING_SUPPORT == 1)
-	ODM_ReleaseTimer(pDM_Odm, &pDM_Odm->BeamformingInfo.TxbfInfo.Txbf_FwNdpaTimer);
-#endif
-#endif
 }
 
 
@@ -1509,40 +1226,7 @@ ODM_StopAllThreads(
 #endif	
 
 
-#if( DM_ODM_SUPPORT_TYPE == ODM_WIN) 
-//
-// 2011/07/26 MH Add an API for testing IQK fail case.
-//
-BOOLEAN
-ODM_CheckPowerStatus(
-	IN	PADAPTER		Adapter)
-{
-
-	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T			pDM_Odm = &pHalData->DM_OutSrc;
-	RT_RF_POWER_STATE 	rtState;
-	PMGNT_INFO			pMgntInfo	= &(Adapter->MgntInfo);
-
-	// 2011/07/27 MH We are not testing ready~~!! We may fail to get correct value when init sequence.
-	if (pMgntInfo->init_adpt_in_progress == TRUE)
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("ODM_CheckPowerStatus Return TRUE, due to initadapter\n"));
-		return	TRUE;
-	}
-	
-	//
-	//	2011/07/19 MH We can not execute tx pwoer tracking/ LLC calibrate or IQK.
-	//
-	Adapter->HalFunc.GetHwRegHandler(Adapter, HW_VAR_RF_STATE, (pu1Byte)(&rtState));	
-	if(Adapter->bDriverStopped || Adapter->bDriverIsGoingToPnpSetPowerSleep || rtState == eRfOff)
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("ODM_CheckPowerStatus Return FALSE, due to %d/%d/%d\n", 
-		Adapter->bDriverStopped, Adapter->bDriverIsGoingToPnpSetPowerSleep, rtState));
-		return	FALSE;
-	}
-	return	TRUE;
-}
-#elif( DM_ODM_SUPPORT_TYPE == ODM_AP)
+#if( DM_ODM_SUPPORT_TYPE == ODM_AP)
 BOOLEAN
 ODM_CheckPowerStatus(
 		IN	PADAPTER		Adapter)
@@ -1578,7 +1262,7 @@ ODM_CheckPowerStatus(
 // need to ODM CE Platform
 //move to here for ANT detection mechanism using
 
-#if ((DM_ODM_SUPPORT_TYPE == ODM_WIN)||(DM_ODM_SUPPORT_TYPE == ODM_CE))
+#if ((DM_ODM_SUPPORT_TYPE == ODM_CE))
 u4Byte
 GetPSDData(
 	IN PDM_ODM_T	pDM_Odm,
@@ -1677,47 +1361,6 @@ odm_ConvertTo_linear(
 	return (linear);
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-ODM_UpdateInitRateWorkItemCallback(
-    IN PVOID            pContext
-    )
-{
-	PADAPTER	Adapter = (PADAPTER)pContext;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
-
-	u1Byte			p = 0;	
-
-	if(pDM_Odm->SupportICType == ODM_RTL8821)
-	{
-		ODM_TxPwrTrackSetPwr8821A(pDM_Odm, MIX_MODE, ODM_RF_PATH_A, 0);
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8812)
-	{
-		for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8812A; p++)    //DOn't know how to include &c
-		{
-			ODM_TxPwrTrackSetPwr8812A(pDM_Odm, MIX_MODE, p, 0);
-		}
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8723B)
-	{
-			ODM_TxPwrTrackSetPwr_8723B(pDM_Odm, MIX_MODE, ODM_RF_PATH_A, 0);
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8192E)
-	{
-		for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8192E; p++)    //DOn't know how to include &c
-		{
-			ODM_TxPwrTrackSetPwr92E(pDM_Odm, MIX_MODE, p, 0);
-		}
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8188E)
-	{
-			ODM_TxPwrTrackSetPwr88E(pDM_Odm, MIX_MODE, ODM_RF_PATH_A, 0);
-	}
-}
-#endif
-
 //
 // ODM multi-port consideration, added by Roger, 2013.10.01.
 //
@@ -1726,34 +1369,6 @@ ODM_AsocEntry_Init(
 	IN	PDM_ODM_T	pDM_Odm
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PADAPTER pLoopAdapter = GetDefaultAdapter(pDM_Odm->Adapter);
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pLoopAdapter);
-	PDM_ODM_T		 pDM_OutSrc = &pHalData->DM_OutSrc;
-	u1Byte	TotalAssocEntryNum = 0;
-	u1Byte	index = 0;
-
-
-	ODM_CmnInfoPtrArrayHook(pDM_OutSrc, ODM_CMNINFO_STA_STATUS, 0, &pLoopAdapter->MgntInfo.DefaultPort[0]);
-	pLoopAdapter->MgntInfo.DefaultPort[0].MultiPortStationIdx = TotalAssocEntryNum;
-		
-	pLoopAdapter = GetNextExtAdapter(pLoopAdapter);
-	TotalAssocEntryNum +=1;
-
-	while(pLoopAdapter)
-	{
-		for (index = 0; index <ASSOCIATE_ENTRY_NUM; index++)
-		{
-			ODM_CmnInfoPtrArrayHook(pDM_OutSrc, ODM_CMNINFO_STA_STATUS, TotalAssocEntryNum+index, &pLoopAdapter->MgntInfo.AsocEntry[index]);
-			pLoopAdapter->MgntInfo.AsocEntry[index].MultiPortStationIdx = TotalAssocEntryNum+index;				
-		}
-		
-		TotalAssocEntryNum+= index;
-		if(IS_HARDWARE_TYPE_8188E((pDM_Odm->Adapter)))
-			pLoopAdapter->RASupport = TRUE;
-		pLoopAdapter = GetNextExtAdapter(pLoopAdapter);
-	}
-#endif
 }
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
@@ -1848,7 +1463,7 @@ odm_UpdatePowerTrainingState(
 	IN	PDM_ODM_T	pDM_Odm
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PHYDM_FALSEALMCNT);
 	pDIG_T						pDM_DigTable = &pDM_Odm->DM_DigTable;
 	u4Byte						score = 0;
@@ -1962,41 +1577,6 @@ odm_UpdatePowerTrainingState(
 /* The following is for compile only*/
 /*===========================================================*/
 /*#define TARGET_CHNL_NUM_2G_5G	59*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-u1Byte GetRightChnlPlaceforIQK(u1Byte chnl)
-{
-	u1Byte	channel_all[TARGET_CHNL_NUM_2G_5G] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 100, 
-		102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 149, 151, 153, 155, 157, 159, 161, 163, 165};
-	u1Byte	place = chnl;
-
-	
-	if (chnl > 14) {
-		for (place = 14; place < sizeof(channel_all); place++) {
-			if (channel_all[place] == chnl)
-				return place-13;
-		}
-	}
-	
-	return 0;
-}
-
-VOID
-FillH2CCmd92C(	
-	IN	PADAPTER		Adapter,
-	IN	u1Byte	ElementID,
-	IN	u4Byte	CmdLen,
-	IN	pu1Byte	pCmdBuffer
-)
-{}
-VOID
-PHY_SetTxPowerLevel8192C(
-	IN	PADAPTER		Adapter,
-	IN	u1Byte			channel
-	)
-{
-}
-#endif
 /*===========================================================*/
 
 VOID

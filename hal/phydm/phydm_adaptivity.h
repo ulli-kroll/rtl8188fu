@@ -27,17 +27,6 @@
 #define PwdBUpperBound	7
 #define DFIRloss	5
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-typedef enum _tag_PhyDM_REGULATION_Type {
-	REGULATION_FCC = 0,
-	REGULATION_MKK = 1,
-	REGULATION_ETSI = 2,
-	REGULATION_WW = 3,	
-	
-	MAX_REGULATION_NUM = 4
-} PhyDM_REGULATION_TYPE;
-#endif
-
 typedef enum tag_PhyDM_set_LNA {
 	PhyDM_disable_LNA		= 0,
 	PhyDM_enable_LNA		= 1,
@@ -149,24 +138,6 @@ phydm_setEDCCAThresholdAPI(
 	IN	PVOID	pDM_VOID,
 	IN	u1Byte	IGI
 );
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-VOID
-Phydm_DisableEDCCA(
-	IN		PVOID					pDM_VOID
-);
-
-VOID
-Phydm_DynamicEDCCA(
-	IN		PVOID					pDM_VOID
-);
-
-VOID
-Phydm_AdaptivityBSOD(
-	IN		PVOID					pDM_VOID
-);
-
-#endif
 
 
 #endif

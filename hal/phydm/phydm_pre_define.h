@@ -219,9 +219,6 @@
 #define ODM_RATEVHTSS4MCS8		0x52
 #define ODM_RATEVHTSS4MCS9		0x53
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
-#else
 	#if (RTL8192E_SUPPORT == 1)
 		#define ODM_NUM_RATE_IDX (ODM_RATEMCS15+1)
 	#elif (RTL8723B_SUPPORT == 1) || (RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1) 
@@ -235,11 +232,6 @@
 	#else
 		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
 	#endif
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#define CONFIG_SFW_SUPPORTED
-#endif
 
 //1 ============================================================
 //1  enumeration
@@ -291,11 +283,6 @@ typedef enum tag_ODM_Support_IC_Type_Definition
 #define ODM_IC_11AC_SERIES_SUPPORT		0
 #endif
 
-#define ODM_IC_11N_SERIES_SUPPORT			1
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-#define ODM_IC_11AC_SERIES_SUPPORT		1
 #define ODM_IC_11N_SERIES_SUPPORT			1
 
 #else 
