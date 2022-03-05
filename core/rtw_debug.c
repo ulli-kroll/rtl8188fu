@@ -96,10 +96,6 @@ void dump_drv_cfg(void *sel)
 	DBG_871X_SEL_NL(sel, "CONFIG_POWER_SAVING\n");
 #endif
 
-#ifdef CONFIG_DISABLE_ODM
-	DBG_871X_SEL_NL(sel, "CONFIG_DISABLE_ODM\n");
-#endif
-
 #ifdef CONFIG_MINIMAL_MEMORY_USAGE
 	DBG_871X_SEL_NL(sel, "CONFIG_MINIMAL_MEMORY_USAGE\n");
 #endif

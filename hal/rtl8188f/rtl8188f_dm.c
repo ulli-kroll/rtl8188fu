@@ -119,13 +119,9 @@ static void Init_ODM_ComInfo_8188f(PADAPTER	Adapter)
 	ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_FAB_VER, fab_ver);
 	ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_CUT_VER, cut_ver);
 
-#ifdef CONFIG_DISABLE_ODM
-	SupportAbility = 0;
-#else
 	SupportAbility =	ODM_RF_CALIBRATION		|
 						ODM_RF_TX_PWR_TRACK	/*| */
 						;
-#endif
 
 	ODM_CmnInfoUpdate(pDM_Odm, ODM_CMNINFO_ABILITY, SupportAbility);
 }
@@ -157,9 +153,6 @@ static void Update_ODM_ComInfo_8188f(PADAPTER	Adapter)
 		SupportAbility |= ODM_BB_ADAPTIVITY;
 	}
 
-#ifdef CONFIG_DISABLE_ODM
-	SupportAbility = 0;
-#endif/*CONFIG_DISABLE_ODM */
 
 	ODM_CmnInfoUpdate(pDM_Odm, ODM_CMNINFO_ABILITY, SupportAbility);
 }
