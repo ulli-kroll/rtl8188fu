@@ -1284,13 +1284,11 @@ u32 rtw_start_drv_threads(_adapter *padapter)
 		_status = _FAIL;
 #endif
 
-	if (is_primary_adapter(padapter)) {
 		padapter->cmdThread = kthread_run(rtw_cmd_thread, padapter, "RTW_CMD_THREAD");
 	        if(IS_ERR(padapter->cmdThread))
 			_status = _FAIL;
 		else
 			_rtw_down_sema(&padapter->cmdpriv.terminate_cmdthread_sema); //wait for cmd_thread to run
-	}
 
 
 #ifdef CONFIG_EVENT_THREAD_MODE
@@ -1308,7 +1306,6 @@ void rtw_stop_drv_threads (_adapter *padapter)
 {
 	RT_TRACE(_module_os_intfs_c_,_drv_info_,("+rtw_stop_drv_threads\n"));
 
-	if (is_primary_adapter(padapter))
 		rtw_stop_cmd_thread(padapter);
 
 #ifdef CONFIG_EVENT_THREAD_MODE
@@ -1488,7 +1485,6 @@ u8 rtw_reset_drv_sw(_adapter *padapter)
 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(padapter);
 
 	//hal_priv
-	if( is_primary_adapter(padapter))
 		rtw_hal_def_value_init(padapter);
 
 	RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
@@ -2703,7 +2699,7 @@ int rtw_suspend_free_assoc_resource(_adapter *padapter)
 
 	//s2-4.
 #ifdef CONFIG_AUTOSUSPEND
-	if(is_primary_adapter(padapter) && (!adapter_to_pwrctl(padapter)->bInternalAutoSuspend ))
+	if((!adapter_to_pwrctl(padapter)->bInternalAutoSuspend ))
 #endif
 		rtw_free_network_queue(padapter, _TRUE);
 

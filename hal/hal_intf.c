@@ -59,7 +59,6 @@ void rtw_hal_read_chip_version(_adapter *padapter)
 
 void rtw_hal_def_value_init(_adapter *padapter)
 {
-	if (is_primary_adapter(padapter)) {
 		padapter->HalFunc.init_default_value(padapter);
 
 		rtw_init_hal_com_default_value(padapter);
@@ -74,32 +73,27 @@ void rtw_hal_def_value_init(_adapter *padapter)
 			dvobj->cam_ctl.sec_cap = hal_spec->sec_cap;
 			dvobj->cam_ctl.num = rtw_min(hal_spec->sec_cam_ent_num, SEC_CAM_ENT_NUM_SW_LIMIT);
 		}
-	}
 }
 
 u8 rtw_hal_data_init(_adapter *padapter)
 {
-	if (is_primary_adapter(padapter)) {
 		padapter->hal_data_sz = sizeof(HAL_DATA_TYPE);
 		padapter->HalData = rtw_zvmalloc(padapter->hal_data_sz);
 		if(padapter->HalData == NULL){
 			DBG_8192C("cant not alloc memory for HAL DATA \n");
 			return _FAIL;
 		}
-	}
 	return _SUCCESS;
 }
 
 void rtw_hal_data_deinit(_adapter *padapter)
 {	
-	if (is_primary_adapter(padapter)) {
 		if (padapter->HalData) 
 		{
 			rtw_vmfree(padapter->HalData, padapter->hal_data_sz);
 			padapter->HalData = NULL;
 			padapter->hal_data_sz = 0;
 		}	
-	}
 }
 
 void	rtw_hal_free_data(_adapter *padapter)
@@ -109,7 +103,6 @@ void	rtw_hal_free_data(_adapter *padapter)
 }
 void rtw_hal_dm_init(_adapter *padapter)
 {
-	if (is_primary_adapter(padapter)) {
 		PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
 		
 		padapter->HalFunc.dm_init(padapter);
@@ -117,27 +110,22 @@ void rtw_hal_dm_init(_adapter *padapter)
 		_rtw_spinlock_init(&pHalData->IQKSpinLock);
 
 		phy_load_tx_power_ext_info(padapter, 1);
-	}
 }
 void rtw_hal_dm_deinit(_adapter *padapter)
 {
-	if (is_primary_adapter(padapter)) {
 		PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);		
 
 		padapter->HalFunc.dm_deinit(padapter);
 
 		_rtw_spinlock_free(&pHalData->IQKSpinLock);
-	}
 }
 void	rtw_hal_sw_led_init(_adapter *padapter)
 {
-	if(padapter->HalFunc.InitSwLeds)
 		padapter->HalFunc.InitSwLeds(padapter);
 }
 
 void rtw_hal_sw_led_deinit(_adapter *padapter)
 {
-	if(padapter->HalFunc.DeInitSwLeds)
 		padapter->HalFunc.DeInitSwLeds(padapter);
 }
 
@@ -304,14 +292,12 @@ s32 rtw_hal_fw_dl(_adapter *padapter, u8 wowlan)
 #if defined(CONFIG_USB_HCI)
 u32	rtw_hal_inirp_init(_adapter *padapter)
 {
-	if (is_primary_adapter(padapter)) 		
 		return padapter->HalFunc.inirp_init(padapter);	
 	 return _SUCCESS;
 }
 u32	rtw_hal_inirp_deinit(_adapter *padapter)
 {
 
-	if (is_primary_adapter(padapter)) 	
 		return padapter->HalFunc.inirp_deinit(padapter);
 
 	return _SUCCESS;
@@ -530,9 +516,6 @@ void	rtw_hal_get_tx_power_level(_adapter *padapter, s32 *powerlevel)
 
 void	rtw_hal_dm_watchdog(_adapter *padapter)
 {
-	if (!is_primary_adapter(padapter))
-		return;
-
 	padapter->HalFunc.hal_dm_watchdog(padapter);
 	
 }

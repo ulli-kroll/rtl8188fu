@@ -356,7 +356,6 @@ struct registry_priv
 #define REGSTY_IS_11AC_ENABLE(regsty) ((regsty)->vht_enable != 0)
 #define REGSTY_IS_11AC_AUTO(regsty) ((regsty)->vht_enable == 2)
 
-#define is_primary_adapter(adapter) (1)
 #define is_vir_adapter(adapter) (0)
 #define get_iface_type(adapter) (IFACE_PORT0)
 #define GET_PRIMARY_ADAPTER(padapter) (((_adapter *)padapter)->dvobj->padapters[IFACE_ID0])

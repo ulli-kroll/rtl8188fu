@@ -1593,8 +1593,7 @@ inline void rtw_indicate_scan_done( _adapter *padapter, bool aborted)
 	rtw_os_indicate_scan_done(padapter, aborted);
 
 #ifdef CONFIG_IPS
-	if (is_primary_adapter(padapter)
-		&& (_FALSE == adapter_to_pwrctl(padapter)->bInSuspend)
+	if (	   (_FALSE == adapter_to_pwrctl(padapter)->bInSuspend)
 		&& (check_fwstate(&padapter->mlmepriv, WIFI_ASOC_STATE|WIFI_UNDER_LINKING) == _FALSE))
 	{
 		struct pwrctrl_priv *pwrpriv;
@@ -2799,7 +2798,6 @@ void rtw_dynamic_check_timer_handlder(_adapter *adapter)
 	else
 #endif //CONFIG_LPS_LCLK_WD_TIMER	
 	{
-		if(is_primary_adapter(adapter))
 		{	
 			rtw_dynamic_chk_wk_cmd(adapter);		
 		}	

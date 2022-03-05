@@ -143,9 +143,6 @@ int ips_leave(_adapter * padapter)
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 	int ret;
 
-	if(!is_primary_adapter(padapter))
-		return _SUCCESS;
-
 	_enter_pwrlock(&pwrpriv->lock);
 	ret = _ips_leave(padapter);
 #ifdef DBG_CHECK_FW_PS_STATE

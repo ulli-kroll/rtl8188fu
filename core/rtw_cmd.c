@@ -2714,7 +2714,6 @@ void dynamic_chk_wk_hdl(_adapter *padapter)
 
 #ifdef CONFIG_IPS_CHECK_IN_WD
 	//always call rtw_ps_processor() at last one.
-	if (is_primary_adapter(padapter))
 		rtw_ps_processor(padapter);
 #endif
 }
