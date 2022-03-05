@@ -1054,13 +1054,11 @@ static void next_key(u8 *key, sint round);
 static void byte_sub(u8 *in, u8 *out);
 static void shift_row(u8 *in, u8 *out);
 static void mix_column(u8 *in, u8 *out);
-#ifndef PLATFORM_FREEBSD 
 static void add_round_key( u8 *shiftrow_in,
                     u8 *mcol_in,
                     u8 *block_in,
                     sint round,
                     u8 *out);
-#endif //PLATFORM_FREEBSD
 static void aes128k128d(u8 *key, u8 *data, u8 *ciphertext);
 
 
@@ -2457,7 +2455,6 @@ const u8 rcons[] = {
  *
  * @return	the number of rounds for the given cipher key size.
  */
-#ifndef PLATFORM_FREEBSD //Baron
 static void rijndaelKeySetupEnc(u32 rk[/*44*/], const u8 cipherKey[])
 {
 	int i;
@@ -2673,7 +2670,6 @@ int omac1_aes_128(u8 *key, u8 *data, size_t data_len, u8 *mac)
 {
 	return omac1_aes_128_vector(key, 1, &data, &data_len, mac);
 }
-#endif //PLATFORM_FREEBSD Baron
 
 #ifdef CONFIG_TDLS
 void wpa_tdls_generate_tpk(_adapter *padapter, PVOID sta)

@@ -416,7 +416,7 @@ struct xmit_buf
 	//u32 sz[8];
 	u32	ff_hwaddr;
 
-#if defined(PLATFORM_OS_XP)||defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
+#if defined(PLATFORM_OS_XP)||defined(PLATFORM_LINUX)
 	PURB	pxmit_urb[8];
 	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
 #endif
@@ -595,9 +595,6 @@ struct	xmit_priv	{
 #endif
 #ifdef PLATFORM_LINUX
 	struct tasklet_struct xmit_tasklet;
-#endif
-#ifdef PLATFORM_FREEBSD
-	struct task xmit_tasklet;
 #endif
 	//per AC pending irp
 	int beq_cnt;
