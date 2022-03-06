@@ -86,10 +86,6 @@ extern	u1Byte CCKSwingTable_Ch14_92E[CCK_TABLE_SIZE_92E][8];
 #define	OFDM_TABLE_SIZE_8812 	43
 #define	AVG_THERMAL_NUM_8812	4
 
-#if(RTL8814A_SUPPORT == 1)
-extern u4Byte TxScalingTable_Jaguar[TXSCALE_TABLE_SIZE];
-#endif
-
 #define dm_CheckTXPowerTracking 	ODM_TXPowerTrackingCheck
 
 typedef struct _IQK_MATRIX_REGS_SETTING{

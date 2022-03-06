@@ -26,22 +26,6 @@
 
 #define		TEST_FALG___		1
 
-#if (DM_ODM_SUPPORT_TYPE ==ODM_CE) 
-#define 	RTL8192CE_SUPPORT 				0
-#define 	RTL8192CU_SUPPORT 				0
-#define 	RTL8192C_SUPPORT 				0	
-
-#define 	RTL8192DE_SUPPORT 				0
-#define 	RTL8192DU_SUPPORT 				0
-#define 	RTL8192D_SUPPORT 				0	
-
-#define 	RTL8723AU_SUPPORT				0
-#define 	RTL8723AS_SUPPORT				0
-#define 	RTL8723AE_SUPPORT				0
-#define 	RTL8723A_SUPPORT				0
-#define 	RTL8723_FPGA_VERIFICATION		0
-#endif
-
 //2 Config Flags and Structs - defined by each ODM Type
 
 #if (DM_ODM_SUPPORT_TYPE ==ODM_CE)

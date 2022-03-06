@@ -441,14 +441,6 @@ phydm_reset_retry_limit_table(
 				4, 8, 12, 16, 24, 32, 32, 32		/*40M HT-2SS*/
 			};
 
-		#elif (RTL8821A_SUPPORT == 1) || (RTL8881A_SUPPORT == 1) 
-
-		#elif (RTL8812A_SUPPORT == 1)
-
-		#elif(RTL8814A_SUPPORT == 1)
-
-		#else
-
 		#endif
 
 	memcpy(&(pRA_Table->per_rate_retrylimit_20M[0]), &(per_rate_retrylimit_table_20M[0]), ODM_NUM_RATE_IDX);

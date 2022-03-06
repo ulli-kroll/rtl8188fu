@@ -157,9 +157,6 @@ odm_DynamicTxPower_92D(
 	IN		PVOID					pDM_VOID
 	)
 {
-#if (RTL8192D_SUPPORT==1)
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#endif
 }
 
 VOID 

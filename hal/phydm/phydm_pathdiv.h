@@ -89,38 +89,6 @@ typedef struct _ODM_PATH_DIVERSITY_
 	u2Byte	PathA_Cnt[ODM_ASSOCIATE_ENTRY_NUM];
 	u2Byte	PathB_Cnt[ODM_ASSOCIATE_ENTRY_NUM];
 	u1Byte	path_div_type;
-  #if RTL8814A_SUPPORT
-	
-	u4Byte	path_a_sum_all;
-	u4Byte	path_b_sum_all;
-	u4Byte	path_c_sum_all;
-	u4Byte	path_d_sum_all;
-
-	u4Byte	path_a_cnt_all;
-	u4Byte	path_b_cnt_all;
-	u4Byte	path_c_cnt_all;
-	u4Byte	path_d_cnt_all;
-	
-	u1Byte	dtp_period;
-	BOOLEAN	bBecomeLinked;
-	BOOLEAN	is_u3_mode;
-	u1Byte	num_tx_path;
-	u1Byte	default_path;
-	u1Byte	num_candidate;
-	u1Byte	ant_candidate_1;
-	u1Byte	ant_candidate_2;
-	u1Byte	ant_candidate_3;
-	u1Byte     dtp_state;
-	u1Byte	dtp_check_patha_counter;
-	BOOLEAN	fix_path_bfer;
-	u1Byte	search_space_2[NUM_CHOOSE2_FROM4];
-	u1Byte	search_space_3[NUM_CHOOSE3_FROM4];
-	
-	u1Byte	pre_tx_path;
-	u1Byte	use_path_a_as_default_ant;
-	BOOLEAN is_pathA_exist;
-
-  #endif
 }PATHDIV_T, *pPATHDIV_T;
 
 

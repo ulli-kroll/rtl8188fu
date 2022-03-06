@@ -537,42 +537,6 @@ odm_DIG(
 	
 
 	//1 Update status
-#if (RTL8192D_SUPPORT==1) 
-	if(pDM_Odm->SupportICType == ODM_RTL8192D)
-	{
-		if(*(pDM_Odm->pMacPhyMode) == ODM_DMSP)
-		{
-			if(*(pDM_Odm->pbMasterOfDMSP))
-			{
-				DIG_Dynamic_MIN = pDM_DigTable->DIG_Dynamic_MIN_0;
-				FirstConnect = (pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == FALSE);
-				FirstDisConnect = (!pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == TRUE);
-			}
-			else
-			{
-				DIG_Dynamic_MIN = pDM_DigTable->DIG_Dynamic_MIN_1;
-				FirstConnect = (pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_1 == FALSE);
-				FirstDisConnect = (!pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_1 == TRUE);
-			}
-		}
-		else
-		{
-			if(*(pDM_Odm->pBandType) == ODM_BAND_5G)
-			{
-				DIG_Dynamic_MIN = pDM_DigTable->DIG_Dynamic_MIN_0;
-				FirstConnect = (pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == FALSE);
-				FirstDisConnect = (!pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == TRUE);
-			}
-			else
-			{
-				DIG_Dynamic_MIN = pDM_DigTable->DIG_Dynamic_MIN_1;
-				FirstConnect = (pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_1 == FALSE);
-				FirstDisConnect = (!pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_1 == TRUE);
-			}
-		}
-	}
-	else
-#endif
 	{	
 		DIG_Dynamic_MIN = pDM_DigTable->DIG_Dynamic_MIN_0;
 		FirstConnect = (pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == FALSE);
@@ -581,18 +545,6 @@ odm_DIG(
 
 
 	//1 Boundary Decision
-#if (RTL8192C_SUPPORT==1) 
-	if((pDM_Odm->SupportICType & ODM_RTL8192C) && (pDM_Odm->BoardType & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA)))
-	{
-		//2 High power case
-		{
-			dm_dig_max = DM_DIG_MAX_NIC_HP;
-			dm_dig_min = DM_DIG_MIN_NIC_HP;
-		}
-		DIG_MaxOfMin = DM_DIG_MAX_AP_HP;
-	}
-	else
-#endif
 	{
 		//2 For WIN\CE
 		if(pDM_Odm->SupportICType >= ODM_RTL8188E)
@@ -815,41 +767,6 @@ odm_DIG(
 	//1 High power RSSI threshold
 
 	//1 Update status
-#if (RTL8192D_SUPPORT==1) 
-	if(pDM_Odm->SupportICType == ODM_RTL8192D)
-	{
-		//sherry  delete DualMacSmartConncurrent 20110517
-		if(*(pDM_Odm->pMacPhyMode) == ODM_DMSP)
-		{
-			ODM_Write_DIG_DMSP(pDM_Odm, CurrentIGI);//ODM_Write_DIG_DMSP(pDM_Odm, pDM_DigTable->CurIGValue);
-			if(*(pDM_Odm->pbMasterOfDMSP))
-			{
-				pDM_DigTable->bMediaConnect_0 = pDM_Odm->bLinked;
-				pDM_DigTable->DIG_Dynamic_MIN_0 = DIG_Dynamic_MIN;
-			}
-			else
-			{
-				pDM_DigTable->bMediaConnect_1 = pDM_Odm->bLinked;
-				pDM_DigTable->DIG_Dynamic_MIN_1 = DIG_Dynamic_MIN;
-			}
-		}
-		else
-		{
-			ODM_Write_DIG(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
-			if(*(pDM_Odm->pBandType) == ODM_BAND_5G)
-			{
-				pDM_DigTable->bMediaConnect_0 = pDM_Odm->bLinked;
-				pDM_DigTable->DIG_Dynamic_MIN_0 = DIG_Dynamic_MIN;
-			}
-			else
-			{
-				pDM_DigTable->bMediaConnect_1 = pDM_Odm->bLinked;
-				pDM_DigTable->DIG_Dynamic_MIN_1 = DIG_Dynamic_MIN;
-			}
-		}
-	}
-	else
-#endif
 	{
 		{
 			ODM_Write_DIG(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
@@ -956,13 +873,6 @@ odm_FalseAlarmCounterStatistics(
 								FalseAlmCnt->Cnt_Crc8_fail + FalseAlmCnt->Cnt_Mcs_fail +
 								FalseAlmCnt->Cnt_Fast_Fsync + FalseAlmCnt->Cnt_SB_Search_fail;
 
-#if (RTL8192D_SUPPORT==1) 
-		if(pDM_Odm->SupportICType == ODM_RTL8192D)
-		{
-			odm_GetCCKFalseAlarm_92D(pDM_Odm);
-		}
-		else
-#endif
 		{
 			//hold cck counter
 			ODM_SetBBReg(pDM_Odm, ODM_REG_CCK_FA_RST_11N, BIT12, 1); 
@@ -1189,11 +1099,6 @@ odm_CCKPacketDetectionThresh(
 			CurCCK_CCAThres = 0x40;
 	}
 	
-#if (RTL8192D_SUPPORT==1) 
-	if((pDM_Odm->SupportICType == ODM_RTL8192D) && (*pDM_Odm->pBandType == ODM_BAND_2_4G))
-		ODM_Write_CCK_CCA_Thres_92D(pDM_Odm, CurCCK_CCAThres);
-	else
-#endif
 		ODM_Write_CCK_CCA_Thres(pDM_Odm, CurCCK_CCAThres);
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_CCK_PD, ODM_DBG_LOUD, ("odm_CCKPacketDetectionThresh()  CurCCK_CCAThres = 0x%x\n",CurCCK_CCAThres));
