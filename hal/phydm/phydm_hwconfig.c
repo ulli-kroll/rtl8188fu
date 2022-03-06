@@ -333,21 +333,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 		//In 88E, cck_highpwr is always set to 1
 		if (pDM_Odm->SupportICType & (ODM_RTL8703B)) {
 			
-			#if (RTL8703B_SUPPORT == 1)
-			if (pDM_Odm->cck_agc_report_type == 1) {  /*4 bit LNA*/
-
-				u1Byte cck_agc_rpt_b = (pPhyStaRpt->cck_rpt_b_ofdm_cfosho_b & BIT7) ? 1 : 0;
-								
-				LNA_idx = (cck_agc_rpt_b << 3) | ((cck_agc_rpt & 0xE0) >> 5);
-				VGA_idx = (cck_agc_rpt & 0x1F);
-				
-				rx_pwr_all = odm_CCKRSSI_8703B(LNA_idx, VGA_idx);
-				PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-				if (PWDB_ALL > 100)
-					PWDB_ALL = 100;	
-			
-			}
-			#endif
 		} else if (pDM_Odm->SupportICType & (ODM_RTL8188E | ODM_RTL8192E | ODM_RTL8723B | ODM_RTL8188F)) /*3 bit LNA*/
 		{
 			LNA_idx = ((cck_agc_rpt & 0xE0) >>5);
@@ -453,12 +438,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 			}
 			else if(pDM_Odm->SupportICType & (ODM_RTL8723B))
 			{
-#if (RTL8723B_SUPPORT == 1)			
-				rx_pwr_all = odm_CCKRSSI_8723B(LNA_idx,VGA_idx);
-				PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-				if(PWDB_ALL>100)
-					PWDB_ALL = 100;	
-#endif				
 			} else if (pDM_Odm->SupportICType & (ODM_RTL8188F)) {
 #if (RTL8188F_SUPPORT == 1)
 				rx_pwr_all = odm_CCKRSSI_8188F(LNA_idx, VGA_idx);
@@ -1007,39 +986,6 @@ ODM_ConfigRFWithHeaderFile(
 				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
-#if (RTL8723A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8723A)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8723A,_RadioA);
-		}
-	}
-#endif
-
-#if (RTL8723B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8723B)
-	{
-		if(ConfigType == CONFIG_RF_RADIO)
-			READ_AND_CONFIG_MP(8723B,_RadioA);
-		else if(ConfigType == CONFIG_RF_TXPWR_LMT)
-			READ_AND_CONFIG_MP(8723B,_TXPWR_LMT);
-	}
-#endif
-
-#if (RTL8192E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8192E)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-		 	if(eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8192E,_RadioA);
-			else if(eRFPath == ODM_RF_PATH_B)
-				READ_AND_CONFIG_MP(8192E,_RadioB);
-		} else if (ConfigType == CONFIG_RF_TXPWR_LMT) {
-			READ_AND_CONFIG_MP(8192E,_TXPWR_LMT);
-	}
-	}
-#endif
 
 //1 All platforms support
 #if (RTL8188E_SUPPORT == 1)
@@ -1051,14 +997,6 @@ ODM_ConfigRFWithHeaderFile(
 		}
 		else if(ConfigType == CONFIG_RF_TXPWR_LMT)
 			READ_AND_CONFIG_MP(8188E,_TXPWR_LMT);
-	}
-#endif
-#if (RTL8703B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
-		if (ConfigType == CONFIG_RF_RADIO) {
-			if (eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8703B, _RadioA);
-		}	
 	}
 #endif
 
@@ -1090,49 +1028,8 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
-#if RTL8192E_SUPPORT 	
-	if(pDM_Odm->SupportICType == ODM_RTL8192E)
-	{
-		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
-			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_PCIE);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_USB); 
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_SDIO); 
-	}
-#endif
-#if RTL8723B_SUPPORT 	
-	if(pDM_Odm->SupportICType == ODM_RTL8723B)
-	{
-		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
-			READ_AND_CONFIG_MP(8723B,_TxPowerTrack_PCIE);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8723B,_TxPowerTrack_USB);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8723B,_TxPowerTrack_SDIO); 			
-	}
-#endif	
-#if RTL8188E_SUPPORT 	
-	if(pDM_Odm->SupportICType == ODM_RTL8188E)
-	{
-		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
-			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_PCIE);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_USB);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_SDIO);
-	}
-#endif
 
 //1 All platforms support
-#if RTL8703B_SUPPORT
-	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
-		if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8703B, _TxPowerTrack_USB);
-		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
-			READ_AND_CONFIG_MP(8703B, _TxPowerTrack_SDIO);		
-	}
-#endif
 
 #if RTL8188F_SUPPORT
 	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
@@ -1155,65 +1052,8 @@ ODM_ConfigBBWithHeaderFile(
 {
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (RTL8723A_SUPPORT == 1) 
-	if(pDM_Odm->SupportICType == ODM_RTL8723A)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8723A,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8723A,_AGC_TAB);
-		}		
-	}		
-#endif
-#if (RTL8723B_SUPPORT == 1)
-	if(pDM_Odm->SupportICType == ODM_RTL8723B)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8723B,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8723B,_AGC_TAB);
-		}else if(ConfigType == CONFIG_BB_PHY_REG_PG){
-			READ_AND_CONFIG_MP(8723B,_PHY_REG_PG);
-		}
-	}
-#endif
-#if (RTL8192E_SUPPORT == 1)
-	if(pDM_Odm->SupportICType == ODM_RTL8192E)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG){
-			READ_AND_CONFIG_MP(8192E,_PHY_REG);
-		}else if(ConfigType == CONFIG_BB_AGC_TAB){
-			READ_AND_CONFIG_MP(8192E,_AGC_TAB);
-		}else if(ConfigType == CONFIG_BB_PHY_REG_PG){
-			READ_AND_CONFIG_MP(8192E,_PHY_REG_PG);
-		}
-	}
-#endif
-
 
 //1 All platforms support
-#if (RTL8188E_SUPPORT == 1)
-	if(pDM_Odm->SupportICType == ODM_RTL8188E)
-	{
-		if(ConfigType == CONFIG_BB_PHY_REG)
-			READ_AND_CONFIG_MP(8188E,_PHY_REG);
-		else if(ConfigType == CONFIG_BB_AGC_TAB)
-			READ_AND_CONFIG_MP(8188E,_AGC_TAB);
-		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
-			READ_AND_CONFIG_MP(8188E,_PHY_REG_PG);
-	}
-#endif
-#if (RTL8703B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
-		if (ConfigType == CONFIG_BB_PHY_REG)
-			READ_AND_CONFIG_MP(8703B, _PHY_REG);
-		else if (ConfigType == CONFIG_BB_AGC_TAB)
-			READ_AND_CONFIG_MP(8703B, _AGC_TAB);
-		else if (ConfigType == CONFIG_BB_PHY_REG_PG)
-			READ_AND_CONFIG_MP(8703B, _PHY_REG_PG);
-	}
-#endif
-
 #if (RTL8188F_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
 		if (ConfigType == CONFIG_BB_PHY_REG) 
@@ -1243,33 +1083,8 @@ ODM_ConfigMACWithHeaderFile(
 				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (RTL8723A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8723A){
-		READ_AND_CONFIG_MP(8723A,_MAC_REG);
-	}
-#endif
-#if (RTL8723B_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8723B){
-		READ_AND_CONFIG_MP(8723B,_MAC_REG);
-	}
-#endif
-#if (RTL8192E_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8192E){
-		READ_AND_CONFIG_MP(8192E,_MAC_REG);
-	}
-#endif
 
 //1 All platforms support
-#if (RTL8188E_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8188E){
-		READ_AND_CONFIG_MP(8188E,_MAC_REG);
-	}
-#endif
-#if (RTL8703B_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8703B)
-		READ_AND_CONFIG_MP(8703B, _MAC_REG);
-#endif
-
 #if (RTL8188F_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8188F) 
 		READ_AND_CONFIG_MP(8188F, _MAC_REG);
@@ -1288,27 +1103,7 @@ ODM_GetHWImgVersion(
     u4Byte  Version=0;
 
 //1 AP doesn't use PHYDM initialization in these ICs
-#if (RTL8723A_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8723A)
-		Version = GET_VERSION_MP(8723A,_MAC_REG);
-#endif
-#if (RTL8723B_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8723B)
-		Version = GET_VERSION_MP(8723B,_MAC_REG);
-#endif
-#if (RTL8192E_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8192E)
-		Version = GET_VERSION_MP(8192E,_MAC_REG);
-#endif
 /*1 All platforms support*/
-#if (RTL8188E_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8188E)
-		Version = GET_VERSION_MP(8188E,_MAC_REG);
-#endif
-#if (RTL8703B_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8703B)
-		Version = GET_VERSION_MP(8703B, _MAC_REG);
-#endif
 #if (RTL8188F_SUPPORT == 1)  
 	if (pDM_Odm->SupportICType == ODM_RTL8188F)
 		Version = GET_VERSION_MP(8188F, _MAC_REG);

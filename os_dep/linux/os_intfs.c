@@ -90,11 +90,7 @@ int rtw_uapsd_acbk_en = 0;
 int rtw_uapsd_acbe_en = 0;
 int rtw_uapsd_acvi_en = 0;
 int rtw_uapsd_acvo_en = 0;
-#ifdef CONFIG_RTL8814A
-int rtw_pwrtrim_enable = 2; /* disable kfree , rename to power trim disable */
-#else
 int rtw_pwrtrim_enable = 0; /* Default Enalbe  power trim by efuse config */
-#endif
 #ifdef CONFIG_80211N_HT
 int rtw_ht_enable = 1;
 // 0: 20 MHz, 1: 40 MHz, 2: 80 MHz, 3: 160MHz, 4: 80+80MHz

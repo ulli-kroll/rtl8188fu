@@ -182,14 +182,6 @@ VOID phydm_BasicProfile(
 		ICType = "RTL8821B";
 	else if (pDM_Odm->SupportICType == ODM_RTL8822B)
 		ICType = "RTL8822B";
-#if (RTL8703B_SUPPORT == 1)
-	else if (pDM_Odm->SupportICType == ODM_RTL8703B) {
-		ICType = "RTL8703B";
-		date = RELEASE_DATE_8703B;
-		commit_by = COMMIT_BY_8703B;
-		release_ver = RELEASE_VERSION_8703B;
-	} 
-#endif
 	else if (pDM_Odm->SupportICType == ODM_RTL8195A)
 		ICType = "RTL8195A";
 	else if (pDM_Odm->SupportICType == ODM_RTL8188F)

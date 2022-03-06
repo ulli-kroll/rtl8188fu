@@ -956,15 +956,6 @@ odm_FalseAlarmCounterStatistics(
 								FalseAlmCnt->Cnt_Crc8_fail + FalseAlmCnt->Cnt_Mcs_fail +
 								FalseAlmCnt->Cnt_Fast_Fsync + FalseAlmCnt->Cnt_SB_Search_fail;
 
-#if (RTL8188E_SUPPORT==1)
-		if(pDM_Odm->SupportICType == ODM_RTL8188E)
-		{
-			ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_SC_CNT_11N, bMaskDWord);
-			FalseAlmCnt->Cnt_BW_LSC = (ret_value&0xffff);
-			FalseAlmCnt->Cnt_BW_USC = ((ret_value&0xffff0000)>>16);
-		}
-#endif
-
 #if (RTL8192D_SUPPORT==1) 
 		if(pDM_Odm->SupportICType == ODM_RTL8192D)
 		{
@@ -996,16 +987,6 @@ odm_FalseAlarmCounterStatistics(
 							FalseAlmCnt->Cnt_Cck_fail);	
 
 		FalseAlmCnt->Cnt_CCA_all = FalseAlmCnt->Cnt_OFDM_CCA + FalseAlmCnt->Cnt_CCK_CCA;
-
-#if (RTL8192C_SUPPORT==1)
-		if(pDM_Odm->SupportICType == ODM_RTL8192C)
-			odm_ResetFACounter_92C(pDM_Odm);
-#endif
-
-#if (RTL8192D_SUPPORT==1)
-		if(pDM_Odm->SupportICType == ODM_RTL8192D)
-			odm_ResetFACounter_92D(pDM_Odm);
-#endif
 
 		if(pDM_Odm->SupportICType >=ODM_RTL8723A)
 		{

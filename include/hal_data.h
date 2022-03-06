@@ -288,9 +288,6 @@ typedef struct hal_com_data
 	struct kfree_data_t kfree_data;
 #endif /*CONFIG_RF_POWER_TRIM*/
 
-#if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8703B)
-	u8	adjuseVoltageVal;
-#endif
 	u8	EfuseUsedPercentage;
 	u16	EfuseUsedBytes;
 	/*u8		EfuseMap[2][HWSET_MAX_SIZE_JAGUAR];*/
@@ -504,11 +501,11 @@ typedef struct hal_com_data
 
 	
 
-#if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8703B) || defined(CONFIG_RTL8188F)
+#if defined(CONFIG_RTL8188F)
 	// Interrupt relatd register information.
 	u32			SysIntrStatus;
 	u32			SysIntrMask;
-#endif /*endif CONFIG_RTL8723B	*/
+#endif
 
 #ifdef CONFIG_BACKGROUND_NOISE_MONITOR
 	s16 noise[ODM_MAX_CHANNEL_NUM];

@@ -755,18 +755,6 @@ odm_TXPowerTrackingThermalMeterInit(
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 	u1Byte p;
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	#ifdef CONFIG_RTL8188E
-	{
-		pDM_Odm->RFCalibrateInfo.bTXPowerTracking = _TRUE;
-		pDM_Odm->RFCalibrateInfo.TXPowercount = 0;
-		pDM_Odm->RFCalibrateInfo.bTXPowerTrackingInit = _FALSE;
-
-		if(pDM_Odm->mp_mode == FALSE)
-			pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = _TRUE;
-		
-		MSG_8192C("pDM_Odm TxPowerTrackControl = %d\n", pDM_Odm->RFCalibrateInfo.TxPowerTrackControl);
-	}
-	#else
 	{
 		PADAPTER		Adapter = pDM_Odm->Adapter;
 		HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
@@ -785,7 +773,6 @@ odm_TXPowerTrackingThermalMeterInit(
 		MSG_8192C("pdmpriv->TxPowerTrackControl = %d\n", pdmpriv->TxPowerTrackControl);
 	
 	}	
-	#endif//endif (CONFIG_RTL8188E==1)	
 #endif
 
        pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = TRUE;

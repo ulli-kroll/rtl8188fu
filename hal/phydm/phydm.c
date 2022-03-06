@@ -155,34 +155,6 @@ phydm_Init_cck_setting(
 
 	pDM_Odm->bCckHighPower = (BOOLEAN) ODM_GetBBReg(pDM_Odm, ODM_REG(CCK_RPT_FORMAT,pDM_Odm), ODM_BIT(CCK_RPT_FORMAT,pDM_Odm));
 
-	#if (RTL8192E_SUPPORT == 1)
-	if(pDM_Odm->SupportICType & (ODM_RTL8192E))
-	{
-		/* 0x824[9] = 0x82C[9] = 0xA80[7]  these regiaters settinh should be equal or CCK RSSI report may inaccurate */
-		value_824 = ODM_GetBBReg(pDM_Odm, 0x824, BIT9);
-		value_82c = ODM_GetBBReg(pDM_Odm, 0x82c, BIT9);
-		
-		if(value_824 != value_82c)
-		{
-			ODM_SetBBReg(pDM_Odm, 0x82c , BIT9, value_824);
-		}
-		ODM_SetBBReg(pDM_Odm, 0xa80 , BIT7, value_824);
-		pDM_Odm->cck_agc_report_type = (BOOLEAN)value_824;
-	}
-	#endif
-	
-	#if (RTL8703B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType & (ODM_RTL8703B)) {
-
-		pDM_Odm->cck_agc_report_type = ODM_GetBBReg(pDM_Odm, 0x950, BIT11) ? 1 : 0; /*1: 4bit LNA , 0: 3bit LNA */
-		
-		if (pDM_Odm->cck_agc_report_type != 1) {
-			DbgPrint("[Warning] 8703B CCK should be 4bit LNA, ie. 0x950[11] = 1\n");
-			/**/
-		}
-	}
-	#endif
-	
 }
 
 u1Byte DummyHubUsbMode = 1;/* USB 2.0 */
@@ -345,26 +317,8 @@ ODM_DMInit(
 		odm_DynamicBBPowerSavingInit(pDM_Odm);
 		odm_DynamicTxPowerInit(pDM_Odm);
 
-#if (RTL8188E_SUPPORT == 1)
-		if(pDM_Odm->SupportICType==ODM_RTL8188E)
-		{
-			odm_PrimaryCCA_Init(pDM_Odm);
-			ODM_RAInfo_Init_all(pDM_Odm);
-		}
-#endif
-
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	
-	#if (RTL8723B_SUPPORT == 1)
-		if(pDM_Odm->SupportICType == ODM_RTL8723B)
-			odm_SwAntDetectInit(pDM_Odm);
-	#endif
-
-	#if (RTL8192E_SUPPORT == 1)
-		if(pDM_Odm->SupportICType==ODM_RTL8192E)
-			odm_PrimaryCCA_Check_Init(pDM_Odm);
-	#endif
-
 #endif
 
 	}
@@ -518,17 +472,8 @@ ODM_DMWatchdog(
 	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 	{
 	        
-#if (RTL8188E_SUPPORT == 1)
-	        if(pDM_Odm->SupportICType==ODM_RTL8188E)
-	                odm_DynamicPrimaryCCA(pDM_Odm);	
-#endif
-
 #if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 
-	#if (RTL8192E_SUPPORT == 1)
-		if(pDM_Odm->SupportICType==ODM_RTL8192E)
-			odm_DynamicPrimaryCCA_Check(pDM_Odm); 
-	#endif
 #endif
 	}
 

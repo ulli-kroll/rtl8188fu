@@ -515,9 +515,6 @@ phydm_trans_h2c_id(
 		//1 [3]	
 		case ODM_H2C_WIFI_CALIBRATION:
 			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-				#if(RTL8723B_SUPPORT==1) 
-					platform_h2c_id = H2C_8723B_BT_WLAN_CALIBRATION;
-				#endif
 				
 			#endif
 			
@@ -534,11 +531,6 @@ phydm_trans_h2c_id(
 		case ODM_H2C_RA_PARA_ADJUST:
 
 			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-				#if(RTL8192E_SUPPORT==1)
-					platform_h2c_id =H2C_8192E_RA_PARA_ADJUST;
-				#elif(RTL8723B_SUPPORT==1) 
-					platform_h2c_id =H2C_8723B_RA_PARA_ADJUST;
-				#endif
 				
 			#endif
 			
@@ -564,9 +556,6 @@ phydm_trans_h2c_id(
 				break;
 
 		case PHYDM_H2C_TXBF:
-#if ((RTL8192E_SUPPORT == 1))
-			platform_h2c_id  = 0x41;	/*H2C_TxBF*/
-#endif
 		break;
 
 		default:

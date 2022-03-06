@@ -750,16 +750,8 @@ s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
 	#endif
 		
 	if (pHalData->fw_ractrl == _TRUE) {
-		#if (RTL8188E_SUPPORT == 1)
-		if (pDM_Odm->SupportICType == ODM_RTL8188E)
-			cmdlen = 3;
-		#endif
 		ODM_FillH2CCmd(pDM_Odm, ODM_H2C_RSSI_REPORT, cmdlen, H2C_Parameter);
 	} else {
-		#if ((RTL8188E_SUPPORT == 1) && (RATE_ADAPTIVE_SUPPORT == 1))
-		if (pDM_Odm->SupportICType == ODM_RTL8188E)
-			ODM_RA_SetRSSI_8188E(pDM_Odm, (u8)(pEntry->mac_id & 0xFF), pEntry->rssi_stat.UndecoratedSmoothedPWDB & 0x7F);
-		#endif
 	}
 	return _SUCCESS;
 }

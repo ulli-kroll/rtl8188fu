@@ -216,18 +216,8 @@
 #define ODM_RATEVHTSS4MCS8		0x52
 #define ODM_RATEVHTSS4MCS9		0x53
 
-	#if (RTL8192E_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEMCS15+1)
-	#elif (RTL8723B_SUPPORT == 1) || (RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1) 
+	#if (RTL8188F_SUPPORT == 1) 
 		#define ODM_NUM_RATE_IDX (ODM_RATEMCS7+1)
-	#elif (RTL8821A_SUPPORT == 1) || (RTL8881A_SUPPORT == 1) 
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS1MCS9+1)
-	#elif (RTL8812A_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS2MCS9+1)
-	#elif(RTL8814A_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS3MCS9+1)
-	#else
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
 	#endif
 
 //1 ============================================================

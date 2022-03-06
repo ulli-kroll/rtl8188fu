@@ -155,18 +155,6 @@ void mac_reg_dump(void *sel, _adapter *adapter)
 			DBG_871X_SEL(sel, "\n");
 	}
 	
-#ifdef CONFIG_RTL8814A
-	{
-		for(i=0x1000;i<0x1650;i+=4)
-		{
-			if(j%4==1)
-				DBG_871X_SEL_NL(sel, "0x%03x",i);
-			DBG_871X_SEL(sel, " 0x%08x ", rtw_read32(adapter,i));
-			if((j++)%4 == 0)
-				DBG_871X_SEL(sel, "\n");
-		}
-	}
-#endif /* CONFIG_RTL8814A */
 }
 
 void bb_reg_dump(void *sel, _adapter *adapter)

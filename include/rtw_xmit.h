@@ -126,14 +126,9 @@ do{\
 
 // For Buffer Descriptor ring architecture
 #ifdef BUF_DESC_ARCH	
-#if defined(CONFIG_RTL8192E)
-#define TX_BUFFER_SEG_NUM	1 /* 0:2 seg, 1: 4 seg, 2: 8 seg. */
-#elif defined(CONFIG_RTL8814A)
-#define TX_BUFFER_SEG_NUM	1 /* 0:2 seg, 1: 4 seg, 2: 8 seg. */
-#endif
 #endif
 
-#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A) || defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8703B) || defined(CONFIG_RTL8188F)
+#if (defined(CONFIG_RTL8188F))
 #define TXDESC_SIZE 40
 #else
 #define TXDESC_SIZE 32 /* old IC (ex: 8188E) */
@@ -160,7 +155,7 @@ enum TXDESC_SC{
 	SC_DUPLICATE=0x03
 };
 
-#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A) || defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8188F)
+#if defined(CONFIG_RTL8188F)
 #define TXDESC_40_BYTES
 #endif
 

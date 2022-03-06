@@ -25,13 +25,6 @@ EXTRA_LDFLAGS += --strip-debug
 CONFIG_AUTOCFG_CP = n
 
 ########################## WIFI IC ############################
-CONFIG_RTL8188E = n
-CONFIG_RTL8812A = n
-CONFIG_RTL8821A = n
-CONFIG_RTL8192E = n
-CONFIG_RTL8723B = n
-CONFIG_RTL8814A = n
-CONFIG_RTL8723C = n
 CONFIG_RTL8188F = y
 ######################### Interface ###########################
 CONFIG_USB_HCI = y
