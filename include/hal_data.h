@@ -27,12 +27,6 @@
 //
 // <Roger_Notes> For RTL8723 WiFi/BT/GPS multi-function configuration. 2010.10.06.
 //
-typedef enum _RT_MULTI_FUNC{
-	RT_MULTI_FUNC_NONE	= 0x00,
-	RT_MULTI_FUNC_WIFI 	= 0x01,
-	RT_MULTI_FUNC_BT 		= 0x02,
-	RT_MULTI_FUNC_GPS 	= 0x04,
-}RT_MULTI_FUNC,*PRT_MULTI_FUNC;
 //
 // <Roger_Notes> For RTL8723 WiFi PDn/GPIO polarity control configuration. 2010.10.08.
 //
@@ -206,7 +200,6 @@ struct hal_iqk_reg_backup {
 typedef struct hal_com_data
 {
 	HAL_VERSION			VersionID;
-	RT_MULTI_FUNC		MultiFunc; // For multi-function consideration.
 	RT_POLARITY_CTL		PolarityCtl; // For Wifi PDn Polarity control.
 	RT_REGULATOR_MODE	RegulatorMode; // switching regulator or LDO
 	u8	hw_init_completed;

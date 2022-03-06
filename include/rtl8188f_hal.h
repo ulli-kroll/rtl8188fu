@@ -164,9 +164,6 @@ typedef struct _C2H_EVT_HDR
 	u8	CmdSeq;
 } __attribute__((__packed__)) C2H_EVT_HDR, *PC2H_EVT_HDR;
 
-#define INCLUDE_MULTI_FUNC_BT(_Adapter)		(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_BT)
-#define INCLUDE_MULTI_FUNC_GPS(_Adapter)	(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_GPS)
-
 // rtl8188a_hal_init.c
 s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedWoWLANFw);
 void rtl8188f_FirmwareSelfReset(PADAPTER padapter);
