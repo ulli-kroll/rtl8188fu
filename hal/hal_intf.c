@@ -109,7 +109,7 @@ void rtw_hal_dm_init(_adapter *padapter)
 
 		_rtw_spinlock_init(&pHalData->IQKSpinLock);
 
-		phy_load_tx_power_ext_info(padapter, 1);
+		phy_load_tx_power_ext_info(padapter);
 }
 void rtw_hal_dm_deinit(_adapter *padapter)
 {
