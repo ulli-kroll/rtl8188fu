@@ -2284,13 +2284,11 @@ int phy_load_tx_power_by_rate(_adapter *adapter)
 	/* tx power limit is based on tx power by rate */
 	hal_data->txpwr_limit_loaded = 0;
 
-#ifdef CONFIG_EMBEDDED_FWIMG
 	if (HAL_STATUS_SUCCESS == ODM_ConfigBBWithHeaderFile(&hal_data->odmpriv, CONFIG_BB_PHY_REG_PG)) {
 		DBG_871X("default power by rate loaded\n");
 		hal_data->txpwr_by_rate_from_file = 0;
 		goto post_hdl;
 	}
-#endif
 
 	DBG_871X_LEVEL(_drv_err_, "%s():Read Tx power by rate fail\n", __func__);
 	goto exit;
@@ -2324,13 +2322,11 @@ int phy_load_tx_power_limit(_adapter *adapter)
 		goto exit;
 	}
 
-#ifdef CONFIG_EMBEDDED_FWIMG
 	if (HAL_STATUS_SUCCESS == ODM_ConfigRFWithHeaderFile(&hal_data->odmpriv, CONFIG_RF_TXPWR_LMT, (ODM_RF_RADIO_PATH_E)0)) {
 		DBG_871X("default power limit loaded\n");
 		hal_data->txpwr_limit_from_file = 0;
 		goto post_hdl;
 	}
-#endif
 
 	DBG_871X_LEVEL(_drv_err_, "%s():Read Tx power limit fail\n", __func__);
 	goto exit;
