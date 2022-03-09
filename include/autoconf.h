@@ -65,7 +65,6 @@
 		#define CONFIG_HOSTAPD_MLME
 	#endif
 	/* #define CONFIG_FIND_BEST_CHANNEL */
-	#define CONFIG_TX_MCAST2UNI /* Support IP multicast to unicast */
 
 #endif
 

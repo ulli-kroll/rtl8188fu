@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2012 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -64,7 +64,7 @@ enum WIFI_FRAME_TYPE {
 	WIFI_MGT_TYPE  =	(0),
 	WIFI_CTRL_TYPE =	(BIT(2)),
 	WIFI_DATA_TYPE =	(BIT(3)),
-	WIFI_QOS_DATA_TYPE	= (BIT(7)|BIT(3)),	//!< QoS Data	
+	WIFI_QOS_DATA_TYPE	= (BIT(7)|BIT(3)),	//!< QoS Data
 };
 
 enum WIFI_FRAME_SUBTYPE {
@@ -201,7 +201,7 @@ enum WIFI_STATUS_CODE {
 #define WLAN_STATUS_AP_UNABLE_TO_HANDLE_NEW_STA 17
 #define WLAN_STATUS_ASSOC_DENIED_RATES 18
 #endif
-//entended 
+//entended
 /* IEEE 802.11b */
 #define WLAN_STATUS_ASSOC_DENIED_NOSHORT 19
 #define WLAN_STATUS_ASSOC_DENIED_NOPBCC 20
@@ -416,7 +416,7 @@ enum WIFI_REG_DOMAIN {
 #define SetAMsdu(pbuf, amsdu)	\
 	do	{	\
 		*(unsigned short *)(pbuf) |= cpu_to_le16( (amsdu & 1) << 7); \
-	} while(0)	
+	} while(0)
 
 #define GetAid(pbuf)	(cpu_to_le16(*(unsigned short *)((SIZE_PTR)(pbuf) + 2)) & 0x3fff)
 
@@ -618,7 +618,7 @@ typedef	enum _ELEMENT_ID{
 	EID_TClass					= 14,
 	EID_Schedule				= 15,
 	//
-	
+
 	EID_Ctext					= 16, /* challenge text*/
 	EID_POWER_CONSTRAINT		= 32, /* Power Constraint*/
 
@@ -630,7 +630,7 @@ typedef	enum _ELEMENT_ID{
 
 	EID_MeasureRequest			= 38, // Measurement Request
 	EID_MeasureReport			= 39, // Measurement Report
-	
+
 	EID_ERPInfo 				= 42,
 
 	// Form 7.3.2: Information elements in 802.11E/D13.0, page 46.
@@ -639,27 +639,27 @@ typedef	enum _ELEMENT_ID{
 	EID_HTCapability			= 45,
 	EID_QoSCap					= 46,
 	//
-	
+
 	EID_WPA2					= 48,
 	EID_ExtSupRates			= 50,
 
 	EID_FTIE					= 55, // Defined in 802.11r
 	EID_Timeout				= 56, // Defined in 802.11r
-	
+
 	EID_SupRegulatory			= 59, // Supported Requlatory Classes 802.11y
 	EID_HTInfo 					= 61,
 	EID_SecondaryChnlOffset		= 62,
-	
+
 	EID_BSSCoexistence			= 72, // 20/40 BSS Coexistence
 	EID_BSSIntolerantChlReport	= 73,
 	EID_OBSS					= 74, // Overlapping BSS Scan Parameters
-	
+
 	EID_LinkIdentifier			= 101, // Defined in 802.11z
 	EID_WakeupSchedule		= 102, // Defined in 802.11z
 	EID_ChnlSwitchTimeing		= 104, // Defined in 802.11z
 	EID_PTIControl				= 105, // Defined in 802.11z
 	EID_PUBufferStatus			= 106, // Defined in 802.11z
-	
+
 	EID_EXTCapability			= 127, // Extended Capabilities
 	// From S19:Aironet IE and S21:AP IP address IE in CCX v1.13, p16 and p18.
 	EID_Aironet					= 133, // 0x85: Aironet Element for Cisco CCX
@@ -667,7 +667,7 @@ typedef	enum _ELEMENT_ID{
 
 	EID_CellPwr					= 150, // 0x96: Cell Power Limit IE. Ref. 0x96.
 
-	EID_CCKM    					= 156, 
+	EID_CCKM    					= 156,
 
 	EID_Vendor					= 221, // 0xDD: Vendor Specific
 
@@ -729,7 +729,7 @@ typedef	enum _ELEMENT_ID{
 
 #ifdef CONFIG_IEEE80211W
 #define _MME_IE_LENGTH_  18
-#endif //CONFIG_IEEE80211W				
+#endif //CONFIG_IEEE80211W
 /*-----------------------------------------------------------------------------
 				Below is the definition for WMM
 ------------------------------------------------------------------------------*/
@@ -738,7 +738,7 @@ typedef	enum _ELEMENT_ID{
 
 
 /*-----------------------------------------------------------------------------
-				Below is the definition for 802.11n 
+				Below is the definition for 802.11n
 ------------------------------------------------------------------------------*/
 
 //#ifdef CONFIG_80211N_HT
@@ -784,7 +784,7 @@ struct rtw_ieee80211_bar {
  * This structure refers to "HT capabilities element" as
  * described in 802.11n draft section 7.3.2.52
  */
- 
+
 struct rtw_ieee80211_ht_cap {
 	unsigned short 	cap_info;
 	unsigned char 	ampdu_params_info;
@@ -812,9 +812,9 @@ struct ieee80211_ht_addt_info {
 struct HT_caps_element
 {
 	union
-	{ 
-		struct 
-		{ 	
+	{
+		struct
+		{
 			unsigned short	HT_caps_info;
 			unsigned char	AMPDU_para;
 			unsigned char	MCS_rate[16];
@@ -865,7 +865,7 @@ typedef enum _HT_CAP_AMPDU_FACTOR {
 	MAX_AMPDU_FACTOR_8K		= 0,
 	MAX_AMPDU_FACTOR_16K	= 1,
 	MAX_AMPDU_FACTOR_32K	= 2,
-	MAX_AMPDU_FACTOR_64K	= 3,	
+	MAX_AMPDU_FACTOR_64K	= 3,
 }HT_CAP_AMPDU_FACTOR;
 
 
@@ -1163,7 +1163,7 @@ typedef enum _HT_CAP_AMPDU_DENSITY {
 
 #define	P2P_FINDPHASE_EX_NONE				0	// default value, used when: (1)p2p disabed or (2)p2p enabled but only do 1 scan phase
 #define	P2P_FINDPHASE_EX_FULL				1	// used when p2p enabled and want to do 1 scan phase and P2P_FINDPHASE_EX_MAX-1 find phase
-#define	P2P_FINDPHASE_EX_SOCIAL_FIRST		(P2P_FINDPHASE_EX_FULL+1) 
+#define	P2P_FINDPHASE_EX_SOCIAL_FIRST		(P2P_FINDPHASE_EX_FULL+1)
 #define	P2P_FINDPHASE_EX_MAX					4
 #define	P2P_FINDPHASE_EX_SOCIAL_LAST		P2P_FINDPHASE_EX_MAX
 
@@ -1197,7 +1197,7 @@ enum P2P_ROLE {
 	P2P_ROLE_DISABLE = 0,
 	P2P_ROLE_DEVICE = 1,
 	P2P_ROLE_CLIENT = 2,
-	P2P_ROLE_GO = 3	
+	P2P_ROLE_GO = 3
 };
 
 enum P2P_STATE {
@@ -1209,7 +1209,7 @@ enum P2P_STATE {
 	P2P_STATE_FIND_PHASE_SEARCH = 5,				//	In the search state of find phase
 	P2P_STATE_TX_PROVISION_DIS_REQ = 6,			//	In P2P provisioning discovery
 	P2P_STATE_RX_PROVISION_DIS_RSP = 7,
-	P2P_STATE_RX_PROVISION_DIS_REQ = 8,	
+	P2P_STATE_RX_PROVISION_DIS_REQ = 8,
 	P2P_STATE_GONEGO_ING = 9,						//	Doing the group owner negoitation handshake
 	P2P_STATE_GONEGO_OK = 10,						//	finish the group negoitation handshake with success
 	P2P_STATE_GONEGO_FAIL = 11,					//	finish the group negoitation handshake with failure
@@ -1240,7 +1240,7 @@ enum P2P_PROTO_WK_ID
 	P2P_FIND_PHASE_WK = 0,
 	P2P_RESTORE_STATE_WK = 1,
 	P2P_PRE_TX_PROVDISC_PROCESS_WK = 2,
-	P2P_PRE_TX_NEGOREQ_PROCESS_WK = 3,	
+	P2P_PRE_TX_NEGOREQ_PROCESS_WK = 3,
 	P2P_PRE_TX_INVITEREQ_PROCESS_WK = 4,
 	P2P_AP_P2P_CH_SWITCH_PROCESS_WK =5,
 	P2P_RO_CH_WK = 6,
@@ -1265,11 +1265,6 @@ enum P2P_PROTO_WK_ID
 #define	WFD_DEVINFO_WSD						0x0040
 #define	WFD_DEVINFO_PC_TDLS					0x0080
 #define	WFD_DEVINFO_HDCP_SUPPORT			0x0100
-
-#ifdef  CONFIG_TX_MCAST2UNI
-#define IP_MCAST_MAC(mac)		((mac[0]==0x01)&&(mac[1]==0x00)&&(mac[2]==0x5e))
-#define ICMPV6_MCAST_MAC(mac)	((mac[0]==0x33)&&(mac[1]==0x33)&&(mac[2]!=0xff))
-#endif	// CONFIG_TX_MCAST2UNI
 
 #ifdef CONFIG_IOCTL_CFG80211
 /* Regulatroy Domain */
