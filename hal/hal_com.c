@@ -649,8 +649,8 @@ Hal_MappingOutPipe(
 {
 	struct registry_priv *pregistrypriv = &pAdapter->registrypriv;
 
-	BOOLEAN	 bWIFICfg = (pregistrypriv->wifi_spec) ?_TRUE:_FALSE;
-	
+	BOOLEAN	 bWIFICfg = false;
+		
 	BOOLEAN result = _TRUE;
 
 	switch(NumOutPipe)

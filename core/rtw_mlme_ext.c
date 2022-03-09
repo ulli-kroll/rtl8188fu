@@ -5072,7 +5072,7 @@ void issue_assocreq(_adapter *padapter)
 						(_rtw_memcmp(pIE->data, WPS_OUI, 4)))
 				{	
 					vs_ie_length = pIE->Length;
-					if((!padapter->registrypriv.wifi_spec) && (_rtw_memcmp(pIE->data, WPS_OUI, 4)))
+					if((_rtw_memcmp(pIE->data, WPS_OUI, 4)))
 					{
 						//Commented by Kurt 20110629
 						//In some older APs, WPS handshake
@@ -5881,12 +5881,10 @@ static int issue_action_ba(_adapter *padapter, unsigned char *raddr, unsigned ch
 				BA_para_set &= ~RTW_IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK;
 				BA_para_set |= (size << 6) & RTW_IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK;
 
-				if (!padapter->registrypriv.wifi_spec) {
-					if(pregpriv->ampdu_amsdu==0)//disabled
-						BA_para_set &= ~BIT(0);
-					else if(pregpriv->ampdu_amsdu==1)//enabled
-						BA_para_set |= BIT(0);
-				}
+				if(pregpriv->ampdu_amsdu==0)//disabled
+					BA_para_set &= ~BIT(0);
+				else if(pregpriv->ampdu_amsdu==1)//enabled
+					BA_para_set |= BIT(0);
 
 				BA_para_set = cpu_to_le16(BA_para_set);
 
@@ -6740,28 +6738,6 @@ u8 collect_bss_info(_adapter *padapter, union recv_frame *precv_frame, WLAN_BSSI
 	bssid->Configuration.ATIMWindow = 0;
 
 	//20/40 BSS Coexistence check
-	if((pregistrypriv->wifi_spec==1) && (_FALSE == pmlmeinfo->bwmode_updated))
-	{	
-		struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-#ifdef CONFIG_80211N_HT
-		p = rtw_get_ie(bssid->IEs + ie_offset, _HT_CAPABILITY_IE_, &len, bssid->IELength - ie_offset);
-		if(p && len>0)
-		{
-			struct HT_caps_element	*pHT_caps;
-			pHT_caps = (struct HT_caps_element	*)(p + 2);
-			
-			if(pHT_caps->u.HT_cap_element.HT_caps_info&BIT(14))
-			{				
-				pmlmepriv->num_FortyMHzIntolerant++;
-			}
-		}
-		else
-		{
-			pmlmepriv->num_sta_no_ht++;
-		}
-#endif //CONFIG_80211N_HT
-		
-	}
 
 #ifdef CONFIG_INTEL_WIDI
 	//process_intel_widi_query_or_tigger(padapter, bssid);
@@ -7782,10 +7758,6 @@ static void rtw_mlmeext_disconnect(_adapter *padapter)
 	padapter->tdlsinfo.ap_prohibited = _FALSE;
 
 	/* For TDLS channel switch, currently we only allow it to work in wifi logo test mode */
-	if (padapter->registrypriv.wifi_spec == 1)
-	{
-		padapter->tdlsinfo.ch_switch_prohibited = _FALSE;
-	}
 #endif /* CONFIG_TDLS */
 
 }
@@ -9036,9 +9008,6 @@ u8 rtw_scan_sparse(_adapter *adapter, struct rtw_ieee80211_channel *ch, u8 ch_nu
 	struct registry_priv *regsty = dvobj_to_regsty(adapter_to_dvobj(adapter));
 	struct mlme_ext_priv *mlmeext = &adapter->mlmeextpriv;
 
-	if (regsty->wifi_spec)
-		goto exit;
-
 	/* assume ch_num > 6 is normal scan */
 	if (ch_num <= 6)
 		goto exit;
@@ -9314,21 +9283,13 @@ void site_survey(_adapter *padapter, u8 survey_channel, RT_SCAN_TYPE ScanType)
 
 				for (i = 0; i < RTW_SSID_SCAN_AMOUNT; i++) {
 					if (pmlmeext->sitesurvey_res.ssid[i].SsidLength) {
-						/* IOT issue, When wifi_spec is not set, send one probe req without WPS IE. */
-						if (padapter->registrypriv.wifi_spec)
-							issue_probereq(padapter, &(pmlmeext->sitesurvey_res.ssid[i]), NULL);
-						else
-							issue_probereq_ex(padapter, &(pmlmeext->sitesurvey_res.ssid[i]), NULL, 0, 0, 0, 0);
+						issue_probereq_ex(padapter, &(pmlmeext->sitesurvey_res.ssid[i]), NULL, 0, 0, 0, 0);
 						issue_probereq(padapter, &(pmlmeext->sitesurvey_res.ssid[i]), NULL);
 					}
 				}
 
 				if (pmlmeext->sitesurvey_res.scan_mode == SCAN_ACTIVE) {
-					/* IOT issue, When wifi_spec is not set, send one probe req without WPS IE. */
-					if (padapter->registrypriv.wifi_spec)
-						issue_probereq(padapter, NULL, NULL);
-					else
-						issue_probereq_ex(padapter, NULL, NULL, 0, 0, 0, 0);
+					issue_probereq_ex(padapter, NULL, NULL, 0, 0, 0, 0);
 					issue_probereq(padapter, NULL, NULL);
 				}
 			}
@@ -10185,9 +10146,6 @@ u8 tx_beacon_hdl(_adapter *padapter, unsigned char *pbuf)
 	}
 
 
-	if (padapter->registrypriv.wifi_spec == 1)
-		return H2C_SUCCESS;
-	
 	/* tx bc/mc frames after update TIM */
 	chk_bmc_sleepq_hdl(padapter, NULL);
 

@@ -522,7 +522,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			ExtLNAGain; // 2G
 	u1Byte			PatchID; //Customer ID
 	BOOLEAN			bInHctTest;
-	BOOLEAN			bWIFITest;
 
 	BOOLEAN			bDualMacSmartConcurrent;
 	u4Byte			BK_SupportAbility;

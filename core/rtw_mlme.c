@@ -1003,24 +1003,6 @@ int rtw_is_desired_network(_adapter *adapter, struct wlan_network *pnetwork)
 			return _FALSE;
 		}	
 	}
-	if (adapter->registrypriv.wifi_spec == 1) //for  correct flow of 8021X  to do....
-	{
-		u8 *p=NULL;
-		uint ie_len=0;
-
-		if ((desired_encmode == Ndis802_11EncryptionDisabled) && (privacy != 0))
-	            bselected = _FALSE;
-
-		if ( psecuritypriv->ndisauthtype == Ndis802_11AuthModeWPA2PSK) {
-			p = rtw_get_ie(pnetwork->network.IEs + _BEACON_IE_OFFSET_, _RSN_IE_2_, &ie_len, (pnetwork->network.IELength - _BEACON_IE_OFFSET_));
-			if (p && ie_len>0) {
-				bselected = _TRUE;
-			} else {
-				bselected = _FALSE;
-			}
-		}
-	}
-	
 
  	if ((desired_encmode != Ndis802_11EncryptionDisabled) && (privacy == 0)) {
 		DBG_871X("desired_encmode: %d, privacy: %d\n", desired_encmode, privacy);
@@ -2584,9 +2566,6 @@ void rtw_mlme_reset_auto_scan_int(_adapter *adapter)
 	if(pmlmeinfo->VHT_enable) //disable auto scan when connect to 11AC AP
 	{
 		mlme->auto_scan_int_ms = 0;
-	}
-	else if(adapter->registrypriv.wifi_spec && is_client_associated_to_ap(adapter) == _TRUE) {
-		mlme->auto_scan_int_ms = 60*1000;
 	} else {
 		mlme->auto_scan_int_ms = 0; /* disabled */
 	}
@@ -2598,7 +2577,6 @@ void rtw_drv_scan_by_self(_adapter *padapter)
 {
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 
-	if (!padapter->registrypriv.wifi_spec) {
 		if (check_fwstate(pmlmepriv, (_FW_UNDER_SURVEY | _FW_UNDER_LINKING)) == _TRUE) {
 			DBG_871X(FUNC_ADPT_FMT" _FW_UNDER_SURVEY|_FW_UNDER_LINKING\n", FUNC_ADPT_ARG(padapter));
 			goto exit;
@@ -2608,7 +2586,6 @@ void rtw_drv_scan_by_self(_adapter *padapter)
 			DBG_871X(FUNC_ADPT_FMT" exit BusyTraffic\n", FUNC_ADPT_ARG(padapter));
 			goto exit;
 		}
-	}
 
 	DBG_871X(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
@@ -3422,10 +3399,7 @@ void rtw_joinbss_reset(_adapter *padapter)
 	// TH=0 => means that validate usb rx aggregation, use init value.
 	if(phtpriv->ht_option)
 	{
-		if(padapter->registrypriv.wifi_spec==1)		
-			threshold = 1;
-		else
-			threshold = 0;		
+		threshold = 0;		
 		rtw_hal_set_hwreg(padapter, HW_VAR_RXDMA_AGG_PG_TH, (u8 *)(&threshold));
 	}
 	else
@@ -3449,10 +3423,7 @@ void	rtw_ht_use_default_setting(_adapter *padapter)
 	BOOLEAN		bHwLDPCSupport = _FALSE, bHwSTBCSupport = _FALSE;
 	BOOLEAN		bHwSupportBeamformer = _FALSE, bHwSupportBeamformee = _FALSE;
 
-	if (pregistrypriv->wifi_spec)
-		phtpriv->bss_coexist = 1;
-	else
-		phtpriv->bss_coexist = 0;
+	phtpriv->bss_coexist = 0;
 
 	phtpriv->sgi_40m = TEST_FLAG(pregistrypriv->short_gi, BIT1) ? _TRUE : _FALSE;
 	phtpriv->sgi_20m = TEST_FLAG(pregistrypriv->short_gi, BIT0) ? _TRUE : _FALSE;
@@ -3614,8 +3585,7 @@ unsigned int rtw_restructure_ht_ie(_adapter *padapter, u8 *in_ie, u8 *out_ie, ui
 	if (TEST_FLAG(phtpriv->stbc_cap, STBC_HT_ENABLE_RX)) {
 		if((pregistrypriv->rx_stbc == 0x3) ||							/* enable for 2.4/5 GHz */
 			((channel <= 14) && (pregistrypriv->rx_stbc == 0x1)) ||		/* enable for 2.4GHz */
-			((channel > 14) && (pregistrypriv->rx_stbc == 0x2)) ||		/* enable for 5GHz */
-			(pregistrypriv->wifi_spec == 1)) {
+			((channel > 14) && (pregistrypriv->rx_stbc == 0x2))) {		/* enable for 5GHz */
 			/* HAL_DEF_RX_STBC means STBC RX spatial stream, todo: VHT 4 streams */
 			rtw_hal_get_def_var(padapter, HAL_DEF_RX_STBC, (u8 *)(&rx_stbc_nss));
 			SET_HT_CAP_ELE_RX_STBC(&ht_capie, rx_stbc_nss);
@@ -3761,14 +3731,7 @@ void rtw_update_ht_cap(_adapter *padapter, u8 *pie, uint ie_len, u8 channel)
 	//maybe needs check if ap supports rx ampdu.
 	if((phtpriv->ampdu_enable==_FALSE) &&(pregistrypriv->ampdu_enable==1))
 	{
-		if(pregistrypriv->wifi_spec==1)
-		{
-			//remove this part because testbed AP should disable RX AMPDU
-			//phtpriv->ampdu_enable = _FALSE;
-			phtpriv->ampdu_enable = _TRUE;
-		}
-		else
-			phtpriv->ampdu_enable = _TRUE;
+		phtpriv->ampdu_enable = _TRUE;
 	} 
 
 

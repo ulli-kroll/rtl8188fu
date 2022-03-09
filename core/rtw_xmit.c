@@ -491,7 +491,7 @@ static void update_attrib_vcs_info(_adapter *padapter, struct xmit_frame *pxmitf
 	// (2) If there are more than one frag in  this MSDU, only the first frag uses protection frame.
 	//		Other fragments are protected by previous fragment.
 	//		So we only need to check the length of first fragment.
-	if(pmlmeext->cur_wireless_mode < WIRELESS_11_24N  || padapter->registrypriv.wifi_spec)
+	if(pmlmeext->cur_wireless_mode < WIRELESS_11_24N)
 	{
 		if(sz > padapter->registrypriv.rts_thresh)
 		{
@@ -3084,24 +3084,6 @@ _func_enter_;
 
 	inx[0] = 0; inx[1] = 1; inx[2] = 2; inx[3] = 3;
 
-	if(pregpriv->wifi_spec==1)
-	{
-		int j, tmp, acirp_cnt[4];
-#if 0
-		if(flags<XMIT_QUEUE_ENTRY)
-		{
-			//priority exchange according to the completed xmitbuf flags.
-			inx[flags] = 0;
-			inx[0] = flags;
-		}
-#endif	
-	
-#if defined(CONFIG_USB_HCI)
-		for(j=0; j<4; j++)
-			inx[j] = pxmitpriv->wmm_para_seq[j];
-#endif
-	}
-
 	_enter_critical_bh(&pxmitpriv->lock, &irqL0);
 
 	for(i = 0; i < entry; i++) 
@@ -3990,9 +3972,7 @@ inline bool xmitframe_hiq_filter(struct xmit_frame *xmitframe)
 	_adapter *adapter = xmitframe->padapter;
 	struct registry_priv *registry = &adapter->registrypriv;
 
-	if (adapter->registrypriv.wifi_spec == 1) {
-		allow = _TRUE;
-	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_SPECIAL) {
+	       if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_SPECIAL) {
 	
 		struct pkt_attrib *attrib = &xmitframe->attrib;
 

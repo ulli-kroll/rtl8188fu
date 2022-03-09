@@ -4971,13 +4971,6 @@ static int rtw_dbg_port(struct net_device *dev,
 				}
 				break;
 #endif
-				case 0x14: //get wifi_spec
-				{
-					struct registry_priv	*pregpriv = &padapter->registrypriv;
-					DBG_871X("get wifi_spec=%d\n",pregpriv->wifi_spec);
-					
-				}
-				break;
 				case 0x16:
 				{
 					if(arg == 0xff){

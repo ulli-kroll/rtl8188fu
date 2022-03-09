@@ -560,11 +560,6 @@ void rtl8188f_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 		smart_ps = pwrpriv->smart_ps;
 	}
 
-	if (padapter->registrypriv.wifi_spec == 1) {
-		awake_intvl = 2;
-		rlbm = 1;
-	}
-
 	if (psmode > 0) {
 		{
 			PowerState = 0x00;/* AllON(0x0C), RFON(0x04), RFOFF(0x00) */

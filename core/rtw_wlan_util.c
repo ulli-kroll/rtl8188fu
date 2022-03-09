@@ -1576,26 +1576,6 @@ int WMM_param_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs	pIE)
 	pmlmeinfo->WMM_enable = 1;
 	return _TRUE;
 
-	/*if (pregpriv->wifi_spec == 1)
-	{
-		if (pmlmeinfo->WMM_enable == 1)
-		{
-			//todo: compare the parameter set count & decide wheher to update or not
-			return _FAIL;
-		}
-		else
-		{
-			pmlmeinfo->WMM_enable = 1;
-			_rtw_rtw_memcpy(&(pmlmeinfo->WMM_param), (pIE->data + 6), sizeof(struct WMM_para_element));
-			return _TRUE;
-		}
-	}
-	else
-	{
-		pmlmeinfo->WMM_enable = 0;
-		return _FAIL;
-	}*/
-	
 }
 
 void WMMOnAssocRsp(_adapter *padapter)
@@ -1701,43 +1681,6 @@ void WMMOnAssocRsp(_adapter *padapter)
 			padapter->mlmepriv.acm_mask = acm_mask;
 
 		inx[0] = 0; inx[1] = 1; inx[2] = 2; inx[3] = 3;
-
-		if(pregpriv->wifi_spec==1)
-		{
-			u32	j, tmp, change_inx=_FALSE;
-
-			//entry indx: 0->vo, 1->vi, 2->be, 3->bk.
-			for(i=0; i<4; i++)
-			{
-				for(j=i+1; j<4; j++)
-				{
-					//compare CW and AIFS
-					if((edca[j] & 0xFFFF) < (edca[i] & 0xFFFF))
-					{
-						change_inx = _TRUE;
-					}
-					else if((edca[j] & 0xFFFF) == (edca[i] & 0xFFFF))
-					{
-						//compare TXOP
-						if((edca[j] >> 16) > (edca[i] >> 16))
-							change_inx = _TRUE;
-					}
-				
-					if(change_inx)
-					{
-						tmp = edca[i];
-						edca[i] = edca[j];
-						edca[j] = tmp;
-
-						tmp = inx[i];
-						inx[i] = inx[j];
-						inx[j] = tmp;
-
-						change_inx = _FALSE;
-					}
-				}
-			}
-		}
 
 		for(i=0; i<4; i++) {
 			pxmitpriv->wmm_para_seq[i] = inx[i];

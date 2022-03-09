@@ -593,9 +593,6 @@ ODM_CmnInfoInit(
 		case 	ODM_CMNINFO_BINHCT_TEST:
 			pDM_Odm->bInHctTest = (BOOLEAN)Value;
 			break;
-		case 	ODM_CMNINFO_BWIFI_TEST:
-			pDM_Odm->bWIFITest = (BOOLEAN)Value;
-			break;	
 		case	ODM_CMNINFO_SMART_CONCURRENT:
 			pDM_Odm->bDualMacSmartConcurrent = (BOOLEAN )Value;
 			break;

@@ -129,11 +129,6 @@ int rtw_lowrate_two_xmit = 1;//Use 2 path Tx to transmit MCS0~7 and legacy mode
 int rtw_rf_config = RF_MAX_TYPE;  //auto
 
 int rtw_low_power = 0;
-#ifdef CONFIG_WIFI_TEST
-int rtw_wifi_spec = 1;//for wifi test
-#else
-int rtw_wifi_spec = 0;
-#endif
 
 int rtw_special_rf_path = 0; //0: 2T2R ,1: only turn on path A 1T1R
 
@@ -255,7 +250,6 @@ module_param(rtw_rf_config, int, 0644);
 module_param(rtw_power_mgnt, int, 0644);
 module_param(rtw_smart_ps, int, 0644);
 module_param(rtw_low_power, int, 0644);
-module_param(rtw_wifi_spec, int, 0644);
 
 module_param(rtw_full_ch_in_p2p_handshake, int, 0644);
 module_param(rtw_antdiv_cfg, int, 0644);
@@ -560,8 +554,6 @@ _func_enter_;
 	registry_par->rf_config = (u8)rtw_rf_config;
 	registry_par->low_power = (u8)rtw_low_power;
 
-
-	registry_par->wifi_spec = (u8)rtw_wifi_spec;
 
 	if (strlen(rtw_country_code) != 2
 		|| is_alpha(rtw_country_code[0]) == _FALSE

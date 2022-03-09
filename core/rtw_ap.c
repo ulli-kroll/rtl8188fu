@@ -452,12 +452,6 @@ void	expire_timeout_chk(_adapter *padapter)
 		{
 			struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 
-			if (padapter->registrypriv.wifi_spec == 1)
-			{
-				psta->expire_to = pstapriv->expire_to;
-				continue;
-			}
-
 #ifndef CONFIG_ACTIVE_KEEP_ALIVE_CHECK
 #ifdef CONFIG_80211N_HT
 
@@ -1236,36 +1230,6 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 
 		inx[0] = 0; inx[1] = 1; inx[2] = 2; inx[3] = 3;
 
-		if (pregpriv->wifi_spec == 1) {
-			u32	j, tmp, change_inx = _FALSE;
-
-			/* entry indx: 0->vo, 1->vi, 2->be, 3->bk. */
-			for (i = 0 ; i < 4 ; i++) {
-				for (j = i+1 ; j < 4 ; j++) {
-					/* compare CW and AIFS */
-					if ((edca[j] & 0xFFFF) < (edca[i] & 0xFFFF)) {
-						change_inx = _TRUE;
-					} else if ((edca[j] & 0xFFFF) == (edca[i] & 0xFFFF)) {
-						/* compare TXOP */
-						if ((edca[j] >> 16) > (edca[i] >> 16))
-							change_inx = _TRUE;
-					}
-
-					if (change_inx) {
-						tmp = edca[i];
-						edca[i] = edca[j];
-						edca[j] = tmp;
-
-						tmp = inx[i];
-						inx[i] = inx[j];
-						inx[j] = tmp;
-
-						change_inx = _FALSE;
-					}
-				}
-			}
-		}
-
 		for (i = 0 ; i < 4 ; i++) {
 			pxmitpriv->wmm_para_seq[i] = inx[i];
 			DBG_871X("wmm_para_seq(%d): %d\n", i, pxmitpriv->wmm_para_seq[i]);
@@ -1336,9 +1300,7 @@ static void rtw_ap_check_scan(_adapter *padapter)
 
 	_enter_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
 	phead = get_list_head(queue);
-	if (rtw_end_of_queue_search(phead, get_next(phead)) == _TRUE)
-		if (padapter->registrypriv.wifi_spec)
-			do_scan = _TRUE;
+
 	_exit_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
 
 #ifdef CONFIG_AUTO_CHNL_SEL_NHM
@@ -1609,10 +1571,6 @@ change_chbw:
 		#endif
 		#endif /* !defined(CONFIG_INTERRUPT_BASED_TXBCN) */
 	}
-
-	/*Set EDCA param reg after update cur_wireless_mode & update_capinfo*/
-	if (pregpriv->wifi_spec == 1)
-		rtw_set_hw_wmm_param(padapter);
 
 	/*pmlmeext->bstart_bss = _TRUE;*/
 }
@@ -2137,15 +2095,6 @@ int rtw_check_beacon_data(_adapter *padapter, u8 *pbuf,  int len)
 	}
 #endif //CONFIG_80211AC_VHT
 
-	if(pbss_network->Configuration.DSConfig <= 14 && padapter->registrypriv.wifi_spec == 1) {
-		uint len = 0;
-
-		SET_EXT_CAPABILITY_ELE_BSS_COEXIST(pmlmepriv->ext_capab_ie_data, 1);
-		pmlmepriv->ext_capab_ie_len = 10;
-		rtw_set_ie(pbss_network->IEs + pbss_network->IELength, EID_EXTCapability, 8, pmlmepriv->ext_capab_ie_data, &len);
-		pbss_network->IELength += pmlmepriv->ext_capab_ie_len;
-	}
-
 	pbss_network->Length = get_WLAN_BSSID_EX_sz((WLAN_BSSID_EX *)pbss_network);
 
 	rtw_ies_get_chbw(pbss_network->IEs + _BEACON_IE_OFFSET_, pbss_network->IELength - _BEACON_IE_OFFSET_
@@ -2449,8 +2398,7 @@ u8 rtw_ap_bmc_frames_hdl(_adapter *padapter)
 	bool update_tim = _FALSE;
 
 
-	if (padapter->registrypriv.wifi_spec != 1)
-		return H2C_SUCCESS;
+	return H2C_SUCCESS;
 
 
 	psta_bmc = rtw_get_bcmc_stainfo(padapter);

@@ -241,7 +241,6 @@ struct registry_priv
 	u8	rf_config ;
 	u8	low_power ;
 
-	u8	wifi_spec;// !turbo_mode
 	u8	special_rf_path; // 0: 2T2R ,1: only turn on path A 1T1R
 	char alpha2[2];
 	u8	channel_plan;

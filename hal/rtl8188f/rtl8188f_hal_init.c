@@ -5269,10 +5269,7 @@ u8 GetHalDefVar8188F(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval)
 	break;
 
 	case HAL_DEF_TX_PAGE_BOUNDARY:
-		if (!padapter->registrypriv.wifi_spec)
-			*(u8 *)pval = TX_PAGE_BOUNDARY_8188F;
-		else
-			*(u8 *)pval = WMM_NORMAL_TX_PAGE_BOUNDARY_8188F;
+		*(u8 *)pval = TX_PAGE_BOUNDARY_8188F;
 		break;
 
 	case HAL_DEF_MACID_SLEEP:

@@ -221,7 +221,7 @@ static void _InitQueueReservedPage(PADAPTER padapter)
 	u32			numPubQ;
 	u32			value32;
 	u8			value8;
-	BOOLEAN		bWiFiConfig	= pregistrypriv->wifi_spec;
+	BOOLEAN		bWiFiConfig	= false;
 
 	if (pHalData->OutEpQueueSel & TX_SELE_HQ)
 		numHQ = bWiFiConfig ? WMM_NORMAL_PAGE_NUM_HPQ_8188F : NORMAL_PAGE_NUM_HPQ_8188F;
@@ -250,7 +250,7 @@ static void _InitTxBufferBoundary(PADAPTER padapter)
 	/*u16	txdmactrl; */
 	u8	txpktbuf_bndy;
 
-	if (!pregistrypriv->wifi_spec)
+	if (true)
 		txpktbuf_bndy = TX_PAGE_BOUNDARY_8188F;
 	else {
 		/*for WMM */
@@ -331,7 +331,7 @@ _InitNormalChipTwoOutEpPriority(
 		break;
 	}
 
-	if (!pregistrypriv->wifi_spec) {
+	if (true) {
 		beQ		= valueLow;
 		bkQ		= valueLow;
 		viQ		= valueHi;
@@ -359,7 +359,7 @@ _InitNormalChipThreeOutEpPriority(
 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
 	u16			beQ, bkQ, viQ, voQ, mgtQ, hiQ;
 
-	if (!pregistrypriv->wifi_spec) { /* typical setting */
+	if (true) { /* typical setting */
 		beQ		= QUEUE_LOW;
 		bkQ		= QUEUE_LOW;
 		viQ		= QUEUE_NORMAL;
@@ -650,9 +650,6 @@ usb_AggSettingTxUpdate(
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	/*PMGNT_INFO		pMgntInfo = &(Adapter->MgntInfo); */
 	u32			value32;
-
-	if (Adapter->registrypriv.wifi_spec)
-		pHalData->UsbTxAggMode = _FALSE;
 
 	if (pHalData->UsbTxAggMode) {
 		value32 = rtw_read32(Adapter, REG_DWBCN0_CTRL_8188F);
@@ -1116,12 +1113,9 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	}
 
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_LLTT);
-	if (!pregistrypriv->wifi_spec)
-		boundary = TX_PAGE_BOUNDARY_8188F;
-	else {
-		/* for WMM */
-		boundary = WMM_NORMAL_TX_PAGE_BOUNDARY_8188F;
-	}
+
+	boundary = TX_PAGE_BOUNDARY_8188F;
+
 	status =  rtl8188f_InitLLTTable(padapter);
 	if (status == _FAIL) {
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init LLT table\n"));
@@ -1281,9 +1275,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/* 2010.04.09 add by hpfan */
 	/* */
 	rtw_write32(padapter, REG_BAR_MODE_CTRL, 0x0201ffff);
-
-	if (pregistrypriv->wifi_spec)
-		rtw_write16(padapter, REG_FAST_EDCA_CTRL , 0);
 
 	/* Move by Neo for USB SS from above setp */
 

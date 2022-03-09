@@ -212,13 +212,7 @@ inline static bool rtw_os_need_wake_queue(_adapter *padapter, u16 qidx)
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35))
 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
 
-	if (padapter->registrypriv.wifi_spec) {
-		if (pxmitpriv->hwxmits[qidx].accnt < WMM_XMIT_THRESHOLD)
-			return _TRUE;
-	} else {
-		return _TRUE;
-	}
-	return _FALSE;
+	return _TRUE;
 #else
 	return _TRUE;
 #endif
@@ -228,14 +222,9 @@ inline static bool rtw_os_need_stop_queue(_adapter *padapter, u16 qidx)
 {
 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35))
-	if (padapter->registrypriv.wifi_spec) {
-		/* No free space for Tx, tx_worker is too slow */
-		if (pxmitpriv->hwxmits[qidx].accnt > WMM_XMIT_THRESHOLD)
-			return _TRUE;
-	} else {
-		if(pxmitpriv->free_xmitframe_cnt<=4)
-			return _TRUE;
-	}
+
+	if(pxmitpriv->free_xmitframe_cnt<=4)
+		return _TRUE;
 #else
 	if(pxmitpriv->free_xmitframe_cnt<=4)
 		return _TRUE;
