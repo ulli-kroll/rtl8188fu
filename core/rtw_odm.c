@@ -294,18 +294,6 @@ void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter)
 	);
 }
 
-void rtw_odm_adaptivity_parm_set(_adapter *adapter, s8 TH_L2H_ini, s8 TH_EDCCA_HL_diff, s8 TH_L2H_ini_mode2, s8 TH_EDCCA_HL_diff_mode2, u8 EDCCA_enable)
-{
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(adapter);
-	DM_ODM_T *odm = &pHalData->odmpriv;
-
-	odm->TH_L2H_ini = TH_L2H_ini;
-	odm->TH_EDCCA_HL_diff = TH_EDCCA_HL_diff;
-	odm->TH_L2H_ini_mode2 = TH_L2H_ini_mode2;
-	odm->TH_EDCCA_HL_diff_mode2 = TH_EDCCA_HL_diff_mode2;
-	odm->EDCCA_enable = EDCCA_enable;
-}
-
 void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
