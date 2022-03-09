@@ -81,9 +81,6 @@
 	#define CONFIG_TDLS_CH_SW	/* Enable this flag only when we confirm that TDLS CH SW is supported in FW */
 #endif
 
-#define CONFIG_LAYER2_ROAMING
-#define CONFIG_LAYER2_ROAMING_RESUME
-
 #define CONFIG_80211D
 
 
