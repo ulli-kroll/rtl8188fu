@@ -785,10 +785,6 @@ static VOID _BBTurnOnBlock(
 	IN	PADAPTER		Adapter
 )
 {
-#if (DISABLE_BB_RF)
-	return;
-#endif
-
 	PHY_SetBBReg(Adapter, rFPGA0_RFMOD, bCCKEn, 0x1);
 	PHY_SetBBReg(Adapter, rFPGA0_RFMOD, bOFDMEn, 0x1);
 }
@@ -942,7 +938,7 @@ rt_rf_power_state RfOnOffDetect(IN	PADAPTER pAdapter)
 void _ps_open_RF(_adapter *padapter);
 
 #ifdef CONFIG_8188FTV_SOLUTION_D
-/* 
+/*
 Write corresponding register of efuse. Indirect Write.
 Offset:	reg offset.
 Value:	u8 value
@@ -954,7 +950,7 @@ VOID WriteUSB2PHYReg(PADAPTER Adapter, u8 Offset, u8 Value)
 	rtw_write8(Adapter, 0xFE42, 0x81);
 }
 
-/* 
+/*
 Read corresponding register of efuse. Indirect Read.
 Offset: reg offset.
 */
@@ -2127,11 +2123,7 @@ _ReadRFType(
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 
-#if DISABLE_BB_RF
-	pHalData->rf_chip = RF_PSEUDO_11N;
-#else
 	pHalData->rf_chip = RF_6052;
-#endif
 }
 
 

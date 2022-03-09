@@ -105,8 +105,6 @@
 
 #define CONFIG_RF_POWER_TRIM
 
-#define DISABLE_BB_RF	0
-
 #define RTW_NOTCH_FILTER 0 /* 0:Disable, 1:Enable, */
 
 /*
