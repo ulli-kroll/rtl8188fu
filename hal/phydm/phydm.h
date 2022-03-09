@@ -685,7 +685,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			DCbackoff;
 	BOOLEAN			Adaptivity_enable;
 	u1Byte			APTotalNum;
-	BOOLEAN			EDCCA_enable;
 	ADAPTIVITY_STATISTICS	Adaptivity;
 	//For Adaptivtiy
 	u1Byte			LastUSBHub;

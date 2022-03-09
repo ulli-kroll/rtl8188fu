@@ -279,12 +279,11 @@ void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter)
 
 	DBG_871X_SEL_NL(sel, "%10s %16s %16s %22s %12s\n"
 		, "TH_L2H_ini", "TH_EDCCA_HL_diff", "TH_L2H_ini_mode2", "TH_EDCCA_HL_diff_mode2", "EDCCA_enable");
-	DBG_871X_SEL_NL(sel, "0x%-8x %-16d 0x%-14x %-22d %-12d\n"
+	DBG_871X_SEL_NL(sel, "0x%-8x %-16d 0x%-14x %-22d\n"
 		, (u8)odm->TH_L2H_ini
 		, odm->TH_EDCCA_HL_diff
 		, (u8)odm->TH_L2H_ini_mode2
 		, odm->TH_EDCCA_HL_diff_mode2
-		, odm->EDCCA_enable
 	);
 
 	DBG_871X_SEL_NL(sel, "%15s %9s\n", "AdapEnableState", "Adap_Flag");
@@ -297,10 +296,10 @@ void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter)
 void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
-	DM_ODM_T *odm = &(hal_data->odmpriv);	
-	
-	DBG_871X_SEL_NL(sel,"RxRate = %s, RSSI_A = %d(%%), RSSI_B = %d(%%)\n", 
-	HDATA_RATE(odm->RxRate), odm->RSSI_A, odm->RSSI_B);	
+	DM_ODM_T *odm = &(hal_data->odmpriv);
+
+	DBG_871X_SEL_NL(sel,"RxRate = %s, RSSI_A = %d(%%), RSSI_B = %d(%%)\n",
+	HDATA_RATE(odm->RxRate), odm->RSSI_A, odm->RSSI_B);
 }
 
 

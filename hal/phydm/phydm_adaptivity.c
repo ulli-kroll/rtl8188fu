@@ -513,8 +513,6 @@ Phydm_AdaptivityInit(
 	pDM_Odm->Adaptivity_IGI_upper = 0;
 	pDM_Odm->Adaptivity_enable = FALSE;	/*use this flag to decide enable or disable*/
 
-	pDM_Odm->EDCCA_enable = TRUE;		/*even no adaptivity, we still enable EDCCA*/
-
 	pDM_Odm->TH_L2H_ini_mode2 = 20;
 	pDM_Odm->TH_EDCCA_HL_diff_mode2 = 8;
 	
@@ -567,11 +565,6 @@ Phydm_Adaptivity(
 	s1Byte			TH_L2H_dmc, TH_H2L_dmc;
 	s1Byte			Diff = 0, IGI_target;
 	PADAPTIVITY_STATISTICS	Adaptivity = (PADAPTIVITY_STATISTICS)PhyDM_Get_Structure(pDM_Odm, PHYDM_ADAPTIVITY);
-
-	if ((pDM_Odm->EDCCA_enable == FALSE)) {
-		ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("Disable EDCCA!!!\n"));
-		return;
-	}
 
 	if (!(pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY)) {
 		ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("adaptivity disable, enable EDCCA mode!!!\n"));
