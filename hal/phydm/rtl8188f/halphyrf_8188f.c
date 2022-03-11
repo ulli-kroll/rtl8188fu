@@ -155,7 +155,6 @@ ODM_TxPwrTrackSetPwr_8188F(
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(Adapter);
 	u1Byte PwrTrackingLimit_OFDM = 34; //+0dB
 	u1Byte PwrTrackingLimit_CCK = CCK_TABLE_SIZE_88F-1;   //-2dB
-	u1Byte TxRate = 0xFF;
 	s1Byte Final_OFDM_Swing_Index = 0;
 	s1Byte Final_CCK_Swing_Index = 0;
 //	u1Byte	i = 0;
@@ -172,28 +171,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 #endif
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("===>ODM_TxPwrTrackSetPwr8188F\n"));
 
-	if (TxRate != 0xFF) {
-		//2 CCK
-		if ((TxRate >= MGN_1M) && (TxRate <= MGN_11M))
-			PwrTrackingLimit_CCK = CCK_TABLE_SIZE_88F-1;  //-2dB
-		//2 OFDM
-		else if ((TxRate >= MGN_6M) && (TxRate <= MGN_48M))
-			PwrTrackingLimit_OFDM = 36; //+3dB
-		else if (TxRate == MGN_54M)
-			PwrTrackingLimit_OFDM = 34; //+2dB
-
-		//2 HT
-		else if ((TxRate >= MGN_MCS0) && (TxRate <= MGN_MCS2)) //QPSK/BPSK
-			PwrTrackingLimit_OFDM = 38; //+4dB
-		else if ((TxRate >= MGN_MCS3) && (TxRate <= MGN_MCS4)) //16QAM
-			PwrTrackingLimit_OFDM = 36; //+3dB
-		else if ((TxRate >= MGN_MCS5) && (TxRate <= MGN_MCS7)) //64QAM
-			PwrTrackingLimit_OFDM = 34; //+2dB
-
-		else
-			PwrTrackingLimit_OFDM = pRFCalibrateInfo->DefaultOfdmIndex;   //Default OFDM index = 30
-	}
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("TxRate=0x%x, PwrTrackingLimit=%d\n", TxRate, PwrTrackingLimit_OFDM));
+	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("PwrTrackingLimit=%d\n", PwrTrackingLimit_OFDM));
 
 	RT_TRACE(COMP_CMD, DBG_LOUD, ("Method=%d\n", Method));
 
