@@ -87,34 +87,21 @@ void setIqkMatrix_8188F(
 			IqkResult_Y = IqkResult_Y | 0xFFFFFC00;
 		ele_C = ((IqkResult_Y * ele_D) >> 8) & 0x000003FF;
 
-		if (RFPath == ODM_RF_PATH_A)
-			switch (RFPath) {
-			case ODM_RF_PATH_A:
-				//wirte new elements A, C, D to regC80 and regC94, element B is always 0
-				value32 = (ele_D << 22) | ((ele_C & 0x3F) << 16) | ele_A;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, bMaskDWord, value32);
+		switch (RFPath) {
+		case ODM_RF_PATH_A:
+			//wirte new elements A, C, D to regC80 and regC94, element B is always 0
+			value32 = (ele_D << 22) | ((ele_C & 0x3F) << 16) | ele_A;
+			ODM_SetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, bMaskDWord, value32);
 
-				value32 = (ele_C & 0x000003C0) >> 6;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_XCTxAFE, bMaskH4Bits, value32);
+			value32 = (ele_C & 0x000003C0) >> 6;
+			ODM_SetBBReg(pDM_Odm, rOFDM0_XCTxAFE, bMaskH4Bits, value32);
 
-				value32 = ((IqkResult_X * ele_D) >> 7) & 0x01;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT24, value32);
-				break;
-			case ODM_RF_PATH_B:
-				//wirte new elements A, C, D to regC88 and regC9C, element B is always 0
-				value32 = (ele_D << 22) | ((ele_C & 0x3F) << 16) | ele_A;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_XBTxIQImbalance, bMaskDWord, value32);
-
-				value32 = (ele_C & 0x000003C0) >> 6;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_XDTxAFE, bMaskH4Bits, value32);
-
-				value32 = ((IqkResult_X * ele_D) >> 7) & 0x01;
-				ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT28, value32);
-
-				break;
-			default:
-				break;
-			}
+			value32 = ((IqkResult_X * ele_D) >> 7) & 0x01;
+			ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT24, value32);
+			break;
+		default:
+			break;
+		}
 	} else {
 		switch (RFPath) {
 		case ODM_RF_PATH_A:
