@@ -74,7 +74,7 @@ void setIqkMatrix_8188F(
 	else if (OFDM_index < 0)
 		OFDM_index = 0;
 
-	ele_D = (OFDMSwingTable_New[OFDM_index] & 0xFFC00000) >> 22;
+	ele_D = (OFDMSwingTable[OFDM_index] & 0xFFC00000) >> 22;
 
 	//new element A = element D x X
 	if ((IqkResult_X != 0) && (*(pDM_Odm->pBandType) == ODM_BAND_2_4G)) {
@@ -118,13 +118,13 @@ void setIqkMatrix_8188F(
 	} else {
 		switch (RFPath) {
 		case ODM_RF_PATH_A:
-			ODM_SetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, bMaskDWord, OFDMSwingTable_New[OFDM_index]);
+			ODM_SetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, bMaskDWord, OFDMSwingTable[OFDM_index]);
 			ODM_SetBBReg(pDM_Odm, rOFDM0_XCTxAFE, bMaskH4Bits, 0x00);
 			ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT24, 0x00);
 			break;
 
 		case ODM_RF_PATH_B:
-			ODM_SetBBReg(pDM_Odm, rOFDM0_XBTxIQImbalance, bMaskDWord, OFDMSwingTable_New[OFDM_index]);
+			ODM_SetBBReg(pDM_Odm, rOFDM0_XBTxIQImbalance, bMaskDWord, OFDMSwingTable[OFDM_index]);
 			ODM_SetBBReg(pDM_Odm, rOFDM0_XDTxAFE, bMaskH4Bits, 0x00);
 			ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT28, 0x00);
 			break;

@@ -28,7 +28,7 @@
 // Global var
 //============================================================
 
-u4Byte OFDMSwingTable_New[OFDM_TABLE_SIZE] = {
+u4Byte OFDMSwingTable[OFDM_TABLE_SIZE] = {
 	0x0b40002d, // 0,  -15.0dB	
 	0x0c000030, // 1,  -14.5dB
 	0x0cc00033, // 2,  -14.0dB
@@ -170,7 +170,7 @@ getSwingIndex(
 
 	bbSwing = PHY_QueryBBReg(Adapter, rOFDM0_XATxIQImbalance, 0xFFC00000);
 
-	pSwingTable = OFDMSwingTable_New;
+	pSwingTable = OFDMSwingTable;
 	swingTableSize = OFDM_TABLE_SIZE;
 
 	for (i = 0; i < swingTableSize; ++i) {
