@@ -171,10 +171,10 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	
 	pDM_Odm->RFCalibrateInfo.ThermalValue_AVG[pDM_Odm->RFCalibrateInfo.ThermalValue_AVG_index] = ThermalValue;
 	pDM_Odm->RFCalibrateInfo.ThermalValue_AVG_index++;
-	if(pDM_Odm->RFCalibrateInfo.ThermalValue_AVG_index == c.AverageThermalNum)   //Average times =  c.AverageThermalNum
+	if(pDM_Odm->RFCalibrateInfo.ThermalValue_AVG_index == AVG_THERMAL_NUM_8188F)   //Average times =  c.AverageThermalNum
 		pDM_Odm->RFCalibrateInfo.ThermalValue_AVG_index = 0;
 
-	for(i = 0; i < c.AverageThermalNum; i++)
+	for(i = 0; i < AVG_THERMAL_NUM_8188F; i++)
 	{
 		if(pDM_Odm->RFCalibrateInfo.ThermalValue_AVG[i])
 		{
