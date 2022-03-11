@@ -222,21 +222,13 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	if (delta > 0 && pDM_Odm->RFCalibrateInfo.TxPowerTrackControl)
 	{
 		//"delta" here is used to record the absolute value of differrence.
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))			
 	    delta = ThermalValue > pHalData->EEPROMThermalMeter?(ThermalValue - pHalData->EEPROMThermalMeter):(pHalData->EEPROMThermalMeter - ThermalValue);		
-#else
-	    delta = (ThermalValue > pDM_Odm->priv->pmib->dot11RFEntry.ther)?(ThermalValue - pDM_Odm->priv->pmib->dot11RFEntry.ther):(pDM_Odm->priv->pmib->dot11RFEntry.ther - ThermalValue);		
-#endif
 		if (delta >= TXPWR_TRACK_TABLE_SIZE)
 			delta = TXPWR_TRACK_TABLE_SIZE - 1;
 
 		//4 7.1 The Final Power Index = BaseIndex + PowerIndexOffset
 		
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))				
 		if(ThermalValue > pHalData->EEPROMThermalMeter) {
-#else
-		if(ThermalValue > pDM_Odm->priv->pmib->dot11RFEntry.ther) {
-#endif
 			for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)  {
 				pDM_Odm->RFCalibrateInfo.DeltaPowerIndexLast[p] = pDM_Odm->RFCalibrateInfo.DeltaPowerIndex[p];	/* recording power index offset */
 				switch (p) {
