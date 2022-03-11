@@ -508,7 +508,6 @@ void ConfigureTxpowerTrack_8188F(
 	pConfig->SwingTableSize_OFDM = OFDM_TABLE_SIZE;
 	pConfig->Threshold_IQK = IQK_THRESHOLD;
 	pConfig->AverageThermalNum = AVG_THERMAL_NUM_8188F;
-	pConfig->RfPathCount = MAX_PATH_NUM_8188F;
 	pConfig->ThermalRegAddr = RF_T_METER_8188F;
 
 	pConfig->ODM_TxPwrTrackSetPwr = ODM_TxPwrTrackSetPwr_8188F;
