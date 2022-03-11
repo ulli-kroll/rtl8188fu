@@ -360,9 +360,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	}
 	
 	if ((pDM_Odm->RFCalibrateInfo.PowerIndexOffset[ODM_RF_PATH_A] != 0 ||
-		pDM_Odm->RFCalibrateInfo.PowerIndexOffset[ODM_RF_PATH_B] != 0 ||
-		pDM_Odm->RFCalibrateInfo.PowerIndexOffset[ODM_RF_PATH_C] != 0 ||
-		pDM_Odm->RFCalibrateInfo.PowerIndexOffset[ODM_RF_PATH_D] != 0) && 
+		pDM_Odm->RFCalibrateInfo.PowerIndexOffset[ODM_RF_PATH_B] != 0) && 
 		pDM_Odm->RFCalibrateInfo.TxPowerTrackControl && (pHalData->EEPROMThermalMeter != 0xff))
 	{
 		//4 7.2 Configure the Swing Table to adjust Tx Power.
