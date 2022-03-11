@@ -1227,8 +1227,7 @@ phy_GetChnlIndex(
 	return bIn24G;
 }
 
-u8
-PHY_GetTxPowerIndexBase(
+u8 rtl8188fu_phy_get_txpower_index_base(
 	IN	PADAPTER		pAdapter,
 	IN	u8				RFPath,
 	IN	u8				Rate,	
