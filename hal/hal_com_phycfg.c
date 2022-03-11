@@ -1124,42 +1124,42 @@ PHY_SetTxPowerIndexByRateSection(
 	{
 		u8	cckRates[]   = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M};
 		if ( pHalData->CurrentBandType == BAND_ON_2_4G )
-			PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+			rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 									  cckRates, sizeof(cckRates)/sizeof(u8) );
 			
 	}
 	else if ( RateSection == OFDM )
 	{
 		u8	ofdmRates[]  = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 									 ofdmRates, sizeof(ofdmRates)/sizeof(u8));
 		
 	}
 	else if ( RateSection == HT_MCS0_MCS7 )
 	{
 		u8	htRates1T[]  = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 									 htRates1T, sizeof(htRates1T)/sizeof(u8));
 
 	}
 	else if ( RateSection == HT_MCS8_MCS15 )
 	{
 		u8	htRates2T[]  = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  	 htRates2T, sizeof(htRates2T)/sizeof(u8));
 		
 	}
 	else if ( RateSection == HT_MCS16_MCS23 )
 	{
 		u1Byte	htRates3T[]  = {MGN_MCS16, MGN_MCS17, MGN_MCS18, MGN_MCS19, MGN_MCS20, MGN_MCS21, MGN_MCS22, MGN_MCS23};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  	 htRates3T, sizeof(htRates3T)/sizeof(u1Byte));
 		
 	}
 	else if ( RateSection == HT_MCS24_MCS31 )
 	{
 		u1Byte	htRates4T[]  = {MGN_MCS24, MGN_MCS25, MGN_MCS26, MGN_MCS27, MGN_MCS28, MGN_MCS29, MGN_MCS30, MGN_MCS31};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  	 htRates4T, sizeof(htRates4T)/sizeof(u1Byte));
 		
 	}
@@ -1167,7 +1167,7 @@ PHY_SetTxPowerIndexByRateSection(
 	{	
 		u8	vhtRates1T[] = {MGN_VHT1SS_MCS0, MGN_VHT1SS_MCS1, MGN_VHT1SS_MCS2, MGN_VHT1SS_MCS3, MGN_VHT1SS_MCS4, 
                             	MGN_VHT1SS_MCS5, MGN_VHT1SS_MCS6, MGN_VHT1SS_MCS7, MGN_VHT1SS_MCS8, MGN_VHT1SS_MCS9};
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 									vhtRates1T, sizeof(vhtRates1T)/sizeof(u8));
 
 	}
@@ -1176,7 +1176,7 @@ PHY_SetTxPowerIndexByRateSection(
 		u8	vhtRates2T[] = {MGN_VHT2SS_MCS0, MGN_VHT2SS_MCS1, MGN_VHT2SS_MCS2, MGN_VHT2SS_MCS3, MGN_VHT2SS_MCS4, 
                             	MGN_VHT2SS_MCS5, MGN_VHT2SS_MCS6, MGN_VHT2SS_MCS7, MGN_VHT2SS_MCS8, MGN_VHT2SS_MCS9};
 
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  vhtRates2T, sizeof(vhtRates2T)/sizeof(u8));
 	}
 	else if ( RateSection == VHT_3SSMCS0_3SSMCS9 )
@@ -1184,7 +1184,7 @@ PHY_SetTxPowerIndexByRateSection(
 		u1Byte	vhtRates3T[] = {MGN_VHT3SS_MCS0, MGN_VHT3SS_MCS1, MGN_VHT3SS_MCS2, MGN_VHT3SS_MCS3, MGN_VHT3SS_MCS4, 
                             	MGN_VHT3SS_MCS5, MGN_VHT3SS_MCS6, MGN_VHT3SS_MCS7, MGN_VHT3SS_MCS8, MGN_VHT3SS_MCS9};
 
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  vhtRates3T, sizeof(vhtRates3T)/sizeof(u1Byte));
 	}
 	else if ( RateSection == VHT_4SSMCS0_4SSMCS9 )
@@ -1192,7 +1192,7 @@ PHY_SetTxPowerIndexByRateSection(
 		u1Byte	vhtRates4T[] = {MGN_VHT4SS_MCS0, MGN_VHT4SS_MCS1, MGN_VHT4SS_MCS2, MGN_VHT4SS_MCS3, MGN_VHT4SS_MCS4, 
                             	MGN_VHT4SS_MCS5, MGN_VHT4SS_MCS6, MGN_VHT4SS_MCS7, MGN_VHT4SS_MCS8, MGN_VHT4SS_MCS9};
 
-		PHY_SetTxPowerIndexByRateArray( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
 								  vhtRates4T, sizeof(vhtRates4T)/sizeof(u1Byte));
 	}
 	else
@@ -1651,7 +1651,7 @@ PHY_SetTxPowerLevelByPath(
 }
 
 VOID
-PHY_SetTxPowerIndexByRateArray(
+rtl8188fu_phy_set_txpower_index_by_rate_array(
 	IN	PADAPTER			pAdapter,
 	IN 	u8					RFPath,
 	IN	CHANNEL_WIDTH		BandWidth,	

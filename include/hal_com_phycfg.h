@@ -152,7 +152,7 @@ PHY_SetTxPowerLevelByPath(
 	);
 
 VOID 
-PHY_SetTxPowerIndexByRateArray(
+rtl8188fu_phy_set_txpower_index_by_rate_array(
 	IN	PADAPTER		pAdapter,
 	IN	u8				RFPath,
 	IN	CHANNEL_WIDTH	BandWidth,	
