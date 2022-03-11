@@ -905,7 +905,7 @@ phy_SpurCalibration_8188F(
 	u4Byte		reg948;
 
 	/* add for notch */
-	u4Byte				wlan_channel, CurrentChannel, Is40MHz;
+	u4Byte				wlan_channel, CurrentChannel;
 	HAL_DATA_TYPE		*pHalData	= GET_HAL_DATA(pAdapter);
 	PDM_ODM_T		pDM_Odm = &(pHalData->odmpriv);
 
