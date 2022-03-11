@@ -112,7 +112,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	u1Byte			ThermalValue = 0, delta, delta_LCK, delta_IQK, p = 0, i = 0;
-	s1Byte			diff_DPK[4] = {0};
 	u1Byte			ThermalValue_AVG_count = 0;
 	u4Byte			ThermalValue_AVG = 0;	
 
@@ -193,9 +192,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("no PG, use ThermalValue for IQK\n"));
 	}
 	
-	for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-		diff_DPK[p] = (s1Byte)ThermalValue - (s1Byte)pDM_Odm->RFCalibrateInfo.DpkThermal[p];
-
 	/*4 6. If necessary, do LCK.*/	
 	if (!(pDM_Odm->SupportICType & ODM_RTL8821)) {
 
