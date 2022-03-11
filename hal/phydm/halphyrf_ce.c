@@ -447,40 +447,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		}
 	}	
 	if (!(pDM_Odm->SupportICType & ODM_RTL8814A)) {
-		if (pDM_Odm->RFCalibrateInfo.DpkThermal[ODM_RF_PATH_A] != 0) {
-			if (diff_DPK[ODM_RF_PATH_A] >= c.Threshold_DPK) { 
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xcc4, BIT14|BIT13|BIT12|BIT11|BIT10, (diff_DPK[ODM_RF_PATH_A] / c.Threshold_DPK));
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);
-			} else if ((diff_DPK[ODM_RF_PATH_A] <= -1 * c.Threshold_DPK)) {
-				s4Byte value = 0x20 + (diff_DPK[ODM_RF_PATH_A] / c.Threshold_DPK);
-
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xcc4, BIT14|BIT13|BIT12|BIT11|BIT10, value);
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);
-			} else {
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xcc4, BIT14|BIT13|BIT12|BIT11|BIT10, 0);
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);	
-			}
-		}
-		if (pDM_Odm->RFCalibrateInfo.DpkThermal[ODM_RF_PATH_B] != 0) {
-			if (diff_DPK[ODM_RF_PATH_B] >= c.Threshold_DPK) { 
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xec4, BIT14|BIT13|BIT12|BIT11|BIT10, (diff_DPK[ODM_RF_PATH_B] / c.Threshold_DPK));
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);
-			} else if ((diff_DPK[ODM_RF_PATH_B] <= -1 * c.Threshold_DPK)) {
-				s4Byte value = 0x20 + (diff_DPK[ODM_RF_PATH_B] / c.Threshold_DPK);	
-				
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xec4, BIT14|BIT13|BIT12|BIT11|BIT10, value);
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);
-			} else {
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1);
-				ODM_SetBBReg(pDM_Odm, 0xec4, BIT14|BIT13|BIT12|BIT11|BIT10, 0);
-				ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x0);	
-			}
-		}
 	}
 
 			

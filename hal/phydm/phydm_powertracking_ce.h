@@ -202,7 +202,6 @@ typedef struct ODM_RF_Calibration_Structure
 	u4Byte	TxLOK[2];
 	u4Byte  DpkTxAGC;
 	s4Byte  DpkGain;
-	u4Byte  DpkThermal[4];
 	s1Byte Modify_TxAGC_Value_OFDM;
 	s1Byte Modify_TxAGC_Value_CCK;
 }ODM_RF_CAL_T,*PODM_RF_CAL_T;
