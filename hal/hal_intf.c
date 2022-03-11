@@ -502,12 +502,6 @@ void	rtw_hal_set_chnl_bw(_adapter *padapter, u8 channel, CHANNEL_WIDTH Bandwidth
 	padapter->HalFunc.set_chnl_bw_handler(padapter, channel, Bandwidth, Offset40, Offset80);	
 }
 
-void	rtw_hal_set_tx_power_level(_adapter *padapter, u8 channel)
-{
-	if(padapter->HalFunc.set_tx_power_level_handler)
-		padapter->HalFunc.set_tx_power_level_handler(padapter, channel);
-}
-
 void	rtw_hal_get_tx_power_level(_adapter *padapter, s32 *powerlevel)
 {
 	if(padapter->HalFunc.get_tx_power_level_handler)
