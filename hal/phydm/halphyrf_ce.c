@@ -382,8 +382,8 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 			("\n\n========================================================================================================\n"));  
-		if(pDM_Odm->RFCalibrateInfo.CCK_index > c.SwingTableSize_CCK-1)
-			pDM_Odm->RFCalibrateInfo.CCK_index = c.SwingTableSize_CCK-1;
+		if(pDM_Odm->RFCalibrateInfo.CCK_index > CCK_TABLE_SIZE_88F-1)
+			pDM_Odm->RFCalibrateInfo.CCK_index = CCK_TABLE_SIZE_88F-1;
 		else if (pDM_Odm->RFCalibrateInfo.CCK_index <= 0)
 			pDM_Odm->RFCalibrateInfo.CCK_index = 0;
 	} else {
