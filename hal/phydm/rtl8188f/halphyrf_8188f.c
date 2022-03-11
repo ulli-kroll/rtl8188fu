@@ -125,21 +125,6 @@ void setIqkMatrix_8188F(
 				 (u4Byte)IqkResult_X, (u4Byte)IqkResult_Y, (u4Byte)ele_A, (u4Byte)ele_C, (u4Byte)ele_D, (u4Byte)IqkResult_X, (u4Byte)IqkResult_Y));
 }
 
-void DoIQK_8188F(
-	PVOID pDM_VOID,
-	u1Byte DeltaThermalIndex,
-	u1Byte ThermalValue,
-	u1Byte Threshold
-)
-{
-	PDM_ODM_T pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PADAPTER Adapter = pDM_Odm->Adapter;
-
-	pDM_Odm->RFCalibrateInfo.ThermalValue_IQK = ThermalValue;
-	PHY_IQCalibrate_8188F(Adapter, FALSE, FALSE);
-
-}
-
 /*-----------------------------------------------------------------------------
  * Function:	odm_TxPwrTrackSetPwr88E()
  *

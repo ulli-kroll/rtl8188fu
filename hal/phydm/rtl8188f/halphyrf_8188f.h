@@ -34,13 +34,6 @@ void ConfigureTxpowerTrack_8188F(
 	PTXPWRTRACK_CFG	pConfig
 	);
 
-void DoIQK_8188F(
-	PVOID		pDM_VOID,
-	u1Byte 		DeltaThermalIndex,
-	u1Byte		ThermalValue,	
-	u1Byte 		Threshold
-	);
-
 VOID
 ODM_TxPwrTrackSetPwr_8188F(
 	IN	PVOID		pDM_VOID,
