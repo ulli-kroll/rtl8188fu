@@ -508,7 +508,6 @@ void ConfigureTxpowerTrack_8188F(
 	pConfig->SwingTableSize_OFDM = OFDM_TABLE_SIZE;
 
 	pConfig->ODM_TxPwrTrackSetPwr = ODM_TxPwrTrackSetPwr_8188F;
-	pConfig->DoIQK = DoIQK_8188F;
 	pConfig->PHY_LCCalibrate = PHY_LCCalibrate_8188F;
 	pConfig->GetDeltaSwingTable = GetDeltaSwingTable_8188F;
 }

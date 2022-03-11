@@ -493,7 +493,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		/* Delta temperature is equal to or larger than 20 centigrade (When threshold is 8).*/
 		if (delta_IQK >= IQK_THRESHOLD) {
 			if (!pDM_Odm->RFCalibrateInfo.bIQKInProgress) 
-				(*c.DoIQK)(pDM_Odm, delta_IQK, ThermalValue, 8);
+				DoIQK_8188F(pDM_Odm, delta_IQK, ThermalValue, 8);
 		}
 	}	
 	if (!(pDM_Odm->SupportICType & ODM_RTL8814A)) {
