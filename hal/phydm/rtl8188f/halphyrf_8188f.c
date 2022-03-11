@@ -506,7 +506,6 @@ void ConfigureTxpowerTrack_8188F(
 	RT_TRACE(COMP_CMD, DBG_LOUD, ("ConfigureTxpowerTrack_8188F ====> \n"));
 	pConfig->SwingTableSize_CCK = CCK_TABLE_SIZE_88F;
 	pConfig->SwingTableSize_OFDM = OFDM_TABLE_SIZE;
-	pConfig->Threshold_IQK = IQK_THRESHOLD;
 
 	pConfig->ODM_TxPwrTrackSetPwr = ODM_TxPwrTrackSetPwr_8188F;
 	pConfig->DoIQK = DoIQK_8188F;

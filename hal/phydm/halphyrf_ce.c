@@ -223,9 +223,9 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		
 		/* 4 6. If necessary, do LCK.*/
 		
-		if (delta_LCK >= c.Threshold_IQK) {
+		if (delta_LCK >= IQK_THRESHOLD) {
 			/* Delta temperature is equal to or larger than 20 centigrade.*/
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("delta_LCK(%d) >= Threshold_IQK(%d)\n", delta_LCK, c.Threshold_IQK));
+			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("delta_LCK(%d) >= Threshold_IQK(%d)\n", delta_LCK, IQK_THRESHOLD));
 			pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
 			if (c.PHY_LCCalibrate)
 				(*c.PHY_LCCalibrate)(pDM_Odm);
@@ -491,7 +491,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 	if (!IS_HARDWARE_TYPE_8723B(Adapter) && !IS_HARDWARE_TYPE_8192E(Adapter) && !IS_HARDWARE_TYPE_8703B(Adapter)) {
 		/* Delta temperature is equal to or larger than 20 centigrade (When threshold is 8).*/
-		if (delta_IQK >= c.Threshold_IQK) {
+		if (delta_IQK >= IQK_THRESHOLD) {
 			if (!pDM_Odm->RFCalibrateInfo.bIQKInProgress) 
 				(*c.DoIQK)(pDM_Odm, delta_IQK, ThermalValue, 8);
 		}

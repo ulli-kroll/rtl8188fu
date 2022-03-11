@@ -44,7 +44,6 @@ typedef VOID	(*FuncSwing8814only)(PVOID, pu1Byte*, pu1Byte*, pu1Byte*, pu1Byte*)
 typedef struct _TXPWRTRACK_CFG {
 	u1Byte 		SwingTableSize_CCK;	
 	u1Byte 		SwingTableSize_OFDM;
-	u1Byte 		Threshold_IQK;	
 	u1Byte		Threshold_DPK;
 	FuncSetPwr 	ODM_TxPwrTrackSetPwr;
 	FuncIQK 	DoIQK;
