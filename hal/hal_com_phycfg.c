@@ -209,51 +209,6 @@ u8 phy_get_target_tx_power(
 	return target_power;
 }
 
-#ifdef TX_POWER_BY_RATE_OLD
-VOID
-phy_StoreTxPowerByRateBaseOld(	
-	IN	PADAPTER	pAdapter
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	u16			rawValue = 0;
-	u8			base = 0;
-	u8			path = 0;
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][7] >> 8 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, CCK, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][1] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, OFDM, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][3] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, HT_MCS0_MCS7, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][5] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, HT_MCS8_MCS15, RF_2TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][7] & 0xFF ); 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, CCK, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][9] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, OFDM, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][11] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, HT_MCS0_MCS7, RF_1TX, base );
-
-	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][13] >> 24 ) & 0xFF; 
-	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
-	phy_SetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, HT_MCS8_MCS15, RF_2TX, base );
-}
-#endif /* TX_POWER_BY_RATE_OLD */
-
 VOID
 phy_StoreTxPowerByRateBase(	
 	IN	PADAPTER	pAdapter
@@ -298,53 +253,6 @@ phy_StoreTxPowerByRateBase(
 		}
 	}
 }
-
-#ifdef TX_POWER_BY_RATE_OLD
-u8
-PHY_GetRateSectionIndexOfTxPowerByRate(
-	IN	PADAPTER	pAdapter,
-	IN	u32			RegAddr,
-	IN	u32			BitMask
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
-	u8 			index = 0;
-	
-	if ( pDM_Odm->PhyRegPgVersion == 0 )
-	{
-		switch ( RegAddr )
-		{
-			case rTxAGC_A_Rate18_06:	 index = 0;		break;
-			case rTxAGC_A_Rate54_24:	 index = 1;		break;
-			case rTxAGC_A_CCK1_Mcs32:	 index = 6;		break;
-			case rTxAGC_B_CCK11_A_CCK2_11:
-				if ( BitMask == bMaskH3Bytes )
-					index = 7;
-				else if ( BitMask == 0x000000ff )
-					index = 15;
-				break;
-				
-			case rTxAGC_A_Mcs03_Mcs00:	 index = 2;		break;
-			case rTxAGC_A_Mcs07_Mcs04:	 index = 3;		break;
-			case rTxAGC_A_Mcs11_Mcs08:	 index = 4;		break;
-			case rTxAGC_A_Mcs15_Mcs12:	 index = 5;		break;
-			case rTxAGC_B_Rate18_06:	 index = 8;		break;
-			case rTxAGC_B_Rate54_24:	 index = 9;		break;
-			case rTxAGC_B_CCK1_55_Mcs32: index = 14;	break;
-			case rTxAGC_B_Mcs03_Mcs00:	 index = 10;	break;
-			case rTxAGC_B_Mcs07_Mcs04:	 index = 11;	break;
-			case rTxAGC_B_Mcs11_Mcs08:	 index = 12;	break;
-			case rTxAGC_B_Mcs15_Mcs12:	 index = 13;	break;
-			default:
-				DBG_871X("Invalid RegAddr 0x3%x in PHY_GetRateSectionIndexOfTxPowerByRate()", RegAddr );
-				break;
-		};
-	}
-	
-	return index;
-}
-#endif /* TX_POWER_BY_RATE_OLD */
 
 VOID
 PHY_GetRateValuesOfTxPowerByRate(
@@ -813,24 +721,6 @@ PHY_StoreTxPowerByRateNew(
 	}
 }
 
-#ifdef TX_POWER_BY_RATE_OLD
-void 
-PHY_StoreTxPowerByRateOld(
-	IN	PADAPTER		pAdapter,
-	IN	u32				RegAddr,
-	IN	u32				BitMask,
-	IN	u32				Data
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	u8			index = PHY_GetRateSectionIndexOfTxPowerByRate( pAdapter, RegAddr, BitMask );
-
-	pHalData->MCSTxPowerLevelOriginalOffset[pHalData->pwrGroupCnt][index] = Data;
-	//DBG_871X("MCSTxPowerLevelOriginalOffset[%d][0] = 0x%x\n", pHalData->pwrGroupCnt,
-	//	pHalData->MCSTxPowerLevelOriginalOffset[pHalData->pwrGroupCnt][0]);
-}
-#endif /* TX_POWER_BY_RATE_OLD */
-
 VOID
 PHY_InitTxPowerByRate(
 	IN	PADAPTER	pAdapter
@@ -873,128 +763,10 @@ PHY_StoreTxPowerByRate(
 	{
 		PHY_StoreTxPowerByRateNew( pAdapter, Band, RfPath, TxNum, RegAddr, BitMask, Data );
 	}
-#ifdef TX_POWER_BY_RATE_OLD
-	else if ( pDM_Odm->PhyRegPgVersion == 0 )
-	{
-		PHY_StoreTxPowerByRateOld( pAdapter, RegAddr, BitMask, Data );
-	
-		if ( RegAddr == rTxAGC_A_Mcs15_Mcs12 && pHalData->rf_type == RF_1T1R )
-			pHalData->pwrGroupCnt++;
-		else if ( RegAddr == rTxAGC_B_Mcs15_Mcs12 && pHalData->rf_type != RF_1T1R )
-			pHalData->pwrGroupCnt++;
-	}
-#endif
 	else
 		DBG_871X("Invalid PHY_REG_PG.txt version %d\n",  pDM_Odm->PhyRegPgVersion );
 	
 }
-
-#ifdef TX_POWER_BY_RATE_OLD
-VOID 
-phy_ConvertTxPowerByRateByBase(
-	IN	u32*		pData,
-	IN	u8			Start,
-	IN	u8			End,
-	IN	u8			BaseValue
-	)
-{
-	s8	i = 0;
-	u8	TempValue = 0;
-	u32	TempData = 0;
-	
-	for ( i = 3; i >= 0; --i )
-	{
-		if ( i >= Start && i <= End )
-		{
-			// Get the exact value
-			TempValue = ( u8 ) ( *pData >> ( i * 8 ) ) & 0xF; 
-			TempValue += ( ( u8 ) ( ( *pData >> ( i * 8 + 4 ) ) & 0xF ) ) * 10; 
-			
-			// Change the value to a relative value
-			TempValue = ( TempValue > BaseValue ) ? TempValue - BaseValue : BaseValue - TempValue;
-		}
-		else
-		{
-			TempValue = ( u8 ) ( *pData >> ( i * 8 ) ) & 0xFF;
-		}
-		
-		TempData <<= 8;
-		TempData |= TempValue;
-	}
-
-	*pData = TempData;
-}
-
-
-VOID
-PHY_ConvertTxPowerByRateInDbmToRelativeValuesOld(
-	IN	PADAPTER	pAdapter
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	u8			base = 0;
-	
-	//DBG_871X("===>PHY_ConvertTxPowerByRateInDbmToRelativeValuesOld()\n" );
-	
-	// CCK
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, CCK );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][6] ), 1, 1, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][7] ), 1, 3, base );
-
-	// OFDM
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, OFDM );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][0] ), 0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][1] ),	0, 3, base );
-
-	// HT MCS0~7
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, HT_MCS0_MCS7 );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][2] ),	0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][3] ),	0, 3, base );
-
-	// HT MCS8~15
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_2TX, HT_MCS8_MCS15 );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][4] ), 0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][5] ), 0, 3, base );
-
-	// CCK
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, RF_1TX, CCK );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][14] ), 1, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][15] ), 0, 0, base );
-
-	// OFDM
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, RF_1TX, OFDM );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][8] ), 0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][9] ),	0, 3, base );
-
-	// HT MCS0~7
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, RF_1TX, HT_MCS0_MCS7 );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][10] ), 0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][11] ), 0, 3, base );
-
-	// HT MCS8~15
-	base = PHY_GetTxPowerByRateBase( pAdapter, BAND_ON_2_4G, ODM_RF_PATH_B, RF_2TX, HT_MCS8_MCS15 );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][12] ), 0, 3, base );
-	phy_ConvertTxPowerByRateByBase( 
-			&( pHalData->MCSTxPowerLevelOriginalOffset[0][13] ), 0, 3, base );
-
-	//DBG_871X("<===PHY_ConvertTxPowerByRateInDbmToRelativeValuesOld()\n" );
-}
-#endif /* TX_POWER_BY_RATE_OLD */
 
 VOID
 phy_ConvertTxPowerByRateInDbmToRelativeValues(
