@@ -117,7 +117,7 @@ PHY_SetTxPowerIndexByRateSection(
 	);
 
 s8
-_PHY_GetTxPowerByRate(
+_rtl8188fu_get_tx_power_by_rate(
 	IN	PADAPTER	pAdapter,
 	IN	u8			Band,
 	IN	u8			RFPath,

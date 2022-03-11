@@ -292,7 +292,7 @@ phy_StoreTxPowerByRateBase(
 				if (band == BAND_ON_5G && IS_CCK_RATE_SECTION(rs))
 					continue;
 
-				base = _PHY_GetTxPowerByRate(pAdapter, band, path, tx_num, rate_sec_base[rs]);
+				base = _rtl8188fu_get_tx_power_by_rate(pAdapter, band, path, tx_num, rate_sec_base[rs]);
 				phy_SetTxPowerByRateBase(pAdapter, band, path, rs, tx_num, base);
 			}
 		}
@@ -1536,7 +1536,7 @@ PHY_GetRateIndexOfTxPowerByRate(
 }
 
 s8
-_PHY_GetTxPowerByRate(
+_rtl8188fu_get_tx_power_by_rate(
 	IN	PADAPTER	pAdapter, 
 	IN	u8			Band, 
 	IN	u8			RFPath, 
@@ -1584,7 +1584,7 @@ PHY_GetTxPowerByRate(
 	if (!phy_is_tx_power_by_rate_needed(pAdapter))
 		return 0;
 
-	return _PHY_GetTxPowerByRate(pAdapter, Band, RFPath, TxNum, Rate);
+	return _rtl8188fu_get_tx_power_by_rate(pAdapter, Band, RFPath, TxNum, Rate);
 }
 
 VOID
