@@ -762,48 +762,6 @@ void SelectChannel(_adapter *padapter, unsigned char channel)
 		
 }
 
-void SetBWMode(_adapter *padapter, unsigned short bwmode, unsigned char channel_offset)
-{
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-
-	_enter_critical_mutex(&(adapter_to_dvobj(padapter)->setbw_mutex), NULL);
-
-#ifdef CONFIG_DFS_MASTER
-{
-	struct rf_ctl_t *rfctl = adapter_to_rfctl(padapter);
-	bool ori_overlap_radar_detect_ch = rtw_rfctl_overlap_radar_detect_ch(rfctl);
-	bool new_overlap_radar_detect_ch = _rtw_rfctl_overlap_radar_detect_ch(rfctl
-		, adapter_to_dvobj(padapter)->oper_channel, bwmode, channel_offset);
-
-	if (!ori_overlap_radar_detect_ch && new_overlap_radar_detect_ch)
-		rtw_odm_radar_detect_enable(padapter);
-
-	if (new_overlap_radar_detect_ch && IS_UNDER_CAC(rfctl)) {
-		u8 pause = 0xFF;
-
-		rtw_hal_set_hwreg(padapter, HW_VAR_TXPAUSE, &pause);
-	}
-#endif /* CONFIG_DFS_MASTER */
-
-	//saved bw info
-	rtw_set_oper_bw(padapter, bwmode);
-	rtw_set_oper_choffset(padapter, channel_offset);
-
-	rtw_hal_set_bwmode(padapter, (CHANNEL_WIDTH)bwmode, channel_offset);
-
-#ifdef CONFIG_DFS_MASTER
-	if (ori_overlap_radar_detect_ch && !new_overlap_radar_detect_ch) {
-		u8 pause = 0x00;
-
-		rtw_odm_radar_detect_disable(padapter);
-		rtw_hal_set_hwreg(padapter, HW_VAR_TXPAUSE, &pause);
-	}
-}
-#endif /* CONFIG_DFS_MASTER */
-
-	_exit_critical_mutex(&(adapter_to_dvobj(padapter)->setbw_mutex), NULL);
-}
-
 void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char channel_offset, unsigned short bwmode)
 {
 	u8 center_ch, chnl_offset80 = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
