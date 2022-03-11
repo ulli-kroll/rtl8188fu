@@ -444,18 +444,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 }
 
 
-//3============================================================
-//3 IQ Calibration
-//3============================================================
-
-VOID
-ODM_ResetIQKResult(
-	IN		PVOID					pDM_VOID
-)
-{
-	return;
-
-}
 u1Byte ODM_GetRightChnlPlaceforIQK(u1Byte chnl)
 {
 	u1Byte	channel_all[ODM_TARGET_CHNL_NUM_2G_5G] = 

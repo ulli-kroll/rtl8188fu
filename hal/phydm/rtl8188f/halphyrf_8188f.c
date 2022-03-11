@@ -135,10 +135,6 @@ void DoIQK_8188F(
 	PDM_ODM_T pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PADAPTER Adapter = pDM_Odm->Adapter;
 
-	ODM_ResetIQKResult(pDM_Odm);
-
-
-
 	pDM_Odm->RFCalibrateInfo.ThermalValue_IQK = ThermalValue;
 	PHY_IQCalibrate_8188F(Adapter, FALSE, FALSE);
 
