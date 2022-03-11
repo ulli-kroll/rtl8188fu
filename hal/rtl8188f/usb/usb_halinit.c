@@ -1842,15 +1842,6 @@ u32 rtl8188fu_hal_deinit(PADAPTER Adapter)
 	rtw_write32(Adapter, REG_HIMR1_8188F, IMR_DISABLED_8188F);
 #endif
 
-#ifdef SUPPORT_HW_RFOFF_DETECTED
-	DBG_871X("%s: bkeepfwalive(%x)\n", __func__, pwrctl->bkeepfwalive);
-
-	if (pwrctl->bkeepfwalive) {
-		_ps_close_RF(Adapter);
-		if ((pwrctl->bHWPwrPindetect) && (pwrctl->bHWPowerdown))
-			rtl8188fu_hw_power_down(Adapter);
-	} else
-#endif
 	{
 		if (rtw_is_hw_init_completed(Adapter)) {
 			rtw_hal_power_off(Adapter);
@@ -2315,15 +2306,6 @@ static u8 rtl8188fu_ps_func(PADAPTER Adapter, HAL_INTF_PS_FUNC efunc_id, u8 *val
 {
 	u8 bResult = _TRUE;
 	switch (efunc_id) {
-
-#if defined(CONFIG_AUTOSUSPEND) && defined(SUPPORT_HW_RFOFF_DETECTED)
-	case HAL_USB_SELECT_SUSPEND: {
-		u8 bfwpoll = *((u8 *)val);
-
-		rtl8188f_set_FwSelectSuspend_cmd(Adapter, bfwpoll , 500); /*note fw to support hw power down ping detect */
-	}
-	break;
-#endif /*CONFIG_AUTOSUSPEND && SUPPORT_HW_RFOFF_DETECTED */
 
 	default:
 		break;

@@ -86,7 +86,6 @@
 /*
  * Hareware/Firmware Related Configure
  */
-/* #define SUPPORT_HW_RFOFF_DETECTED */
 
 #define CONFIG_LED
 #ifdef CONFIG_LED

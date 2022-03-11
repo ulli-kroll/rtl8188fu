@@ -567,122 +567,6 @@ static void usb_intf_stop(_adapter *padapter)
 
 }
 
-#ifdef SUPPORT_HW_RFOFF_DETECTED
-int rtw_hw_suspend(_adapter *padapter )
-{
-	struct pwrctrl_priv *pwrpriv;
-	struct usb_interface *pusb_intf;
-	struct net_device *pnetdev;
-
-	_func_enter_;
-	if(NULL==padapter)
-		goto error_exit;
-
-	if ((_FALSE == padapter->bup) || RTW_CANNOT_RUN(padapter)) {
-		DBG_871X("padapter->bup=%d bDriverStopped=%s bSurpriseRemoved = %s\n"
-			, padapter->bup
-			, rtw_is_drv_stopped(padapter)?"True":"False"
-			, rtw_is_surprise_removed(padapter)?"True":"False");
-		goto error_exit;
-	}
-	
-	pwrpriv = adapter_to_pwrctl(padapter);
-	pusb_intf = adapter_to_dvobj(padapter)->pusbintf;
-	pnetdev = padapter->pnetdev;
-	
-	LeaveAllPowerSaveMode(padapter);
-
-	DBG_871X("==> rtw_hw_suspend\n");
-	_enter_pwrlock(&pwrpriv->lock);
-	pwrpriv->bips_processing = _TRUE;
-	//padapter->net_closed = _TRUE;
-	//s1.
-	if(pnetdev)
-	{
-		netif_carrier_off(pnetdev);
-		rtw_netif_stop_queue(pnetdev);
-	}
-
-	//s2.
-	rtw_disassoc_cmd(padapter, 500, _FALSE);
-
-	//s2-2.  indicate disconnect to os
-	//rtw_indicate_disconnect(padapter);
-	{
-		struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
-		if(check_fwstate(pmlmepriv, _FW_LINKED))
-		{
-			_clr_fwstate_(pmlmepriv, _FW_LINKED);
-			rtw_led_control(padapter, LED_CTL_NO_LINK);
-
-			rtw_os_indicate_disconnect(padapter, 0, _FALSE);
-
-			#ifdef CONFIG_LPS
-			//donnot enqueue cmd
-			rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_DISCONNECT, 0);
-			#endif
-		}
-	}
-	//s2-3.
-	rtw_free_assoc_resources(padapter, 1);
-
-	//s2-4.
-	rtw_free_network_queue(padapter,_TRUE);
-	#ifdef CONFIG_IPS
-	rtw_ips_dev_unload(padapter);
-	#endif
-	pwrpriv->rf_pwrstate = rf_off;
-	pwrpriv->bips_processing = _FALSE;
-	_exit_pwrlock(&pwrpriv->lock);
-	
-	_func_exit_;
-	return 0;
-
-error_exit:
-	DBG_871X("%s, failed \n",__FUNCTION__);
-	return (-1);
-
-}
-
-int rtw_hw_resume(_adapter *padapter)
-{
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
-	struct usb_interface *pusb_intf = adapter_to_dvobj(padapter)->pusbintf;
-	struct net_device *pnetdev = padapter->pnetdev;
-
-	_func_enter_;	
-	DBG_871X("==> rtw_hw_resume\n");
-	_enter_pwrlock(&pwrpriv->lock);
-	pwrpriv->bips_processing = _TRUE;
-	rtw_reset_drv_sw(padapter);
-
-	if(pm_netdev_open(pnetdev,_FALSE) != 0)
-	{
-		_exit_pwrlock(&pwrpriv->lock);
-		goto error_exit;
-	}
-
-	netif_device_attach(pnetdev);
-	netif_carrier_on(pnetdev);
-
-	rtw_netif_wake_queue(pnetdev);
-
-	pwrpriv->bkeepfwalive = _FALSE;
-	pwrpriv->brfoffbyhw = _FALSE;
-
-	pwrpriv->rf_pwrstate = rf_on;
-	pwrpriv->bips_processing = _FALSE;
-	_exit_pwrlock(&pwrpriv->lock);
-
-	_func_exit_;
-
-	return 0;
-error_exit:
-	DBG_871X("%s, Open net dev failed \n",__FUNCTION__);
-	return (-1);
-}
-#endif
-
 static int rtw_suspend(struct usb_interface *pusb_intf, pm_message_t message)
 {
 	struct dvobj_priv *dvobj;
@@ -707,14 +591,6 @@ static int rtw_suspend(struct usb_interface *pusb_intf, pm_message_t message)
 #ifdef CONFIG_AUTOSUSPEND
 		if(pwrpriv->bInternalAutoSuspend ){
 
-			#ifdef SUPPORT_HW_RFOFF_DETECTED
-			// The FW command register update must after MAC and FW init ready.
-			if((padapter->bFWReady) && (pwrpriv->bHWPwrPindetect ) && (padapter->registrypriv.usbss_enable ))
-			{
-				u8 bOpen = _TRUE;
-				rtw_interface_ps_func(padapter,HAL_USB_SELECT_SUSPEND,&bOpen);
-			}
-			#endif//SUPPORT_HW_RFOFF_DETECTED
 		}
 #endif//CONFIG_AUTOSUSPEND
 	}
@@ -745,14 +621,6 @@ int rtw_resume_process(_adapter *padapter)
 	#ifdef CONFIG_AUTOSUSPEND
 	if(pwrpriv->bInternalAutoSuspend )
 	{
-		#ifdef SUPPORT_HW_RFOFF_DETECTED
-			// The FW command register update must after MAC and FW init ready.
-		if((padapter->bFWReady) && (pwrpriv->bHWPwrPindetect) && (padapter->registrypriv.usbss_enable ))
-		{
-			u8 bOpen = _FALSE;
-			rtw_interface_ps_func(padapter,HAL_USB_SELECT_SUSPEND,&bOpen);
-		}	
-		#endif
 		pwrpriv->bInternalAutoSuspend = _FALSE;
 		pwrpriv->brfoffbyhw = _FALSE;
 	}

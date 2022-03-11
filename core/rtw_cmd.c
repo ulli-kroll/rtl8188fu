@@ -364,24 +364,6 @@ int rtw_cmd_filter(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj)
 {
 	u8 bAllow = _FALSE; //set to _TRUE to allow enqueuing cmd when hw_init_completed is _FALSE
 	
-	#ifdef SUPPORT_HW_RFOFF_DETECTED
-	//To decide allow or not
-	if( (adapter_to_pwrctl(pcmdpriv->padapter)->bHWPwrPindetect)
-		&&(!pcmdpriv->padapter->registrypriv.usbss_enable)
-	)		
-	{
-		if(cmd_obj->cmdcode == GEN_CMD_CODE(_Set_Drv_Extra) ) 
-		{
-			struct drvextra_cmd_parm	*pdrvextra_cmd_parm = (struct drvextra_cmd_parm *)cmd_obj->parmbuf; 
-			if(pdrvextra_cmd_parm->ec_id == POWER_SAVING_CTRL_WK_CID)
-			{	
-				//DBG_871X("==>enqueue POWER_SAVING_CTRL_WK_CID\n");
-				bAllow = _TRUE; 
-			}
-		}
-	}
-	#endif
-
 #ifndef CONFIG_C2H_PACKET_EN
 	/* C2H should be always allowed */
 	if(cmd_obj->cmdcode == GEN_CMD_CODE(_Set_Drv_Extra)) {
