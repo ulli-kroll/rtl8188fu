@@ -45,7 +45,6 @@ typedef struct _TXPWRTRACK_CFG {
 	u1Byte 		SwingTableSize_CCK;	
 	u1Byte 		SwingTableSize_OFDM;
 	u1Byte		Threshold_DPK;
-	FuncSetPwr 	ODM_TxPwrTrackSetPwr;
 	FuncLCK		PHY_LCCalibrate;
 	FuncSwing	GetDeltaSwingTable;
 	FuncSwing8814only	GetDeltaSwingTable8814only;

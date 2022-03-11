@@ -447,13 +447,13 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 				pDM_Odm->SupportICType == ODM_RTL8822B || pDM_Odm->SupportICType == ODM_RTL8188F || pDM_Odm->SupportICType == ODM_RTL8703B) {
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking MIX_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-						(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, MIX_MODE, p, 0);
+						ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, 0);
 			}
 			else 
 			{
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking BBSWING_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-						(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, p, Indexforchannel);
+						ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, BBSWING, p, Indexforchannel);
 			}
 		}
 		else
@@ -467,13 +467,13 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking MIX_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-					(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, MIX_MODE, p, Indexforchannel);
+					ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, Indexforchannel);
 			}
 			else
 			{
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking BBSWING_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-					(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, p, Indexforchannel);
+					ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, BBSWING, p, Indexforchannel);
 			}
 			
 		}
