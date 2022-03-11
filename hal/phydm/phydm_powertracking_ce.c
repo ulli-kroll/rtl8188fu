@@ -28,46 +28,6 @@
 // Global var
 //============================================================
 
-u4Byte	OFDMSwingTable[OFDM_TABLE_SIZE] = {
-	0x7f8001fe,	// 0, +6.0dB
-	0x788001e2,	// 1, +5.5dB
-	0x71c001c7,	// 2, +5.0dB
-	0x6b8001ae,	// 3, +4.5dB
-	0x65400195,	// 4, +4.0dB
-	0x5fc0017f,	// 5, +3.5dB
-	0x5a400169,	// 6, +3.0dB
-	0x55400155,	// 7, +2.5dB
-	0x50800142,	// 8, +2.0dB
-	0x4c000130,	// 9, +1.5dB
-	0x47c0011f,	// 10, +1.0dB
-	0x43c0010f,	// 11, +0.5dB
-	0x40000100,	// 12, +0dB
-	0x3c8000f2,	// 13, -0.5dB
-	0x390000e4,	// 14, -1.0dB
-	0x35c000d7,	// 15, -1.5dB
-	0x32c000cb,	// 16, -2.0dB
-	0x300000c0,	// 17, -2.5dB
-	0x2d4000b5,	// 18, -3.0dB
-	0x2ac000ab,	// 19, -3.5dB
-	0x288000a2,	// 20, -4.0dB
-	0x26000098,	// 21, -4.5dB
-	0x24000090,	// 22, -5.0dB
-	0x22000088,	// 23, -5.5dB
-	0x20000080,	// 24, -6.0dB
-	0x1e400079,	// 25, -6.5dB
-	0x1c800072,	// 26, -7.0dB
-	0x1b00006c,	// 27. -7.5dB
-	0x19800066,	// 28, -8.0dB
-	0x18000060,	// 29, -8.5dB
-	0x16c0005b,	// 30, -9.0dB
-	0x15800056,	// 31, -9.5dB
-	0x14400051,	// 32, -10.0dB
-	0x1300004c,	// 33, -10.5dB
-	0x12000048,	// 34, -11.0dB
-	0x11000044,	// 35, -11.5dB
-	0x10000040,	// 36, -12.0dB
-};
-
 u1Byte	CCKSwingTable_Ch1_Ch13[CCK_TABLE_SIZE][8] = {
 	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},	// 0, +0dB
 	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},	// 1, -0.5dB
@@ -396,20 +356,10 @@ getSwingIndex(
 	u4Byte 			swingTableSize;
 	pu4Byte 			pSwingTable;
 
-	if (pDM_Odm->SupportICType == ODM_RTL8188E || pDM_Odm->SupportICType == ODM_RTL8723B
-		|| pDM_Odm->SupportICType == ODM_RTL8192E || pDM_Odm->SupportICType == ODM_RTL8188F || pDM_Odm->SupportICType == ODM_RTL8703B
-	) {
-		bbSwing = PHY_QueryBBReg(Adapter, rOFDM0_XATxIQImbalance, 0xFFC00000);
+	bbSwing = PHY_QueryBBReg(Adapter, rOFDM0_XATxIQImbalance, 0xFFC00000);
 
-		pSwingTable = OFDMSwingTable_New;
-		swingTableSize = OFDM_TABLE_SIZE;
-	} else {
-		{
-			bbSwing = 0;
-			pSwingTable = OFDMSwingTable;
-			swingTableSize = OFDM_TABLE_SIZE;
-		}
-	}
+	pSwingTable = OFDMSwingTable_New;
+	swingTableSize = OFDM_TABLE_SIZE;
 
 	for (i = 0; i < swingTableSize; ++i) {
 		u4Byte tableValue = pSwingTable[i];
