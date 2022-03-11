@@ -504,7 +504,6 @@ void ConfigureTxpowerTrack_8188F(
 )
 {
 	RT_TRACE(COMP_CMD, DBG_LOUD, ("ConfigureTxpowerTrack_8188F ====> \n"));
-	pConfig->SwingTableSize_OFDM = OFDM_TABLE_SIZE;
 
 	pConfig->GetDeltaSwingTable = GetDeltaSwingTable_8188F;
 }

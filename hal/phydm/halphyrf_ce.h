@@ -42,7 +42,6 @@ typedef VOID  	(*FuncSwing)(PVOID, pu1Byte*, pu1Byte*, pu1Byte*, pu1Byte*);
 typedef VOID	(*FuncSwing8814only)(PVOID, pu1Byte*, pu1Byte*, pu1Byte*, pu1Byte*);
 
 typedef struct _TXPWRTRACK_CFG {
-	u1Byte 		SwingTableSize_OFDM;
 	u1Byte		Threshold_DPK;
 	FuncSwing	GetDeltaSwingTable;
 	FuncSwing8814only	GetDeltaSwingTable8814only;

@@ -370,9 +370,9 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 		    //4 7.1 Handle boundary conditions of index.
 		
-			if(pDM_Odm->RFCalibrateInfo.OFDM_index[p] > c.SwingTableSize_OFDM-1)
+			if(pDM_Odm->RFCalibrateInfo.OFDM_index[p] > OFDM_TABLE_SIZE-1)
 			{
-				pDM_Odm->RFCalibrateInfo.OFDM_index[p] = c.SwingTableSize_OFDM-1;
+				pDM_Odm->RFCalibrateInfo.OFDM_index[p] = OFDM_TABLE_SIZE-1;
 			}
 			else if (pDM_Odm->RFCalibrateInfo.OFDM_index[p] < OFDM_min_index)
 			{
