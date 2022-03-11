@@ -102,7 +102,6 @@ typedef struct ODM_RF_Calibration_Structure
 	
 	BOOLEAN	bReloadtxpowerindex;	
 	u1Byte 	bRfPiEnable;
-	u4Byte 	TXPowerTrackingCallbackCnt; //cosa add for debug
 
 
 	//------------------------- Tx power Tracking -------------------------//
