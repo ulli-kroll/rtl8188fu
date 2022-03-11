@@ -819,8 +819,7 @@ phy_GetCurrentTxNum_8188F(
 	return RF_TX_NUM_NONIMPLEMENT;
 }
 
-u8
-PHY_GetTxPowerIndex_8188F(
+u8 rtl8188fu_phy_get_txpower_index(
 	IN	PADAPTER			pAdapter,
 	IN	u8					RFPath,
 	IN	u8					Rate,

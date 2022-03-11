@@ -250,5 +250,13 @@ void dump_tx_power_limit(void *sel, _adapter *adapter);
 
 int rtw_get_phy_file_path(_adapter *adapter, const char *file_name);
 
+u8 rtl8188fu_phy_get_txpower_index(
+	IN	PADAPTER			pAdapter,
+	IN	u8					RFPath,
+	IN	u8					Rate,
+	IN	CHANNEL_WIDTH		BandWidth,
+	IN	u8					Channel
+);
+
 #endif /* __HAL_COMMON_H__ */
 
