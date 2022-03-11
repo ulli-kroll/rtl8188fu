@@ -427,15 +427,13 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 	}
 
-	if (!IS_HARDWARE_TYPE_8723B(Adapter) && !IS_HARDWARE_TYPE_8192E(Adapter) && !IS_HARDWARE_TYPE_8703B(Adapter)) {
-		/* Delta temperature is equal to or larger than 20 centigrade (When threshold is 8).*/
-		if (delta_IQK >= IQK_THRESHOLD) {
-			if (!pDM_Odm->RFCalibrateInfo.bIQKInProgress) {
-				pDM_Odm->RFCalibrateInfo.ThermalValue_IQK = ThermalValue;
-				PHY_IQCalibrate_8188F(Adapter, FALSE, FALSE);
-			 }
-		}
-	}	
+	/* Delta temperature is equal to or larger than 20 centigrade (When threshold is 8).*/
+	if (delta_IQK >= IQK_THRESHOLD) {
+		if (!pDM_Odm->RFCalibrateInfo.bIQKInProgress) {
+			pDM_Odm->RFCalibrateInfo.ThermalValue_IQK = ThermalValue;
+			PHY_IQCalibrate_8188F(Adapter, FALSE, FALSE);
+		 }
+	}
 	if (!(pDM_Odm->SupportICType & ODM_RTL8814A)) {
 	}
 
