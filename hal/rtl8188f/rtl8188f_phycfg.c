@@ -949,7 +949,7 @@ phy_SpurCalibration_8188F(
 	if ((bHW_Ctrl_S1 || bSW_Ctrl_S1) && (idx <= 6)) {
 		initial_gain = (u1Byte)(ODM_GetBBReg(pDM_Odm, rOFDM0_XAAGCCore1, bMaskByte0) & 0x7f);
 		PHY_SetBBReg(pAdapter, rFPGA0_RFMOD, BIT24, 0); /* Disable CCK block */
-		ODM_Write_DIG(pDM_Odm, 0x30);
+		rtl8188fu_dm_write_dig(pDM_Odm, 0x30);
 		PHY_SetBBReg(pAdapter, rFPGA0_AnalogParameter4, bMaskDWord, 0xccf000c0);		/* disable 3-wire */
 
 		PHY_SetBBReg(pAdapter, rFPGA0_PSDFunction, bMaskDWord, freq[idx]);				/* Setup PSD */
@@ -964,7 +964,7 @@ phy_SpurCalibration_8188F(
 
 		PHY_SetBBReg(pAdapter, rFPGA0_AnalogParameter4, bMaskDWord, 0xccc000c0);	/* enable 3-wire */
 		PHY_SetBBReg(pAdapter, rFPGA0_RFMOD, BIT24, 1); /* Enable CCK block */
-		ODM_Write_DIG(pDM_Odm, initial_gain);
+		rtl8188fu_dm_write_dig(pDM_Odm, initial_gain);
 	}
 
 	/* --- Notch Filter --- Asked by Rock */

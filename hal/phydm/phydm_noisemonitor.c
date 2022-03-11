@@ -214,7 +214,7 @@ odm_InbandNoise_Monitor_ACSeries(PDM_ODM_T	pDM_Odm, u8 bPauseDIG, u8 IGIValue, u
 	/* Step 3. Get noise power level */
 	while (1) {
 		/*Set IGI=0x1C */
-		ODM_Write_DIG(pDM_Odm, 0x1C);
+		rtl8188fu_dm_write_dig(pDM_Odm, 0x1C);
 		/*stop CK320&CK88 */
 		ODM_SetBBReg(pDM_Odm, 0x8B4, BIT6, 1);
 		/*Read Path-A */

@@ -302,7 +302,7 @@ void rtl8188f_hal_dm_in_lps(PADAPTER padapter)
 	DBG_871X("%s, RSSI_Min=%d\n", __func__, pDM_Odm->RSSI_Min);
 
 	/*update IGI */
-	ODM_Write_DIG(pDM_Odm, pDM_Odm->RSSI_Min);
+	rtl8188fu_dm_write_dig(pDM_Odm, pDM_Odm->RSSI_Min);
 
 
 	/*set rssi to fw */

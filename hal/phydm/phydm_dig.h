@@ -227,7 +227,7 @@ ODM_ChangeDynamicInitGainThresh(
 	);
 
 VOID
-ODM_Write_DIG(
+rtl8188fu_dm_write_dig(
 	IN		PVOID					pDM_VOID, 	
 	IN		u1Byte					CurrentIGI
 	);

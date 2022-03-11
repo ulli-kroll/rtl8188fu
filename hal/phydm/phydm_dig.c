@@ -220,7 +220,7 @@ odm_DigForBtHsMode(
 }
 
 VOID
-ODM_Write_DIG(
+rtl8188fu_dm_write_dig(
 	IN	PVOID			pDM_VOID,
 	IN	u1Byte			CurrentIGI
 	)
@@ -332,7 +332,7 @@ odm_PauseDIG(
 
 		/* Write new IGI value */
 		if (BIT(pause_level + 1) > pDM_DigTable->pause_dig_level) {
-			ODM_Write_DIG(pDM_Odm, IGIValue);
+			rtl8188fu_dm_write_dig(pDM_Odm, IGIValue);
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_PauseDIG(): IGI of higher level = 0x%x\n",  IGIValue));
 		}
 		break;
@@ -353,7 +353,7 @@ odm_PauseDIG(
 		/* Resume DIG */
 		if (pDM_DigTable->pause_dig_level == 0) {
 			/* Write backup IGI value */
-			ODM_Write_DIG(pDM_Odm, pDM_DigTable->IGIBackup);
+			rtl8188fu_dm_write_dig(pDM_Odm, pDM_DigTable->IGIBackup);
 			pDM_DigTable->bIgnoreDIG = TRUE;
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_PauseDIG(): Write original IGI = 0x%x\n", pDM_DigTable->IGIBackup));
 
@@ -372,7 +372,7 @@ odm_PauseDIG(
 			}
 		
 			/* write IGI of lower level */
-			ODM_Write_DIG(pDM_Odm, pDM_DigTable->pause_dig_value[max_level]);
+			rtl8188fu_dm_write_dig(pDM_Odm, pDM_DigTable->pause_dig_value[max_level]);
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_PauseDIG(): Write IGI (0x%x) of level (%d)\n",  
 				 pDM_DigTable->pause_dig_value[max_level], max_level));
 			break;
@@ -769,7 +769,7 @@ odm_DIG(
 	//1 Update status
 	{
 		{
-			ODM_Write_DIG(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
+			rtl8188fu_dm_write_dig(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
 			pDM_DigTable->bMediaConnect_0 = pDM_Odm->bLinked;
 			pDM_DigTable->DIG_Dynamic_MIN_0 = DIG_Dynamic_MIN;
 		}
@@ -823,7 +823,7 @@ odm_DIGbyRSSI_LPS(
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): pDM_Odm->RSSI_Min = %d\n",pDM_Odm->RSSI_Min));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): CurrentIGI = 0x%x\n",CurrentIGI));
 
-	ODM_Write_DIG(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
+	rtl8188fu_dm_write_dig(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
 #endif
 }
 
