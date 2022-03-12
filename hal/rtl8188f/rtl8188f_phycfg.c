@@ -841,7 +841,7 @@ u8 rtl8188fu_phy_get_txpower_index(
 	powerDiffByRate = powerDiffByRate > limit ? limit : powerDiffByRate;
 	txPower += powerDiffByRate;
 
-	txPower += PHY_GetTxPowerTrackingOffset(pAdapter, RFPath, Rate);
+	txPower += rtl8188fu_phy_get_tx_power_tracking_offset(pAdapter, RFPath, Rate);
 
 	if (txPower > MAX_POWER_INDEX)
 		txPower = MAX_POWER_INDEX;

@@ -1179,7 +1179,7 @@ u8 rtl8188fu_phy_get_txpower_index_base(
 }
 
 s8
-PHY_GetTxPowerTrackingOffset( 
+rtl8188fu_phy_get_tx_power_tracking_offset(
 	PADAPTER	pAdapter,
 	u8			RFPath,
 	u8			Rate

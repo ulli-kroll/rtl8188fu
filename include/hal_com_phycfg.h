@@ -214,7 +214,7 @@ PHY_InitTxPowerLimit(
 	);
 
 s8
-PHY_GetTxPowerTrackingOffset( 
+rtl8188fu_phy_get_tx_power_tracking_offset( 
 	PADAPTER	pAdapter,
 	u8			Rate,
 	u8			RFPath
