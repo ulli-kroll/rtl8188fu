@@ -193,7 +193,7 @@ rtl8188fu_phy_get_txpower_index_base(
 	);
 
 s8
-PHY_GetTxPowerLimit(
+rtl8188fu_phy_get_txpower_limit(
 	IN	PADAPTER		Adapter,
 	IN	u32				RegPwrTblSel,
 	IN	BAND_TYPE		Band,

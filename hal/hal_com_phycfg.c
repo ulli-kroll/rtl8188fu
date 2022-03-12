@@ -1485,7 +1485,7 @@ phy_GetChannelIndexOfTxPowerLimit(
 }
 
 s8
-PHY_GetTxPowerLimit(
+rtl8188fu_phy_get_txpower_limit(
 	IN	PADAPTER			Adapter,
 	IN	u32					RegPwrTblSel,
 	IN	BAND_TYPE			Band,
@@ -2335,10 +2335,10 @@ void dump_tx_power_limit(void *sel, _adapter *adapter)
 					}
 
 					/* dump limit in db (calculate from path A) */
-					limit_offset[0] = PHY_GetTxPowerLimit(adapter, 3, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* FCC */
-					limit_offset[1] = PHY_GetTxPowerLimit(adapter, 1, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* ETSI */
-					limit_offset[2] = PHY_GetTxPowerLimit(adapter, 2, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* MKK */
-					limit_offset[3] = PHY_GetTxPowerLimit(adapter, 4, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* WW */
+					limit_offset[0] = rtl8188fu_phy_get_txpower_limit(adapter, 3, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* FCC */
+					limit_offset[1] = rtl8188fu_phy_get_txpower_limit(adapter, 1, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* ETSI */
+					limit_offset[2] = rtl8188fu_phy_get_txpower_limit(adapter, 2, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* MKK */
+					limit_offset[3] = rtl8188fu_phy_get_txpower_limit(adapter, 4, band, bw, RF_PATH_A, rates_by_sections[rs].rates[0], ch); /* WW */
 
 					base = phy_get_target_tx_power(adapter, band, RF_PATH_A, rs);
 
@@ -2360,10 +2360,10 @@ void dump_tx_power_limit(void *sel, _adapter *adapter)
 					for (path = 0; path < RF_PATH_MAX; path++) {
 						if (path >= hal_data->NumTotalRFPath)
 							break;
-						limit_offset[0] = PHY_GetTxPowerLimit(adapter, 3, band, bw, path, rates_by_sections[rs].rates[0], ch); /* FCC */
-						limit_offset[1] = PHY_GetTxPowerLimit(adapter, 1, band, bw, path, rates_by_sections[rs].rates[0], ch); /* ETSI */
-						limit_offset[2] = PHY_GetTxPowerLimit(adapter, 2, band, bw, path, rates_by_sections[rs].rates[0], ch); /* MKK */
-						limit_offset[3] = PHY_GetTxPowerLimit(adapter, 4, band, bw, path, rates_by_sections[rs].rates[0], ch); /* WW */
+						limit_offset[0] = rtl8188fu_phy_get_txpower_limit(adapter, 3, band, bw, path, rates_by_sections[rs].rates[0], ch); /* FCC */
+						limit_offset[1] = rtl8188fu_phy_get_txpower_limit(adapter, 1, band, bw, path, rates_by_sections[rs].rates[0], ch); /* ETSI */
+						limit_offset[2] = rtl8188fu_phy_get_txpower_limit(adapter, 2, band, bw, path, rates_by_sections[rs].rates[0], ch); /* MKK */
+						limit_offset[3] = rtl8188fu_phy_get_txpower_limit(adapter, 4, band, bw, path, rates_by_sections[rs].rates[0], ch); /* WW */
 
 						base = phy_get_target_tx_power(adapter, band, path, rs);
 
