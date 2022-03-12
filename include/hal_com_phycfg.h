@@ -246,7 +246,6 @@ void phy_load_tx_power_ext_info(_adapter *adapter);
 void dump_tx_power_ext_info(void *sel, _adapter *adapter);
 void dump_target_tx_power(void *sel, _adapter *adapter);
 void dump_tx_power_by_rate(void *sel, _adapter *adapter);
-void dump_tx_power_limit(void *sel, _adapter *adapter);
 
 int rtw_get_phy_file_path(_adapter *adapter, const char *file_name);
 
