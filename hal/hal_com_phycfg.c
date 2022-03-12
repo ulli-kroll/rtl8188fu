@@ -108,12 +108,12 @@ bool rtw_regsty_chk_target_tx_power_valid(_adapter *adapter)
 }
 
 /*
-* PHY_GetTxPowerByRateBase -
+* rtl8188fu_get_tx_power_by_rateBase -
 *
 * Return 2 times of dBm
 */
 u8
-PHY_GetTxPowerByRateBase(
+rtl8188fu_get_tx_power_by_rateBase(
 	IN	PADAPTER		Adapter,
 	IN	u8				Band,
 	IN	u8				RfPath,
@@ -204,7 +204,7 @@ u8 phy_get_target_tx_power(
 	if (phy_is_tx_power_by_rate_needed(Adapter) == _FALSE && regsty->target_tx_pwr_valid == _TRUE)
 		target_power = 2 * rtw_regsty_get_target_tx_power(Adapter, Band, RfPath, RateSection);
 	else
-		target_power = PHY_GetTxPowerByRateBase(Adapter, Band, RfPath, rate_section_to_tx_num(RateSection), RateSection);
+		target_power = rtl8188fu_get_tx_power_by_rateBase(Adapter, Band, RfPath, rate_section_to_tx_num(RateSection), RateSection);
 
 	return target_power;
 }
@@ -798,66 +798,66 @@ phy_ConvertTxPowerByRateInDbmToRelativeValues(
 			for ( txNum = RF_1TX; txNum < RF_MAX_TX_NUM; ++txNum )
 			{
 				// CCK
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_11M );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_11M );
 				for ( i = 0; i < sizeof( cckRates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, cckRates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, cckRates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, cckRates[i], value - base );
 				}
 
 				// OFDM
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_54M );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_54M );
 				for ( i = 0; i < sizeof( ofdmRates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, ofdmRates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, ofdmRates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, ofdmRates[i], value - base );
 				}
 				
 				// HT MCS0~7
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_MCS7 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS7 );
 				for ( i = 0; i < sizeof( mcs0_7Rates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, mcs0_7Rates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs0_7Rates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs0_7Rates[i], value - base );
 				}
 
 				// HT MCS8~15
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_MCS15 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS15 );
 				for ( i = 0; i < sizeof( mcs8_15Rates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, mcs8_15Rates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs8_15Rates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs8_15Rates[i], value - base );
 				}
 
 				// HT MCS16~23
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_MCS23 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS23 );
 				for ( i = 0; i < sizeof( mcs16_23Rates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, mcs16_23Rates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs16_23Rates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs16_23Rates[i], value - base );
 				}
 
 				// VHT 1SS
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_VHT1SS_MCS7 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT1SS_MCS7 );
 				for ( i = 0; i < sizeof( vht1ssRates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, vht1ssRates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht1ssRates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht1ssRates[i], value - base );
 				}
 
 				// VHT 2SS
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_VHT2SS_MCS7 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT2SS_MCS7 );
 				for ( i = 0; i < sizeof( vht2ssRates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, vht2ssRates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht2ssRates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht2ssRates[i], value - base );
 				}
 
 				// VHT 3SS
-				base = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, MGN_VHT3SS_MCS7 );
+				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT3SS_MCS7 );
 				for ( i = 0; i < sizeof( vht3ssRates ); ++i )
 				{
-					value = PHY_GetTxPowerByRate( pAdapter, band, path, txNum, vht3ssRates[i] );
+					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht3ssRates[i] );
 					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht3ssRates[i], value - base );
 				}
 			}
@@ -1345,7 +1345,7 @@ exit:
 
 
 s8
-PHY_GetTxPowerByRate(
+rtl8188fu_get_tx_power_by_rate(
 	IN	PADAPTER	pAdapter,
 	IN	u8			Band,
 	IN	u8			RFPath,
@@ -2202,13 +2202,13 @@ void dump_tx_power_by_rate(void *sel, _adapter *adapter)
 				max_rate_num = 8;
 
 				rate_num = rate_section_rate_num(rs);
-				base = PHY_GetTxPowerByRateBase(adapter, band, path, tx_num, rs);
+				base = rtl8188fu_get_tx_power_by_rateBase(adapter, band, path, tx_num, rs);
 
 				DBG_871X_SEL_NL(sel, "%7s: ", rate_section_str(rs));
 
 				/* dump power by rate in db */
 				for (n = rate_num - 1; n >= 0; n--) {
-					by_rate_offset = PHY_GetTxPowerByRate(adapter, band, path, tx_num, rates_by_sections[rs].rates[n]);
+					by_rate_offset = rtl8188fu_get_tx_power_by_rate(adapter, band, path, tx_num, rates_by_sections[rs].rates[n]);
 
 					if ((base + by_rate_offset) % 2)
 						DBG_871X_SEL(sel, "%2d.5 ", (base + by_rate_offset) / 2);
@@ -2222,7 +2222,7 @@ void dump_tx_power_by_rate(void *sel, _adapter *adapter)
 
 				/* dump power by rate in offset */
 				for (n = rate_num - 1; n >= 0; n--) {
-					by_rate_offset = PHY_GetTxPowerByRate(adapter, band, path, tx_num, rates_by_sections[rs].rates[n]);
+					by_rate_offset = rtl8188fu_get_tx_power_by_rate(adapter, band, path, tx_num, rates_by_sections[rs].rates[n]);
 					DBG_871X_SEL(sel, "%3d ", by_rate_offset);
 				}
 				DBG_871X_SEL_NL(sel, "\n");

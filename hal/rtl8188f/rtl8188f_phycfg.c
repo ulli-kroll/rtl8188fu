@@ -834,7 +834,7 @@ u8 rtl8188fu_phy_get_txpower_index(
 	/*DBG_871X("===>%s\n", __func__ ); */
 
 	txPower = (s8) rtl8188fu_phy_get_txpower_index_base(pAdapter, RFPath, Rate, BandWidth, Channel, &bIn24G);
-	powerDiffByRate = PHY_GetTxPowerByRate(pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, Rate);
+	powerDiffByRate = rtl8188fu_get_tx_power_by_rate(pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, Rate);
 
 	limit = PHY_GetTxPowerLimit(pAdapter, pAdapter->registrypriv.RegPwrTblSel, (u8)(!bIn24G), pHalData->CurrentChannelBW, RFPath, Rate, pHalData->CurrentChannel);
 
