@@ -2643,34 +2643,6 @@ s32 CardDisableHWSM(PADAPTER padapter, u8 resetMCU)
 	return rtStatus;
 }
 
-/* without HW Auto state machine */
-s32 CardDisableWithoutHWSM(PADAPTER padapter)
-{
-	s32 rtStatus = _SUCCESS;
-
-
-	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> Card Disable Without HWSM .\n")); */
-	if (RTW_CANNOT_RUN(padapter))
-		return rtStatus;
-
-	/*==== RF Off Sequence ==== */
-	_rtl8188fu_disable_rf_afe_and_reset(padapter);
-
-	/*  ==== Reset digital sequence   ====== */
-	_ResetDigitalProcedure1(padapter, _TRUE);
-
-	/*  ==== Pull GPIO PIN to balance level and LED control ====== */
-	_DisableGPIO(padapter);
-
-	/*  ==== Reset digital sequence   ====== */
-	_ResetDigitalProcedure2(padapter);
-
-	/*  ==== Disable analog sequence === */
-	_DisableAnalog(padapter, _TRUE);
-
-	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("<====== Card Disable Without HWSM .\n")); */
-	return rtStatus;
-}
 #endif /* CONFIG_USB_HCI */
 
 BOOLEAN
