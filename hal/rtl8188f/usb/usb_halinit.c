@@ -1527,63 +1527,6 @@ _SetUsbSuspend(
 
 }
 
-static VOID
-_DisableAnalog(
-	IN PADAPTER			Adapter,
-	IN BOOLEAN			bWithoutHWSM
-)
-{
-	u16 value16 = 0;
-	u8 value8 = 0;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
-	if (bWithoutHWSM) {
-		/*
-		 * n.	LDOA15_CTRL 0x20[7:0] = 0x04		disable A15 power
-		 * o.	LDOV12D_CTRL 0x21[7:0] = 0x54		disable digital core power
-		 * r.	When driver call disable, the ASIC will turn off remaining clock automatically
-		 */
-
-		rtw_write8(Adapter, REG_LDOA15_CTRL, 0x04);
-		/*PlatformIOWrite1Byte(Adapter, REG_LDOV12D_CTRL, 0x54); */
-
-		value8 = rtw_read8(Adapter, REG_LDOV12D_CTRL);
-		value8 &= (~LDV12_EN);
-		rtw_write8(Adapter, REG_LDOV12D_CTRL, value8);
-		/*RT_TRACE(COMP_INIT, DBG_LOUD, (" REG_LDOV12D_CTRL Reg0x21:0x%02x.\n",value8)); */
-	}
-
-	/*
-	 * h.	SPS0_CTRL 0x11[7:0] = 0x23			enter PFM mode
-	 * i.	APS_FSMCO 0x04[15:0] = 0x4802		set USB suspend
-	 */
-
-
-	value8 = 0x23;
-
-	rtw_write8(Adapter, REG_SPS0_CTRL, value8);
-
-
-	if (bWithoutHWSM) {
-		/* 2010/08/31 According to Filen description, we need to use HW to shut down 8051 automatically. */
-		/* Because suspend operation need the asistance of 8051 to wait for 3ms. */
-		value16 |= (APDM_HOST | AFSM_HSUS | PFM_ALDN);
-	} else
-		value16 |= (APDM_HOST | AFSM_HSUS | PFM_ALDN);
-
-	rtw_write16(Adapter, REG_APS_FSMCO, value16);/*0x4802 */
-
-	rtw_write8(Adapter, REG_RSV_CTRL, 0x0e);
-
-#if 0
-	/*tynli_test for suspend mode. */
-	if (!bWithoutHWSM)
-		rtw_write8(Adapter, 0xfe10, 0x19);
-#endif
-
-	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> Disable Analog Reg0x04:0x%04x.\n",value16)); */
-}
-
 static void rtl8188fu_hw_power_down(_adapter *padapter)
 {
 	u8	u1bTmp;
