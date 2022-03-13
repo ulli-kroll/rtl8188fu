@@ -68,15 +68,15 @@ ODM_ClearTxPowerTrackingState(
 	u1Byte 			p = 0;
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 	
-	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->DefaultCckIndex;
-	pRFCalibrateInfo->BbSwingIdxCck = pRFCalibrateInfo->DefaultCckIndex;
+	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->default_cck_index;
+	pRFCalibrateInfo->BbSwingIdxCck = pRFCalibrateInfo->default_cck_index;
 	pDM_Odm->RFCalibrateInfo.CCK_index = 0;
 	
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{
-		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->DefaultOfdmIndex;
-		pRFCalibrateInfo->BbSwingIdxOfdm[p] = pRFCalibrateInfo->DefaultOfdmIndex;
-		pRFCalibrateInfo->OFDM_index[p] = pRFCalibrateInfo->DefaultOfdmIndex;
+		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->default_ofdm_index;
+		pRFCalibrateInfo->BbSwingIdxOfdm[p] = pRFCalibrateInfo->default_ofdm_index;
+		pRFCalibrateInfo->OFDM_index[p] = pRFCalibrateInfo->default_ofdm_index;
 
 		pRFCalibrateInfo->PowerIndexOffset[p] = 0;
 		pRFCalibrateInfo->DeltaPowerIndex[p] = 0;
@@ -139,7 +139,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
     
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, 
 		("===>ODM_TXPowerTrackingCallback_ThermalMeter Start\n pRFCalibrateInfo->BbSwingIdxCckBase: %d, pRFCalibrateInfo->BbSwingIdxOfdmBase[A]: %d, pRFCalibrateInfo->DefaultOfdmIndex: %d\n", 
-		pRFCalibrateInfo->BbSwingIdxCckBase, pRFCalibrateInfo->BbSwingIdxOfdmBase[ODM_RF_PATH_A], pRFCalibrateInfo->DefaultOfdmIndex));
+		pRFCalibrateInfo->BbSwingIdxCckBase, pRFCalibrateInfo->BbSwingIdxOfdmBase[ODM_RF_PATH_A], pRFCalibrateInfo->default_ofdm_index));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, 
 		("pDM_Odm->RFCalibrateInfo.TxPowerTrackControl %d,  pHalData->EEPROMThermalMeter %d\n", pDM_Odm->RFCalibrateInfo.TxPowerTrackControl,  pHalData->EEPROMThermalMeter));

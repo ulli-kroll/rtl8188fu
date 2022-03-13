@@ -132,8 +132,8 @@ typedef struct ODM_RF_Calibration_Structure
 	u1Byte			BbSwingIdxCck;
 	u1Byte			BbSwingIdxCckCurrent;
 	u1Byte			BbSwingIdxCckBase;
-	u1Byte			DefaultOfdmIndex;
-	u1Byte			DefaultCckIndex;	
+	u1Byte			default_ofdm_index;
+	u1Byte			default_cck_index;	
 	BOOLEAN			BbSwingFlagCck;
 	
 	s1Byte			Absolute_OFDMSwingIdx[MAX_RF_PATH];   

@@ -214,15 +214,15 @@ odm_TXPowerTrackingThermalMeterInit(
 	pRFCalibrateInfo->ThermalValue_IQK = pHalData->EEPROMThermalMeter;
 	pRFCalibrateInfo->ThermalValue_LCK = pHalData->EEPROMThermalMeter;	
 
-	pRFCalibrateInfo->DefaultOfdmIndex =28;							//OFDM: -1dB
-	pRFCalibrateInfo->DefaultCckIndex =20;							//CCK:-6dB
-	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->DefaultCckIndex;
-	pRFCalibrateInfo->CCK_index = pRFCalibrateInfo->DefaultCckIndex;
+	pRFCalibrateInfo->default_ofdm_index =28;							//OFDM: -1dB
+	pRFCalibrateInfo->default_cck_index =20;							//CCK:-6dB
+	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->default_cck_index;
+	pRFCalibrateInfo->CCK_index = pRFCalibrateInfo->default_cck_index;
 	
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{
-		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->DefaultOfdmIndex;		
-		pRFCalibrateInfo->OFDM_index[p] = pRFCalibrateInfo->DefaultOfdmIndex;		
+		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->default_ofdm_index;		
+		pRFCalibrateInfo->OFDM_index[p] = pRFCalibrateInfo->default_ofdm_index;		
 		pRFCalibrateInfo->DeltaPowerIndex[p] = 0;
 		pRFCalibrateInfo->DeltaPowerIndexLast[p] = 0;
 		pRFCalibrateInfo->PowerIndexOffset[p] = 0;
