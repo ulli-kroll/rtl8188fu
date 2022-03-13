@@ -214,23 +214,8 @@ odm_TXPowerTrackingThermalMeterInit(
 	pRFCalibrateInfo->ThermalValue_IQK = pHalData->EEPROMThermalMeter;
 	pRFCalibrateInfo->ThermalValue_LCK = pHalData->EEPROMThermalMeter;	
 
-	// The index of "0 dB" in SwingTable.
-	if (pDM_Odm->SupportICType == ODM_RTL8188E || pDM_Odm->SupportICType == ODM_RTL8723B ||
-		pDM_Odm->SupportICType == ODM_RTL8192E || pDM_Odm->SupportICType == ODM_RTL8703B) {
-		pRFCalibrateInfo->DefaultOfdmIndex = (defaultSwingIndex >= OFDM_TABLE_SIZE) ? 30 : defaultSwingIndex;
-		pRFCalibrateInfo->DefaultCckIndex = 20;	
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8188F)          //add by Mingzhi.Guo  2015-03-23
-	{
-		pRFCalibrateInfo->DefaultOfdmIndex =28;							//OFDM: -1dB
-		pRFCalibrateInfo->DefaultCckIndex =20;							//CCK:-6dB
-	}
-	else
-	{
-		pRFCalibrateInfo->DefaultOfdmIndex = (defaultSwingIndex >= TXSCALE_TABLE_SIZE) ? 24 : defaultSwingIndex;
-		pRFCalibrateInfo->DefaultCckIndex = 24;	
-	}
-
+	pRFCalibrateInfo->DefaultOfdmIndex =28;							//OFDM: -1dB
+	pRFCalibrateInfo->DefaultCckIndex =20;							//CCK:-6dB
 	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->DefaultCckIndex;
 	pRFCalibrateInfo->CCK_index = pRFCalibrateInfo->DefaultCckIndex;
 	
