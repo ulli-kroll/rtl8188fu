@@ -3072,36 +3072,6 @@ exit:
 	return ret;
 }
 
-#ifdef CONFIG_EFUSE_CONFIG_FILE
-u32 Hal_readPGDataFromConfigFile(PADAPTER padapter)
-{
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(padapter);
-	u32 ret;
-
-	ret = rtw_read_efuse_from_file(EFUSE_MAP_PATH, hal_data->efuse_eeprom_data);
-	hal_data->efuse_file_status = ((ret == _FAIL) ? EFUSE_FILE_FAILED : EFUSE_FILE_LOADED);
-
-	return ret;
-}
-
-u32 Hal_ReadMACAddrFromFile(PADAPTER padapter, u8 *mac_addr)
-{
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(padapter);
-	u32 ret = _FAIL;
-
-	if (rtw_read_macaddr_from_file(WIFIMAC_PATH, mac_addr) == _SUCCESS
-		&& rtw_check_invalid_mac_address(mac_addr, _TRUE) == _FALSE
-	) {
-		hal_data->macaddr_file_status = MACADDR_FILE_LOADED;
-		ret = _SUCCESS;
-	} else {
-		hal_data->macaddr_file_status = MACADDR_FILE_FAILED;
-	}
-
-	return ret;
-}
-#endif /* CONFIG_EFUSE_CONFIG_FILE */
-
 int hal_config_macaddr(_adapter *adapter, bool autoload_fail)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
@@ -3116,12 +3086,6 @@ int hal_config_macaddr(_adapter *adapter, bool autoload_fail)
 	if (addr_offset != -1)
 		hw_addr = &hal_data->efuse_eeprom_data[addr_offset];
 
-#ifdef CONFIG_EFUSE_CONFIG_FILE
-	/* if the hw_addr is written by efuse file, set to NULL */
-	if (hal_data->efuse_file_status == EFUSE_FILE_LOADED)
-		hw_addr = NULL;
-#endif
-
 	if (!hw_addr) {
 		/* try getting hw pg data */
 		if (Hal_GetPhyEfuseMACAddr(adapter, addr) == _SUCCESS)
@@ -3135,14 +3099,6 @@ int hal_config_macaddr(_adapter *adapter, bool autoload_fail)
 	}
 	
 bypass_hw_pg:
-
-#ifdef CONFIG_EFUSE_CONFIG_FILE
-	/* check wifi mac file */
-	if (Hal_ReadMACAddrFromFile(adapter, addr) == _SUCCESS) {
-		_rtw_memcpy(hal_data->EEPROMMACAddr, addr, ETH_ALEN);
-		goto exit;
-	}
-#endif
 
 	_rtw_memset(hal_data->EEPROMMACAddr, 0, ETH_ALEN);
 	ret = _FAIL;

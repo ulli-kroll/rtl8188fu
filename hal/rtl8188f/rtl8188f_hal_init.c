@@ -2808,12 +2808,6 @@ Hal_InitPGData(
 		_rtw_memcpy((void *)PROMContent, (void *)pHalData->efuse_eeprom_data, HWSET_MAX_SIZE_8188F);
 	}
 
-#ifdef CONFIG_EFUSE_CONFIG_FILE
-	if (check_phy_efuse_tx_power_info_valid(padapter) == _FALSE) {
-		if (Hal_readPGDataFromConfigFile(padapter) != _SUCCESS)
-			DBG_871X_LEVEL(_drv_err_, "invalid phy efuse and read from file fail, will use driver default!!\n");
-	}
-#endif
 }
 
 void
