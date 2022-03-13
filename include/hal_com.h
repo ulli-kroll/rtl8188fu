@@ -278,7 +278,6 @@ void rtw_hal_config_rftype(PADAPTER  padapter);
 #define WL_FUNC_BIT_NUM		4
 
 int hal_spec_init(_adapter *adapter);
-void dump_hal_spec(void *sel, _adapter *adapter);
 
 bool hal_chk_band_cap(_adapter *adapter, u8 cap);
 bool hal_chk_bw_cap(_adapter *adapter, u8 cap);

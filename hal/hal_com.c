@@ -3799,45 +3799,6 @@ static const char * const _wl_func_str[] = {
 	/* BIT3 */"FTM",
 };
 
-void dump_hal_spec(void *sel, _adapter *adapter)
-{
-	struct hal_spec_t *hal_spec = GET_HAL_SPEC(adapter);
-	int i;
-
-	DBG_871X_SEL_NL(sel, "macid_num:%u\n", hal_spec->macid_num);
-	DBG_871X_SEL_NL(sel, "sec_cap:0x%02x\n", hal_spec->sec_cap);
-	DBG_871X_SEL_NL(sel, "sec_cam_ent_num:%u\n", hal_spec->sec_cam_ent_num);
-	DBG_871X_SEL_NL(sel, "nss_num:%u\n", hal_spec->nss_num);
-
-	DBG_871X_SEL_NL(sel, "band_cap:");
-	for (i = 0; i < BAND_CAP_BIT_NUM; i++) {
-		if (((hal_spec->band_cap) >> i) & BIT0 && _band_cap_str[i])
-			DBG_871X_SEL(sel, "%s ", _band_cap_str[i]);
-	}
-	DBG_871X_SEL(sel, "\n");
-
-	DBG_871X_SEL_NL(sel, "bw_cap:");
-	for (i = 0; i < BW_CAP_BIT_NUM; i++) {
-		if (((hal_spec->bw_cap) >> i) & BIT0 && _bw_cap_str[i])
-			DBG_871X_SEL(sel, "%s ", _bw_cap_str[i]);
-	}
-	DBG_871X_SEL(sel, "\n");
-
-	DBG_871X_SEL_NL(sel, "proto_cap:");
-	for (i = 0; i < PROTO_CAP_BIT_NUM; i++) {
-		if (((hal_spec->proto_cap) >> i) & BIT0 && _proto_cap_str[i])
-			DBG_871X_SEL(sel, "%s ", _proto_cap_str[i]);
-	}
-	DBG_871X_SEL(sel, "\n");
-
-	DBG_871X_SEL_NL(sel, "wl_func:");
-	for (i = 0; i < WL_FUNC_BIT_NUM; i++) {
-		if (((hal_spec->wl_func) >> i) & BIT0 && _wl_func_str[i])
-			DBG_871X_SEL(sel, "%s ", _wl_func_str[i]);
-	}
-	DBG_871X_SEL(sel, "\n");
-}
-
 inline bool hal_chk_band_cap(_adapter *adapter, u8 cap)
 {
 	return (GET_HAL_SPEC(adapter)->band_cap & cap);
