@@ -173,8 +173,6 @@ void rtl8188f_init_default_value(PADAPTER padapter);
 
 s32 rtl8188f_InitLLTTable(PADAPTER padapter);
 
-s32 CardDisableHWSM(PADAPTER padapter, u8 resetMCU);
-
 // EFuse
 u8 GetEEPROMSize8188F(PADAPTER padapter);
 void Hal_InitPGData(PADAPTER padapter, u8 *PROMContent);

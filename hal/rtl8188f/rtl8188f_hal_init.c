@@ -2618,31 +2618,6 @@ void _DisableAnalog(PADAPTER padapter, BOOLEAN bWithoutHWSM)
 	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> Disable Analog Reg0x04:0x%04x.\n",value16)); */
 }
 
-/* HW Auto state machine */
-s32 CardDisableHWSM(PADAPTER padapter, u8 resetMCU)
-{
-	int rtStatus = _SUCCESS;
-
-
-	if (RTW_CANNOT_RUN(padapter))
-		return rtStatus;
-	/*==== RF Off Sequence ==== */
-	_rtl8188fu_disable_rf_afe_and_reset(padapter);
-
-	/*  ==== Reset digital sequence   ====== */
-	_ResetDigitalProcedure1(padapter, _FALSE);
-
-	/*  ==== Pull GPIO PIN to balance level and LED control ====== */
-	_DisableGPIO(padapter);
-
-	/*  ==== Disable analog sequence === */
-	_DisableAnalog(padapter, _FALSE);
-
-	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("======> Card disable finished.\n"));
-
-	return rtStatus;
-}
-
 #endif /* CONFIG_USB_HCI */
 
 BOOLEAN
