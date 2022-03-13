@@ -2552,20 +2552,6 @@ void _ResetDigitalProcedure1(PADAPTER padapter, BOOLEAN bWithoutHWSM)
 	_ResetDigitalProcedure1_8188F(padapter, bWithoutHWSM);
 }
 
-void _ResetDigitalProcedure2(PADAPTER padapter)
-{
-	/*HAL_DATA_TYPE		*pHalData	= GET_HAL_DATA(padapter); */
-	/*
-	 * k.	SYS_FUNC_EN 0x03[7:0] = 0x44			disable ELDR runction
-	 * l.	SYS_CLKR 0x08[15:0] = 0x3083			disable ELDR clock
-	 * m.	SYS_ISO_CTRL 0x01[7:0] = 0x83			isolated ELDR to PON
-	 */
-	/*rtw_write8(padapter, REG_SYS_FUNC_EN+1, 0x44); //marked by Scott. */
-	/* 2011/01/26 MH SD4 Scott suggest to fix UNC-B cut bug. */
-	rtw_write16(padapter, REG_SYS_CLKR, 0x70a3); /*modify to 0x70a3 by Scott. */
-	rtw_write8(padapter, REG_SYS_ISO_CTRL + 1, 0x82); /*modify to 0x82 by Scott. */
-}
-
 #endif /* CONFIG_USB_HCI */
 
 BOOLEAN
