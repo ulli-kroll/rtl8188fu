@@ -2401,7 +2401,7 @@ void _DisableGPIO(PADAPTER	padapter)
 	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> Disable GPIO and LED.\n")); */
 } /*end of _DisableGPIO() */
 
-void _DisableRFAFEAndResetBB8188F(PADAPTER padapter)
+static void _rtl8188fu_disable_rf_afe_and_reset(PADAPTER padapter)
 {
 	/*
 	 * a.	TXPAUSE 0x522[7:0] = 0xFF			Pause MAC TX queue
@@ -2431,11 +2431,6 @@ void _DisableRFAFEAndResetBB8188F(PADAPTER padapter)
 	/* 2010/08/12 MH We need to set BB/GLBAL reset to save power for SS mode. */
 
 	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> RF off and reset BB.\n")); */
-}
-
-void _DisableRFAFEAndResetBB(PADAPTER padapter)
-{
-	_DisableRFAFEAndResetBB8188F(padapter);
 }
 
 void _ResetDigitalProcedure1_8188F(PADAPTER padapter, BOOLEAN bWithoutHWSM)
@@ -2632,7 +2627,7 @@ s32 CardDisableHWSM(PADAPTER padapter, u8 resetMCU)
 	if (RTW_CANNOT_RUN(padapter))
 		return rtStatus;
 	/*==== RF Off Sequence ==== */
-	_DisableRFAFEAndResetBB(padapter);
+	_rtl8188fu_disable_rf_afe_and_reset(padapter);
 
 	/*  ==== Reset digital sequence   ====== */
 	_ResetDigitalProcedure1(padapter, _FALSE);
@@ -2659,7 +2654,7 @@ s32 CardDisableWithoutHWSM(PADAPTER padapter)
 		return rtStatus;
 
 	/*==== RF Off Sequence ==== */
-	_DisableRFAFEAndResetBB(padapter);
+	_rtl8188fu_disable_rf_afe_and_reset(padapter);
 
 	/*  ==== Reset digital sequence   ====== */
 	_ResetDigitalProcedure1(padapter, _TRUE);
