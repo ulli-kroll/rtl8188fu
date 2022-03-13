@@ -3868,37 +3868,6 @@ inline bool hal_is_bw_support(_adapter *adapter, u8 bw)
 	return (GET_HAL_SPEC(adapter)->bw_cap & ch_width_to_bw_cap(bw));
 }
 
-inline bool hal_is_wireless_mode_support(_adapter *adapter, u8 mode)
-{
-	u8 proto_cap = GET_HAL_SPEC(adapter)->proto_cap;
-
-	if (mode == WIRELESS_11B)
-		if ((proto_cap & PROTO_CAP_11B) && hal_chk_band_cap(adapter, BAND_CAP_2G))
-			return 1;
-
-	if (mode == WIRELESS_11G)
-		if ((proto_cap & PROTO_CAP_11G) && hal_chk_band_cap(adapter, BAND_CAP_2G))
-			return 1;
-
-	if (mode == WIRELESS_11A)
-		if ((proto_cap & PROTO_CAP_11G) && hal_chk_band_cap(adapter, BAND_CAP_5G))
-			return 1;
-
-	if (mode == WIRELESS_11_24N)
-		if ((proto_cap & PROTO_CAP_11N) && hal_chk_band_cap(adapter, BAND_CAP_2G))
-			return 1;
-
-	if (mode == WIRELESS_11_5N)
-		if ((proto_cap & PROTO_CAP_11N) && hal_chk_band_cap(adapter, BAND_CAP_5G))
-			return 1;
-
-	if (mode == WIRELESS_11AC)
-		if ((proto_cap & PROTO_CAP_11AC) && hal_chk_band_cap(adapter, BAND_CAP_5G))
-			return 1;
-
-	return 0;
-}
-
 /*
 * hal_largest_bw - starting from in_bw, get largest bw supported by HAL
 * @adapter:

@@ -285,7 +285,6 @@ bool hal_chk_bw_cap(_adapter *adapter, u8 cap);
 bool hal_chk_proto_cap(_adapter *adapter, u8 cap);
 bool hal_is_band_support(_adapter *adapter, u8 band);
 bool hal_is_bw_support(_adapter *adapter, u8 bw);
-bool hal_is_wireless_mode_support(_adapter *adapter, u8 mode);
 u8 hal_largest_bw(_adapter *adapter, u8 in_bw);
 
 bool hal_chk_wl_func(_adapter *adapter, u8 func);
