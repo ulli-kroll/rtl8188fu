@@ -582,13 +582,6 @@ void dump_country_chplan_map(void *sel)
 	const struct country_chplan *ent;
 	u8 code[2];
 
-#if RTW_DEF_MODULE_REGULATORY_CERT
-	DBG_871X_SEL(sel, "RTW_DEF_MODULE_REGULATORY_CERT:0x%x\n", RTW_DEF_MODULE_REGULATORY_CERT);
-#endif
-#ifdef CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP
-	DBG_871X_SEL(sel, "CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP\n");
-#endif
-
 	for (code[0] = 'A'; code[0] <= 'Z'; code[0]++) {
 		for (code[1] = 'A'; code[1] <= 'Z'; code[1]++) {
 			ent = rtw_get_chplan_from_country(code);

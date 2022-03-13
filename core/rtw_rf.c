@@ -194,11 +194,7 @@ const u8 _band_to_band_cap[] = {
 #define COUNTRY_CHPLAN_ASSIGN_EN_11AC(_val)
 #endif
 
-#if RTW_DEF_MODULE_REGULATORY_CERT
-#define COUNTRY_CHPLAN_ASSIGN_DEF_MODULE_FLAGS(_val) , .def_module_flags = (_val)
-#else
 #define COUNTRY_CHPLAN_ASSIGN_DEF_MODULE_FLAGS(_val)
-#endif
 
 /* has def_module_flags specified, used by common map and HAL dfference map */
 #define COUNTRY_CHPLAN_ENT(_alpha2, _chplan, _en_11ac, _def_module_flags) \
@@ -206,120 +202,6 @@ const u8 _band_to_band_cap[] = {
 		COUNTRY_CHPLAN_ASSIGN_EN_11AC(_en_11ac) \
 		COUNTRY_CHPLAN_ASSIGN_DEF_MODULE_FLAGS(_def_module_flags) \
 	}
-
-#ifdef CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP
-
-#include "../platform/custom_country_chplan.h"
-
-#elif RTW_DEF_MODULE_REGULATORY_CERT
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8821AE_HMC_M2)
-static const struct country_chplan RTL8821AE_HMC_M2_country_chplan_map[] = {
-	COUNTRY_CHPLAN_ENT("CN", 0x51, 1, 0xFB), /* China */
-	COUNTRY_CHPLAN_ENT("RU", 0x59, 0, 0xFB), /* Russia(fac/gost), Kaliningrad */
-	COUNTRY_CHPLAN_ENT("UA", 0x26, 0, 0xFB), /* Ukraine */
-};
-static const u16 RTL8821AE_HMC_M2_country_chplan_map_sz = sizeof(RTL8821AE_HMC_M2_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8821AU)
-static const struct country_chplan RTL8821AU_country_chplan_map[] = {
-	COUNTRY_CHPLAN_ENT("RU", 0x59, 0, 0xFB), /* Russia(fac/gost), Kaliningrad */
-	COUNTRY_CHPLAN_ENT("UA", 0x26, 0, 0xFB), /* Ukraine */
-};
-static const u16 RTL8821AU_country_chplan_map_sz = sizeof(RTL8821AU_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8812AENF_NGFF)
-static const struct country_chplan RTL8812AENF_NGFF_country_chplan_map[] = {
-};
-static const u16 RTL8812AENF_NGFF_country_chplan_map_sz = sizeof(RTL8812AENF_NGFF_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8812AEBT_HMC)
-static const struct country_chplan RTL8812AEBT_HMC_country_chplan_map[] = {
-};
-static const u16 RTL8812AEBT_HMC_country_chplan_map_sz = sizeof(RTL8812AEBT_HMC_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8188EE_HMC_M2)
-static const struct country_chplan RTL8188EE_HMC_M2_country_chplan_map[] = {
-};
-static const u16 RTL8188EE_HMC_M2_country_chplan_map_sz = sizeof(RTL8188EE_HMC_M2_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8723BE_HMC_M2)
-static const struct country_chplan RTL8723BE_HMC_M2_country_chplan_map[] = {
-};
-static const u16 RTL8723BE_HMC_M2_country_chplan_map_sz = sizeof(RTL8723BE_HMC_M2_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8723BS_NGFF1216)
-static const struct country_chplan RTL8723BS_NGFF1216_country_chplan_map[] = {
-};
-static const u16 RTL8723BS_NGFF1216_country_chplan_map_sz = sizeof(RTL8723BS_NGFF1216_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-#if (RTW_DEF_MODULE_REGULATORY_CERT & RTW_MODULE_RTL8192EEBT_HMC_M2)
-static const struct country_chplan RTL8192EEBT_HMC_M2_country_chplan_map[] = {
-};
-static const u16 RTL8192EEBT_HMC_M2_country_chplan_map_sz = sizeof(RTL8192EEBT_HMC_M2_country_chplan_map)/sizeof(struct country_chplan);
-#endif
-
-/**
- * rtw_def_module_get_chplan_from_country -
- * @country_code: string of country code
- * @return:
- * Return NULL for case referring to common map
- */
-static const struct country_chplan *rtw_def_module_get_chplan_from_country(const char *country_code)
-{
-	const struct country_chplan *ent = NULL;
-	const struct country_chplan *hal_map = NULL;
-	u16 hal_map_sz = 0;
-	int i;
-
-	/* TODO: runtime selection for multi driver */
-#if (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8821AE_HMC_M2)
-	hal_map = RTL8821AE_HMC_M2_country_chplan_map;
-	hal_map_sz = RTL8821AE_HMC_M2_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8821AU)
-	hal_map = RTL8821AU_country_chplan_map;
-	hal_map_sz = RTL8821AU_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8812AENF_NGFF)
-	hal_map = RTL8812AENF_NGFF_country_chplan_map;
-	hal_map_sz = RTL8812AENF_NGFF_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8812AEBT_HMC)
-	hal_map = RTL8812AEBT_HMC_country_chplan_map;
-	hal_map_sz = RTL8812AEBT_HMC_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8188EE_HMC_M2)
-	hal_map = RTL8188EE_HMC_M2_country_chplan_map;
-	hal_map_sz = RTL8188EE_HMC_M2_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8723BE_HMC_M2)
-	hal_map = RTL8723BE_HMC_M2_country_chplan_map;
-	hal_map_sz = RTL8723BE_HMC_M2_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8723BS_NGFF1216)
-	hal_map = RTL8723BS_NGFF1216_country_chplan_map;
-	hal_map_sz = RTL8723BS_NGFF1216_country_chplan_map_sz;
-#elif (RTW_DEF_MODULE_REGULATORY_CERT == RTW_MODULE_RTL8192EEBT_HMC_M2)
-	hal_map = RTL8192EEBT_HMC_M2_country_chplan_map;
-	hal_map_sz = RTL8192EEBT_HMC_M2_country_chplan_map_sz;
-#endif
-
-	if (hal_map == NULL || hal_map_sz == 0)
-		goto exit;
-
-	for (i = 0; i < hal_map_sz; i++) {
-		if (strncmp(country_code, hal_map[i].alpha2, 2) == 0) {
-			ent = &hal_map[i];
-			break;
-		}
-	}
-
-exit:
-	return ent;
-}
-#endif /* CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP or RTW_DEF_MODULE_REGULATORY_CERT */
 
 static const struct country_chplan country_chplan_map[] = {
 	COUNTRY_CHPLAN_ENT("AD", 0x26, 1, 0x00), /* Andorra */
@@ -572,19 +454,8 @@ const struct country_chplan *rtw_get_chplan_from_country(const char *country_cod
 	code[0] = alpha_to_upper(country_code[0]);
 	code[1] = alpha_to_upper(country_code[1]);
 
-#if !defined(CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP) && RTW_DEF_MODULE_REGULATORY_CERT
-	ent = rtw_def_module_get_chplan_from_country(code);
-	if (ent != NULL)
-		goto exit;
-#endif
-
-#ifdef CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP
-	map = CUSTOMIZED_country_chplan_map;
-	map_sz = CUSTOMIZED_country_chplan_map_sz;
-#else
 	map = country_chplan_map;
 	map_sz = country_chplan_map_sz;
-#endif
 
 	for (i = 0; i < map_sz; i++) {
 		if (strncmp(code, map[i].alpha2, 2) == 0) {
