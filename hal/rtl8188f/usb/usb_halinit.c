@@ -1528,35 +1528,6 @@ _SetUsbSuspend(
 }
 
 static VOID
-_DisableRFAFEAndResetBB(
-	IN PADAPTER			Adapter
-)
-{
-	/*
-	 * a.	TXPAUSE 0x522[7:0] = 0xFF			Pause MAC TX queue
-	 * b.	RF path 0 offset 0x00 = 0x00		disable RF
-	 * c.	APSD_CTRL 0x600[7:0] = 0x40
-	 * d.	SYS_FUNC_EN 0x02[7:0] = 0x16		reset BB state machine
-	 * e.	SYS_FUNC_EN 0x02[7:0] = 0x14		reset BB state machine
-	 */
-	u8 eRFPath = 0, value8 = 0;
-	rtw_write8(Adapter, REG_TXPAUSE, 0xFF);
-	PHY_SetRFReg(Adapter, eRFPath, 0x0, bMaskByte0, 0x0);
-
-	value8 |= APSDOFF;
-	rtw_write8(Adapter, REG_APSD_CTRL, value8);/*0x40 */
-
-	value8 = 0;
-	value8 |= (FEN_USBD | FEN_USBA | FEN_BB_GLB_RSTn);
-	rtw_write8(Adapter, REG_SYS_FUNC_EN, value8);/*0x16 */
-
-	value8 &= (~FEN_BB_GLB_RSTn);
-	rtw_write8(Adapter, REG_SYS_FUNC_EN, value8); /*0x14 */
-
-	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> RF off and reset BB.\n")); */
-}
-
-static VOID
 _ResetDigitalProcedure1(
 	IN 	PADAPTER			Adapter,
 	IN	BOOLEAN				bWithoutHWSM
