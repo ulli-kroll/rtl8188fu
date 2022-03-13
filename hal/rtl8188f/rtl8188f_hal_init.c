@@ -531,7 +531,7 @@ u8 send_fw_packet(PADAPTER padapter, u8 *pRam_code, u32 length)
 
 MODULE_FIRMWARE("rtlwifi/rtl8188fufw.bin");
 
-s32 rtl8188f_FirmwareDownload(PADAPTER padapter, BOOLEAN  bUsedqFw)
+s32 rtl8188f_FirmwareDownload(PADAPTER padapter)
 {
 	s32	rtStatus = _SUCCESS;
 	u8 write_fw = 0;

@@ -322,7 +322,7 @@ struct hal_ops {
 	s32 (*fill_h2c_cmd)(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
 	void (*fill_fake_txdesc)(PADAPTER, u8 *pDesc, u32 BufferLen,
 			u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
-	s32 (*fw_dl)(_adapter *adapter, u8 wowlan);
+	s32 (*fw_dl)(_adapter *adapter);
 
 	u8 (*hal_get_tx_buff_rsvd_page_num)(_adapter *adapter, bool wowlan);
 #ifdef CONFIG_GPIO_API
@@ -565,7 +565,7 @@ void rtw_hal_update_hisr_hsisr_ind(_adapter *padapter, u32 flag);
 #endif
 
 void rtw_hal_fw_correct_bcn(_adapter *padapter);
-s32 rtw_hal_fw_dl(_adapter *padapter, u8 wowlan);
+s32 rtw_hal_fw_dl(_adapter *padapter);
 
 u8 rtw_hal_ops_check(_adapter *padapter);
 
