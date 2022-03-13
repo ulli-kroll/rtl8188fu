@@ -1528,24 +1528,6 @@ _SetUsbSuspend(
 }
 
 static VOID
-_ResetDigitalProcedure2(
-	IN 	PADAPTER			Adapter
-)
-{
-	/*
-	 * k.	SYS_FUNC_EN 0x03[7:0] = 0x44			disable ELDR runction
-	 * l.	SYS_CLKR 0x08[15:0] = 0x3083			disable ELDR clock
-	 * m.	SYS_ISO_CTRL 0x01[7:0] = 0x83			isolated ELDR to PON
-	 */
-	/*rtw_write8(Adapter, REG_SYS_FUNC_EN+1, 0x44);//marked by Scott. */
-	/*rtw_write16(Adapter, REG_SYS_CLKR, 0x3083); */
-	/*rtw_write8(Adapter, REG_SYS_ISO_CTRL+1, 0x83); */
-
-	rtw_write16(Adapter, REG_SYS_CLKR, 0x70a3); /*modify to 0x70a3 by Scott. */
-	rtw_write8(Adapter, REG_SYS_ISO_CTRL + 1, 0x82); /*modify to 0x82 by Scott. */
-}
-
-static VOID
 _DisableAnalog(
 	IN PADAPTER			Adapter,
 	IN BOOLEAN			bWithoutHWSM
