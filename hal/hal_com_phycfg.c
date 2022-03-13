@@ -746,29 +746,6 @@ PHY_InitTxPowerByRate(
 }
 
 VOID
-PHY_StoreTxPowerByRate(
-	IN	PADAPTER	pAdapter,
-	IN	u32			Band,
-	IN	u32			RfPath,
-	IN	u32			TxNum,
-	IN	u32			RegAddr,
-	IN	u32			BitMask,
-	IN	u32			Data
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	PDM_ODM_T  		pDM_Odm = &pHalData->odmpriv;
-	
-	if ( pDM_Odm->PhyRegPgVersion > 0 )
-	{
-		PHY_StoreTxPowerByRateNew( pAdapter, Band, RfPath, TxNum, RegAddr, BitMask, Data );
-	}
-	else
-		DBG_871X("Invalid PHY_REG_PG.txt version %d\n",  pDM_Odm->PhyRegPgVersion );
-	
-}
-
-VOID
 phy_ConvertTxPowerByRateInDbmToRelativeValues(
 	IN	PADAPTER	pAdapter
 	)
