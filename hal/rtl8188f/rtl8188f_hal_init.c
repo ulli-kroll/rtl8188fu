@@ -2547,11 +2547,6 @@ void _ResetDigitalProcedure1_8188F(PADAPTER padapter, BOOLEAN bWithoutHWSM)
 
 }
 
-void _ResetDigitalProcedure1(PADAPTER padapter, BOOLEAN bWithoutHWSM)
-{
-	_ResetDigitalProcedure1_8188F(padapter, bWithoutHWSM);
-}
-
 #endif /* CONFIG_USB_HCI */
 
 BOOLEAN
