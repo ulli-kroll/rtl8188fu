@@ -181,7 +181,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("odm_TxPwrTrackSetPwr8188F CH=%d\n", *(pDM_Odm->pChannel)));
 
-		pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath] = pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
+		pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
 
 
 	} else if (Method == BBSWING) {
@@ -231,7 +231,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 		Final_CCK_Swing_Index = pRFCalibrateInfo->default_cck_index + pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
 		if (RFPath == ODM_RF_PATH_A) {
 			if (Final_OFDM_Swing_Index > PwrTrackingLimit_OFDM) {     //BBSwing higher then Limit
-				pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath] = Final_OFDM_Swing_Index - PwrTrackingLimit_OFDM;
+				pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - PwrTrackingLimit_OFDM;
 
 				setIqkMatrix_8188F(pDM_Odm, PwrTrackingLimit_OFDM, RFPath,
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
@@ -243,9 +243,9 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 							 ("******Path_A Over BBSwing Limit , PwrTrackingLimit = %d , Remnant TxAGC Value = %d\n",
-							  PwrTrackingLimit_OFDM, pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath]));
+							  PwrTrackingLimit_OFDM, pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath]));
 				} else if (Final_OFDM_Swing_Index < pRFCalibrateInfo->default_ofdm_index) {
-					pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath] = Final_OFDM_Swing_Index - pRFCalibrateInfo->default_ofdm_index;
+					pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - pRFCalibrateInfo->default_ofdm_index;
 					setIqkMatrix_8188F(pDM_Odm, pRFCalibrateInfo->default_ofdm_index, ODM_RF_PATH_A,
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
@@ -255,7 +255,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 							 ("******Path_A Lower then BBSwing lower bound  28 , Remnant TxAGC Value = %d\n",
-							  pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath]));
+							  pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath]));
 			} else {
 				setIqkMatrix_8188F(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
@@ -265,7 +265,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 							 ("******Path_A Compensate with BBSwing , Final_OFDM_Swing_Index = %d\n", Final_OFDM_Swing_Index));
 
 				if (pRFCalibrateInfo->Modify_TxAGC_Flag_PathA) {  //If TxAGC has changed, reset TxAGC again
-					pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath] = 0;
+					pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = 0;
 					}
 			}
 			{
@@ -273,14 +273,14 @@ ODM_TxPwrTrackSetPwr_8188F(
 				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, OFDM );
 				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, HT_MCS0_MCS7 );
 			}
-			pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=pRFCalibrateInfo->Remnant_OFDMSwingIdx[ODM_RF_PATH_A] ;        //add by Mingzhi.Guo
+			pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=pRFCalibrateInfo->remnant_ofdm_swing_idx[ODM_RF_PATH_A] ;        //add by Mingzhi.Guo
 
 
 			//MIX mode: CCK
 			if(Final_CCK_Swing_Index > PwrTrackingLimit_CCK) {
-				pRFCalibrateInfo->Remnant_CCKSwingIdx = Final_CCK_Swing_Index - PwrTrackingLimit_CCK;
+				pRFCalibrateInfo->remnant_cck_idx = Final_CCK_Swing_Index - PwrTrackingLimit_CCK;
 
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("******Path_A CCK Over Limit , PwrTrackingLimit_CCK = %d , pRFCalibrateInfo->Remnant_CCKSwingIdx  = %d \n", PwrTrackingLimit_CCK, pRFCalibrateInfo->Remnant_CCKSwingIdx));
+				ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("******Path_A CCK Over Limit , PwrTrackingLimit_CCK = %d , pRFCalibrateInfo->Remnant_CCKSwingIdx  = %d \n", PwrTrackingLimit_CCK, pRFCalibrateInfo->remnant_cck_idx));
 				ODM_Write1Byte(pDM_Odm, 0xa22, CCKSwingTable_Ch1_Ch14_88F[PwrTrackingLimit_CCK][0]);
 				ODM_Write1Byte(pDM_Odm, 0xa23, CCKSwingTable_Ch1_Ch14_88F[PwrTrackingLimit_CCK][1]);
 				ODM_Write1Byte(pDM_Odm, 0xa24, CCKSwingTable_Ch1_Ch14_88F[PwrTrackingLimit_CCK][2]);
@@ -301,9 +301,9 @@ ODM_TxPwrTrackSetPwr_8188F(
 				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA_CCK = TRUE;
 
 			} else if(Final_CCK_Swing_Index < 0) {   // Lowest CCK Index = 0
-				pRFCalibrateInfo->Remnant_CCKSwingIdx = Final_CCK_Swing_Index;
+				pRFCalibrateInfo->remnant_cck_idx = Final_CCK_Swing_Index;
 
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("******Path_A CCK Under Limit , PwrTrackingLimit_CCK = %d , pRFCalibrateInfo->Remnant_CCKSwingIdx  = %d \n", 0, pRFCalibrateInfo->Remnant_CCKSwingIdx));
+				ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("******Path_A CCK Under Limit , PwrTrackingLimit_CCK = %d , pRFCalibrateInfo->Remnant_CCKSwingIdx  = %d \n", 0, pRFCalibrateInfo->remnant_cck_idx));
 				ODM_Write1Byte(pDM_Odm, 0xa22, CCKSwingTable_Ch1_Ch14_88F[0][0]);
 				ODM_Write1Byte(pDM_Odm, 0xa23, CCKSwingTable_Ch1_Ch14_88F[0][1]);
 				ODM_Write1Byte(pDM_Odm, 0xa24, CCKSwingTable_Ch1_Ch14_88F[0][2]);
@@ -342,13 +342,13 @@ ODM_TxPwrTrackSetPwr_8188F(
 				ODM_Write1Byte(pDM_Odm, 0xaa3, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][15]);
 
 				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA_CCK=FALSE;
-				pRFCalibrateInfo->Remnant_CCKSwingIdx = 0;
+				pRFCalibrateInfo->remnant_cck_idx = 0;
 			}
 			{
 				//Set TxAGC Page C{};
 				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, CCK );
 			}
-			pRFCalibrateInfo->Modify_TxAGC_Value_CCK = pRFCalibrateInfo->Remnant_CCKSwingIdx;
+			pRFCalibrateInfo->Modify_TxAGC_Value_CCK = pRFCalibrateInfo->remnant_cck_idx;
 
 		}
 	} else

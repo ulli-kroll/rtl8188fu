@@ -137,8 +137,8 @@ typedef struct ODM_RF_Calibration_Structure
 	BOOLEAN			BbSwingFlagCck;
 	
 	s1Byte			Absolute_OFDMSwingIdx[MAX_RF_PATH];   
-	s1Byte			Remnant_OFDMSwingIdx[MAX_RF_PATH];   
-	s1Byte			Remnant_CCKSwingIdx;
+	s1Byte			remnant_ofdm_swing_idx[MAX_RF_PATH];
+	s1Byte			remnant_cck_idx;
 	s1Byte			Modify_TxAGC_Value;       /*Remnat compensate value at TxAGC */
 	BOOLEAN			Modify_TxAGC_Flag_PathA;
 	BOOLEAN			Modify_TxAGC_Flag_PathB;

@@ -1194,12 +1194,12 @@ rtl8188fu_phy_get_tx_power_tracking_offset(
 	
 	if ((Rate == MGN_1M) ||(Rate == MGN_2M)||(Rate == MGN_5_5M)||(Rate == MGN_11M))
 	{ 
-		offset = pDM_Odm->RFCalibrateInfo.Remnant_CCKSwingIdx;
+		offset = pDM_Odm->RFCalibrateInfo.remnant_cck_idx;
 		/*DBG_871X("+Remnant_CCKSwingIdx = 0x%x\n", RFPath, Rate, pRFCalibrateInfo->Remnant_CCKSwingIdx);*/
 	}
 	else
 	{
-		offset = pDM_Odm->RFCalibrateInfo.Remnant_OFDMSwingIdx[RFPath]; 
+		offset = pDM_Odm->RFCalibrateInfo.remnant_ofdm_swing_idx[RFPath];
 		/*DBG_871X("+Remanant_OFDMSwingIdx[RFPath %u][Rate 0x%x] = 0x%x\n", RFPath, Rate, pRFCalibrateInfo->Remnant_OFDMSwingIdx[RFPath]);	*/	
 		
 	}

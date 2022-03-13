@@ -84,7 +84,7 @@ ODM_ClearTxPowerTrackingState(
 		pRFCalibrateInfo->PowerIndexOffset[p] = 0;
 
 		pRFCalibrateInfo->Absolute_OFDMSwingIdx[p] = 0;    /* Initial Mix mode power tracking*/
-		pRFCalibrateInfo->Remnant_OFDMSwingIdx[p] = 0;			  
+		pRFCalibrateInfo->remnant_ofdm_swing_idx[p] = 0;
 		pRFCalibrateInfo->KfreeOffset[p] = 0;
 	}
 	
@@ -92,7 +92,7 @@ ODM_ClearTxPowerTrackingState(
 	pRFCalibrateInfo->Modify_TxAGC_Flag_PathB = FALSE;       /*Initial at Modify Tx Scaling Mode*/
 	pRFCalibrateInfo->Modify_TxAGC_Flag_PathC = FALSE;       /*Initial at Modify Tx Scaling Mode*/
 	pRFCalibrateInfo->Modify_TxAGC_Flag_PathD = FALSE;       /*Initial at Modify Tx Scaling Mode*/
-	pRFCalibrateInfo->Remnant_CCKSwingIdx = 0;
+	pRFCalibrateInfo->remnant_cck_idx = 0;
 	pRFCalibrateInfo->ThermalValue = pHalData->EEPROMThermalMeter;
 	
 	pRFCalibrateInfo->Modify_TxAGC_Value_CCK=0;			//modify by Mingzhi.Guo
