@@ -169,9 +169,6 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter);
 void rtl8188f_FirmwareSelfReset(PADAPTER padapter);
 void rtl8188f_InitializeFirmwareVars(PADAPTER padapter);
 
-void rtl8188f_InitAntenna_Selection(PADAPTER padapter);
-void rtl8188f_DeinitAntenna_Selection(PADAPTER padapter);
-void rtl8188f_CheckAntenna_Selection(PADAPTER padapter);
 void rtl8188f_init_default_value(PADAPTER padapter);
 
 s32 rtl8188f_InitLLTTable(PADAPTER padapter);

@@ -1264,7 +1264,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC11);
 	/* 2010/12/17 MH We need to set TX power according to EFUSE content at first. */
 	/*PHY_SetTxPowerLevel8188F(padapter, pHalData->CurrentChannel); */
-	rtl8188f_InitAntenna_Selection(padapter);
 
 	/* HW SEQ CTRL */
 	/*set 0x0 to 0xFF by tynli. Default enable HW SEQ NUM. */

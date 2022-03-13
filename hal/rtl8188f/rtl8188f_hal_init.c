@@ -2198,39 +2198,6 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->hal_get_tx_buff_rsvd_page_num = &GetTxBufferRsvdPageNum8188F;
 }
 
-void rtl8188f_InitAntenna_Selection(PADAPTER padapter)
-{
-}
-
-void rtl8188f_CheckAntenna_Selection(PADAPTER padapter)
-{
-	PHAL_DATA_TYPE pHalData;
-	u8 val;
-
-
-	pHalData = GET_HAL_DATA(padapter);
-
-	val = rtw_read8(padapter, REG_LEDCFG2);
-	/* Let 8051 take control antenna stetting */
-	if (!(val & BIT(7))) {
-		val |= BIT(7); /* DPDT_SEL_EN, 0x4C[23] */
-		rtw_write8(padapter, REG_LEDCFG2, val);
-	}
-}
-void rtl8188f_DeinitAntenna_Selection(PADAPTER padapter)
-{
-	PHAL_DATA_TYPE pHalData;
-	u8 val;
-
-
-	pHalData = GET_HAL_DATA(padapter);
-	val = rtw_read8(padapter, REG_LEDCFG2);
-	/* Let 8051 take control antenna stetting */
-	val &= ~BIT(7); /* DPDT_SEL_EN, clear 0x4C[23] */
-	rtw_write8(padapter, REG_LEDCFG2, val);
-
-}
-
 void init_hal_spec_8188f(_adapter *adapter)
 {
 	struct hal_spec_t *hal_spec = GET_HAL_SPEC(adapter);
