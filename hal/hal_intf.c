@@ -175,9 +175,6 @@ uint	 rtw_hal_init(_adapter *padapter)
 	if (status == _SUCCESS) {
 		pHalData->hw_init_completed = _TRUE;
 			
-		if (padapter->registrypriv.notch_filter == 1)
-			rtw_hal_notch_filter(padapter, 1);
-
 		for (i = 0; i<dvobj->iface_nums; i++)
 			rtw_sec_restore_wep_key(dvobj->padapters[i]);
 
@@ -553,12 +550,6 @@ s32 rtw_hal_xmit_thread_handler(_adapter *padapter)
 	return padapter->HalFunc.xmit_thread_handler(padapter);
 }
 #endif
-
-void rtw_hal_notch_filter(_adapter *adapter, bool enable)
-{
-	if(adapter->HalFunc.hal_notch_filter)
-		adapter->HalFunc.hal_notch_filter(adapter,enable);		
-}
 
 bool rtw_hal_c2h_valid(_adapter *adapter, u8 *buf)
 {

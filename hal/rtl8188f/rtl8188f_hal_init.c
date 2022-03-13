@@ -1960,17 +1960,6 @@ static void rtl8188f_SetBeaconRelatedRegisters(PADAPTER padapter)
 	rtw_write8(padapter, bcn_ctrl_reg, val8);
 }
 
-void hal_notch_filter_8188f(_adapter *adapter, bool enable)
-{
-	if (enable) {
-		DBG_871X("Enable notch filter\n");
-		rtw_write8(adapter, rOFDM0_RxDSP + 1, rtw_read8(adapter, rOFDM0_RxDSP + 1) | BIT1);
-	} else {
-		DBG_871X("Disable notch filter\n");
-		rtw_write8(adapter, rOFDM0_RxDSP + 1, rtw_read8(adapter, rOFDM0_RxDSP + 1) & ~BIT1);
-	}
-}
-
 u8 rtl8188f_MRateIdxToARFRId(PADAPTER padapter, u8 rate_idx)
 {
 	u8 ret = 0;
@@ -2200,8 +2189,6 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 #ifdef CONFIG_XMIT_THREAD_MODE
 	pHalFunc->xmit_thread_handler = &hal_xmit_handler;
 #endif
-	pHalFunc->hal_notch_filter = &hal_notch_filter_8188f;
-
 	pHalFunc->c2h_handler = c2h_handler_8188f;
 	pHalFunc->c2h_id_filter_ccx = c2h_id_filter_ccx_8188f;
 

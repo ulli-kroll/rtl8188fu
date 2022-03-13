@@ -316,7 +316,6 @@ struct hal_ops {
 	int (*IOL_exec_cmds_sync)(_adapter *padapter, struct xmit_frame *xmit_frame, u32 max_wating_ms, u32 bndy_cnt);
 #endif
 
-	void (*hal_notch_filter)(_adapter * adapter, bool enable);
 	s32 (*c2h_handler)(_adapter *padapter, u8 *c2h_evt);
 	c2h_id_filter c2h_id_filter_ccx;
 	s32 (*fill_h2c_cmd)(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
@@ -542,8 +541,6 @@ int rtw_hal_iol_cmd(ADAPTER *adapter, struct xmit_frame *xmit_frame, u32 max_wat
 #ifdef CONFIG_XMIT_THREAD_MODE
 s32 rtw_hal_xmit_thread_handler(_adapter *padapter);
 #endif
-
-void rtw_hal_notch_filter(_adapter * adapter, bool enable);
 
 bool rtw_hal_c2h_valid(_adapter *adapter, u8 *buf);
 s32 rtw_hal_c2h_evt_read(_adapter *adapter, u8 *buf);
