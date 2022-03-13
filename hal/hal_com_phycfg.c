@@ -673,54 +673,6 @@ PHY_GetRateValuesOfTxPowerByRate(
 	};
 }
 
-void
-PHY_StoreTxPowerByRateNew(
-	IN	PADAPTER	pAdapter,
-	IN	u32			Band,
-	IN	u32			RfPath,
-	IN	u32			TxNum,
-	IN	u32			RegAddr,
-	IN	u32			BitMask,
-	IN	u32			Data
-	)
-{
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-	u8	i = 0, rates[4] = {0}, rateNum = 0;
-	s8	PwrByRateVal[4] = {0};
-
-	PHY_GetRateValuesOfTxPowerByRate(pAdapter, RegAddr, BitMask, Data, rates, PwrByRateVal, &rateNum);
-
-	if (Band != BAND_ON_2_4G && Band != BAND_ON_5G) {
-		DBG_871X_LEVEL(_drv_always_, "Invalid Band %d\n", Band);
-		return;
-	}
-
-	if (RfPath > ODM_RF_PATH_D) {
-		DBG_871X_LEVEL(_drv_always_, "Invalid RfPath %d\n", RfPath);
-		return;
-	}
-
-	if (TxNum > ODM_RF_PATH_D) {
-		DBG_871X_LEVEL(_drv_always_, "Invalid TxNum %d\n", TxNum);
-		return;
-	}
-
-	for (i = 0; i < rateNum; ++i) {
-		u8 rate_idx = PHY_GetRateIndexOfTxPowerByRate(rates[i]);
-
-		if (IS_1T_RATE(rates[i]))
-			pHalData->TxPwrByRateOffset[Band][RfPath][RF_1TX][rate_idx] = PwrByRateVal[i];
-		else if (IS_2T_RATE(rates[i]))
-			pHalData->TxPwrByRateOffset[Band][RfPath][RF_2TX][rate_idx] = PwrByRateVal[i];
-		else if (IS_3T_RATE(rates[i]))
-			pHalData->TxPwrByRateOffset[Band][RfPath][RF_3TX][rate_idx] = PwrByRateVal[i];
-		else if (IS_4T_RATE(rates[i]))
-			pHalData->TxPwrByRateOffset[Band][RfPath][RF_4TX][rate_idx] = PwrByRateVal[i];
-		else
-			rtw_warn_on(1);
-	}
-}
-
 VOID
 PHY_InitTxPowerByRate(
 	IN	PADAPTER	pAdapter
