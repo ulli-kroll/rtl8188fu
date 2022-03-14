@@ -101,12 +101,6 @@ PHY_GetTxPowerIndex_8188F(
 	IN	u8					Channel
 	);
 
-VOID	
-PHY_GetTxPowerLevel8188F(			
-	IN	PADAPTER		Adapter,
-	OUT s32*		    		powerlevel	
-	);
-
 VOID
 PHY_SetTxPowerLevel8188F(
 	IN	PADAPTER		Adapter,

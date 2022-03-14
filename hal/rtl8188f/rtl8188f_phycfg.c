@@ -869,25 +869,6 @@ PHY_SetTxPowerLevel8188F(
 	RT_TRACE(_module_hal_init_c_, _drv_info_, ("<==PHY_SetTxPowerLevel8188F()\n"));
 }
 
-VOID
-PHY_GetTxPowerLevel8188F(
-	IN	PADAPTER		Adapter,
-	OUT	s32				*powerlevel
-)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	s32				TxPwrDbm = 13;
-#if 0
-	RT_TRACE(COMP_TXAGC, DBG_LOUD, ("PHY_GetTxPowerLevel8188F(): TxPowerLevel: %#x\n", TxPwrDbm));
-
-	if (pMgntInfo->ClientConfigPwrInDbm != UNSPECIFIED_PWR_DBM)
-		*powerlevel = pMgntInfo->ClientConfigPwrInDbm;
-	else
-		*powerlevel = TxPwrDbm;
-#endif
-}
-
-
 /* A workaround to eliminate the 2400MHz, 2440MHz, 2480MHz spur of 8188F. (Asked by David.) */
 VOID
 phy_SpurCalibration_8188F(

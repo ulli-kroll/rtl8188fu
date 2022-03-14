@@ -270,8 +270,6 @@ struct hal_ops {
 	void	(*set_channel_handler)(_adapter *padapter, u8 channel);
 	void	(*set_chnl_bw_handler)(_adapter *padapter, u8 channel, CHANNEL_WIDTH Bandwidth, u8 Offset40, u8 Offset80);
 
-	void	(*get_tx_power_level_handler)(_adapter *padapter, s32 *powerlevel);
-
 	void	(*hal_dm_watchdog)(_adapter *padapter);
 #ifdef CONFIG_LPS_LCLK_WD_TIMER
 	void	(*hal_dm_watchdog_in_lps)(_adapter *padapter);
@@ -527,8 +525,6 @@ void	rtw_hal_set_chan(_adapter *padapter, u8 channel);
 void	rtw_hal_set_chnl_bw(_adapter *padapter, u8 channel, CHANNEL_WIDTH Bandwidth, u8 Offset40, u8 Offset80);
 void	rtw_hal_dm_watchdog(_adapter *padapter);
 void	rtw_hal_dm_watchdog_in_lps(_adapter *padapter);
-
-void	rtw_hal_get_tx_power_level(_adapter *padapter, s32 *powerlevel);
 
 #ifdef CONFIG_HOSTAPD_MLME
 s32	rtw_hal_hostap_mgnt_xmit_entry(_adapter *padapter, _pkt *pkt);

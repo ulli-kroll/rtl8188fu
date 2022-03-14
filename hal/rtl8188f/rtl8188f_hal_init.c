@@ -2152,8 +2152,6 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->set_channel_handler = &PHY_SwChnl8188F;
 	pHalFunc->set_chnl_bw_handler = &PHY_SetSwChnlBWMode8188F;
 
-	pHalFunc->get_tx_power_level_handler = &PHY_GetTxPowerLevel8188F;
-
 	pHalFunc->hal_dm_watchdog = &rtl8188f_HalDmWatchDog;
 #ifdef CONFIG_LPS_LCLK_WD_TIMER
 	pHalFunc->hal_dm_watchdog_in_lps = &rtl8188f_HalDmWatchDog_in_LPS;
