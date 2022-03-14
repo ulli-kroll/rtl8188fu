@@ -187,6 +187,14 @@ void Hal_EfuseParseAntennaDiversity_8188F(PADAPTER padapter, u8 *hwinfo, BOOLEAN
 void Hal_EfuseParseXtal_8188F(PADAPTER pAdapter, u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseThermalMeter_8188F(PADAPTER padapter, u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseKFreeData_8188F(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
+VOID
+rtl8188fu_get_delta_swing_table(
+	IN PVOID pDM_VOID,
+	OUT pu1Byte *TemperatureUP_A,
+	OUT pu1Byte *TemperatureDOWN_A,
+	OUT pu1Byte *TemperatureUP_B,
+	OUT pu1Byte *TemperatureDOWN_B
+);
 
 #if 0 /* Do not need for rtl8188f */
 VOID Hal_EfuseParseVoltage_8188F(PADAPTER pAdapter,u8* hwinfo,BOOLEAN 	AutoLoadFail); 

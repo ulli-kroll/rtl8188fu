@@ -43,8 +43,6 @@ typedef VOID	(*FuncSwing8814only)(PVOID, pu1Byte*, pu1Byte*, pu1Byte*, pu1Byte*)
 
 typedef struct _TXPWRTRACK_CFG {
 	u1Byte		Threshold_DPK;
-	FuncSwing	GetDeltaSwingTable;
-	FuncSwing8814only	GetDeltaSwingTable8814only;
 } TXPWRTRACK_CFG, *PTXPWRTRACK_CFG;
 
 void ConfigureTxpowerTrack(

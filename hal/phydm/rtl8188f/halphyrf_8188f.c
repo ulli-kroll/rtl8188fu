@@ -357,7 +357,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 
 VOID
-GetDeltaSwingTable_8188F(
+rtl8188fu_get_delta_swing_table(
 	IN PVOID pDM_VOID,
 	OUT pu1Byte *TemperatureUP_A,
 	OUT pu1Byte *TemperatureDOWN_A,
@@ -419,8 +419,6 @@ void ConfigureTxpowerTrack_8188F(
 )
 {
 	RT_TRACE(COMP_CMD, DBG_LOUD, ("ConfigureTxpowerTrack_8188F ====> \n"));
-
-	pConfig->GetDeltaSwingTable = GetDeltaSwingTable_8188F;
 }
 
 //1 7.	IQK

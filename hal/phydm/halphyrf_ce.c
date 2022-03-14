@@ -132,8 +132,8 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 	ConfigureTxpowerTrack(pDM_Odm, &c);
 
-	(*c.GetDeltaSwingTable)(pDM_Odm, (pu1Byte*)&deltaSwingTableIdx_TUP_A, (pu1Byte*)&deltaSwingTableIdx_TDOWN_A,
-									  (pu1Byte*)&deltaSwingTableIdx_TUP_B, (pu1Byte*)&deltaSwingTableIdx_TDOWN_B);	
+	rtl8188fu_get_delta_swing_table(pDM_Odm, (pu1Byte*)&deltaSwingTableIdx_TUP_A, (pu1Byte*)&deltaSwingTableIdx_TDOWN_A,
+						  (pu1Byte*)&deltaSwingTableIdx_TUP_B, (pu1Byte*)&deltaSwingTableIdx_TDOWN_B);
 	
 	pDM_Odm->RFCalibrateInfo.bTXPowerTrackingInit = TRUE;
     
