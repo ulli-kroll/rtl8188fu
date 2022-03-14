@@ -199,8 +199,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			/*no PG , do LCK at initial status*/
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("no PG, do LCK\n"));
 			pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
-			if (PHY_LCCalibrate_8188F)
-				PHY_LCCalibrate_8188F(pDM_Odm);
+			PHY_LCCalibrate_8188F(pDM_Odm);
 			delta_LCK = (ThermalValue > pDM_Odm->RFCalibrateInfo.ThermalValue_LCK)?(ThermalValue - pDM_Odm->RFCalibrateInfo.ThermalValue_LCK):(pDM_Odm->RFCalibrateInfo.ThermalValue_LCK - ThermalValue);
 		}
 
@@ -213,8 +212,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			/* Delta temperature is equal to or larger than 20 centigrade.*/
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("delta_LCK(%d) >= Threshold_IQK(%d)\n", delta_LCK, IQK_THRESHOLD));
 			pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
-			if (PHY_LCCalibrate_8188F)
-				PHY_LCCalibrate_8188F(pDM_Odm);
+			PHY_LCCalibrate_8188F(pDM_Odm);
 		}
 	}
 	//3 7. If necessary, move the index of swing table to adjust Tx power.	
