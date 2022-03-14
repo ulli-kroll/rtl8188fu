@@ -160,7 +160,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#define	USE_WORKITEM 0
 	#define	FOR_BRAZIL_PRETEST 0
 	/*#define	BT_30_SUPPORT			0*/
-	#define	FPGA_TWO_MAC_VERIFICATION	0
 	#define	RTL8881A_SUPPORT	0
 
 #endif

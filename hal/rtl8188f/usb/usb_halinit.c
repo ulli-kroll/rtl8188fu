@@ -1344,29 +1344,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	DBG_871X("MAC loopback: REG_CR_8188F=%#X.\n", rtw_read32(padapter, REG_CR_8188F));
 #endif
 
-#if FPGA_TWO_MAC_VERIFICATION
-/* #if 1 */
-	/* Enable BB */
-	value8 = rtw_read8(padapter, REG_SYS_FUNC_EN_8188F);
-	DBG_871X("RJZ: open 2-MAC mode: REG_SYS_FUNC_EN_8188F = %#x.\n", value8);
-	rtw_write8(padapter, REG_SYS_FUNC_EN_8188F, value8 | BIT0 | BIT1 | BIT2);
-	value8 = rtw_read8(padapter, REG_SYS_FUNC_EN_8188F);
-	DBG_871X("RJZ: open 2-MAC mode: REG_SYS_FUNC_EN_8188F = %#x.\n", value8);
-
-	/* Use 40MHz */
-	value8 = rtw_read8(padapter, REG_SYS_CLKR_8188F);
-	rtw_write8(padapter, REG_SYS_CLKR_8188F, value8 & ~BIT4);
-	value8 = rtw_read8(padapter, REG_SYS_CLKR_8188F);
-
-	/* Clear 970~976. */
-	rtw_write32(padapter, 0x0970, 0);
-	rtw_write16(padapter, 0x0974, 0);
-	rtw_write8(padapter, 0x0976, 0);
-
-	/* Set the microsecond time unit used by MAC TSF clock. */
-	rtw_write8(padapter, REG_USTIME_TSF_8188F, 0x28);
-#endif
-
 	/*_dbg_dump_macreg(Adapter); */
 
 exit:
