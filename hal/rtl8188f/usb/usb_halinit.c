@@ -1009,78 +1009,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	u32 value32;
 	u32 init_start_time = rtw_get_current_time();
 
-
-#ifdef DBG_HAL_INIT_PROFILING
-
-	enum HAL_INIT_STAGES {
-		HAL_INIT_STAGES_BEGIN = 0,
-		HAL_INIT_STAGES_INIT_PW_ON,
-		HAL_INIT_STAGES_INIT_LLTT,
-		HAL_INIT_STAGES_MISC01,
-		HAL_INIT_STAGES_DOWNLOAD_FW,
-		HAL_INIT_STAGES_MAC,
-		HAL_INIT_STAGES_BB,
-		HAL_INIT_STAGES_RF,
-		HAL_INIT_STAGES_MISC02,
-		HAL_INIT_STAGES_TURN_ON_BLOCK,
-		HAL_INIT_STAGES_INIT_SECURITY,
-		HAL_INIT_STAGES_MISC11,
-		/*HAL_INIT_STAGES_RF_PS, */
-		HAL_INIT_STAGES_INIT_HAL_DM,
-/*		HAL_INIT_STAGES_IQK, */
-/*		HAL_INIT_STAGES_PW_TRACK, */
-/*		HAL_INIT_STAGES_LCK, */
-		HAL_INIT_STAGES_MISC21,
-		/*HAL_INIT_STAGES_INIT_PABIAS, */
-		HAL_INIT_STAGES_BT_COEXIST,
-		/*HAL_INIT_STAGES_ANTENNA_SEL, */
-		HAL_INIT_STAGES_MISC31,
-		HAL_INIT_STAGES_END,
-		HAL_INIT_STAGES_NUM
-	};
-
-	static char * const hal_init_stages_str[] = {
-		"HAL_INIT_STAGES_BEGIN",
-		"HAL_INIT_STAGES_INIT_PW_ON",
-		"HAL_INIT_STAGES_INIT_LLTT",
-		"HAL_INIT_STAGES_MISC01",
-		"HAL_INIT_STAGES_DOWNLOAD_FW",
-		"HAL_INIT_STAGES_MAC",
-		"HAL_INIT_STAGES_BB",
-		"HAL_INIT_STAGES_RF",
-		"HAL_INIT_STAGES_MISC02",
-		"HAL_INIT_STAGES_TURN_ON_BLOCK",
-		"HAL_INIT_STAGES_INIT_SECURITY",
-		"HAL_INIT_STAGES_MISC11",
-		/*"HAL_INIT_STAGES_RF_PS", */
-		"HAL_INIT_STAGES_INIT_HAL_DM",
-/*		"HAL_INIT_STAGES_IQK", */
-/*		"HAL_INIT_STAGES_PW_TRACK", */
-/*		"HAL_INIT_STAGES_LCK", */
-		"HAL_INIT_STAGES_MISC21",
-		/*"HAL_INIT_STAGES_INIT_PABIAS", */
-		"HAL_INIT_STAGES_BT_COEXIST",
-		/*"HAL_INIT_STAGES_ANTENNA_SEL", */
-		"HAL_INIT_STAGES_MISC31",
-		"HAL_INIT_STAGES_END",
-	};
-
-	int hal_init_profiling_i;
-	u32 hal_init_stages_timestamp[HAL_INIT_STAGES_NUM]; /*used to record the time of each stage's starting point */
-
-	for (hal_init_profiling_i = 0; hal_init_profiling_i < HAL_INIT_STAGES_NUM; hal_init_profiling_i++)
-		hal_init_stages_timestamp[hal_init_profiling_i] = 0;
-
-#define HAL_INIT_PROFILE_TAG(stage) { hal_init_stages_timestamp[(stage)] = rtw_get_current_time(); }
-#else
-#define HAL_INIT_PROFILE_TAG(stage) do {} while (0)
-#endif /*DBG_HAL_INIT_PROFILING */
-
-
-
 	_func_enter_;
-
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_BEGIN);
 
 /*	if (rtw_is_surprise_removed(Adapter)) */
 /*		return RT_STATUS_FAILURE; */
@@ -1092,7 +1021,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 #endif
 
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_PW_ON);
 	status = rtw_hal_power_on(padapter);
 	if (status == _FAIL) {
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init power on!\n"));
@@ -1112,8 +1040,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 		DBG_871X(" MAC has not been powered on yet.\n");
 	}
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_LLTT);
-
 	boundary = TX_PAGE_BOUNDARY_8188F;
 
 	status =  rtl8188f_InitLLTTable(padapter);
@@ -1122,7 +1048,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 		goto exit;
 	}
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC01);
 	if (pHalData->bRDGEnable)
 		_InitRDGSetting_8188fu(padapter);
 
@@ -1160,8 +1085,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/* <Kordan> InitHalDm should be put ahead of FirmwareDownload. (HWConfig flow: FW->MAC->-BB->RF) */
 	/*InitHalDm(Adapter); */
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_DOWNLOAD_FW);
-
 	if (pwrctrlpriv->reg_rfoff == _TRUE)
 		pwrctrlpriv->rf_pwrstate = rf_off;
 
@@ -1173,7 +1096,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MAC);
 #if (HAL_MAC_ENABLE == 1)
 	status = PHY_MACConfig8188F(padapter);
 	if (status == _FAIL) {
@@ -1184,7 +1106,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	DBG_871X("PHY_MACConfig8188F OK!\n");
 
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_BB);
 	/* */
 	/*d. Initialize BB related configurations. */
 	/* */
@@ -1200,7 +1121,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_RF);
 #if (HAL_RF_ENABLE == 1)
 	status = PHY_RFConfig8188F(padapter);
 
@@ -1214,9 +1134,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 #endif
 
-
-
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC02);
 	_InitQueueReservedPage(padapter);
 	_InitTxBufferBoundary(padapter);
 	_InitQueuePriority(padapter);
@@ -1250,7 +1167,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	_InitHWLed(padapter);
 #endif /*CONFIG_LED */
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_TURN_ON_BLOCK);
 	_BBTurnOnBlock(padapter);
 	/*NicIFSetMacAddress(padapter, padapter->PermanentAddress); */
 
@@ -1258,10 +1174,8 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	rtw_hal_set_chnl_bw(padapter, padapter->registrypriv.channel,
 						CHANNEL_WIDTH_20, HAL_PRIME_CHNL_OFFSET_DONT_CARE, HAL_PRIME_CHNL_OFFSET_DONT_CARE);
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_SECURITY);
 	invalidate_cam_all(padapter);
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC11);
 	/* 2010/12/17 MH We need to set TX power according to EFUSE content at first. */
 	/*PHY_SetTxPowerLevel8188F(padapter, pHalData->CurrentChannel); */
 
@@ -1279,7 +1193,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 /*	_RfPowerSave(Adapter); */
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_HAL_DM);
 	rtl8188f_InitHalDm(padapter);
 
 	{
@@ -1304,12 +1217,9 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	}
 
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC21);
-
 /*HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_PABIAS); */
 /*	_InitPABias(Adapter); */
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_BT_COEXIST);
 	/* rtw_btcoex_HAL_Initialize(padapter, _TRUE);	// For Test. */
 
 #if 0
@@ -1325,7 +1235,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	HwSuspendModeEnable92Cu(Adapter, _FALSE);
 #endif
 
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC31);
 	rtw_hal_set_hwreg(padapter, HW_VAR_NAV_UPPER, (u8 *)&NavUpper);
 
 #ifdef CONFIG_XMIT_ACK
@@ -1347,22 +1256,8 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/*_dbg_dump_macreg(Adapter); */
 
 exit:
-	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_END);
 
 	DBG_871X("%s in %dms\n", __func__, rtw_get_passing_time_ms(init_start_time));
-
-#ifdef DBG_HAL_INIT_PROFILING
-	hal_init_stages_timestamp[HAL_INIT_STAGES_END] = rtw_get_current_time();
-
-	for (hal_init_profiling_i = 0; hal_init_profiling_i < HAL_INIT_STAGES_NUM - 1; hal_init_profiling_i++) {
-		DBG_871X("DBG_HAL_INIT_PROFILING: %35s, %u, %5u, %5u\n"
-				 , hal_init_stages_str[hal_init_profiling_i]
-				 , hal_init_stages_timestamp[hal_init_profiling_i]
-				 , (hal_init_stages_timestamp[hal_init_profiling_i + 1] - hal_init_stages_timestamp[hal_init_profiling_i])
-				 , rtw_get_time_interval_ms(hal_init_stages_timestamp[hal_init_profiling_i], hal_init_stages_timestamp[hal_init_profiling_i + 1])
-				);
-	}
-#endif
 
 	_func_exit_;
 
