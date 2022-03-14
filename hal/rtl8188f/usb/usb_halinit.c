@@ -934,69 +934,6 @@ rt_rf_power_state RfOnOffDetect(IN	PADAPTER pAdapter)
 
 void _ps_open_RF(_adapter *padapter);
 
-#ifdef CONFIG_8188FTV_SOLUTION_D
-/*
-Write corresponding register of efuse. Indirect Write.
-Offset:	reg offset.
-Value:	u8 value
-*/
-VOID WriteUSB2PHYReg(PADAPTER Adapter, u8 Offset, u8 Value)
-{
-	rtw_write8(Adapter, 0xFE41, Value);
-	rtw_write8(Adapter, 0xFE40, Offset);
-	rtw_write8(Adapter, 0xFE42, 0x81);
-}
-
-/*
-Read corresponding register of efuse. Indirect Read.
-Offset: reg offset.
-*/
-u1Byte ReadUSB2PHYReg(PADAPTER Adapter, u8 Offset)
-{
-	u8 value = 0;
-	rtw_write8(Adapter, 0xFE40, Offset);
-	rtw_write8(Adapter, 0xFE42, 0x81);
-	value = rtw_read8(Adapter, 0xFE43);
-
-	return value;
-}
-
-void rtl8188fu_solution_d(PADAPTER Adapter)
-{
-	u8 reg_val[6] = {0};
-	u16 reg0mask = BIT(10) | BIT(11) | BIT(12) | BIT(13);
-	u16 reg1mask = BIT(0) | BIT(1) | BIT(2) | BIT(3);
-
-	reg_val[0] = PHY_QueryMacReg(Adapter, 0x10, reg0mask);	/* efuse 0x3   */
-	reg_val[1] = PHY_QueryMacReg(Adapter, 0xC4, reg1mask);	/* efuse 0xd   */
-	reg_val[2] = ReadUSB2PHYReg(Adapter, 0xC1);				/* efuse 0x131 */
-	reg_val[3] = PHY_QueryMacReg(Adapter, 0x4, BIT(11)); 	/* efuse 0xa   */
-	reg_val[4] = ReadUSB2PHYReg(Adapter, 0xD2);				/* efuse 0x13a */
-	reg_val[5] = ReadUSB2PHYReg(Adapter, 0xD3);				/* efuse 0x13b */
-
-	if(!(reg_val[3] == 0 && reg_val[4] == 0 && reg_val[5] == 0x31)) /* solution "EP" not applied */
-	{
-		if((reg_val[0] == 0xC && reg_val[1] == 0xC && reg_val[2] == 0xAE)		/* solution O */
-			||(reg_val[0] == 0xF && reg_val[1] == 0xC && reg_val[2] == 0xAE)	/* solution A */
-			||(reg_val[0] == 0xC && reg_val[1] == 0xB && reg_val[2] == 0xAE)	/* solution B */
-			||(reg_val[0] == 0xC && reg_val[1] == 0xC && reg_val[2] == 0xBE))	/* solution C */
-		{
-			/* apply solution D */
-			PHY_SetMacReg(Adapter, 0x10, reg0mask, 0xF);
-			PHY_SetMacReg(Adapter, 0xC4, reg1mask, 0x7);
-			WriteUSB2PHYReg(Adapter, 0xE1, 0xB6);
-			DBG_871X("%s, Aplly Solution D\n", __func__);
-		}
-		else if(reg_val[0] == 0xF && reg_val[1] == 0x7 && reg_val[2] == 0xB6)
-			DBG_871X("%s, Solution D already apllied\n", __func__);
-		else
-			DBG_871X("%s, Unexpected efuse content\n", __func__);
-	}
-	else
-		DBG_871X("%s, Solution EP already applied\n", __func__);
-}
-#endif
-
 u32 rtl8188fu_hal_init(PADAPTER padapter)
 {
 	u8	value8 = 0, u1bRegCR;
@@ -1689,10 +1626,6 @@ static void _ReadPROMContent(
 
 	DBG_8192C("Boot from %s, Autoload %s !\n", (pHalData->EepromOrEfuse ? "EEPROM" : "EFUSE"),
 			  (pHalData->bautoload_fail_flag ? "Fail" : "OK"));
-
-#ifdef CONFIG_8188FTV_SOLUTION_D
-	rtl8188fu_solution_d(Adapter);
-#endif
 
 	InitAdapterVariablesByPROM_8188FU(Adapter);
 }
