@@ -2364,42 +2364,6 @@ s32 rtl8188f_InitLLTTable(PADAPTER padapter)
 }
 
 #if defined(CONFIG_USB_HCI)
-void _DisableGPIO(PADAPTER	padapter)
-{
-	/*
-	 * j. GPIO_PIN_CTRL 0x44[31:0]=0x000
-	 * k.Value = GPIO_PIN_CTRL[7:0]
-	 * l. GPIO_PIN_CTRL 0x44[31:0] = 0x00FF0000 | (value <<8);		write external PIN level
-	 * m. GPIO_MUXCFG 0x42 [15:0] = 0x0780
-	 * n. LEDCFG 0x4C[15:0] = 0x8080
-	 */
-	u8	value8;
-	u16	value16;
-	u32	value32;
-	u32	u4bTmp;
-
-
-	/*1. Disable GPIO[7:0] */
-	rtw_write16(padapter, REG_GPIO_PIN_CTRL + 2, 0x0000);
-	value32 = rtw_read32(padapter, REG_GPIO_PIN_CTRL) & 0xFFFF00FF;
-	u4bTmp = value32 & 0x000000FF;
-	value32 |= ((u4bTmp << 8) | 0x00FF0000);
-	rtw_write32(padapter, REG_GPIO_PIN_CTRL, value32);
-
-
-	/*2. Disable GPIO[10:8] */
-	rtw_write8(padapter, REG_MAC_PINMUX_CFG, 0x00);
-	value16 = rtw_read16(padapter, REG_GPIO_IO_SEL) & 0xFF0F;
-	value8 = (u8)(value16 & 0x000F);
-	value16 |= ((value8 << 4) | 0x0780);
-	rtw_write16(padapter, REG_GPIO_IO_SEL, value16);
-
-
-	/*3. Disable LED0 & 1 */
-	rtw_write16(padapter, REG_LEDCFG0, 0x8080);
-
-	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("======> Disable GPIO and LED.\n")); */
-} /*end of _DisableGPIO() */
 
 static void _rtl8188fu_disable_rf_afe_and_reset(PADAPTER padapter)
 {
