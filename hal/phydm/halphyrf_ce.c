@@ -193,27 +193,24 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	}
 	
 	/*4 6. If necessary, do LCK.*/	
-	if (!(pDM_Odm->SupportICType & ODM_RTL8821)) {
+	if (pDM_Odm->RFCalibrateInfo.ThermalValue_LCK == 0xff) {
+		/*no PG , do LCK at initial status*/
+		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("no PG, do LCK\n"));
+		pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
+		PHY_LCCalibrate_8188F(pDM_Odm);
+		delta_LCK = (ThermalValue > pDM_Odm->RFCalibrateInfo.ThermalValue_LCK)?(ThermalValue - pDM_Odm->RFCalibrateInfo.ThermalValue_LCK):(pDM_Odm->RFCalibrateInfo.ThermalValue_LCK - ThermalValue);
+	}
 
-		if (pDM_Odm->RFCalibrateInfo.ThermalValue_LCK == 0xff) {
-			/*no PG , do LCK at initial status*/
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("no PG, do LCK\n"));
-			pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
-			PHY_LCCalibrate_8188F(pDM_Odm);
-			delta_LCK = (ThermalValue > pDM_Odm->RFCalibrateInfo.ThermalValue_LCK)?(ThermalValue - pDM_Odm->RFCalibrateInfo.ThermalValue_LCK):(pDM_Odm->RFCalibrateInfo.ThermalValue_LCK - ThermalValue);
-		}
+	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("(delta, delta_LCK, delta_IQK) = (%d, %d, %d)\n", delta, delta_LCK, delta_IQK));
+	/*DBG_871X("(delta, delta_LCK, delta_IQK) = (%d, %d, %d), %d\n", delta, delta_LCK, delta_IQK, c.Threshold_IQK);*/
 
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("(delta, delta_LCK, delta_IQK) = (%d, %d, %d)\n", delta, delta_LCK, delta_IQK));
-		/*DBG_871X("(delta, delta_LCK, delta_IQK) = (%d, %d, %d), %d\n", delta, delta_LCK, delta_IQK, c.Threshold_IQK);*/
-		
-		/* 4 6. If necessary, do LCK.*/
-		
-		if (delta_LCK >= IQK_THRESHOLD) {
-			/* Delta temperature is equal to or larger than 20 centigrade.*/
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("delta_LCK(%d) >= Threshold_IQK(%d)\n", delta_LCK, IQK_THRESHOLD));
-			pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
-			PHY_LCCalibrate_8188F(pDM_Odm);
-		}
+	/* 4 6. If necessary, do LCK.*/
+
+	if (delta_LCK >= IQK_THRESHOLD) {
+		/* Delta temperature is equal to or larger than 20 centigrade.*/
+		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("delta_LCK(%d) >= Threshold_IQK(%d)\n", delta_LCK, IQK_THRESHOLD));
+		pDM_Odm->RFCalibrateInfo.ThermalValue_LCK = ThermalValue;
+		PHY_LCCalibrate_8188F(pDM_Odm);
 	}
 	//3 7. If necessary, move the index of swing table to adjust Tx power.	
 	
@@ -378,19 +375,8 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 				("Temperature(%d) higher than PG value(%d)\n", ThermalValue, pHalData->EEPROMThermalMeter));			
 
-			if (pDM_Odm->SupportICType == ODM_RTL8188E || pDM_Odm->SupportICType == ODM_RTL8192E || pDM_Odm->SupportICType == ODM_RTL8821 ||
-				pDM_Odm->SupportICType == ODM_RTL8812 || pDM_Odm->SupportICType == ODM_RTL8723B || pDM_Odm->SupportICType == ODM_RTL8814A ||
-				pDM_Odm->SupportICType == ODM_RTL8822B || pDM_Odm->SupportICType == ODM_RTL8188F || pDM_Odm->SupportICType == ODM_RTL8703B) {
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking MIX_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
 						ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, 0);
-			}
-			else 
-			{
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking BBSWING_MODE**********\n"));
-				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-						ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, BBSWING, p, Indexforchannel);
-			}
 		}
 		else
 		{
