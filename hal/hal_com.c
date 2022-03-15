@@ -3108,30 +3108,12 @@ exit:
 }
 
 #ifdef CONFIG_RF_POWER_TRIM
-u32 Array_kfreemap[] = { 
-0x08,0xe,
-0x06,0xc,
-0x04,0xa,
-0x02,0x8,
-0x00,0x6,
-0x03,0x4,
-0x05,0x2,
-0x07,0x0,
-0x09,0x0,
-0x0c,0x0,
-};
 
 void rtw_bb_rf_gain_offset(_adapter *padapter)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct registry_priv  *registry_par = &padapter->registrypriv;
 	struct kfree_data_t *kfree_data = &pHalData->kfree_data;
-	u8		value = pHalData->EEPROMRFGainOffset;
-	u8		tmp = 0x3e;
-	u32		res, i = 0;
-	u4Byte		ArrayLen	= sizeof(Array_kfreemap)/sizeof(u32);
-	pu4Byte		Array	= Array_kfreemap;
-	u4Byte		v1 = 0, v2 = 0, GainValue = 0, target = 0;
 
 	if (registry_par->RegPwrTrimEnable == 2) {
 		DBG_871X("Registry kfree default force disable.\n");
