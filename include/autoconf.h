@@ -102,7 +102,7 @@
 
 #define CONFIG_C2H_PACKET_EN
 
-#define CONFIG_RF_POWER_TRIM
+/* #define CONFIG_RF_POWER_TRIM */
 
 /*
  * Interface Related Configure
