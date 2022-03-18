@@ -319,7 +319,7 @@ typedef struct hal_com_data
 	**********************************/
 	u8	TxPwrByRateTable;
 	u8	TxPwrByRateBand;
-	s8	TxPwrByRateOffset[TX_PWR_BY_RATE_NUM_BAND]
+	s8	tx_power_by_rate_offset[TX_PWR_BY_RATE_NUM_BAND]
 						 [TX_PWR_BY_RATE_NUM_RF]
 						 [TX_PWR_BY_RATE_NUM_RF]
 						 [TX_PWR_BY_RATE_NUM_RATE];

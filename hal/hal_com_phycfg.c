@@ -274,7 +274,7 @@ PHY_InitTxPowerByRate(
 				for ( rfPath = 0; rfPath < TX_PWR_BY_RATE_NUM_RF; ++rfPath )
 					for ( TxNum = 0; TxNum < TX_PWR_BY_RATE_NUM_RF; ++TxNum )
 						for ( rate = 0; rate < TX_PWR_BY_RATE_NUM_RATE; ++rate )
-							pHalData->TxPwrByRateOffset[band][rfPath][TxNum][rate] = 0;
+							pHalData->tx_power_by_rate_offset[band][rfPath][TxNum][rate] = 0;
 	}
 }
 
@@ -799,7 +799,7 @@ _rtl8188fu_get_tx_power_by_rate(
 		goto exit;
 	}
 
-	value = pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex];
+	value = pHalData->tx_power_by_rate_offset[Band][RFPath][TxNum][rateIndex];
 
 exit:
 	return value;
@@ -855,7 +855,7 @@ PHY_SetTxPowerByRate(
 		return;
 	}
 
-	pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex] = Value;
+	pHalData->tx_power_by_rate_offset[Band][RFPath][TxNum][rateIndex] = Value;
 }
 
 void rtl8188fu_phy_set_txpower_level(
