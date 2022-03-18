@@ -1325,15 +1325,14 @@ PHY_SetTxPowerByRate(
 	pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex] = Value;
 }
 
-VOID
-PHY_SetTxPowerLevelByPath(
+void rtl8188fu_phy_set_txpower_level(
 	IN	PADAPTER	Adapter,
-	IN	u8			channel,
-	IN	u8			path
+	IN	u8			channel
 	)
 {
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 	BOOLEAN bIsIn24G = (pHalData->CurrentBandType == BAND_ON_2_4G );
+	u8 path = ODM_RF_PATH_A;
 
 	//if ( pMgntInfo->RegNByteAccess == 0 )
 	{

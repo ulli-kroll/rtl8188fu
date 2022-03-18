@@ -102,7 +102,7 @@ PHY_GetTxPowerIndex_8188F(
 	);
 
 VOID
-PHY_SetTxPowerLevel8188F(
+rtl8188fu_phy_set_txpower_level(
 	IN	PADAPTER		Adapter,
 	IN	u8			channel
 	);

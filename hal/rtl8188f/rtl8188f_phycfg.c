@@ -850,25 +850,6 @@ u8 rtl8188fu_phy_get_txpower_index(
 	return (u8) txPower;
 }
 
-VOID
-PHY_SetTxPowerLevel8188F(
-	IN	PADAPTER		Adapter,
-	IN	u8				Channel
-)
-{
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
-	u8				cur_antenna;
-	u8				RFPath = ODM_RF_PATH_A;
-
-		RFPath = pHalData->ant_path;
-
-	RT_TRACE(_module_hal_init_c_, _drv_info_, ("==>PHY_SetTxPowerLevel8188F()\n"));
-
-	PHY_SetTxPowerLevelByPath(Adapter, Channel, RFPath);
-
-	RT_TRACE(_module_hal_init_c_, _drv_info_, ("<==PHY_SetTxPowerLevel8188F()\n"));
-}
-
 /* A workaround to eliminate the 2400MHz, 2440MHz, 2480MHz spur of 8188F. (Asked by David.) */
 VOID
 phy_SpurCalibration_8188F(
@@ -1231,7 +1212,7 @@ phy_SwChnlAndSetBwMode8188F(
 		pHalData->bSetChnlBW = _FALSE;
 	}
 
-	PHY_SetTxPowerLevel8188F(Adapter, pHalData->CurrentChannel);
+	rtl8188fu_phy_set_txpower_level(Adapter, pHalData->CurrentChannel);
 }
 
 VOID
