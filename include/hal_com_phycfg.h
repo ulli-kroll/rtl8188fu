@@ -219,7 +219,7 @@ PHY_GetTxPowerIndex(
 	);
 
 VOID
-PHY_SetTxPowerIndex(
+rtl8188fu_phy_set_txpower_index(
 	IN	PADAPTER		pAdapter,
 	IN	u32				PowerIndex,
 	IN	u8				RFPath,	

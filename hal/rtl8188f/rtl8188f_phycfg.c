@@ -728,8 +728,8 @@ void phy_PowerIndexCheck8188F(
  *                                                                                    <20120830, Kordan>
  **************************************************************************************************************/
 
-VOID
-PHY_SetTxPowerIndex_8188F(
+void rtl8188fu_phy_set_txpower_index
+(
 	IN	PADAPTER			Adapter,
 	IN	u32					PowerIndex,
 	IN	u8					RFPath,

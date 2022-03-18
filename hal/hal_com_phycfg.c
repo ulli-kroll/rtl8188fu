@@ -1364,10 +1364,9 @@ rtl8188fu_phy_set_txpower_index_by_rate_array(
 	u32	powerIndex = 0;
 	int	i = 0;
 
-	for (i = 0; i < RateArraySize; ++i) 
-	{
+	for (i = 0; i < RateArraySize; ++i) {
 		powerIndex = rtl8188fu_phy_get_txpower_index(pAdapter, RFPath, Rates[i], BandWidth, Channel);
-		PHY_SetTxPowerIndex(pAdapter, powerIndex, RFPath, Rates[i]);
+		rtl8188fu_phy_set_txpower_index(pAdapter, powerIndex, RFPath, Rates[i]);
 	}
 }
 
@@ -1898,28 +1897,6 @@ PHY_SetTxPowerLimit(
 	} else {
 		DBG_871X_LEVEL(_drv_always_, "Cannot recognize the band info in %s\n", Band);
 		return;
-	}
-}
-
-VOID
-PHY_SetTxPowerIndex(
-	IN	PADAPTER		pAdapter,
-	IN	u32				PowerIndex,
-	IN	u8				RFPath,	
-	IN	u8				Rate
-	)
-{
-	    if (IS_HARDWARE_TYPE_8723B(pAdapter)) {
-	}
-	else if (IS_HARDWARE_TYPE_8703B(pAdapter)) {
-	}
-	else if (IS_HARDWARE_TYPE_8192E(pAdapter)) {
-	}
-	else if (IS_HARDWARE_TYPE_8188E(pAdapter)) {
-	} else if (IS_HARDWARE_TYPE_8188F(pAdapter)) {
-#if (RTL8188F_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8188F(pAdapter, PowerIndex, RFPath, Rate);
-#endif
 	}
 }
 
