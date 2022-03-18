@@ -2361,54 +2361,27 @@ s32 rtl8188f_InitLLTTable(PADAPTER padapter)
 	return ret;
 }
 
-BOOLEAN
-Hal_GetChnlGroup8188F(
-	IN	u8 Channel,
-	OUT u8 *pGroup
-)
+static int _rtl8188fu_get_chnl_group(u8 channel)
 {
-	BOOLEAN bIn24G = TRUE;
+	int chnlgroup;
+	
+	if (1 <= channel && channel <= 2)
+		chnlgroup = 0;
+	else if (3  <= channel && channel <= 5)
+		chnlgroup = 1;
+	else if (6  <= channel && channel <= 8)
+		chnlgroup = 2;
+	else if (9  <= channel && channel <= 11)
+		chnlgroup = 3;
+	else if (12 <= channel && channel <= 14)
+		chnlgroup = 4;
+	else
+		RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("==>Hal_GetChnlGroup8188F in 2.4 G, but Channel %d in Group not found\n", Channel));
 
-	if (Channel <= 14) {
-		bIn24G = TRUE;
-
-		if (1 <= Channel && Channel <= 2)
-			*pGroup = 0;
-		else if (3  <= Channel && Channel <= 5)
-			*pGroup = 1;
-		else if (6  <= Channel && Channel <= 8)
-			*pGroup = 2;
-		else if (9  <= Channel && Channel <= 11)
-			*pGroup = 3;
-		else if (12 <= Channel && Channel <= 14)
-			*pGroup = 4;
-		else
-			RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("==>Hal_GetChnlGroup8188F in 2.4 G, but Channel %d in Group not found\n", Channel));
-	} else {
-		bIn24G = FALSE;
-
-		if (36 <= Channel && Channel <= 42)
-			*pGroup = 0;
-		else if (44   <= Channel && Channel <=  48)   *pGroup = 1;
-		else if (50   <= Channel && Channel <=  58)   *pGroup = 2;
-		else if (60   <= Channel && Channel <=  64)   *pGroup = 3;
-		else if (100  <= Channel && Channel <= 106)   *pGroup = 4;
-		else if (108  <= Channel && Channel <= 114)   *pGroup = 5;
-		else if (116  <= Channel && Channel <= 122)   *pGroup = 6;
-		else if (124  <= Channel && Channel <= 130)   *pGroup = 7;
-		else if (132  <= Channel && Channel <= 138)   *pGroup = 8;
-		else if (140  <= Channel && Channel <= 144)   *pGroup = 9;
-		else if (149  <= Channel && Channel <= 155)   *pGroup = 10;
-		else if (157  <= Channel && Channel <= 161)   *pGroup = 11;
-		else if (165  <= Channel && Channel <= 171)   *pGroup = 12;
-		else if (173  <= Channel && Channel <= 177)   *pGroup = 13;
-		else
-			RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("==>Hal_GetChnlGroup8188F in 5G, but Channel %d in Group not found\n", Channel));
-
-	}
-	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("<==Hal_GetChnlGroup8188F,  (%s) Channel = %d, Group =%d,\n",
-			 (bIn24G) ? "2.4G" : "5G", Channel, *pGroup));
-	return bIn24G;
+	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("<==Hal_GetChnlGroup8188F, Channel = %d, Group =%d,\n",
+			 channel, chnlgroup));
+			 
+	return chnlgroup;
 }
 
 void
@@ -2626,7 +2599,7 @@ Hal_EfuseParseTxPowerInfo_8188F(
 	Hal_ReadPowerValueFromPROM_8188F(padapter, &pwrInfo24G, PROMContent, AutoLoadFail);
 	for (rfPath = 0; rfPath < MAX_RF_PATH; rfPath++) {
 		for (ch = 0; ch < CENTER_CH_2G_NUM; ch++) {
-			Hal_GetChnlGroup8188F(ch + 1, &group);
+			group = _rtl8188fu_get_chnl_group(ch + 1);
 
 			if (ch == 14 - 1) {
 				pHalData->Index24G_CCK_Base[rfPath][ch] = pwrInfo24G.IndexCCK_Base[rfPath][5];
