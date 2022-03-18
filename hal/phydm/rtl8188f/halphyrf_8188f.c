@@ -270,8 +270,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 			}
 			{
 			//Set TxAGC Page C{};
-				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, OFDM );
-				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, HT_MCS0_MCS7 );
+				rtl8188fu_phy_set_txpower_index_by_rate_section(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, OFDM );
+				rtl8188fu_phy_set_txpower_index_by_rate_section(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, HT_MCS0_MCS7 );
 			}
 			pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=pRFCalibrateInfo->remnant_ofdm_swing_idx[ODM_RF_PATH_A] ;        //add by Mingzhi.Guo
 
@@ -346,7 +346,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 			}
 			{
 				//Set TxAGC Page C{};
-				PHY_SetTxPowerIndexByRateSection(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, CCK );
+				rtl8188fu_phy_set_txpower_index_by_rate_section(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, CCK );
 			}
 			pRFCalibrateInfo->Modify_TxAGC_Value_CCK = pRFCalibrateInfo->remnant_cck_idx;
 

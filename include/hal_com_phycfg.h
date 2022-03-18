@@ -109,7 +109,7 @@ PHY_GetRateIndexOfTxPowerByRate(
 	);
 
 VOID 
-PHY_SetTxPowerIndexByRateSection(
+rtl8188fu_phy_set_txpower_index_by_rate_section(
 	IN	PADAPTER		pAdapter,
 	IN	u8				RFPath,	
 	IN	u8				Channel,
