@@ -150,8 +150,7 @@ rtl8188fu_get_tx_power_by_rateBase(
 	return value;
 }
 
-VOID
-phy_SetTxPowerByRateBase(
+static void rtl8188fu_phy_set_txpower_by_rate_base(
 	IN	PADAPTER		Adapter,
 	IN	u8				Band,
 	IN	u8				RfPath,
@@ -167,23 +166,34 @@ phy_SetTxPowerByRateBase(
 		return;
 	}
 
+	if (Band == BAND_ON_2_4G) {
+		/* ULLI : yes we are stupid for 0=CCK 1=OFDM 2=HT_MCS0_MCS7 3=HT_MCS8_MCS15 */
+		switch (RateSection) {
+		case 0:
+			pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][0] = Value;
+			break;
+		case 1:
+			pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][1] = Value;
+			break;
+		case 2:
+			pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][2] = Value;
+			break;
+		case 3:
+			pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][3] = Value;
+			break;
+		default:
+			DBG_871X_LEVEL(_drv_always_, "%s invalid RateSection:%d in %sG, RfPath:%d, TxNum:%d\n", __func__
+				, RateSection, (Band == BAND_ON_2_4G) ? "2.4" : "5", RfPath, TxNum);
+			break;
+		}
+	} else {
+		DBG_871X_LEVEL(_drv_always_, "%s invalid Band:%d\n", __func__, Band);
+	}
+
 	if (Band != BAND_ON_2_4G && Band != BAND_ON_5G) {
 		DBG_871X_LEVEL(_drv_always_, "%s invalid Band:%d\n", __func__, Band);
 		return;
 	}
-
-	if (RateSection >= RATE_SECTION_NUM
-		|| (Band == BAND_ON_5G && RateSection == CCK)
-	) {
-		DBG_871X_LEVEL(_drv_always_, "%s invalid RateSection:%d in %sG, RfPath:%d, TxNum:%d\n", __func__
-			, RateSection, (Band == BAND_ON_2_4G) ? "2.4" : "5", RfPath, TxNum);
-		return;
-	}
-
-	if (Band == BAND_ON_2_4G)
-		pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][RateSection] = Value;
-	else /* BAND_ON_5G */
-		pHalData->txpwr_by_rate_base_5g[RfPath][TxNum][RateSection - 1] = Value;
 }
 
 /*
@@ -247,7 +257,7 @@ static void rtl8q88fu_phy_store_txpower_by_rate_base(
 					continue;
 
 				base = _rtl8188fu_get_tx_power_by_rate(pAdapter, band, path, tx_num, rate_sec_base[rs]);
-				phy_SetTxPowerByRateBase(pAdapter, band, path, rs, tx_num, base);
+				rtl8188fu_phy_set_txpower_by_rate_base(pAdapter, band, path, rs, tx_num, base);
 			}
 		}
 	}
