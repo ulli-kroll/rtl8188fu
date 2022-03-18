@@ -2469,23 +2469,6 @@ Hal_EEValueCheck(
 	}
 }
 
-static u8
-Hal_GetChnlGroup(
-	IN	u8 chnl
-)
-{
-	u8	group = 0;
-
-	if (chnl < 3)			/* Cjanel 1-3 */
-		group = 0;
-	else if (chnl < 9)		/* Channel 4-9 */
-		group = 1;
-	else					/* Channel 10-14 */
-		group = 2;
-
-	return group;
-}
-
 void
 Hal_ReadPowerValueFromPROM_8188F(
 	IN	PADAPTER 		Adapter,
