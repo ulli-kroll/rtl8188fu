@@ -92,17 +92,6 @@ PHY_GetRateSectionIndexOfTxPowerByRate(
 	);
 #endif /* TX_POWER_BY_RATE_OLD */
 
-VOID
-PHY_GetRateValuesOfTxPowerByRate(
-	IN	PADAPTER pAdapter,
-	IN	u32 RegAddr,
-	IN	u32 BitMask,
-	IN	u32 Value,
-	OUT	u8 *Rate,
-	OUT	s8 *PwrByRateVal,
-	OUT	u8 *RateNum
-	);
-
 u8
 PHY_GetRateIndexOfTxPowerByRate(
 	IN	u8	Rate
