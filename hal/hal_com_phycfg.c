@@ -278,8 +278,7 @@ PHY_InitTxPowerByRate(
 	}
 }
 
-VOID
-phy_ConvertTxPowerByRateInDbmToRelativeValues(
+static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 	IN	PADAPTER	pAdapter
 	)
 {
@@ -389,7 +388,7 @@ PHY_TxPowerByRateConfiguration(
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter);
 
 	phy_StoreTxPowerByRateBase( pAdapter );
-	phy_ConvertTxPowerByRateInDbmToRelativeValues( pAdapter );
+	rtl8188fu_phy_convert_txpower_dbm_to_relative_value( pAdapter );
 }
 
 VOID 
