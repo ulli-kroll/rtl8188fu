@@ -219,7 +219,7 @@ u8 phy_get_target_tx_power(
 	return target_power;
 }
 
-static void rtl8q88fu_phy_store_txpower_by_rate_base(
+static void rtl8188fu_phy_store_txpower_by_rate_base(
 	IN	PADAPTER	pAdapter
 	)
 {
@@ -396,7 +396,7 @@ PHY_TxPowerByRateConfiguration(
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter);
 
-	rtl8q88fu_phy_store_txpower_by_rate_base( pAdapter );
+	rtl8188fu_phy_store_txpower_by_rate_base( pAdapter );
 	rtl8188fu_phy_convert_txpower_dbm_to_relative_value( pAdapter );
 }
 
