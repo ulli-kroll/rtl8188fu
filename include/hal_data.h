@@ -352,10 +352,10 @@ typedef struct hal_com_data
 
 	
 	// Store the original power by rate value of the base of each rate section of rf path A & B
-	u8	TxPwrByRateBase2_4G[TX_PWR_BY_RATE_NUM_RF]
+	u8	txpwr_by_rate_base_24g[TX_PWR_BY_RATE_NUM_RF]
 						[TX_PWR_BY_RATE_NUM_RF]
 						[MAX_BASE_NUM_IN_PHY_REG_PG_2_4G];
-	u8	TxPwrByRateBase5G[TX_PWR_BY_RATE_NUM_RF]
+	u8	txpwr_by_rate_base_5g[TX_PWR_BY_RATE_NUM_RF]
 						[TX_PWR_BY_RATE_NUM_RF]
 						[MAX_BASE_NUM_IN_PHY_REG_PG_5G];
 

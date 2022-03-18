@@ -143,9 +143,9 @@ rtl8188fu_get_tx_power_by_rateBase(
 	}
 
 	if (Band == BAND_ON_2_4G)
-		value = pHalData->TxPwrByRateBase2_4G[RfPath][TxNum][RateSection];
+		value = pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][RateSection];
 	else /* BAND_ON_5G */
-		value = pHalData->TxPwrByRateBase5G[RfPath][TxNum][RateSection - 1];
+		value = pHalData->txpwr_by_rate_base_5g[RfPath][TxNum][RateSection - 1];
 
 	return value;
 }
@@ -181,9 +181,9 @@ phy_SetTxPowerByRateBase(
 	}
 
 	if (Band == BAND_ON_2_4G)
-		pHalData->TxPwrByRateBase2_4G[RfPath][TxNum][RateSection] = Value;
+		pHalData->txpwr_by_rate_base_24g[RfPath][TxNum][RateSection] = Value;
 	else /* BAND_ON_5G */
-		pHalData->TxPwrByRateBase5G[RfPath][TxNum][RateSection - 1] = Value;
+		pHalData->txpwr_by_rate_base_5g[RfPath][TxNum][RateSection - 1] = Value;
 }
 
 /*
