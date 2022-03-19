@@ -124,16 +124,6 @@ rtl8188fu_get_tx_power_by_rate(
 	);
 
 VOID
-PHY_SetTxPowerByRate( 
-	IN	PADAPTER	pAdapter, 
-	IN	u8			Band, 
-	IN	u8			RFPath, 
-	IN	u8			TxNum, 
-	IN	u8			Rate,
-	IN	s8			Value
-	);
-
-VOID
 PHY_SetTxPowerLevelByPath(
 	IN	PADAPTER	Adapter,
 	IN	u8			channel,

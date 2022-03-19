@@ -287,6 +287,42 @@ PHY_InitTxPowerByRate(
 	}
 }
 
+static void _rtl8188fu_phy_set_tx_power_by_rate(
+	IN	PADAPTER	pAdapter, 
+	IN	u8			Band, 
+	IN	u8			RFPath, 
+	IN	u8			TxNum, 
+	IN	u8			Rate,
+	IN	s8			Value
+	)
+{
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
+	u8	rateIndex = PHY_GetRateIndexOfTxPowerByRate( Rate );
+	
+	if ( Band != BAND_ON_2_4G && Band != BAND_ON_5G )
+	{
+		DBG_871X("Invalid band %d in %s\n", Band, __FUNCTION__ );
+		return;
+	}
+	if ( RFPath > ODM_RF_PATH_D )
+	{
+		DBG_871X("Invalid RfPath %d in %s\n", RFPath, __FUNCTION__ );
+		return;
+	}
+	if ( TxNum >= RF_MAX_TX_NUM )
+	{
+		DBG_871X( "Invalid TxNum %d in %s\n", TxNum, __FUNCTION__ );
+		return;
+	}
+	if ( rateIndex >= TX_PWR_BY_RATE_NUM_RATE )
+	{
+		DBG_871X("Invalid RateIndex %d in %s\n", rateIndex, __FUNCTION__ );
+		return;
+	}
+
+	pHalData->tx_power_by_rate_offset[Band][RFPath][TxNum][rateIndex] = Value;
+}
+
 static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 	IN	PADAPTER	pAdapter
 	)
@@ -320,7 +356,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( cckRates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, cckRates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, cckRates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, cckRates[i], value - base );
 				}
 
 				// OFDM
@@ -328,7 +364,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( ofdmRates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, ofdmRates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, ofdmRates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, ofdmRates[i], value - base );
 				}
 				
 				// HT MCS0~7
@@ -336,7 +372,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( mcs0_7Rates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs0_7Rates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs0_7Rates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs0_7Rates[i], value - base );
 				}
 
 				// HT MCS8~15
@@ -344,7 +380,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( mcs8_15Rates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs8_15Rates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs8_15Rates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs8_15Rates[i], value - base );
 				}
 
 				// HT MCS16~23
@@ -352,7 +388,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( mcs16_23Rates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs16_23Rates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, mcs16_23Rates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs16_23Rates[i], value - base );
 				}
 
 				// VHT 1SS
@@ -360,7 +396,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( vht1ssRates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht1ssRates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht1ssRates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht1ssRates[i], value - base );
 				}
 
 				// VHT 2SS
@@ -368,7 +404,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( vht2ssRates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht2ssRates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht2ssRates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht2ssRates[i], value - base );
 				}
 
 				// VHT 3SS
@@ -376,7 +412,7 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 				for ( i = 0; i < sizeof( vht3ssRates ); ++i )
 				{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht3ssRates[i] );
-					PHY_SetTxPowerByRate( pAdapter, band, path, txNum, vht3ssRates[i], value - base );
+					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht3ssRates[i], value - base );
 				}
 			}
 		}
@@ -829,42 +865,6 @@ rtl8188fu_get_tx_power_by_rate(
 	return _rtl8188fu_get_tx_power_by_rate(pAdapter, Band, RFPath, TxNum, Rate);
 }
 
-VOID
-PHY_SetTxPowerByRate( 
-	IN	PADAPTER	pAdapter, 
-	IN	u8			Band, 
-	IN	u8			RFPath, 
-	IN	u8			TxNum, 
-	IN	u8			Rate,
-	IN	s8			Value
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	u8	rateIndex = PHY_GetRateIndexOfTxPowerByRate( Rate );
-	
-	if ( Band != BAND_ON_2_4G && Band != BAND_ON_5G )
-	{
-		DBG_871X("Invalid band %d in %s\n", Band, __FUNCTION__ );
-		return;
-	}
-	if ( RFPath > ODM_RF_PATH_D )
-	{
-		DBG_871X("Invalid RfPath %d in %s\n", RFPath, __FUNCTION__ );
-		return;
-	}
-	if ( TxNum >= RF_MAX_TX_NUM )
-	{
-		DBG_871X( "Invalid TxNum %d in %s\n", TxNum, __FUNCTION__ );
-		return;
-	}
-	if ( rateIndex >= TX_PWR_BY_RATE_NUM_RATE )
-	{
-		DBG_871X("Invalid RateIndex %d in %s\n", rateIndex, __FUNCTION__ );
-		return;
-	}
-
-	pHalData->tx_power_by_rate_offset[Band][RFPath][TxNum][rateIndex] = Value;
-}
 
 void rtl8188fu_phy_set_txpower_level(
 	IN	PADAPTER	Adapter,
