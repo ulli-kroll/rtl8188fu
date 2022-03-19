@@ -358,7 +358,7 @@ uint rtw_pll_ref_clk_sel = CONFIG_RTW_PLL_REF_CLK_SEL;
 module_param(rtw_pll_ref_clk_sel, uint, 0644);
 MODULE_PARM_DESC(rtw_pll_ref_clk_sel, "force pll_ref_clk_sel, 0xF:use autoload value");
 
-int rtw_tx_pwr_lmt_enable = 0;
+int rtw_tx_pwr_lmt_enable = 2;
 int rtw_tx_pwr_by_rate = 1;
 
 module_param(rtw_tx_pwr_lmt_enable, int, 0644);
