@@ -200,7 +200,6 @@ rtl8188fu_phy_set_txpower_index(
 	IN	u8				Rate
 	);
 
-bool phy_is_tx_power_limit_needed(_adapter *adapter);
 bool phy_is_tx_power_by_rate_needed(_adapter *adapter);
 int phy_load_tx_power_by_rate(_adapter *adapter);
 int phy_load_tx_power_limit(_adapter *adapter);

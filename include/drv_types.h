@@ -282,7 +282,6 @@ struct registry_priv
 	u8 pll_ref_clk_sel;
 
 	//define for tx power adjust
-	u8	RegEnableTxPowerLimit;
 	u8	RegEnableTxPowerByRate;
 	u8	RegPowerBase;
 	u8	RegPwrTblSel;
