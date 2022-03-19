@@ -23,91 +23,6 @@
 #include <hal_data.h>
 
 /*
-* rtw_regsty_get_target_tx_power -
-*
-* Return dBm or -1 for undefined
-*/
-s8 rtw_regsty_get_target_tx_power(
-	IN	PADAPTER		Adapter,
-	IN	u8				Band,
-	IN	u8				RfPath,
-	IN	RATE_SECTION	RateSection
-	)
-{
-	struct registry_priv *regsty = adapter_to_regsty(Adapter);
-	s8 value = 0;
-
-	if (RfPath > RF_PATH_D) {
-		DBG_871X_LEVEL(_drv_always_, "%s invalid RfPath:%d\n", __func__, RfPath);
-		return -1;
-	}
-
-	if (Band != BAND_ON_2_4G
-		#ifdef CONFIG_IEEE80211_BAND_5GHZ
-		&& Band != BAND_ON_5G
-		#endif
-	) {
-		DBG_871X_LEVEL(_drv_always_, "%s invalid Band:%d\n", __func__, Band);
-		return -1;
-	}
-
-	if (RateSection >= RATE_SECTION_NUM
-		#ifdef CONFIG_IEEE80211_BAND_5GHZ
-		|| (Band == BAND_ON_5G && RateSection == CCK)
-		#endif
-	) {
-		DBG_871X_LEVEL(_drv_always_, "%s invalid RateSection:%d in %sG, RfPath:%d\n", __func__
-			, RateSection, (Band == BAND_ON_2_4G) ? "2.4" : "5", RfPath);
-		return -1;
-	}
-
-	if (Band == BAND_ON_2_4G)
-		value = regsty->target_tx_pwr_2g[RfPath][RateSection];
-#ifdef CONFIG_IEEE80211_BAND_5GHZ
-	else /* BAND_ON_5G */
-		value = regsty->target_tx_pwr_5g[RfPath][RateSection - 1];
-#endif
-
-	return value;
-}
-
-bool rtw_regsty_chk_target_tx_power_valid(_adapter *adapter)
-{
-	struct hal_spec_t *hal_spec = GET_HAL_SPEC(adapter);
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
-	int path, tx_num, band, rs;
-	s8 target;
-
-	for (band = BAND_ON_2_4G; band <= BAND_ON_5G; band++) {
-		if (!hal_is_band_support(adapter, band))
-			continue;
-
-		for (path = 0; path < RF_PATH_MAX; path++) {
-			if (path >= hal_data->NumTotalRFPath)
-				break;
-
-			for (rs = 0; rs < RATE_SECTION_NUM; rs++) {
-				tx_num = rate_section_to_tx_num(rs);
-				if (tx_num >= hal_spec->nss_num)
-					continue;
-
-				if (band == BAND_ON_5G && IS_CCK_RATE_SECTION(rs))
-					continue;
-
-				if (IS_VHT_RATE_SECTION(rs))
-					continue;
-
-				target = rtw_regsty_get_target_tx_power(adapter, band, path, rs);
-				if (target == -1)
-					return _FALSE;
-			}
-		}
-	}
-
-	return _TRUE;
-}
-
-/*
 * rtl8188fu_get_tx_power_by_rateBase -
 *
 * Return 2 times of dBm
@@ -211,10 +126,7 @@ u8 phy_get_target_tx_power(
 	struct registry_priv *regsty = adapter_to_regsty(Adapter);
 	s16 target_power;
 
-	if (phy_is_tx_power_by_rate_needed(Adapter) == _FALSE && regsty->target_tx_pwr_valid == _TRUE)
-		target_power = 2 * rtw_regsty_get_target_tx_power(Adapter, Band, RfPath, RateSection);
-	else
-		target_power = rtl8188fu_get_tx_power_by_rateBase(Adapter, Band, RfPath, rate_section_to_tx_num(RateSection), RateSection);
+	target_power = rtl8188fu_get_tx_power_by_rateBase(Adapter, Band, RfPath, rate_section_to_tx_num(RateSection), RateSection);
 
 	return target_power;
 }
@@ -1470,13 +1382,7 @@ void phy_load_tx_power_ext_info(_adapter *adapter)
 {
 	struct registry_priv *regsty = adapter_to_regsty(adapter);
 
-	/* check registy target tx power */
-	regsty->target_tx_pwr_valid = rtw_regsty_chk_target_tx_power_valid(adapter);
-
 	/* power by rate and limit */
-	if (phy_is_tx_power_by_rate_needed(adapter)
-		|| (regsty->target_tx_pwr_valid != _TRUE))
-		phy_load_tx_power_by_rate(adapter);
-
+	phy_load_tx_power_by_rate(adapter);
 	phy_load_tx_power_limit(adapter);
 }
