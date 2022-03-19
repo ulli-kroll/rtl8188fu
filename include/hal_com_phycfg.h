@@ -92,11 +92,6 @@ PHY_GetRateSectionIndexOfTxPowerByRate(
 	);
 #endif /* TX_POWER_BY_RATE_OLD */
 
-u8
-PHY_GetRateIndexOfTxPowerByRate(
-	IN	u8	Rate
-	);
-
 VOID 
 rtl8188fu_phy_set_txpower_index_by_rate_section(
 	IN	PADAPTER		pAdapter,
