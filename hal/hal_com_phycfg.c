@@ -816,7 +816,7 @@ rtl8188fu_phy_get_txpower_limit(
 {
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
 	s16				band = -1, regulation = -1, bandwidth = -1,
-					rateSection = -1, channel = -1;
+					rateSection = -1, chnl_idx = -1;
 	s8				powerLimit = MAX_POWER_INDEX;
 
 	if (pHalData->eeprom_regulatory != 1 )
@@ -935,16 +935,16 @@ rtl8188fu_phy_get_txpower_limit(
 	}
 	
 	if ( Band == BAND_ON_2_4G )
-		channel = phy_GetChannelIndexOfTxPowerLimit( BAND_ON_2_4G, Channel );
+		chnl_idx = phy_GetChannelIndexOfTxPowerLimit( BAND_ON_2_4G, Channel );
 	else if ( Band == BAND_ON_5G )
-		channel = phy_GetChannelIndexOfTxPowerLimit( BAND_ON_5G, Channel );
+		chnl_idx = phy_GetChannelIndexOfTxPowerLimit( BAND_ON_5G, Channel );
 	else if ( Band == BAND_ON_BOTH )
 	{
 		// BAND_ON_BOTH don't care temporarily 
 	}
 	
 	if ( band == -1 || regulation == -1 || bandwidth == -1 || 
-	     rateSection == -1 || channel == -1 )
+	     rateSection == -1 || chnl_idx == -1 )
 	{
 		//DBG_871X("Wrong index value to access power limit table [band %d][regulation %d][bandwidth %d][rf_path %d][rate_section %d][chnlGroup %d]\n",
 		//	  band, regulation, bandwidth, RfPath, rateSection, channelGroup );
@@ -957,18 +957,18 @@ rtl8188fu_phy_get_txpower_limit(
 		if (bandwidth >= MAX_2_4G_BANDWIDTH_NUM)
 			bandwidth = MAX_2_4G_BANDWIDTH_NUM - 1;
 		for (i = 0; i < MAX_REGULATION_NUM; ++i)
-			limits[i] = pHalData->TxPwrLimit_2_4G[i][bandwidth][rateSection][channel][RfPath]; 
+			limits[i] = pHalData->TxPwrLimit_2_4G[i][bandwidth][rateSection][chnl_idx][RfPath]; 
 
 		powerLimit = (regulation == TXPWR_LMT_WW) ? phy_GetWorldWideLimit(limits) :
-			          pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][channel][RfPath];
+			          pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RfPath];
 
 	} else if ( Band == BAND_ON_5G ) {
 		s8 limits[10] = {0}; u8 i = 0;
 		for (i = 0; i < MAX_REGULATION_NUM; ++i)
-			limits[i] = pHalData->TxPwrLimit_5G[i][bandwidth][rateSection][channel][RfPath];
+			limits[i] = pHalData->TxPwrLimit_5G[i][bandwidth][rateSection][chnl_idx][RfPath];
 		
 		powerLimit = (regulation == TXPWR_LMT_WW) ? phy_GetWorldWideLimit(limits) : 
-					  pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][channel][RfPath];
+					  pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RfPath];
 	} else 
 		DBG_871X("No power limit table of the specified band\n" );
 
@@ -1174,7 +1174,7 @@ PHY_SetTxPowerLimit(
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
 	u8 regulation = 0, bandwidth = 0, rateSection = 0, channel;
-	s8 powerLimit = 0, prevPowerLimit, channelIndex;
+	s8 powerLimit = 0, prevPowerLimit, chnl_idx;
 
 	if (0)
 		DBG_871X("Index of power limit table [band %s][regulation %s][bw %s][rate section %s][rf path %s][chnl %s][val %s]\n"
@@ -1239,9 +1239,9 @@ PHY_SetTxPowerLimit(
 	}
 
 	if (eqNByte(Band, (u8 *)("2.4G"), 4)) {
-		channelIndex = phy_GetChannelIndexOfTxPowerLimit(BAND_ON_2_4G, channel);
+		chnl_idx = phy_GetChannelIndexOfTxPowerLimit(BAND_ON_2_4G, channel);
 
-		if (channelIndex == -1) {
+		if (chnl_idx == -1) {
 			DBG_871X_LEVEL(_drv_always_, "unsupported channel: %d at 2.4G\n", channel);
 			return;
 		}
@@ -1251,39 +1251,39 @@ PHY_SetTxPowerLimit(
 			return;
 		}
 
-		prevPowerLimit = pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][channelIndex][RF_PATH_A];
+		prevPowerLimit = pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A];
 
 		if (prevPowerLimit != MAX_POWER_INDEX)
 			DBG_871X_LEVEL(_drv_always_, "duplicate tx power limit combination [band %s][regulation %s][bw %s][rate section %s][rf path %s][chnl %s]\n"
 				, Band, Regulation, Bandwidth, RateSection, RfPath, Channel);
 
 		if (powerLimit < prevPowerLimit)
-			pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][channelIndex][RF_PATH_A] = powerLimit;
+			pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A] = powerLimit;
 
 		if (0)
 			DBG_871X("2.4G Band value : [regulation %d][bw %d][rate_section %d][chnl %d][val %d]\n"
-				, regulation, bandwidth, rateSection, channelIndex, pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][channelIndex][ODM_RF_PATH_A]);
+				, regulation, bandwidth, rateSection, chnl_idx, pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][ODM_RF_PATH_A]);
 	} else if (eqNByte(Band, (u8 *)("5G"), 2)) {
 
-		channelIndex = phy_GetChannelIndexOfTxPowerLimit(BAND_ON_5G, channel);
+		chnl_idx = phy_GetChannelIndexOfTxPowerLimit(BAND_ON_5G, channel);
 
-		if (channelIndex == -1) {
+		if (chnl_idx == -1) {
 			DBG_871X_LEVEL(_drv_always_, "unsupported channel: %d at 5G\n", channel);
 			return;
 		}
 
-		prevPowerLimit = pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][channelIndex][RF_PATH_A];
+		prevPowerLimit = pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A];
 
 		if (prevPowerLimit != MAX_POWER_INDEX)
 			DBG_871X_LEVEL(_drv_always_, "duplicate tx power limit combination [band %s][regulation %s][bw %s][rate section %s][rf path %s][chnl %s]\n"
 				, Band, Regulation, Bandwidth, RateSection, RfPath, Channel);
 
 		if (powerLimit < prevPowerLimit)
-			pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][channelIndex][RF_PATH_A] = powerLimit;
+			pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A] = powerLimit;
 
 		if (0)
 			DBG_871X("5G Band value : [regulation %d][bw %d][rate_section %d][chnl %d][val %d]\n"
-				, regulation, bandwidth, rateSection, channel, pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][channelIndex][RF_PATH_A]);
+				, regulation, bandwidth, rateSection, channel, pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A]);
 	} else {
 		DBG_871X_LEVEL(_drv_always_, "Cannot recognize the band info in %s\n", Band);
 		return;
