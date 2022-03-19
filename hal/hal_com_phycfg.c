@@ -1263,27 +1263,6 @@ PHY_SetTxPowerLimit(
 		if (0)
 			DBG_871X("2.4G Band value : [regulation %d][bw %d][rate_section %d][chnl %d][val %d]\n"
 				, regulation, bandwidth, rateSection, chnl_idx, pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][ODM_RF_PATH_A]);
-	} else if (eqNByte(Band, (u8 *)("5G"), 2)) {
-
-		chnl_idx = phy_GetChannelIndexOfTxPowerLimit(BAND_ON_5G, channel);
-
-		if (chnl_idx == -1) {
-			DBG_871X_LEVEL(_drv_always_, "unsupported channel: %d at 5G\n", channel);
-			return;
-		}
-
-		prevPowerLimit = pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A];
-
-		if (prevPowerLimit != MAX_POWER_INDEX)
-			DBG_871X_LEVEL(_drv_always_, "duplicate tx power limit combination [band %s][regulation %s][bw %s][rate section %s][rf path %s][chnl %s]\n"
-				, Band, Regulation, Bandwidth, RateSection, RfPath, Channel);
-
-		if (powerLimit < prevPowerLimit)
-			pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A] = powerLimit;
-
-		if (0)
-			DBG_871X("5G Band value : [regulation %d][bw %d][rate_section %d][chnl %d][val %d]\n"
-				, regulation, bandwidth, rateSection, channel, pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A]);
 	} else {
 		DBG_871X_LEVEL(_drv_always_, "Cannot recognize the band info in %s\n", Band);
 		return;
