@@ -916,7 +916,7 @@ rtl8188fu_phy_get_txpower_limit(
 					rateSection = -1, channel = -1;
 	s8				powerLimit = MAX_POWER_INDEX;
 
-	if ( ( Adapter->registrypriv.RegEnableTxPowerLimit == 2 && pHalData->EEPROMRegulatory != 1 ) || 
+	if ( ( Adapter->registrypriv.RegEnableTxPowerLimit == 2 && pHalData->eeprom_regulatory != 1 ) || 
 		   Adapter->registrypriv.RegEnableTxPowerLimit == 0 )
 		return MAX_POWER_INDEX;
 
@@ -1394,7 +1394,7 @@ bool phy_is_tx_power_limit_needed(_adapter *adapter)
 	struct registry_priv *regsty = dvobj_to_regsty(adapter_to_dvobj(adapter));
 
 	if (regsty->RegEnableTxPowerLimit == 1
-		|| (regsty->RegEnableTxPowerLimit == 2 && hal_data->EEPROMRegulatory == 1))
+		|| (regsty->RegEnableTxPowerLimit == 2 && hal_data->eeprom_regulatory == 1))
 		return _TRUE;
 	return _FALSE;
 }
@@ -1405,7 +1405,7 @@ bool phy_is_tx_power_by_rate_needed(_adapter *adapter)
 	struct registry_priv *regsty = dvobj_to_regsty(adapter_to_dvobj(adapter));
 
 	if (regsty->RegEnableTxPowerByRate == 1
-		|| (regsty->RegEnableTxPowerByRate == 2 && hal_data->EEPROMRegulatory != 2))
+		|| (regsty->RegEnableTxPowerByRate == 2 && hal_data->eeprom_regulatory != 2))
 		return _TRUE;
 	return _FALSE;
 }

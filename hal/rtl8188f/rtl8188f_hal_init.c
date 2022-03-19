@@ -2616,11 +2616,11 @@ Hal_EfuseParseTxPowerInfo_8188F(
 
 	/* 2010/10/19 MH Add Regulator recognize for CU. */
 	if (!AutoLoadFail) {
-		pHalData->EEPROMRegulatory = (PROMContent[EEPROM_RF_BOARD_OPTION_8188F] & 0x7);	/*bit0~2 */
+		pHalData->eeprom_regulatory = (PROMContent[EEPROM_RF_BOARD_OPTION_8188F] & 0x7);	/*bit0~2 */
 		if (PROMContent[EEPROM_RF_BOARD_OPTION_8188F] == 0xFF)
-			pHalData->EEPROMRegulatory = (EEPROM_DEFAULT_BOARD_OPTION & 0x7);	/*bit0~2 */
+			pHalData->eeprom_regulatory = (EEPROM_DEFAULT_BOARD_OPTION & 0x7);	/*bit0~2 */
 	} else
-		pHalData->EEPROMRegulatory = 0;
+		pHalData->eeprom_regulatory = 0;
 	RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("EEPROMRegulatory = 0x%x\n", pHalData->EEPROMRegulatory));
 }
 
