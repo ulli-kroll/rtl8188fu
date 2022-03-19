@@ -431,85 +431,39 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 	u8			cckRates[4] = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M},
 				ofdmRates[8] = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M},
 				mcs0_7Rates[8] = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7},
-				mcs8_15Rates[8] = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15},
-				mcs16_23Rates[8] = {MGN_MCS16, MGN_MCS17, MGN_MCS18, MGN_MCS19, MGN_MCS20, MGN_MCS21, MGN_MCS22, MGN_MCS23},
-				vht1ssRates[10] = {MGN_VHT1SS_MCS0, MGN_VHT1SS_MCS1, MGN_VHT1SS_MCS2, MGN_VHT1SS_MCS3, MGN_VHT1SS_MCS4, 
-							   MGN_VHT1SS_MCS5, MGN_VHT1SS_MCS6, MGN_VHT1SS_MCS7, MGN_VHT1SS_MCS8, MGN_VHT1SS_MCS9},
-				vht2ssRates[10] = {MGN_VHT2SS_MCS0, MGN_VHT2SS_MCS1, MGN_VHT2SS_MCS2, MGN_VHT2SS_MCS3, MGN_VHT2SS_MCS4, 
-							   MGN_VHT2SS_MCS5, MGN_VHT2SS_MCS6, MGN_VHT2SS_MCS7, MGN_VHT2SS_MCS8, MGN_VHT2SS_MCS9},
-				vht3ssRates[10] = {MGN_VHT3SS_MCS0, MGN_VHT3SS_MCS1, MGN_VHT3SS_MCS2, MGN_VHT3SS_MCS3, MGN_VHT3SS_MCS4, 
-								   MGN_VHT3SS_MCS5, MGN_VHT3SS_MCS6, MGN_VHT3SS_MCS7, MGN_VHT3SS_MCS8, MGN_VHT3SS_MCS9};
+				mcs8_15Rates[8] = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15};
 
 	//DBG_871X("===>PHY_ConvertTxPowerByRateInDbmToRelativeValues()\n" );
 
-	for ( band = BAND_ON_2_4G; band <= BAND_ON_5G; ++band )
-	{
-		for ( path = ODM_RF_PATH_A; path <= ODM_RF_PATH_D; ++path )
-		{
-			for ( txNum = RF_1TX; txNum < RF_MAX_TX_NUM; ++txNum )
-			{
+	for ( band = BAND_ON_2_4G; band <= BAND_ON_2_4G; ++band ) {
+		for ( path = ODM_RF_PATH_A; path <= ODM_RF_PATH_B; ++path ) {
+			for ( txNum = RF_1TX; txNum < RF_MAX_TX_NUM; ++txNum ) {
 				// CCK
 				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_11M );
-				for ( i = 0; i < sizeof( cckRates ); ++i )
-				{
+				for ( i = 0; i < sizeof( cckRates ); ++i ) {
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, cckRates[i] );
 					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, cckRates[i], value - base );
 				}
 
 				// OFDM
 				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_54M );
-				for ( i = 0; i < sizeof( ofdmRates ); ++i )
-				{
+				for ( i = 0; i < sizeof( ofdmRates ); ++i ) {
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, ofdmRates[i] );
 					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, ofdmRates[i], value - base );
 				}
 				
 				// HT MCS0~7
 				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS7 );
-				for ( i = 0; i < sizeof( mcs0_7Rates ); ++i )
-				{
+				for ( i = 0; i < sizeof( mcs0_7Rates ); ++i ) 	{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs0_7Rates[i] );
 					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs0_7Rates[i], value - base );
 				}
 
 				// HT MCS8~15
 				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS15 );
-				for ( i = 0; i < sizeof( mcs8_15Rates ); ++i )
-				{
+				for ( i = 0; i < sizeof( mcs8_15Rates ); ++i ) 	{
 					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs8_15Rates[i] );
 					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs8_15Rates[i], value - base );
-				}
-
-				// HT MCS16~23
-				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_MCS23 );
-				for ( i = 0; i < sizeof( mcs16_23Rates ); ++i )
-				{
-					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, mcs16_23Rates[i] );
-					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, mcs16_23Rates[i], value - base );
-				}
-
-				// VHT 1SS
-				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT1SS_MCS7 );
-				for ( i = 0; i < sizeof( vht1ssRates ); ++i )
-				{
-					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht1ssRates[i] );
-					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht1ssRates[i], value - base );
-				}
-
-				// VHT 2SS
-				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT2SS_MCS7 );
-				for ( i = 0; i < sizeof( vht2ssRates ); ++i )
-				{
-					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht2ssRates[i] );
-					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht2ssRates[i], value - base );
-				}
-
-				// VHT 3SS
-				base = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, MGN_VHT3SS_MCS7 );
-				for ( i = 0; i < sizeof( vht3ssRates ); ++i )
-				{
-					value = rtl8188fu_get_tx_power_by_rate( pAdapter, band, path, txNum, vht3ssRates[i] );
-					_rtl8188fu_phy_set_tx_power_by_rate( pAdapter, band, path, txNum, vht3ssRates[i], value - base );
 				}
 			}
 		}
