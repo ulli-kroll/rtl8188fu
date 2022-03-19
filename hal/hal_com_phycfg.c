@@ -137,22 +137,16 @@ static void rtl8188fu_phy_store_txpower_by_rate_base(
 {
 	struct hal_spec_t *hal_spec = GET_HAL_SPEC(pAdapter);
 
-	u8 rate_sec_base[RATE_SECTION_NUM] = {
+	u8 rate_sec_base[] = {
 		MGN_11M,
 		MGN_54M,
 		MGN_MCS7,
 		MGN_MCS15,
-		MGN_MCS23,
-		MGN_MCS31,
-		MGN_VHT1SS_MCS7,
-		MGN_VHT2SS_MCS7,
-		MGN_VHT3SS_MCS7,
-		MGN_VHT4SS_MCS7,
 	};
 
 	u8 band, path, rs, tx_num, base, index;
 
-	for (band = BAND_ON_2_4G; band <= BAND_ON_5G; band++) {
+	for (band = BAND_ON_2_4G; band <= BAND_ON_2_4G; band++) {
 
 		for (path = RF_PATH_A; path < RF_PATH_MAX; path++) {
 			/* TODO: 8814A's NumTotalRFPath differs at probe(3) and up(4), need fixed
@@ -160,12 +154,9 @@ static void rtl8188fu_phy_store_txpower_by_rate_base(
 				break;
 			*/
 
-			for (rs = 0; rs < RATE_SECTION_NUM; rs++) {
+			for (rs = 0; rs < ARRAY_SIZE(rate_sec_base); rs++) {
 				tx_num = rate_section_to_tx_num(rs);
 				if (tx_num >= hal_spec->nss_num)
-					continue;
-
-				if (band == BAND_ON_5G && IS_CCK_RATE_SECTION(rs))
 					continue;
 
 				base = _rtl8188fu_get_tx_power_by_rate(pAdapter, band, path, tx_num, rate_sec_base[rs]);
