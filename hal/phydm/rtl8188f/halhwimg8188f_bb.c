@@ -561,7 +561,6 @@ ODM_ReadAndConfig_MP_8188F_PHY_REG_PG(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("===> ODM_ReadAndConfig_MP_8188F_PHY_REG_PG\n"));
 
 	pDM_Odm->PhyRegPgVersion = 1;
-	pDM_Odm->PhyRegPgValueType = PHY_REG_PG_EXACT_VALUE;
 
 	for (i = 0; i < ArrayLen; i += 6) {
 		u4Byte v1 = Array[i];

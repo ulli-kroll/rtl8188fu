@@ -453,7 +453,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	rtl8192cd_priv		fake_priv;
 #endif
 	
-	PHY_REG_PG_TYPE		PhyRegPgValueType;
 	u1Byte				PhyRegPgVersion;
 
 	u8Byte			DebugComponents;

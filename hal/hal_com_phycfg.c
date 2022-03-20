@@ -1216,10 +1216,6 @@ int phy_load_tx_power_by_rate(_adapter *adapter)
 	goto exit;
 
 post_hdl:
-	if (hal_data->odmpriv.PhyRegPgValueType != PHY_REG_PG_EXACT_VALUE) {
-		rtw_warn_on(1);
-		goto exit;
-	}
 
 	rtl8188fu_phy_store_txpower_by_rate_base( adapter );
 	rtl8188fu_phy_convert_txpower_dbm_to_relative_value( adapter );
@@ -1259,11 +1255,6 @@ static void _rtl8188fu_convert_tx_power_limit_to_power_index(PADAPTER Adapter)
 	u8 regulation, bw, channel, rateSection;
 	s8 tempValue = 0, tempPwrLmt = 0;
 	u8 rfPath = 0;
-
-	if (pHalData->odmpriv.PhyRegPgValueType != PHY_REG_PG_EXACT_VALUE) {
-		rtw_warn_on(1);
-		return;
-	}
 
 	phy_CrossReferenceHTAndVHTTxPowerLimit(Adapter);
 
