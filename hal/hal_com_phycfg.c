@@ -166,31 +166,6 @@ static void rtl8188fu_phy_store_txpower_by_rate_base(
 	}
 }
 
-VOID
-PHY_InitTxPowerByRate(
-	IN	PADAPTER	pAdapter
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	u8	band = 0, rfPath = 0, TxNum = 0, rate = 0, i = 0, j = 0;
-
-	if ( IS_HARDWARE_TYPE_8188E( pAdapter ) )
-	{
-		for ( i = 0; i < MAX_PG_GROUP; ++i )
-			for ( j = 0; j < 16; ++j )
-				pHalData->MCSTxPowerLevelOriginalOffset[i][j] = 0;
-	}
-	else
-	{
-		for ( band = BAND_ON_2_4G; band <= BAND_ON_5G; ++band )
-				for ( rfPath = 0; rfPath < TX_PWR_BY_RATE_NUM_RF; ++rfPath )
-					for ( TxNum = 0; TxNum < TX_PWR_BY_RATE_NUM_RF; ++TxNum )
-						for ( rate = 0; rate < TX_PWR_BY_RATE_NUM_RATE; ++rate )
-							pHalData->tx_power_by_rate_offset[band][rfPath][TxNum][rate] = 0;
-	}
-}
-
-
 static u8 _rtl8188fu_phy_get_rate_idx_of_power_by_rate(u8 Rate)
 {
 	u8	index = 0;
@@ -1116,32 +1091,6 @@ PHY_ConvertTxPowerLimitToPowerIndex(
 }
 
 /*
-* PHY_InitTxPowerLimit - Set all hal_data.TxPwrLimit_2_4G, TxPwrLimit_5G array to MAX_POWER_INDEX
-*/
-VOID
-PHY_InitTxPowerLimit(
-	IN	PADAPTER		Adapter
-	)
-{
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
-	u8 i, j, k, l, m;
-
-	for (i = 0; i < MAX_REGULATION_NUM; ++i)
-		for (j = 0; j < MAX_2_4G_BANDWIDTH_NUM; ++j)
-			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
-				for (m = 0; m < CENTER_CH_2G_NUM; ++m)
-					for (l = 0; l < MAX_RF_PATH; ++l)
-						pHalData->TxPwrLimit_2_4G[i][j][k][m][l] = MAX_POWER_INDEX;
-
-	for (i = 0; i < MAX_REGULATION_NUM; ++i)
-		for (j = 0; j < MAX_5G_BANDWIDTH_NUM; ++j)
-			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
-				for (m = 0; m < CENTER_CH_5G_ALL_NUM; ++m)
-					for (l = 0; l < MAX_RF_PATH; ++l)
-						pHalData->TxPwrLimit_5G[i][j][k][m][l] = MAX_POWER_INDEX;
-}
-
-/*
 * PHY_SetTxPowerLimit - Parsing TX power limit from phydm array, called by odm_ConfigBB_TXPWR_LMT_XXX in phydm
 */
 VOID
@@ -1265,6 +1214,28 @@ bool phy_is_tx_power_by_rate_needed(_adapter *adapter)
 	return _FALSE;
 }
 
+
+static void _rtl8188fu_phy_init_tx_power_idx_by_rate(PADAPTER	pAdapter)
+{
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
+	u8	band = 0, rfPath = 0, TxNum = 0, rate = 0, i = 0, j = 0;
+
+	if ( IS_HARDWARE_TYPE_8188E( pAdapter ) )
+	{
+		for ( i = 0; i < MAX_PG_GROUP; ++i )
+			for ( j = 0; j < 16; ++j )
+				pHalData->MCSTxPowerLevelOriginalOffset[i][j] = 0;
+	}
+	else
+	{
+		for ( band = BAND_ON_2_4G; band <= BAND_ON_5G; ++band )
+				for ( rfPath = 0; rfPath < TX_PWR_BY_RATE_NUM_RF; ++rfPath )
+					for ( TxNum = 0; TxNum < TX_PWR_BY_RATE_NUM_RF; ++TxNum )
+						for ( rate = 0; rate < TX_PWR_BY_RATE_NUM_RATE; ++rate )
+							pHalData->tx_power_by_rate_offset[band][rfPath][TxNum][rate] = 0;
+	}
+}
+
 int phy_load_tx_power_by_rate(_adapter *adapter)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
@@ -1272,7 +1243,7 @@ int phy_load_tx_power_by_rate(_adapter *adapter)
 	int ret = _FAIL;
 
 	hal_data->txpwr_by_rate_loaded = 0;
-	PHY_InitTxPowerByRate(adapter);
+	_rtl8188fu_phy_init_tx_power_idx_by_rate(adapter);
 
 	/* tx power limit is based on tx power by rate */
 	hal_data->txpwr_limit_loaded = 0;
@@ -1303,6 +1274,26 @@ exit:
 	return ret;
 }
 
+static void _rtl8188fu_phy_init_tx_power_limit(PADAPTER Adapter)
+{
+	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
+	u8 i, j, k, l, m;
+
+	for (i = 0; i < MAX_REGULATION_NUM; ++i)
+		for (j = 0; j < MAX_2_4G_BANDWIDTH_NUM; ++j)
+			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
+				for (m = 0; m < CENTER_CH_2G_NUM; ++m)
+					for (l = 0; l < MAX_RF_PATH; ++l)
+						pHalData->TxPwrLimit_2_4G[i][j][k][m][l] = MAX_POWER_INDEX;
+
+	for (i = 0; i < MAX_REGULATION_NUM; ++i)
+		for (j = 0; j < MAX_5G_BANDWIDTH_NUM; ++j)
+			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
+				for (m = 0; m < CENTER_CH_5G_ALL_NUM; ++m)
+					for (l = 0; l < MAX_RF_PATH; ++l)
+						pHalData->TxPwrLimit_5G[i][j][k][m][l] = MAX_POWER_INDEX;
+}
+
 int phy_load_tx_power_limit(_adapter *adapter)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
@@ -1310,7 +1301,7 @@ int phy_load_tx_power_limit(_adapter *adapter)
 	int ret = _FAIL;
 
 	hal_data->txpwr_limit_loaded = 0;
-	PHY_InitTxPowerLimit(adapter);
+	_rtl8188fu_phy_init_tx_power_limit(adapter);
 
 	if (!hal_data->txpwr_by_rate_loaded && regsty->target_tx_pwr_valid != _TRUE) {
 		DBG_871X_LEVEL(_drv_err_, "%s():Read Tx power limit before target tx power is specify\n", __func__);

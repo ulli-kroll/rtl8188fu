@@ -135,11 +135,6 @@ rtl8188fu_phy_set_txpower_index_by_rate_array(
 	IN	u8				RateArraySize
 	);
 
-VOID
-PHY_InitTxPowerByRate(
-	IN	PADAPTER	pAdapter
-	);
-
 u8
 rtl8188fu_phy_get_txpower_index_base(
 	IN	PADAPTER		pAdapter,
@@ -163,11 +158,6 @@ rtl8188fu_phy_get_txpower_limit(
 
 VOID 
 PHY_ConvertTxPowerLimitToPowerIndex(
-	IN	PADAPTER			Adapter
-	);
-
-VOID
-PHY_InitTxPowerLimit(
 	IN	PADAPTER			Adapter
 	);
 
