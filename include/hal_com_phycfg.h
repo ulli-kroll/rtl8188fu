@@ -140,11 +140,6 @@ PHY_InitTxPowerByRate(
 	IN	PADAPTER	pAdapter
 	);
 
-VOID
-PHY_TxPowerByRateConfiguration(
-	IN  PADAPTER			pAdapter
-	);
-
 u8
 rtl8188fu_phy_get_txpower_index_base(
 	IN	PADAPTER		pAdapter,

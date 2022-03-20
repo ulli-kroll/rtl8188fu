@@ -375,21 +375,6 @@ static void rtl8188fu_phy_convert_txpower_dbm_to_relative_value(
 	//DBG_871X("<===PHY_ConvertTxPowerByRateInDbmToRelativeValues()\n" );
 }
 
-/*
-  * This function must be called if the value in the PHY_REG_PG.txt(or header)
-  * is exact dBm values
-  */
-VOID
-PHY_TxPowerByRateConfiguration(
-	IN  PADAPTER			pAdapter
-	)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter);
-
-	rtl8188fu_phy_store_txpower_by_rate_base( pAdapter );
-	rtl8188fu_phy_convert_txpower_dbm_to_relative_value( pAdapter );
-}
-
 VOID 
 rtl8188fu_phy_set_txpower_index_by_rate_section(PADAPTER pAdapter,
 						u8 RFPath,
@@ -1307,7 +1292,9 @@ post_hdl:
 		goto exit;
 	}
 
-	PHY_TxPowerByRateConfiguration(adapter);
+	rtl8188fu_phy_store_txpower_by_rate_base( adapter );
+	rtl8188fu_phy_convert_txpower_dbm_to_relative_value( adapter );
+
 	hal_data->txpwr_by_rate_loaded = 1;
 
 	ret = _SUCCESS;
