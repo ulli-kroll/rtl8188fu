@@ -156,11 +156,6 @@ rtl8188fu_phy_get_txpower_limit(
 	IN	u8				Channel
 	);
 
-VOID 
-PHY_ConvertTxPowerLimitToPowerIndex(
-	IN	PADAPTER			Adapter
-	);
-
 s8
 rtl8188fu_phy_get_tx_power_tracking_offset( 
 	PADAPTER	pAdapter,

@@ -1048,48 +1048,6 @@ phy_CrossReferenceHTAndVHTTxPowerLimit(
 		pHalData->tx_pwr_lmt_5g_20_40_ref |= TX_PWR_LMT_REF_VHT_FROM_HT;
 }
 
-VOID 
-PHY_ConvertTxPowerLimitToPowerIndex(
-	IN	PADAPTER			Adapter
-	)
-{
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
-	u8 base;
-	u8 regulation, bw, channel, rateSection;
-	s8 tempValue = 0, tempPwrLmt = 0;
-	u8 rfPath = 0;
-
-	if (pHalData->odmpriv.PhyRegPgValueType != PHY_REG_PG_EXACT_VALUE) {
-		rtw_warn_on(1);
-		return;
-	}
-
-	phy_CrossReferenceHTAndVHTTxPowerLimit(Adapter);
-
-	for (regulation = 0; regulation < MAX_REGULATION_NUM; ++regulation) {
-
-		for (bw = 0; bw < MAX_2_4G_BANDWIDTH_NUM; ++bw) {
-
-			for (channel = 0; channel < CENTER_CH_2G_NUM; ++channel) {
-
-				for (rateSection = CCK; rateSection <= HT_4SS; ++rateSection) {
-					tempPwrLmt = pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][RF_PATH_A];
-
-					if (tempPwrLmt != MAX_POWER_INDEX) {
-
-						for (rfPath = RF_PATH_A; rfPath < MAX_RF_PATH; ++rfPath) {
-							base = phy_get_target_tx_power(Adapter, BAND_ON_2_4G, rfPath, rateSection);
-							tempValue = tempPwrLmt - base;
-							pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][rfPath] = tempValue;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-}
-
 /*
 * PHY_SetTxPowerLimit - Parsing TX power limit from phydm array, called by odm_ConfigBB_TXPWR_LMT_XXX in phydm
 */
@@ -1294,6 +1252,45 @@ static void _rtl8188fu_phy_init_tx_power_limit(PADAPTER Adapter)
 						pHalData->TxPwrLimit_5G[i][j][k][m][l] = MAX_POWER_INDEX;
 }
 
+static void _rtl8188fu_convert_tx_power_limit_to_power_index(PADAPTER Adapter)
+{
+	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
+	u8 base;
+	u8 regulation, bw, channel, rateSection;
+	s8 tempValue = 0, tempPwrLmt = 0;
+	u8 rfPath = 0;
+
+	if (pHalData->odmpriv.PhyRegPgValueType != PHY_REG_PG_EXACT_VALUE) {
+		rtw_warn_on(1);
+		return;
+	}
+
+	phy_CrossReferenceHTAndVHTTxPowerLimit(Adapter);
+
+	for (regulation = 0; regulation < MAX_REGULATION_NUM; ++regulation) {
+
+		for (bw = 0; bw < MAX_2_4G_BANDWIDTH_NUM; ++bw) {
+
+			for (channel = 0; channel < CENTER_CH_2G_NUM; ++channel) {
+
+				for (rateSection = CCK; rateSection <= HT_4SS; ++rateSection) {
+					tempPwrLmt = pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][RF_PATH_A];
+
+					if (tempPwrLmt != MAX_POWER_INDEX) {
+
+						for (rfPath = RF_PATH_A; rfPath < MAX_RF_PATH; ++rfPath) {
+							base = phy_get_target_tx_power(Adapter, BAND_ON_2_4G, rfPath, rateSection);
+							tempValue = tempPwrLmt - base;
+							pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][rfPath] = tempValue;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+}
+
 int phy_load_tx_power_limit(_adapter *adapter)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
@@ -1318,7 +1315,7 @@ int phy_load_tx_power_limit(_adapter *adapter)
 	goto exit;
 
 post_hdl:
-	PHY_ConvertTxPowerLimitToPowerIndex(adapter);
+	_rtl8188fu_convert_tx_power_limit_to_power_index(adapter);
 	hal_data->txpwr_limit_loaded = 1;
 	ret = _SUCCESS;
 
