@@ -953,6 +953,8 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 		goto exit;
 	}
 
+	/* ULLI mac power on ? or efuse ? rtlwifi efuse.c:1116: */
+
 	/* Check if MAC has already power on. */
 	value8 = rtw_read8(padapter, REG_SYS_CLKR_8188F + 1);
 	u1bRegCR = rtw_read8(padapter, REG_CR_8188F);
