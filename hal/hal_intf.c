@@ -129,10 +129,6 @@ void rtw_hal_sw_led_deinit(_adapter *padapter)
 		padapter->HalFunc.DeInitSwLeds(padapter);
 }
 
-u32 rtw_hal_power_on(_adapter *padapter)
-{	
-	return padapter->HalFunc.hal_power_on(padapter);
-}
 void rtw_hal_power_off(_adapter *padapter)
 {
 	struct macid_ctl_t *macid_ctl = &padapter->dvobj->macid_ctl;
@@ -703,10 +699,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 
-	if (NULL == padapter->HalFunc.hal_power_on) {		
-		rtw_hal_error_msg("hal_power_on");
-		ret = _FAIL;
-	}	
 	if (NULL == padapter->HalFunc.hal_power_off) {
 		rtw_hal_error_msg("hal_power_off");
 		ret = _FAIL;

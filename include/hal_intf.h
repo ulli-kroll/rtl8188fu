@@ -226,7 +226,6 @@ struct hal_ops {
 	void	(*init_default_value)(_adapter *padapter);
 	void	(*intf_chip_configure)(_adapter *padapter);
 	void	(*read_adapter_info)(_adapter *padapter);
-	u32	(*hal_power_on)(_adapter *padapter);
 	void	(*hal_power_off)(_adapter *padapter);	
 	u32	(*hal_init)(_adapter *padapter);
 	u32	(*hal_deinit)(_adapter *padapter);

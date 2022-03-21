@@ -133,7 +133,7 @@ void rtl8188fu_interface_configure(_adapter *padapter)
 
 }
 
-static u32 _InitPowerOn_8188FU(PADAPTER padapter)
+u32 rtl8188fu_init_power_on(PADAPTER padapter)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct registry_priv *regsty = dvobj_to_regsty(dvobj);
@@ -947,7 +947,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 #endif
 
 
-	status = rtw_hal_power_on(padapter);
+	status = rtl8188fu_init_power_on(padapter);
 	if (status == _FAIL) {
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init power on!\n"));
 		goto exit;
@@ -1856,7 +1856,6 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 
 	rtl8188f_set_hal_ops(pHalFunc);
 
-	pHalFunc->hal_power_on = &_InitPowerOn_8188FU;
 	pHalFunc->hal_power_off = &CardDisableRTL8188FU;
 
 	pHalFunc->hal_init = &rtl8188fu_hal_init;

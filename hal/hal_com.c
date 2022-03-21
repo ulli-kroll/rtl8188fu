@@ -876,7 +876,7 @@ int hal_read_mac_hidden_rpt(_adapter *adapter)
 	u8 hci_type = rtw_get_intf_type(adapter);
 
 	if (!rtw_is_hw_init_completed(adapter))
-		rtw_hal_power_on(adapter);
+		rtl8188fu_init_power_on(adapter);
 #endif
 
 	/* inform FW mac hidden rpt from reg is needed */

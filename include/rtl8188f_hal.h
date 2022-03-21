@@ -238,5 +238,10 @@ s32 c2h_handler_8188f(PADAPTER padapter, u8 *pC2hEvent);
 u8 MRateToHwRate8188F(u8  rate);
 u8 HwRateToMRate8188F(u8	 rate);
 
+/* ULLI : hal/rtl8188f/usb/usb_halinit.c */
+
+u32 rtl8188fu_init_power_on(PADAPTER padapter);
+
+
 #endif
 
