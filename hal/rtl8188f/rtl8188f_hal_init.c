@@ -912,46 +912,6 @@ Hal_GetEfuseDefinition(
 #define EFUSE_ACCESS_OFF_8188			0x00	/* For RTL8188 only. */
 #define REG_EFUSE_ACCESS_8188			0x00CF	/* Efuse access protection for RTL8188 */
 
-/*================================================================= */
-static void Hal_BT_EfusePowerSwitch(
-	PADAPTER	padapter,
-	u8			bWrite,
-	u8			PwrState)
-{
-	u8 tempval;
-	if (PwrState == _TRUE) {
-		/* enable BT power cut */
-		/* 0x6A[14] = 1 */
-		tempval = rtw_read8(padapter, 0x6B);
-		tempval |= BIT(6);
-		rtw_write8(padapter, 0x6B, tempval);
-
-		/* Attention!! Between 0x6A[14] and 0x6A[15] setting need 100us delay */
-		/* So don't write 0x6A[14]=1 and 0x6A[15]=0 together! */
-		rtw_usleep_os(100);
-		/* disable BT output isolation */
-		/* 0x6A[15] = 0 */
-		tempval = rtw_read8(padapter, 0x6B);
-		tempval &= ~BIT(7);
-		rtw_write8(padapter, 0x6B, tempval);
-	} else {
-		/* enable BT output isolation */
-		/* 0x6A[15] = 1 */
-		tempval = rtw_read8(padapter, 0x6B);
-		tempval |= BIT(7);
-		rtw_write8(padapter, 0x6B, tempval);
-
-		/* Attention!! Between 0x6A[14] and 0x6A[15] setting need 100us delay */
-		/* So don't write 0x6A[14]=1 and 0x6A[15]=0 together! */
-
-		/* disable BT power cut */
-		/* 0x6A[14] = 1 */
-		tempval = rtw_read8(padapter, 0x6B);
-		tempval &= ~BIT(6);
-		rtw_write8(padapter, 0x6B, tempval);
-	}
-
-}
 static void
 Hal_EfusePowerSwitch(
 	PADAPTER	padapter,
