@@ -1349,6 +1349,22 @@ CardDisableRTL8188FU(
 	Adapter->bFWReady = _FALSE;
 }
 
+
+static void rtl8188fu_enable_interrupt(PADAPTER Adapter)
+{
+}
+
+
+static void rtl8188fu_disable_interrupt(PADAPTER Adapter)
+{
+#if 0
+	/* USB only need to clear HISR, no need to set HIMR, because there's no hardware interrupt for USB. */
+	rtw_write32(Adapter, REG_HIMR0_8188F, IMR_DISABLED_8188F);
+	rtw_write32(Adapter, REG_HIMR1_8188F, IMR_DISABLED_8188F);
+#endif
+
+}
+
 u32 rtl8188fu_hal_deinit(PADAPTER Adapter)
 {
 	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(Adapter);
@@ -1361,11 +1377,7 @@ u32 rtl8188fu_hal_deinit(PADAPTER Adapter)
 	rtw_write32(Adapter, REG_HISR0_8188F, 0xFFFFFFFF);
 	rtw_write32(Adapter, REG_HISR1_8188F, 0xFFFFFFFF);
 
-#if 0
-	/* USB only need to clear HISR, no need to set HIMR, because there's no hardware interrupt for USB. */
-	rtw_write32(Adapter, REG_HIMR0_8188F, IMR_DISABLED_8188F);
-	rtw_write32(Adapter, REG_HIMR1_8188F, IMR_DISABLED_8188F);
-#endif
+	rtl8188fu_disable_interrupt(Adapter);
 
 	{
 		if (rtw_is_hw_init_completed(Adapter)) {
