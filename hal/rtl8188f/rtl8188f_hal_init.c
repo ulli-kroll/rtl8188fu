@@ -912,8 +912,7 @@ Hal_GetEfuseDefinition(
 #define EFUSE_ACCESS_OFF_8188			0x00	/* For RTL8188 only. */
 #define REG_EFUSE_ACCESS_8188			0x00CF	/* Efuse access protection for RTL8188 */
 
-static void
-Hal_EfusePowerSwitch(
+void rtl8188fu_EfusePowerSwitch(
 	PADAPTER	padapter,
 	u8			bWrite,
 	u8			PwrState)
@@ -2134,7 +2133,7 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->write_rfreg = &PHY_SetRFReg_8188F;
 
 	/* Efuse related function */
-	pHalFunc->EfusePowerSwitch = &Hal_EfusePowerSwitch;
+	pHalFunc->EfusePowerSwitch = &rtl8188fu_EfusePowerSwitch;
 	pHalFunc->ReadEFuse = &Hal_ReadEFuse;
 	pHalFunc->EFUSEGetEfuseDefinition = &Hal_GetEfuseDefinition;
 	pHalFunc->EfuseGetCurrentSize = &Hal_EfuseGetCurrentSize;
