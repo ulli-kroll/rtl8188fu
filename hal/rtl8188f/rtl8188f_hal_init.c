@@ -3181,6 +3181,8 @@ int reset_tsf(PADAPTER Adapter, u8 reset_port)
 }
 #endif /* CONFIG_TSF_RESET_OFFLOAD */
 
+/* ULLI : note about receive config, registers and values */
+
 static void hw_var_set_monitor(PADAPTER Adapter, u8 variable, u8 *val)
 {
 	u32	value_rcr, rcr_bits;
