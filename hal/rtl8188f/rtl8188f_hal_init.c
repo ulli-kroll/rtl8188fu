@@ -2174,7 +2174,6 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->write_rfreg = &PHY_SetRFReg_8188F;
 
 	/* Efuse related function */
-	pHalFunc->BTEfusePowerSwitch = &Hal_BT_EfusePowerSwitch;
 	pHalFunc->EfusePowerSwitch = &Hal_EfusePowerSwitch;
 	pHalFunc->ReadEFuse = &Hal_ReadEFuse;
 	pHalFunc->EFUSEGetEfuseDefinition = &Hal_GetEfuseDefinition;
@@ -2364,7 +2363,7 @@ s32 rtl8188f_InitLLTTable(PADAPTER padapter)
 static int _rtl8188fu_get_chnl_group(u8 channel)
 {
 	int chnlgroup;
-	
+
 	if (1 <= channel && channel <= 2)
 		chnlgroup = 0;
 	else if (3  <= channel && channel <= 5)
@@ -2380,7 +2379,7 @@ static int _rtl8188fu_get_chnl_group(u8 channel)
 
 	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("<==Hal_GetChnlGroup8188F, Channel = %d, Group =%d,\n",
 			 channel, chnlgroup));
-			 
+
 	return chnlgroup;
 }
 
@@ -3604,7 +3603,7 @@ static void hw_var_set_mlme_sitesurvey(PADAPTER padapter, u8 variable, u8 *val)
 					tx_beacon_hdl(iface, NULL);
 					#endif
 					#endif
-					
+
 				}
 			}
 		}
@@ -3850,7 +3849,7 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 	case C2H_CCX_TX_RPT:
 		CCX_FwC2HTxRpt_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
 		break;
-		
+
 
 #ifdef CONFIG_FW_C2H_DEBUG
 	case C2H_EXTEND:
@@ -3868,11 +3867,11 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 #endif
 
 	default:
-		if (!(phydm_c2H_content_parsing(pDM_Odm, pC2hEvent->CmdID, pC2hEvent->CmdLen, c2hBuf))) 
+		if (!(phydm_c2H_content_parsing(pDM_Odm, pC2hEvent->CmdID, pC2hEvent->CmdLen, c2hBuf)))
 			RT_TRACE(_module_hal_init_c_, _drv_info_, ("%s: [WARNING] unknown C2H(0x%02x)\n", __func__, c2hCmdId));
-		
+
 		break;
-		
+
 	}
 
 #ifndef CONFIG_C2H_PACKET_EN
@@ -3928,12 +3927,12 @@ void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
 		process_c2h_event(padapter, &C2hEvent, pdata);
 		break;
 
-	case C2H_BCN_EARLY_RPT:		
+	case C2H_BCN_EARLY_RPT:
 #ifdef CONFIG_TDLS
 #ifdef CONFIG_TDLS_CH_SW
 		rtw_tdls_ch_sw_back_to_base_chnl(padapter);
 #endif
-#endif	
+#endif
 		break;
 
 	case C2H_FW_CHNL_SWITCH_COMPLETE:
@@ -4516,8 +4515,8 @@ void SetHwReg8188F(PADAPTER padapter, u8 variable, u8 *val)
 	case HW_VAR_TDLS_BCN_EARLY_C2H_RPT:
 		rtl8188f_set_BcnEarly_C2H_Rpt_cmd(padapter, *val);
 		break;
-#endif			
-#endif					
+#endif
+#endif
 	default:
 		SetHwReg(padapter, variable, val);
 		break;
