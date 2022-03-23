@@ -32,11 +32,11 @@ CheckPositive(
 	IN	const u4Byte  Condition4
 )
 {
-	u1Byte    _BoardType = ((pDM_Odm->BoardType & BIT4) >> 4) << 0 | /* _GLNA*/
-				((pDM_Odm->BoardType & BIT3) >> 3) << 1 | /* _GPA*/ 
-				((pDM_Odm->BoardType & BIT7) >> 7) << 2 | /* _ALNA*/
-				((pDM_Odm->BoardType & BIT6) >> 6) << 3 | /* _APA */
-				((pDM_Odm->BoardType & BIT2) >> 2) << 4;  /* _BT*/  
+	u1Byte    _board_type = ((pDM_Odm->board_type & BIT4) >> 4) << 0 | /* _GLNA*/
+				((pDM_Odm->board_type & BIT3) >> 3) << 1 | /* _GPA*/ 
+				((pDM_Odm->board_type & BIT7) >> 7) << 2 | /* _ALNA*/
+				((pDM_Odm->board_type & BIT6) >> 6) << 3 | /* _APA */
+				((pDM_Odm->board_type & BIT2) >> 2) << 4;  /* _BT*/  
 
 	u4Byte	cond1   = Condition1, cond2 = Condition2, cond3 = Condition3, cond4 = Condition4;
 	u4Byte    driver1 = pDM_Odm->CutVersion       << 24 | 
@@ -44,7 +44,7 @@ CheckPositive(
 				pDM_Odm->SupportPlatform  << 16 | 
 				pDM_Odm->PackageType      << 12 | 
 				(pDM_Odm->SupportInterface & 0x0F) << 8  |
-				_BoardType;
+				_board_type;
 
 	u4Byte    driver2 = (pDM_Odm->TypeGLNA & 0xFF) <<  0 |  
 				(pDM_Odm->TypeGPA & 0xFF)  <<  8 | 
@@ -66,7 +66,7 @@ u4Byte    driver3 = 0;
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_TRACE, 
 	("	(Platform, Interface) = (0x%X, 0x%X)\n", pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_TRACE, 
-	("	(Board, Package) = (0x%X, 0x%X)\n", pDM_Odm->BoardType, pDM_Odm->PackageType));
+	("	(Board, Package) = (0x%X, 0x%X)\n", pDM_Odm->board_type, pDM_Odm->PackageType));
 
 
 	/*============== Value Defined Check ===============*/
@@ -86,7 +86,7 @@ u4Byte    driver3 = 0;
 	if ((cond1 & driver1) == cond1) {
 		u4Byte bitMask = 0;
 
-		if ((cond1 & 0x0F) == 0) /* BoardType is DONTCARE*/
+		if ((cond1 & 0x0F) == 0) /* board_type is DONTCARE*/
 			return TRUE;
 
 		if ((cond1 & BIT0) != 0) /*GLNA*/
@@ -98,7 +98,7 @@ u4Byte    driver3 = 0;
 		if ((cond1 & BIT3) != 0) /*APA*/
 			bitMask |= 0xFF000000;
 
-		if (((cond2 & bitMask) == (driver2 & bitMask)) && ((cond4 & bitMask) == (driver4 & bitMask)))  /* BoardType of each RF path is matched*/
+		if (((cond2 & bitMask) == (driver2 & bitMask)) && ((cond4 & bitMask) == (driver4 & bitMask)))  /* board_type of each RF path is matched*/
 			return TRUE;
 		else
 			return FALSE;

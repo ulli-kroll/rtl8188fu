@@ -496,7 +496,7 @@ odm_DIGInit(
 	ODM_Memory_Set(pDM_Odm, pDM_DigTable->pause_cckpd_value, 0, (DM_DIG_MAX_PAUSE_TYPE + 1));
 	pDM_DigTable->pause_cckpd_level = 0;
 
-	if(pDM_Odm->BoardType & (ODM_BOARD_EXT_PA|ODM_BOARD_EXT_LNA))
+	if(pDM_Odm->board_type & (ODM_BOARD_EXT_PA|ODM_BOARD_EXT_LNA))
 	{
 		pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
 		pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;

@@ -504,7 +504,7 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			RFType;
 	u1Byte			RFEType;	
 	// Board Type Normal/HighPower/MiniCard/SLIM/Combo/... = 0/1/2/3/4/...
-	u1Byte			BoardType;
+	u1Byte			board_type;
 	u1Byte			PackageType;
 	u2Byte			TypeGLNA;
 	u2Byte			TypeGPA;

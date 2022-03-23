@@ -545,7 +545,7 @@ ODM_CmnInfoInit(
 			break;
 
 		case	ODM_CMNINFO_BOARD_TYPE:
-			pDM_Odm->BoardType = (u1Byte)Value;
+			pDM_Odm->board_type = (u1Byte)Value;
 			break;
 
 		case	ODM_CMNINFO_PACKAGE_TYPE:

@@ -372,7 +372,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 							break;
 					}
 
-					if(pDM_Odm->BoardType & ODM_BOARD_EXT_LNA)
+					if(pDM_Odm->board_type & ODM_BOARD_EXT_LNA)
 					{
 						rx_pwr_all -= pDM_Odm->ExtLNAGain;
 					}
@@ -497,7 +497,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
 
 			//Modification for ext-LNA board
-			if(pDM_Odm->BoardType & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
+			if(pDM_Odm->board_type & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
 			{
 				if((cck_agc_rpt>>7) == 0){
 					PWDB_ALL = (PWDB_ALL>94)?100:(PWDB_ALL +6);
@@ -599,7 +599,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			if(pDM_Odm->SupportICType&ODM_RTL8192C)
 			{	
 			        //Modification for ext-LNA board	
-				if(pDM_Odm->BoardType & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
+				if(pDM_Odm->board_type & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
 				{
 					if((pPhyStaRpt->path_agc[i].trsw) == 1)
 						RSSI = (RSSI>94)?100:(RSSI +6);
@@ -982,8 +982,8 @@ ODM_ConfigRFWithHeaderFile(
    ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
 		 		("===>ODM_ConfigRFWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
     ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
-				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
+				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->board_type: 0x%X\n",
+				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->board_type));
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
 
@@ -1050,8 +1050,8 @@ ODM_ConfigMACWithHeaderFile(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
 		 		("===>ODM_ConfigMACWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
-				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
+				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->board_type: 0x%X\n",
+				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->board_type));
 
 //1 AP doesn't use PHYDM initialization in these ICs
 
