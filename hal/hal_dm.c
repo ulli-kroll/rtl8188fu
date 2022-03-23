@@ -114,7 +114,7 @@ void Init_ODM_ComInfo(_adapter *adapter)
 		odm_board_type |= ODM_BOARD_EXT_LNA_5G;
 		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_5G_EXT_LNA, 1);
 	}
-	if (pHalData->ExternalPA_2G != 0) {
+	if (pHalData->external_pa_2g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_PA;
 		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_EXT_PA, 1);
 	}
