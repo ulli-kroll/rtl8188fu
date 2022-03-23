@@ -39,13 +39,6 @@ odm_ConfigRF_RadioA_8188F(
 	);
 
 void 
-odm_ConfigRF_RadioB_8188F(
-	IN 	PDM_ODM_T 				pDM_Odm,
-	IN 	u4Byte 					Addr,
-	IN 	u4Byte 					Data
-	);
-
-void 
 odm_ConfigMAC_8188F(
  	IN 	PDM_ODM_T 	pDM_Odm,
  	IN 	u4Byte 		Addr,

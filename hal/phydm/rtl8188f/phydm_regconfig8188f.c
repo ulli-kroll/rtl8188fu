@@ -109,22 +109,6 @@ odm_ConfigRF_RadioA_8188F(
 }
 
 void 
-odm_ConfigRF_RadioB_8188F(
-	IN 	PDM_ODM_T 				pDM_Odm,
-	IN 	u4Byte 					Addr,
-	IN 	u4Byte 					Data
-	)
-{
-	u4Byte  content = 0x1001; // RF_Content: radiob_txt
-	u4Byte	maskforPhySet= (u4Byte)(content&0xE000);
-
-    odm_ConfigRFReg_8188F(pDM_Odm, Addr, Data, ODM_RF_PATH_B, Addr|maskforPhySet);
-	
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigRFWithHeaderFile: [RadioB] %08X %08X\n", Addr, Data));
-    
-}
-
-void 
 odm_ConfigMAC_8188F(
  	IN 	PDM_ODM_T 	pDM_Odm,
  	IN 	u4Byte 		Addr,
