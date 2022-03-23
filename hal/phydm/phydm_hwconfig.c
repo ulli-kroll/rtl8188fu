@@ -24,6 +24,7 @@
 
 #include "mp_precomp.h"
 #include "phydm_precomp.h"
+#include "rtl8188f/halhwimg8188f_rf.h"
 
 #define READ_AND_CONFIG_MP(ic, txt) (ODM_ReadAndConfig_MP_##ic##txt(pDM_Odm))
 
@@ -1031,12 +1032,7 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 
 //1 All platforms support
 
-#if RTL8188F_SUPPORT
-	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
-		if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
-			READ_AND_CONFIG_MP(8188F, _TxPowerTrack_USB);
-	}
-#endif
+	ODM_ReadAndConfig_MP_8188F_TxPowerTrack_USB(pDM_Odm);
 
 //1 New ICs (WIN only)
 
