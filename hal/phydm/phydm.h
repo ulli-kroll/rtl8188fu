@@ -505,11 +505,11 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u2Byte			TypeALNA;
 	u2Byte			TypeAPA;
 	// with external LNA  NO/Yes = 0/1
-	u1Byte			ExtLNA; // 2G
-	u1Byte			ExtLNA5G; //5G
+	u1Byte			external_lna_2g; // 2G
+	u1Byte			external_lna_5g; //5G
 	// with external PA  NO/Yes = 0/1
-	u1Byte			ExtPA; // 2G
-	u1Byte			ExtPA5G; //5G
+	u1Byte			external_pa_2g; // 2G
+	u1Byte			external_pa_5g; //5G
 	// with external TRSW  NO/Yes = 0/1
 	u1Byte			ExtTRSW;
 	u1Byte			ExtLNAGain; // 2G

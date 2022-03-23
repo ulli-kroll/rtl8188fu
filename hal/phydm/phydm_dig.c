@@ -1073,7 +1073,7 @@ odm_CCKPacketDetectionThresh(
 	}
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-	if(pDM_Odm->ExtLNA)
+	if(pDM_Odm->external_lna_2g)
 		return;
 #endif
 
