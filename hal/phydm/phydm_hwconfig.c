@@ -24,7 +24,6 @@
 
 #include "mp_precomp.h"
 #include "phydm_precomp.h"
-#include "rtl8188f/halhwimg8188f_rf.h"
 
 #define READ_AND_CONFIG_MP(ic, txt) (ODM_ReadAndConfig_MP_##ic##txt(pDM_Odm))
 
@@ -1012,30 +1011,6 @@ ODM_ConfigRFWithHeaderFile(
 #endif
 
 //1 New ICs (WIN only)
-
-	return HAL_STATUS_SUCCESS;
-}
-
-HAL_STATUS
-ODM_ConfigRFWithTxPwrTrackHeaderFile(
-	IN 	PDM_ODM_T	        	pDM_Odm
-    )
-{
-   	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-		 		 ("===>ODM_ConfigRFWithTxPwrTrackHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
-   	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-				 ("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
-				 pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
-
-
-//1 AP doesn't use PHYDM power tracking table in these ICs
-
-//1 All platforms support
-
-	ODM_ReadAndConfig_MP_8188F_TxPowerTrack_USB(pDM_Odm);
-
-//1 New ICs (WIN only)
-
 
 	return HAL_STATUS_SUCCESS;
 }
