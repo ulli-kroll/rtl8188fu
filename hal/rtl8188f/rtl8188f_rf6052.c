@@ -140,7 +140,7 @@ phy_RF6052_Config_HardCode(
 }
 
 static int
-phy_RF6052_Config_ParaFile(
+_rtl8188fu_phy_rf6052_config_parafile(
 	IN	PADAPTER		Adapter
 )
 {
@@ -257,7 +257,7 @@ PHY_RF6052_Config8188F(
 	/* */
 	/* Config BB and RF */
 	/* */
-	rtStatus = phy_RF6052_Config_ParaFile(Adapter);
+	rtStatus = _rtl8188fu_phy_rf6052_config_parafile(Adapter);
 	return rtStatus;
 
 }
