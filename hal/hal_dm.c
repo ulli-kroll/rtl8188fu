@@ -108,19 +108,19 @@ void Init_ODM_ComInfo(_adapter *adapter)
 
 	if (pHalData->external_lna_2g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_LNA;
-		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_EXT_LNA, 1);
+		pDM_Odm->ExtLNA =  1;
 	}
 	if (pHalData->external_lna_5g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_LNA_5G;
-		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_5G_EXT_LNA, 1);
+		pDM_Odm->ExtLNA5G = 1;
 	}
 	if (pHalData->external_pa_2g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_PA;
-		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_EXT_PA, 1);
+		pDM_Odm->ExtPA = 1;
 	}
 	if (pHalData->external_pa_5g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_PA_5G;
-		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_5G_EXT_PA, 1);
+		pDM_Odm->ExtPA5G = 1;
 	}
 	if (pHalData->EEPROMBluetoothCoexist)
 		odm_board_type |= ODM_BOARD_BT;	

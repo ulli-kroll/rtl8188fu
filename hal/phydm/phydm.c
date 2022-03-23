@@ -548,22 +548,6 @@ ODM_CmnInfoInit(
 			pDM_Odm->PackageType = (u1Byte)Value;
 			break;
 
-		case	ODM_CMNINFO_EXT_LNA:
-			pDM_Odm->ExtLNA = (u1Byte)Value;
-			break;
-
-		case	ODM_CMNINFO_5G_EXT_LNA:
-			pDM_Odm->ExtLNA5G = (u1Byte)Value;
-			break;
-
-		case	ODM_CMNINFO_EXT_PA:
-			pDM_Odm->ExtPA = (u1Byte)Value;
-			break;
-
-		case	ODM_CMNINFO_5G_EXT_PA:
-			pDM_Odm->ExtPA5G = (u1Byte)Value;
-			break;
-
 		case	ODM_CMNINFO_GPA:
 			pDM_Odm->TypeGPA = (u2Byte)Value;
 			break;
@@ -579,9 +563,6 @@ ODM_CmnInfoInit(
 
 		case	ODM_CMNINFO_EXT_TRSW:
 			pDM_Odm->ExtTRSW = (u1Byte)Value;
-			break;
-		case	ODM_CMNINFO_EXT_LNA_GAIN:
-			pDM_Odm->ExtLNAGain = (u1Byte)Value;
 			break;
 		case 	ODM_CMNINFO_PATCH_ID:
 			pDM_Odm->PatchID = (u1Byte)Value;
