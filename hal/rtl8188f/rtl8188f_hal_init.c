@@ -945,7 +945,7 @@ void rtl8188fu_EfusePowerSwitch(
 			rtw_write8(padapter, EFUSE_TEST + 3, (tempval | 0x80));
 		}
 	} else {
-		rtw_write8(padapter, REG_EFUSE_ACCESS, EFUSE_ACCESS_OFF);
+		rtw_write8(padapter, REG_EFUSE_ACCESS_8188, EFUSE_ACCESS_OFF);
 
 		if (bWrite == _TRUE) {
 			/* Disable LDO 2.5V after read/write action */
