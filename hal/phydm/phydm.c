@@ -544,10 +544,6 @@ ODM_CmnInfoInit(
 			pDM_Odm->AntDivType= (u1Byte)Value;
 			break;
 
-		case	ODM_CMNINFO_BOARD_TYPE:
-			pDM_Odm->board_type = (u1Byte)Value;
-			break;
-
 		case	ODM_CMNINFO_PACKAGE_TYPE:
 			pDM_Odm->PackageType = (u1Byte)Value;
 			break;

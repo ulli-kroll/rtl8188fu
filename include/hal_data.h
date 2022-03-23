@@ -389,7 +389,7 @@ typedef struct hal_com_data
 	u8	LNAType_2G;
 	u8	LNAType_5G;
 	u8	ExternalPA_2G;
-	u8	ExternalLNA_2G;
+	u8	external_lna_2g;
 	u8	ExternalPA_5G;
 	u8	ExternalLNA_5G;
 	u16	TypeGLNA;

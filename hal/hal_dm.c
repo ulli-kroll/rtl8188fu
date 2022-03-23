@@ -106,7 +106,7 @@ void Init_ODM_ComInfo(_adapter *adapter)
 	//1 ======= BoardType: ODM_CMNINFO_BOARD_TYPE =======
 	u8 odm_board_type = ODM_BOARD_DEFAULT;
 
-	if (pHalData->ExternalLNA_2G != 0) {
+	if (pHalData->external_lna_2g != 0) {
 		odm_board_type |= ODM_BOARD_EXT_LNA;
 		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_EXT_LNA, 1);
 	}
@@ -125,7 +125,7 @@ void Init_ODM_ComInfo(_adapter *adapter)
 	if (pHalData->EEPROMBluetoothCoexist)
 		odm_board_type |= ODM_BOARD_BT;	
 
-	ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_BOARD_TYPE, odm_board_type);
+	pDM_Odm->board_type = odm_board_type;
 	//1 ============== End of BoardType ==============
 }
 
