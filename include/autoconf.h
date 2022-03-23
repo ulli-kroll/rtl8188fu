@@ -157,7 +157,6 @@
 
 /* #define CONFIG_CHECK_AC_LIFETIME	*/ /* Check packet lifetime of 4 ACs. */
 
-#define CONFIG_LONG_DELAY_ISSUE
 #define CONFIG_ATTEMPT_TO_FIX_AP_BEACON_ERROR
 
 
