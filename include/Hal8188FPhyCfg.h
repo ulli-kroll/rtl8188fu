@@ -54,7 +54,7 @@ PHY_SetBBReg_8188F(
 	);
 
 u32
-PHY_QueryRFReg_8188F(
+rtl8188fu_phy_query_rf_reg(
 	IN	PADAPTER			Adapter,
 	IN	u8				eRFPath,
 	IN	u32				RegAddr,
