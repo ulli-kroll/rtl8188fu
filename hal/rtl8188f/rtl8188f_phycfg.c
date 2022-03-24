@@ -1366,18 +1366,4 @@ PHY_SetSwChnlBWMode8188F(
 	/*DBG_871X("<==%s()\n",__func__); */
 }
 
-static VOID
-_PHY_DumpRFReg_8188F(IN	PADAPTER	pAdapter)
-{
-	u32 rfRegValue, rfRegOffset;
-
-	RT_TRACE(_module_hal_init_c_, _drv_info_, ("_PHY_DumpRFReg_8188F()====>\n"));
-
-	for (rfRegOffset = 0x00; rfRegOffset <= 0x30; rfRegOffset++) {
-		rfRegValue = rtl8188fu_phy_query_rf_reg(pAdapter, RF_PATH_A, rfRegOffset, bMaskDWord);
-		RT_TRACE(_module_hal_init_c_, _drv_info_, (" 0x%02x = 0x%08x\n", rfRegOffset, rfRegValue));
-	}
-	RT_TRACE(_module_hal_init_c_, _drv_info_, ("<===== _PHY_DumpRFReg_8188F()\n"));
-}
-
 
