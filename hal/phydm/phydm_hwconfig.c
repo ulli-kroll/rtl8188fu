@@ -988,27 +988,11 @@ ODM_ConfigRFWithHeaderFile(
 //1 AP doesn't use PHYDM power tracking table in these ICs
 
 //1 All platforms support
-#if (RTL8188E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188E)
-	{
-		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A)
-					READ_AND_CONFIG_MP(8188E,_RadioA);
-		}
-		else if(ConfigType == CONFIG_RF_TXPWR_LMT)
-			READ_AND_CONFIG_MP(8188E,_TXPWR_LMT);
-	}
-#endif
-
-#if (RTL8188F_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
-		if (ConfigType == CONFIG_RF_RADIO) {
-			if (eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8188F, _RadioA);
-		} else if (ConfigType == CONFIG_RF_TXPWR_LMT)
-			READ_AND_CONFIG_MP(8188F, _TXPWR_LMT);
-	}
-#endif
+	if (ConfigType == CONFIG_RF_RADIO) {
+		if (eRFPath == ODM_RF_PATH_A)
+			ODM_ReadAndConfig_MP_8188F_RadioA(pDM_Odm);
+	} else if (ConfigType == CONFIG_RF_TXPWR_LMT)
+		READ_AND_CONFIG_MP(8188F, _TXPWR_LMT);
 
 //1 New ICs (WIN only)
 
