@@ -211,7 +211,7 @@ phy_FwRFSerialWrite(
 }
 
 static	u32
-phy_RFSerialRead_8188F(
+_rtl8188fu_phy_rf_serial_read(
 	IN	PADAPTER			Adapter,
 	IN	RF_PATH			eRFPath,
 	IN	u32				Offset
@@ -384,7 +384,7 @@ rtl8188fu_phy_query_rf_reg(
 {
 	u32 Original_Value, Readback_Value, BitShift;
 
-	Original_Value = phy_RFSerialRead_8188F(Adapter, eRFPath, RegAddr);
+	Original_Value = _rtl8188fu_phy_rf_serial_read(Adapter, eRFPath, RegAddr);
 
 	BitShift =  phy_CalculateBitShift(BitMask);
 	Readback_Value = (Original_Value & BitMask) >> BitShift;
@@ -423,7 +423,7 @@ PHY_SetRFReg_8188F(
 
 	/* RF data is 12 bits only */
 	if (BitMask != bRFRegOffsetMask) {
-		Original_Value = phy_RFSerialRead_8188F(Adapter, eRFPath, RegAddr);
+		Original_Value = _rtl8188fu_phy_rf_serial_read(Adapter, eRFPath, RegAddr);
 		BitShift =  phy_CalculateBitShift(BitMask);
 		Data = ((Original_Value & (~BitMask)) | (Data << BitShift));
 	}
