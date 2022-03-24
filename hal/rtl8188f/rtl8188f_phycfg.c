@@ -89,7 +89,7 @@ phy_CalculateBitShift(
 * Note:		This function is equal to "GetRegSetting" in PHY programming guide
 */
 u32
-PHY_QueryBBReg_8188F(
+rtl8188fu_phy_query_bb_reg(
 	IN	PADAPTER	Adapter,
 	IN	u32		RegAddr,
 	IN	u32		BitMask

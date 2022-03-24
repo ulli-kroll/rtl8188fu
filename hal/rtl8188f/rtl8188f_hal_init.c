@@ -2127,7 +2127,7 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->run_thread = &rtl8188f_start_thread;
 	pHalFunc->cancel_thread = &rtl8188f_stop_thread;
 
-	pHalFunc->read_bbreg = &PHY_QueryBBReg_8188F;
+	pHalFunc->read_bbreg = &rtl8188fu_phy_query_bb_reg;
 	pHalFunc->write_bbreg = &PHY_SetBBReg_8188F;
 	pHalFunc->read_rfreg = &rtl8188fu_phy_query_rf_reg;
 	pHalFunc->write_rfreg = &rtl8188fu_phy_set_rf_reg;
