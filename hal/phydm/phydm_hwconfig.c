@@ -1035,10 +1035,7 @@ ODM_ConfigMACWithHeaderFile(
 //1 AP doesn't use PHYDM initialization in these ICs
 
 //1 All platforms support
-#if (RTL8188F_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8188F) 
-		READ_AND_CONFIG_MP(8188F, _MAC_REG);
-#endif
+	ODM_ReadAndConfig_MP_8188F_MAC_REG(pDM_Odm);
 
 //1 New ICs (WIN only)
 
