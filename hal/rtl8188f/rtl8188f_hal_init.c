@@ -2130,7 +2130,7 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->read_bbreg = &PHY_QueryBBReg_8188F;
 	pHalFunc->write_bbreg = &PHY_SetBBReg_8188F;
 	pHalFunc->read_rfreg = &rtl8188fu_phy_query_rf_reg;
-	pHalFunc->write_rfreg = &PHY_SetRFReg_8188F;
+	pHalFunc->write_rfreg = &rtl8188fu_phy_set_rf_reg;
 
 	/* Efuse related function */
 	pHalFunc->EfusePowerSwitch = &rtl8188fu_EfusePowerSwitch;

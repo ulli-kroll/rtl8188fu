@@ -62,7 +62,7 @@ rtl8188fu_phy_query_rf_reg(
 	);
 
 VOID
-PHY_SetRFReg_8188F(
+rtl8188fu_phy_set_rf_reg(
 	IN	PADAPTER			Adapter,
 	IN	u8				eRFPath,
 	IN	u32				RegAddr,
