@@ -462,7 +462,7 @@ s32 PHY_MACConfig8188F(PADAPTER Adapter)
 	/* Config MAC */
 	/* */
 	{
-		ODM_ConfigMACWithHeaderFile(&pHalData->odmpriv);
+		_rtl8188fu_phy_config_mac_with_headerfile(&pHalData->odmpriv);
 		rtStatus = _SUCCESS;
 	}
 

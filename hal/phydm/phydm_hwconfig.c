@@ -1020,28 +1020,6 @@ ODM_ConfigBBWithHeaderFile(
 	return HAL_STATUS_SUCCESS; 
 }                 
 
-HAL_STATUS
-ODM_ConfigMACWithHeaderFile(
-	IN 	PDM_ODM_T	pDM_Odm
-	)
-{
-
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-		 		("===>ODM_ConfigMACWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->board_type: 0x%X\n",
-				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->board_type));
-
-//1 AP doesn't use PHYDM initialization in these ICs
-
-//1 All platforms support
-	ODM_ReadAndConfig_MP_8188F_MAC_REG(pDM_Odm);
-
-//1 New ICs (WIN only)
-
-	return HAL_STATUS_SUCCESS;    
-} 
-
 u4Byte 
 ODM_GetHWImgVersion(
 	IN	PDM_ODM_T	pDM_Odm

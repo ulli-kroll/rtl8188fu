@@ -219,7 +219,7 @@ ODM_ConfigBBWithHeaderFile(
     );
 
 HAL_STATUS
-ODM_ConfigMACWithHeaderFile(
+_rtl8188fu_phy_config_mac_with_headerfile(
 	IN  	PDM_ODM_T	pDM_Odm
     );
 

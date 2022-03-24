@@ -224,8 +224,8 @@ u4Byte Array_MP_8188F_MAC_REG[] = {
 
 };
 
-void
-ODM_ReadAndConfig_MP_8188F_MAC_REG(
+HAL_STATUS 
+_rtl8188fu_phy_config_mac_with_headerfile(
 	IN   PDM_ODM_T  pDM_Odm
 )
 {
@@ -276,6 +276,7 @@ ODM_ReadAndConfig_MP_8188F_MAC_REG(
 		}
 		i = i + 2;
 	}
+	return 0;
 }
 
 u4Byte
