@@ -641,7 +641,7 @@ PHY_BB8188F_Config_1T(
 #endif
 
 int
-PHY_RFConfig8188F(
+rtl8188fu_phy_rf_config(
 	IN	PADAPTER	Adapter
 )
 {
