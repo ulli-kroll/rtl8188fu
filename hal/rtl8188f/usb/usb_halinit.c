@@ -1025,7 +1025,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 
 
 #if (HAL_MAC_ENABLE == 1)
-	status = PHY_MACConfig8188F(padapter);
+	status = rtl8188fu_phy_mac_config(padapter);
 	if (status == _FAIL) {
 		DBG_871X("PHY_MACConfig8188F fault !!\n");
 		goto exit;

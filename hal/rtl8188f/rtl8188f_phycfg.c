@@ -453,7 +453,7 @@ rtl8188fu_phy_set_rf_reg(
  *  08/12/2008	MHC		Create Version 0.
  *
  *---------------------------------------------------------------------------*/
-s32 PHY_MACConfig8188F(PADAPTER Adapter)
+s32 rtl8188fu_phy_mac_config(PADAPTER Adapter)
 {
 	int		rtStatus = _SUCCESS;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);

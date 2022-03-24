@@ -75,7 +75,7 @@ int PHY_BBConfig8188F(PADAPTER	Adapter	);
 
 int PHY_RFConfig8188F(PADAPTER	Adapter	);
 
-s32 PHY_MACConfig8188F(PADAPTER padapter);
+s32 rtl8188fu_phy_mac_config(PADAPTER padapter);
 
 int
 PHY_ConfigRFWithParaFile_8188F(
