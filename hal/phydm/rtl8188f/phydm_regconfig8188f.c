@@ -104,8 +104,7 @@ odm_ConfigRF_RadioA_8188F(
     ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigRFWithHeaderFile: [RadioA] %08X %08X\n", Addr, Data));
 }
 
-void 
-odm_ConfigMAC_8188F(
+void _rtl8188fu_write_mac_reg(
  	IN 	PDM_ODM_T 	pDM_Odm,
  	IN 	u4Byte 		Addr,
  	IN 	u1Byte 		Data

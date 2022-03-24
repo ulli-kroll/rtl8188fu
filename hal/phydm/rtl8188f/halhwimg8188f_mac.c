@@ -272,7 +272,7 @@ _rtl8188fu_phy_config_mac_with_headerfile(
 			}
 		} else {
 			if (bMatched)
-				odm_ConfigMAC_8188F(pDM_Odm, v1, (u1Byte)v2);
+				_rtl8188fu_write_mac_reg(pDM_Odm, v1, (u1Byte)v2);
 		}
 		i = i + 2;
 	}

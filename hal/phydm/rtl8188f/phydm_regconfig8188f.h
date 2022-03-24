@@ -39,7 +39,7 @@ odm_ConfigRF_RadioA_8188F(
 	);
 
 void 
-odm_ConfigMAC_8188F(
+_rtl8188fu_write_mac_reg(
  	IN 	PDM_ODM_T 	pDM_Odm,
  	IN 	u4Byte 		Addr,
  	IN 	u1Byte 		Data
