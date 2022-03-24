@@ -319,7 +319,7 @@ _rtl8188fu_phy_rf_serial_read(
  *
 */
 static	VOID
-phy_RFSerialWrite_8188F(
+_rtl8188fu_phy_rf_serial_write(
 	IN	PADAPTER			Adapter,
 	IN	RF_PATH			eRFPath,
 	IN	u32				Offset,
@@ -428,7 +428,7 @@ rtl8188fu_phy_set_rf_reg(
 		Data = ((Original_Value & (~BitMask)) | (Data << BitShift));
 	}
 
-	phy_RFSerialWrite_8188F(Adapter, eRFPath, RegAddr, Data);
+	_rtl8188fu_phy_rf_serial_write(Adapter, eRFPath, RegAddr, Data);
 }
 
 
