@@ -1206,7 +1206,7 @@ int phy_load_tx_power_by_rate(_adapter *adapter)
 	/* tx power limit is based on tx power by rate */
 	hal_data->txpwr_limit_loaded = 0;
 
-	if (HAL_STATUS_SUCCESS == ODM_ConfigBBWithHeaderFile(&hal_data->odmpriv, CONFIG_BB_PHY_REG_PG)) {
+	if (HAL_STATUS_SUCCESS == _rtl8188fu_phy_config_bb_with_headerfile(&hal_data->odmpriv, CONFIG_BB_PHY_REG_PG)) {
 		DBG_871X("default power by rate loaded\n");
 		hal_data->txpwr_by_rate_from_file = 0;
 		goto post_hdl;

@@ -213,7 +213,7 @@ ODM_ConfigRFWithHeaderFile(
 	);
 
 HAL_STATUS
-ODM_ConfigBBWithHeaderFile(
+_rtl8188fu_phy_config_bb_with_headerfile(
 	IN  	PDM_ODM_T	                pDM_Odm,
 	IN	ODM_BB_Config_Type		ConfigType
     );

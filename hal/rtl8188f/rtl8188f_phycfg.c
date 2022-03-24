@@ -514,8 +514,7 @@ phy_InitBBRFRegisterDefinition(
 
 }
 
-static	int
-phy_BB8188f_Config_ParaFile(
+static	int _rtl8188fu_phy_config_parafile(
 	IN	PADAPTER	Adapter
 )
 {
@@ -526,7 +525,7 @@ phy_BB8188f_Config_ParaFile(
 	/* 1. Read PHY_REG.TXT BB INIT!! */
 	/* */
 	{
-		if (HAL_STATUS_SUCCESS != ODM_ConfigBBWithHeaderFile(&pHalData->odmpriv, CONFIG_BB_PHY_REG))
+		if (HAL_STATUS_SUCCESS != _rtl8188fu_phy_config_bb_with_headerfile(&pHalData->odmpriv, CONFIG_BB_PHY_REG))
 			rtStatus = _FAIL;
 	}
 
@@ -539,7 +538,7 @@ phy_BB8188f_Config_ParaFile(
 	/* 2. Read BB AGC table Initialization */
 	/* */
 	{
-		if (HAL_STATUS_SUCCESS != ODM_ConfigBBWithHeaderFile(&pHalData->odmpriv, CONFIG_BB_AGC_TAB))
+		if (HAL_STATUS_SUCCESS != _rtl8188fu_phy_config_bb_with_headerfile(&pHalData->odmpriv, CONFIG_BB_AGC_TAB))
 			rtStatus = _FAIL;
 	}
 
@@ -598,7 +597,7 @@ PHY_BBConfig8188F(
 	rtw_write8(Adapter, REG_SYS_FUNC_EN, FEN_USBD | FEN_USBA | FEN_BB_GLB_RSTn | FEN_BBRSTB);
 
 	/* Config BB and AGC */
-	rtStatus = phy_BB8188f_Config_ParaFile(Adapter);
+	rtStatus = _rtl8188fu_phy_config_parafile(Adapter);
 
 	hal_set_crystal_cap(Adapter, pHalData->CrystalCap);
 
