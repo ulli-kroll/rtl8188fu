@@ -46,7 +46,7 @@ rtl8188fu_phy_query_bb_reg(
 	);
 
 VOID
-PHY_SetBBReg_8188F(
+rtl8188fu_phy_set_bb_reg(
 	IN	PADAPTER	Adapter,
 	IN	u32		RegAddr,
 	IN	u32		BitMask,
