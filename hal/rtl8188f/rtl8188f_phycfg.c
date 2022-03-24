@@ -651,7 +651,7 @@ rtl8188fu_phy_rf_config(
 	/* */
 	/* RF config */
 	/* */
-	rtStatus = PHY_RF6052_Config8188F(Adapter);
+	rtStatus = rtl8188fu_phy_rf6052_config(Adapter);
 
 	/*PHY_BB8188F_Config_1T(Adapter); */
 

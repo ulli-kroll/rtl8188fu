@@ -20,7 +20,7 @@
 #ifndef __RTL8188F_RF_H__
 #define __RTL8188F_RF_H__
 
-int	PHY_RF6052_Config8188F(	IN	PADAPTER		Adapter	);
+int	rtl8188fu_phy_rf6052_config(	IN	PADAPTER		Adapter	);
 
 VOID
 PHY_RF6052SetBandwidth8188F(

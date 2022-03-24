@@ -239,7 +239,7 @@ phy_RF6052_Config_ParaFile_Fail:
 
 
 int
-PHY_RF6052_Config8188F(
+rtl8188fu_phy_rf6052_config(
 	IN	PADAPTER		Adapter)
 {
 	HAL_DATA_TYPE				*pHalData = GET_HAL_DATA(Adapter);
