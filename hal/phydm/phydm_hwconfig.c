@@ -992,7 +992,7 @@ ODM_ConfigRFWithHeaderFile(
 		if (eRFPath == ODM_RF_PATH_A)
 			ODM_ReadAndConfig_MP_8188F_RadioA(pDM_Odm);
 	} else if (ConfigType == CONFIG_RF_TXPWR_LMT)
-		READ_AND_CONFIG_MP(8188F, _TXPWR_LMT);
+		ODM_ReadAndConfig_MP_8188F_TXPWR_LMT(pDM_Odm);
 
 //1 New ICs (WIN only)
 
