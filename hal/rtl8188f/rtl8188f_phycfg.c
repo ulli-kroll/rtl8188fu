@@ -481,8 +481,7 @@ s32 rtl8188fu_phy_mac_config(PADAPTER Adapter)
 * Return:		None
 * Note:		The initialization value is constant and it should never be changes
 */
-static	VOID
-phy_InitBBRFRegisterDefinition(
+static void _rtl8188fu_phy_init_bb_rf_register_definition(
 	IN	PADAPTER		Adapter
 )
 {
@@ -564,7 +563,7 @@ PHY_BBConfig8188F(
 	u8	TmpU1B = 0;
 	u8	value8;
 
-	phy_InitBBRFRegisterDefinition(Adapter);
+	_rtl8188fu_phy_init_bb_rf_register_definition(Adapter);
 
 	/* Enable BB and RF */
 	RegVal = rtw_read16(Adapter, REG_SYS_FUNC_EN);
