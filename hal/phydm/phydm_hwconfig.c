@@ -1008,17 +1008,12 @@ ODM_ConfigBBWithHeaderFile(
 
 //1 AP doesn't use PHYDM initialization in these ICs
 
-//1 All platforms support
-#if (RTL8188F_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
-		if (ConfigType == CONFIG_BB_PHY_REG) 
-			READ_AND_CONFIG_MP(8188F, _PHY_REG);
-		else if (ConfigType == CONFIG_BB_AGC_TAB) 
-			READ_AND_CONFIG_MP(8188F, _AGC_TAB);
-		else if (ConfigType == CONFIG_BB_PHY_REG_PG) 
-			READ_AND_CONFIG_MP(8188F, _PHY_REG_PG);
-	}
-#endif
+	if (ConfigType == CONFIG_BB_PHY_REG) 
+		ODM_ReadAndConfig_MP_8188F_PHY_REG(pDM_Odm);
+	else if (ConfigType == CONFIG_BB_AGC_TAB) 
+		ODM_ReadAndConfig_MP_8188F_AGC_TAB(pDM_Odm);
+	else if (ConfigType == CONFIG_BB_PHY_REG_PG) 
+		ODM_ReadAndConfig_MP_8188F_PHY_REG_PG(pDM_Odm);
 
 //1 New ICs (WIN only)
 
