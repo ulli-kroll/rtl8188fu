@@ -1038,7 +1038,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/*d. Initialize BB related configurations. */
 	/* */
 #if (HAL_BB_ENABLE == 1)
-	status = PHY_BBConfig8188F(padapter);
+	status = rtl8188fu_phy_bb_config(padapter);
 	if (status == _FAIL) {
 		DBG_871X("PHY_BBConfig8188F fault !!\n");
 		goto exit;

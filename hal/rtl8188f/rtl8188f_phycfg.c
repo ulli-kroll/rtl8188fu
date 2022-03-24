@@ -552,8 +552,7 @@ phy_BB8190_Config_ParaFile_Fail:
 }
 
 
-int
-PHY_BBConfig8188F(
+int rtl8188fu_phy_bb_config(
 	IN	PADAPTER	Adapter
 )
 {

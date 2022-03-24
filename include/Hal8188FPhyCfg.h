@@ -71,7 +71,7 @@ rtl8188fu_phy_set_rf_reg(
 	);
 
 /* MAC/BB/RF HAL config */
-int PHY_BBConfig8188F(PADAPTER	Adapter	);
+int rtl8188fu_phy_bb_config(PADAPTER	Adapter	);
 
 int rtl8188fu_phy_rf_config(PADAPTER	Adapter	);
 
