@@ -524,7 +524,7 @@ ODM_ReadAndConfig_MP_8188F_PHY_REG(
 			}
 		} else {
 			if (bMatched)
-				odm_ConfigBB_PHY_8188F(pDM_Odm, v1, bMaskDWord, v2);
+				_rtl8188fu_config_bb_reg(pDM_Odm, v1, bMaskDWord, v2);
 		}
 		i = i + 2;
 	}

@@ -65,7 +65,7 @@ odm_ConfigBB_PHY_REG_PG_8188F(
     );
 
 void 
-odm_ConfigBB_PHY_8188F(
+_rtl8188fu_config_bb_reg(
 	IN 	PDM_ODM_T 	pDM_Odm,
     IN 	u4Byte 		Addr,
     IN 	u4Byte 		Bitmask,
