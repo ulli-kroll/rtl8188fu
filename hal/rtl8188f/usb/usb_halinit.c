@@ -959,7 +959,7 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 	boundary = TX_PAGE_BOUNDARY_8188F;
 
-	status =  rtl8188f_InitLLTTable(padapter);
+	status =  _rtl8188fu_llt_table_init(padapter);
 	if (status == _FAIL) {
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init LLT table\n"));
 		goto exit;

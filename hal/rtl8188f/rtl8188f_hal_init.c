@@ -2284,7 +2284,7 @@ u8 GetEEPROMSize8188F(PADAPTER padapter)
 /* LLT R/W/Init function */
 /* */
 /*------------------------------------------------------------------------- */
-s32 rtl8188f_InitLLTTable(PADAPTER padapter)
+s32 _rtl8188fu_llt_table_init(PADAPTER padapter)
 {
 	u32 start, passing_time;
 	u32 val32;
