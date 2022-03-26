@@ -1611,7 +1611,7 @@ phy_IQCalibrate_8188F(
 
 
 VOID
-phy_LCCalibrate_8188F(
+_rtl8188fu_phy_phy_lc_calibrate(
 	IN PDM_ODM_T pDM_Odm,
 	IN BOOLEAN is2T
 )
@@ -1962,7 +1962,7 @@ PHY_LCCalibrate_8188F(
 	pDM_Odm->RFCalibrateInfo.bLCKInProgress = TRUE;
 
 
-	phy_LCCalibrate_8188F(pDM_Odm, FALSE);
+	_rtl8188fu_phy_phy_lc_calibrate(pDM_Odm, FALSE);
 
 
 	pDM_Odm->RFCalibrateInfo.bLCKInProgress = FALSE;
