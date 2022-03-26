@@ -936,16 +936,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 	_func_enter_;
 
-/*	if (rtw_is_surprise_removed(Adapter)) */
-/*		return RT_STATUS_FAILURE; */
-
-#if 0  /* To prevent Pomelo hanging. Added by tianzeyum. 2014.11.02 */
-#define REG_USB_ACCESS_TIMEOUT 0xFE4C
-	rtw_write8(padapter, REG_USB_ACCESS_TIMEOUT, 0x80);
-#undef REG_USB_ACCESS_TIMEOUT
-#endif
-
-
 	status = rtl8188fu_init_power_on(padapter);
 	if (status == _FAIL) {
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init power on!\n"));
