@@ -1617,7 +1617,7 @@ hal_EfuseCellSel(
 	rtw_write32(Adapter, EFUSE_TEST, value32);
 }
 
-static void ReadAdapterInfo8188FU(PADAPTER Adapter)
+static void _rtl8188fu_read_adapter_info(PADAPTER Adapter)
 {
 	/* Read EEPROM size before call any EEPROM function */
 	Adapter->EepromAddressSize = GetEEPROMSize8188F(Adapter);
@@ -1830,7 +1830,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 
 	pHalFunc->init_default_value = &rtl8188f_init_default_value;
 	pHalFunc->intf_chip_configure = &rtl8188fu_interface_configure;
-	pHalFunc->read_adapter_info = &ReadAdapterInfo8188FU;
+	pHalFunc->read_adapter_info = &_rtl8188fu_read_adapter_info;
 
 	pHalFunc->SetHwRegHandler = &SetHwReg8188FU;
 	pHalFunc->GetHwRegHandler = &GetHwReg8188FU;
