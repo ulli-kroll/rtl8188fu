@@ -556,16 +556,6 @@ static void _InitHWLed(PADAPTER Adapter)
 #endif /*CONFIG_LED */
 
 static VOID
-_InitRDGSetting_8188fu(
-	IN	PADAPTER Adapter
-)
-{
-	rtw_write8(Adapter, REG_RD_CTRL_8188F, 0xFF);
-	rtw_write16(Adapter, REG_RD_NAV_NXT_8188F, 0x200);
-	rtw_write8(Adapter, REG_RD_RESP_PKT_TH_8188F, 0x05);
-}
-
-static VOID
 _InitRetryFunction(
 	IN  PADAPTER Adapter
 )
@@ -964,10 +954,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("Failed to init LLT table\n"));
 		goto exit;
 	}
-
-	if (pHalData->bRDGEnable)
-		_InitRDGSetting_8188fu(padapter);
-
 
 	/*Enable TX Report */
 	/*Enable Tx Report Timer */

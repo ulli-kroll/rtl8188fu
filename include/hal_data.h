@@ -405,9 +405,6 @@ typedef struct hal_com_data
 
 	u32	RfRegChnlVal[MAX_RF_PATH];
 
-	//RDG enable
-	BOOLEAN	 bRDGEnable;
-
 	u8	RegTxPause;
 	// Beacon function related global variable.
 	u8	RegBcnCtrlVal;
