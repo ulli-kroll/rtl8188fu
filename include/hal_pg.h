@@ -596,13 +596,13 @@
 #define 	MAX_TX_COUNT				4
 
 typedef struct _TxPowerInfo24G{
-	u8 IndexCCK_Base[MAX_RF_PATH][MAX_CHNL_GROUP_24G];
-	u8 IndexBW40_Base[MAX_RF_PATH][MAX_CHNL_GROUP_24G];
+	u8 index_cck_base[MAX_RF_PATH][MAX_CHNL_GROUP_24G];
+	u8 index_bw40_base[MAX_RF_PATH][MAX_CHNL_GROUP_24G];
 	//If only one tx, only BW20 and OFDM are used.
-	s8 CCK_Diff[MAX_RF_PATH][MAX_TX_COUNT];	
-	s8 OFDM_Diff[MAX_RF_PATH][MAX_TX_COUNT];
-	s8 BW20_Diff[MAX_RF_PATH][MAX_TX_COUNT];
-	s8 BW40_Diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8 cck_diff[MAX_RF_PATH][MAX_TX_COUNT];	
+	s8 ofdm_diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8 bw20_diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8 bw40_diff[MAX_RF_PATH][MAX_TX_COUNT];
 }TxPowerInfo24G, *PTxPowerInfo24G;
 
 typedef struct _TxPowerInfo5G{

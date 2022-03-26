@@ -288,13 +288,13 @@ typedef struct hal_com_data
 
 	/*---------------------------------------------------------------------------------*/
 	//3 [2.4G]
-	u8	Index24G_CCK_Base[MAX_RF_PATH][CENTER_CH_2G_NUM];
-	u8	Index24G_BW40_Base[MAX_RF_PATH][CENTER_CH_2G_NUM];
+	u8	index_cck_base[MAX_RF_PATH][CENTER_CH_2G_NUM];
+	u8	index_bw40_base[MAX_RF_PATH][CENTER_CH_2G_NUM];
 	//If only one tx, only BW20 and OFDM are used.
-	s8	CCK_24G_Diff[MAX_RF_PATH][MAX_TX_COUNT];	
-	s8	OFDM_24G_Diff[MAX_RF_PATH][MAX_TX_COUNT];
-	s8	BW20_24G_Diff[MAX_RF_PATH][MAX_TX_COUNT];
-	s8	BW40_24G_Diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8	cck_diff[MAX_RF_PATH][MAX_TX_COUNT];	
+	s8	ofdm_diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8	bw20_diff[MAX_RF_PATH][MAX_TX_COUNT];
+	s8	bw40_diff[MAX_RF_PATH][MAX_TX_COUNT];
 	//3 [5G]
 	u8	Index5G_BW40_Base[MAX_RF_PATH][CENTER_CH_5G_ALL_NUM];
 	u8	Index5G_BW80_Base[MAX_RF_PATH][CENTER_CH_5G_80M_NUM];

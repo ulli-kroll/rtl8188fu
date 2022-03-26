@@ -2428,7 +2428,7 @@ Hal_EEValueCheck(
 }
 
 void
-Hal_ReadPowerValueFromPROM_8188F(
+_rtl8188fu_read_power_value_fromprom(
 	IN	PADAPTER 		Adapter,
 	IN	PTxPowerInfo24G	pwrInfo24G,
 	IN	u8				 *PROMContent,
@@ -2448,18 +2448,18 @@ Hal_ReadPowerValueFromPROM_8188F(
 		for (rfPath = 0; rfPath < MAX_RF_PATH; rfPath++) {
 			/*2.4G default value */
 			for (group = 0; group < MAX_CHNL_GROUP_24G; group++) {
-				pwrInfo24G->IndexCCK_Base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
-				pwrInfo24G->IndexBW40_Base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
+				pwrInfo24G->index_cck_base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
+				pwrInfo24G->index_bw40_base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
 			}
 			for (TxCount = 0; TxCount < MAX_TX_COUNT; TxCount++) {
 				if (TxCount == 0) {
-					pwrInfo24G->BW20_Diff[rfPath][0] =	EEPROM_DEFAULT_24G_HT20_DIFF;
-					pwrInfo24G->OFDM_Diff[rfPath][0] =	EEPROM_DEFAULT_24G_OFDM_DIFF;
+					pwrInfo24G->bw20_diff[rfPath][0] =	EEPROM_DEFAULT_24G_HT20_DIFF;
+					pwrInfo24G->ofdm_diff[rfPath][0] =	EEPROM_DEFAULT_24G_OFDM_DIFF;
 				} else {
-					pwrInfo24G->BW20_Diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
-					pwrInfo24G->BW40_Diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
-					pwrInfo24G->CCK_Diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
-					pwrInfo24G->OFDM_Diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
+					pwrInfo24G->bw20_diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
+					pwrInfo24G->bw40_diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
+					pwrInfo24G->cck_diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
+					pwrInfo24G->ofdm_diff[rfPath][TxCount] =	EEPROM_DEFAULT_DIFF;
 				}
 			}
 		}
@@ -2472,47 +2472,47 @@ Hal_ReadPowerValueFromPROM_8188F(
 	for (rfPath = 0; rfPath < MAX_RF_PATH; rfPath++) {
 		/*2 2.4G default value */
 		for (group = 0; group < MAX_CHNL_GROUP_24G; group++) {
-			pwrInfo24G->IndexCCK_Base[rfPath][group] =	PROMContent[eeAddr++];
-			if (pwrInfo24G->IndexCCK_Base[rfPath][group] == 0xFF)
-				pwrInfo24G->IndexCCK_Base[rfPath][group] = EEPROM_DEFAULT_24G_INDEX;
+			pwrInfo24G->index_cck_base[rfPath][group] =	PROMContent[eeAddr++];
+			if (pwrInfo24G->index_cck_base[rfPath][group] == 0xFF)
+				pwrInfo24G->index_cck_base[rfPath][group] = EEPROM_DEFAULT_24G_INDEX;
 		}
 		for (group = 0; group < MAX_CHNL_GROUP_24G - 1; group++) {
-			pwrInfo24G->IndexBW40_Base[rfPath][group] =	PROMContent[eeAddr++];
-			if (pwrInfo24G->IndexBW40_Base[rfPath][group] == 0xFF)
-				pwrInfo24G->IndexBW40_Base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
+			pwrInfo24G->index_bw40_base[rfPath][group] =	PROMContent[eeAddr++];
+			if (pwrInfo24G->index_bw40_base[rfPath][group] == 0xFF)
+				pwrInfo24G->index_bw40_base[rfPath][group] =	EEPROM_DEFAULT_24G_INDEX;
 		}
 		for (TxCount = 0; TxCount < MAX_TX_COUNT; TxCount++) {
 			if (TxCount == 0) {
-				pwrInfo24G->BW40_Diff[rfPath][TxCount] = 0;
-				pwrInfo24G->BW20_Diff[rfPath][TxCount] = (PROMContent[eeAddr] & 0xf0) >> 4;
-				if (pwrInfo24G->BW20_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->BW20_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->bw40_diff[rfPath][TxCount] = 0;
+				pwrInfo24G->bw20_diff[rfPath][TxCount] = (PROMContent[eeAddr] & 0xf0) >> 4;
+				if (pwrInfo24G->bw20_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->bw20_diff[rfPath][TxCount] |= 0xF0;
 
-				pwrInfo24G->OFDM_Diff[rfPath][TxCount] = (PROMContent[eeAddr] & 0x0f);
-				if (pwrInfo24G->OFDM_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->OFDM_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->ofdm_diff[rfPath][TxCount] = (PROMContent[eeAddr] & 0x0f);
+				if (pwrInfo24G->ofdm_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->ofdm_diff[rfPath][TxCount] |= 0xF0;
 
-				pwrInfo24G->CCK_Diff[rfPath][TxCount] = 0;
+				pwrInfo24G->cck_diff[rfPath][TxCount] = 0;
 				eeAddr++;
 			} else {
-				pwrInfo24G->BW40_Diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0xf0) >> 4;
-				if (pwrInfo24G->BW40_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->BW40_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->bw40_diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0xf0) >> 4;
+				if (pwrInfo24G->bw40_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->bw40_diff[rfPath][TxCount] |= 0xF0;
 
-				pwrInfo24G->BW20_Diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0x0f);
-				if (pwrInfo24G->BW20_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->BW20_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->bw20_diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0x0f);
+				if (pwrInfo24G->bw20_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->bw20_diff[rfPath][TxCount] |= 0xF0;
 
 				eeAddr++;
 
-				pwrInfo24G->OFDM_Diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0xf0) >> 4;
-				if (pwrInfo24G->OFDM_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->OFDM_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->ofdm_diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0xf0) >> 4;
+				if (pwrInfo24G->ofdm_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->ofdm_diff[rfPath][TxCount] |= 0xF0;
 
 
-				pwrInfo24G->CCK_Diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0x0f);
-				if (pwrInfo24G->CCK_Diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
-					pwrInfo24G->CCK_Diff[rfPath][TxCount] |= 0xF0;
+				pwrInfo24G->cck_diff[rfPath][TxCount] =	(PROMContent[eeAddr] & 0x0f);
+				if (pwrInfo24G->cck_diff[rfPath][TxCount] & BIT3)		/*4bit sign number to 8 bit sign number*/
+					pwrInfo24G->cck_diff[rfPath][TxCount] |= 0xF0;
 
 				eeAddr++;
 			}
@@ -2537,17 +2537,17 @@ Hal_EfuseParseTxPowerInfo_8188F(
 	u8			rfPath, ch, group, TxCount = 1;
 
 	/*RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("%s(): AutoLoadFail = %d\n", __func__, AutoLoadFail)); */
-	Hal_ReadPowerValueFromPROM_8188F(padapter, &pwrInfo24G, PROMContent, AutoLoadFail);
+	_rtl8188fu_read_power_value_fromprom(padapter, &pwrInfo24G, PROMContent, AutoLoadFail);
 	for (rfPath = 0; rfPath < MAX_RF_PATH; rfPath++) {
 		for (ch = 0; ch < CENTER_CH_2G_NUM; ch++) {
 			group = _rtl8188fu_get_chnl_group(ch + 1);
 
 			if (ch == 14 - 1) {
-				pHalData->Index24G_CCK_Base[rfPath][ch] = pwrInfo24G.IndexCCK_Base[rfPath][5];
-				pHalData->Index24G_BW40_Base[rfPath][ch] = pwrInfo24G.IndexBW40_Base[rfPath][group];
+				pHalData->index_cck_base[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][5];
+				pHalData->index_bw40_base[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
 			} else {
-				pHalData->Index24G_CCK_Base[rfPath][ch] = pwrInfo24G.IndexCCK_Base[rfPath][group];
-				pHalData->Index24G_BW40_Base[rfPath][ch] = pwrInfo24G.IndexBW40_Base[rfPath][group];
+				pHalData->index_cck_base[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][group];
+				pHalData->index_bw40_base[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
 			}
 #ifdef CONFIG_DEBUG
 			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("======= Path %d, ChannelIndex %d, Group %d=======\n", rfPath, ch, group));
@@ -2557,10 +2557,10 @@ Hal_EfuseParseTxPowerInfo_8188F(
 		}
 
 		for (TxCount = 0; TxCount < MAX_TX_COUNT; TxCount++) {
-			pHalData->CCK_24G_Diff[rfPath][TxCount] = pwrInfo24G.CCK_Diff[rfPath][TxCount];
-			pHalData->OFDM_24G_Diff[rfPath][TxCount] = pwrInfo24G.OFDM_Diff[rfPath][TxCount];
-			pHalData->BW20_24G_Diff[rfPath][TxCount] = pwrInfo24G.BW20_Diff[rfPath][TxCount];
-			pHalData->BW40_24G_Diff[rfPath][TxCount] = pwrInfo24G.BW40_Diff[rfPath][TxCount];
+			pHalData->cck_diff[rfPath][TxCount] = pwrInfo24G.cck_diff[rfPath][TxCount];
+			pHalData->ofdm_diff[rfPath][TxCount] = pwrInfo24G.ofdm_diff[rfPath][TxCount];
+			pHalData->bw20_diff[rfPath][TxCount] = pwrInfo24G.bw20_diff[rfPath][TxCount];
+			pHalData->bw40_diff[rfPath][TxCount] = pwrInfo24G.bw40_diff[rfPath][TxCount];
 
 #ifdef CONFIG_DEBUG
 			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("--------------------------------------- 2.4G ---------------------------------------\n"));
