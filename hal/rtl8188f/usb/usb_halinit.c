@@ -923,7 +923,7 @@ rt_rf_power_state RfOnOffDetect(IN	PADAPTER pAdapter)
 
 void _ps_open_RF(_adapter *padapter);
 
-u32 rtl8188fu_hal_init(PADAPTER padapter)
+u32 rtl8188fu_hw_init(PADAPTER padapter)
 {
 	u8	value8 = 0, u1bRegCR;
 	u32	boundary, status = _SUCCESS;
@@ -1854,7 +1854,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 
 	pHalFunc->hal_power_off = &CardDisableRTL8188FU;
 
-	pHalFunc->hal_init = &rtl8188fu_hal_init;
+	pHalFunc->hal_init = &rtl8188fu_hw_init;
 	pHalFunc->hal_deinit = &rtl8188fu_hal_deinit;
 
 	pHalFunc->inirp_init = &rtl8188fu_inirp_init;
