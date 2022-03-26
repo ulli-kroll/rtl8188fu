@@ -64,10 +64,6 @@ int rtw_smart_ps = 2;
 
 int rtw_check_fw_ps = 1;
 
-#ifdef CONFIG_TX_EARLY_MODE
-int rtw_early_mode=1;
-#endif
-
 int rtw_usb_rxagg_mode = 2;//USB_RX_AGG_DMA =1,USB_RX_AGG_USB=2
 module_param(rtw_usb_rxagg_mode, int, 0644);
 
@@ -263,9 +259,6 @@ module_param(rtw_hwpwrp_detect, int, 0644);
 
 module_param(rtw_hw_wps_pbc, int, 0644);
 
-#ifdef CONFIG_TX_EARLY_MODE
-module_param(rtw_early_mode, int, 0644);
-#endif
 #ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
 char *rtw_adaptor_info_caching_file_path= "/data/misc/wifi/rtw_cache";
 module_param(rtw_adaptor_info_caching_file_path, charp, 0644);
@@ -453,9 +446,6 @@ _func_enter_;
 	registry_par->vht_rate_sel = (u8)rtw_vht_rate_sel;
 #endif
 
-#ifdef CONFIG_TX_EARLY_MODE
-	registry_par->early_mode = (u8)rtw_early_mode;
-#endif
 	registry_par->lowrate_two_xmit = (u8)rtw_lowrate_two_xmit;
 	registry_par->rf_config = (u8)rtw_rf_config;
 	registry_par->low_power = (u8)rtw_low_power;

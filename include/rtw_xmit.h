@@ -134,10 +134,6 @@ do{\
 #define TXDESC_SIZE 32 /* old IC (ex: 8188E) */
 #endif
 
-#ifdef CONFIG_TX_EARLY_MODE
-#define EARLY_MODE_INFO_SIZE	8
-#endif
-
 
 #ifdef CONFIG_USB_HCI
 #ifdef USB_PACKET_OFFSET_SZ
@@ -613,12 +609,6 @@ struct	xmit_priv	{
 	struct xmit_buf	pcmd_xmitbuf[CMDBUF_MAX];
 	u8   hw_ssn_seq_no;//mapping to REG_HW_SEQ 0,1,2,3
 	u16	nqos_ssn;
-	#ifdef CONFIG_TX_EARLY_MODE
-
-	#define MAX_AGG_PKT_NUM 256 //Max tx ampdu coounts		
-	
-	struct agg_pkt_info agg_pkt[MAX_AGG_PKT_NUM];
-	#endif
 
 #ifdef CONFIG_XMIT_ACK
 	int	ack_tx;

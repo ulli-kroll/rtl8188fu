@@ -207,14 +207,7 @@
 #endif
 
 #ifdef CONFIG_USB_TX_AGGREGATION
-/* #define CONFIG_TX_EARLY_MODE */
 #endif
-
-#ifdef CONFIG_TX_EARLY_MODE
-#define RTL8188F_EARLY_MODE_PKT_NUM_10	0
-#endif
-
-
 
 
 /*

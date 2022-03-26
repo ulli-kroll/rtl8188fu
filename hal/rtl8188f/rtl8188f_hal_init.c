@@ -3117,13 +3117,6 @@ static void rtl8188f_fill_default_txdesc(
 		offset += (pxmitframe->pkt_offset >> 3);
 #endif /* CONFIG_USB_HCI */
 
-#ifdef CONFIG_TX_EARLY_MODE
-		if (pxmitframe->frame_tag == DATA_FRAMETAG) {
-			pkt_offset = 1;
-			offset += EARLY_MODE_INFO_SIZE;
-		}
-#endif /* CONFIG_TX_EARLY_MODE */
-
 		SET_TX_DESC_PKT_OFFSET_8188F(pbuf, pkt_offset);
 		SET_TX_DESC_OFFSET_8188F(pbuf, offset);
 	}

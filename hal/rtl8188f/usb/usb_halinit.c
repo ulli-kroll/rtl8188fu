@@ -964,27 +964,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 	/*Tx RPT Timer. Unit: 32us */
 	rtw_write16(padapter, REG_TX_RPT_TIME, 0xCdf0);
 
-#ifdef CONFIG_TX_EARLY_MODE
-	if (pHalData->AMPDUBurstMode) {
-		RT_TRACE(_module_hci_hal_init_c_, _drv_err_, ("EarlyMode Enabled!!!\n"));
-
-		value8 = rtw_read8(padapter, REG_EARLY_MODE_CONTROL_8188F);
-#if RTL8188F_EARLY_MODE_PKT_NUM_10 == 1
-		value8 = value8 | 0x1f;
-#else
-		value8 = value8 | 0xf;
-#endif
-		rtw_write8(padapter, REG_EARLY_MODE_CONTROL_8188F, value8);
-
-		rtw_write8(padapter, REG_EARLY_MODE_CONTROL_8188F + 3, 0x80);
-
-		value8 = rtw_read8(padapter, REG_TCR_8188F + 1);
-		value8 = value8 | 0x40;
-		rtw_write8(padapter, REG_TCR_8188F + 1, value8);
-	} else
-		rtw_write8(padapter, REG_EARLY_MODE_CONTROL_8188F, 0);
-#endif
-
 	/* <Kordan> InitHalDm should be put ahead of FirmwareDownload. (HWConfig flow: FW->MAC->-BB->RF) */
 	/*InitHalDm(Adapter); */
 
