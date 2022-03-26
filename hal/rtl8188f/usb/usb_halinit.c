@@ -767,7 +767,7 @@ PHY_InitAntennaSelection8188F(
 }
 
 /* Set CCK and OFDM Block "ON" */
-static VOID _BBTurnOnBlock(
+static VOID _rtl8188_bb_turn_on(
 	IN	PADAPTER		Adapter
 )
 {
@@ -1095,7 +1095,7 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	_InitHWLed(padapter);
 #endif /*CONFIG_LED */
 
-	_BBTurnOnBlock(padapter);
+	_rtl8188_bb_turn_on(padapter);
 	/*NicIFSetMacAddress(padapter, padapter->PermanentAddress); */
 
 
