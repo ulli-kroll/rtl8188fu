@@ -933,7 +933,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	rt_rf_power_state		eRfPowerStateToSet;
 	u32 NavUpper = WiFiNavUpperUs;
 	u32 value32;
-	u32 init_start_time = rtw_get_current_time();
 
 	_func_enter_;
 
@@ -1184,8 +1183,6 @@ u32 rtl8188fu_hal_init(PADAPTER padapter)
 	/*_dbg_dump_macreg(Adapter); */
 
 exit:
-
-	DBG_871X("%s in %dms\n", __func__, rtw_get_passing_time_ms(init_start_time));
 
 	_func_exit_;
 
