@@ -1702,7 +1702,7 @@ hal_EfuseCheckIfDatafollowed(
 }
 #endif
 
-static void rtl8188f_read_chip_version(PADAPTER padapter)
+static void rtl8188fu_read_chip_version(PADAPTER padapter)
 {
 	u32 value32;
 	HAL_DATA_TYPE *pHalData;
@@ -2104,7 +2104,7 @@ void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
 	pHalFunc->dm_init = &rtl8188f_init_dm_priv;
 	pHalFunc->dm_deinit = &rtl8188f_deinit_dm_priv;
 
-	pHalFunc->read_chip_version = &rtl8188f_read_chip_version;
+	pHalFunc->read_chip_version = &rtl8188fu_read_chip_version;
 
 	pHalFunc->UpdateRAMaskHandler = &UpdateHalRAMask8188F;
 	pHalFunc->set_bwmode_handler = &PHY_SetBWMode8188F;
