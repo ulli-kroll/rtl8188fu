@@ -337,7 +337,7 @@ typedef struct hal_com_data
 	u8 tx_pwr_lmt_5g_20_40_ref;
 
 	// Power Limit Table for 2.4G
-	s8	TxPwrLimit_2_4G[MAX_REGULATION_NUM]
+	s8	txpwr_limit_2_4g[MAX_REGULATION_NUM]
 						[MAX_2_4G_BANDWIDTH_NUM]
 						[MAX_RATE_SECTION_NUM]
 						[CENTER_CH_2G_NUM]

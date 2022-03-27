@@ -917,10 +917,10 @@ rtl8188fu_phy_get_txpower_limit(
 		if (bandwidth >= MAX_2_4G_BANDWIDTH_NUM)
 			bandwidth = MAX_2_4G_BANDWIDTH_NUM - 1;
 		for (i = 0; i < MAX_REGULATION_NUM; ++i)
-			limits[i] = pHalData->TxPwrLimit_2_4G[i][bandwidth][rateSection][chnl_idx][RfPath]; 
+			limits[i] = pHalData->txpwr_limit_2_4g[i][bandwidth][rateSection][chnl_idx][RfPath]; 
 
 		powerLimit = (regulation == TXPWR_LMT_WW) ? phy_GetWorldWideLimit(limits) :
-			          pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RfPath];
+			          pHalData->txpwr_limit_2_4g[regulation][bandwidth][rateSection][chnl_idx][RfPath];
 
 	} else if ( Band == BAND_ON_5G ) {
 		s8 limits[10] = {0}; u8 i = 0;
@@ -1143,18 +1143,18 @@ PHY_SetTxPowerLimit(
 			return;
 		}
 
-		prevPowerLimit = pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A];
+		prevPowerLimit = pHalData->txpwr_limit_2_4g[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A];
 
 		if (prevPowerLimit != MAX_POWER_INDEX)
 			DBG_871X_LEVEL(_drv_always_, "duplicate tx power limit combination [band %s][regulation %s][bw %s][rate section %s][rf path %s][chnl %s]\n"
 				, Band, Regulation, Bandwidth, RateSection, RfPath, Channel);
 
 		if (powerLimit < prevPowerLimit)
-			pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A] = powerLimit;
+			pHalData->txpwr_limit_2_4g[regulation][bandwidth][rateSection][chnl_idx][RF_PATH_A] = powerLimit;
 
 		if (0)
 			DBG_871X("2.4G Band value : [regulation %d][bw %d][rate_section %d][chnl %d][val %d]\n"
-				, regulation, bandwidth, rateSection, chnl_idx, pHalData->TxPwrLimit_2_4G[regulation][bandwidth][rateSection][chnl_idx][ODM_RF_PATH_A]);
+				, regulation, bandwidth, rateSection, chnl_idx, pHalData->txpwr_limit_2_4g[regulation][bandwidth][rateSection][chnl_idx][ODM_RF_PATH_A]);
 	} else {
 		DBG_871X_LEVEL(_drv_always_, "Cannot recognize the band info in %s\n", Band);
 		return;
@@ -1238,7 +1238,7 @@ static void _rtl8188fu_phy_init_tx_power_limit(PADAPTER Adapter)
 			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
 				for (m = 0; m < CENTER_CH_2G_NUM; ++m)
 					for (l = 0; l < MAX_RF_PATH; ++l)
-						pHalData->TxPwrLimit_2_4G[i][j][k][m][l] = MAX_POWER_INDEX;
+						pHalData->txpwr_limit_2_4g[i][j][k][m][l] = MAX_POWER_INDEX;
 
 	for (i = 0; i < MAX_REGULATION_NUM; ++i)
 		for (j = 0; j < MAX_5G_BANDWIDTH_NUM; ++j)
@@ -1265,14 +1265,14 @@ static void _rtl8188fu_convert_tx_power_limit_to_power_index(PADAPTER Adapter)
 			for (channel = 0; channel < CENTER_CH_2G_NUM; ++channel) {
 
 				for (rateSection = CCK; rateSection <= HT_4SS; ++rateSection) {
-					tempPwrLmt = pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][RF_PATH_A];
+					tempPwrLmt = pHalData->txpwr_limit_2_4g[regulation][bw][rateSection][channel][RF_PATH_A];
 
 					if (tempPwrLmt != MAX_POWER_INDEX) {
 
 						for (rfPath = RF_PATH_A; rfPath < MAX_RF_PATH; ++rfPath) {
 							base = phy_get_target_tx_power(Adapter, BAND_ON_2_4G, rfPath, rateSection);
 							tempValue = tempPwrLmt - base;
-							pHalData->TxPwrLimit_2_4G[regulation][bw][rateSection][channel][rfPath] = tempValue;
+							pHalData->txpwr_limit_2_4g[regulation][bw][rateSection][channel][rfPath] = tempValue;
 						}
 					}
 				}
