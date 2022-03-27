@@ -2548,11 +2548,6 @@ void _rtl8188fu_read_txpower_info_from_hwpg(
 				pHalData->index_cck_base[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][group];
 				pHalData->index_bw40_base[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
 			}
-#ifdef CONFIG_DEBUG
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("======= Path %d, ChannelIndex %d, Group %d=======\n", rfPath, ch, group));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("Index24G_CCK_Base[%d][%d] = 0x%x\n", rfPath, ch , pHalData->Index24G_CCK_Base[rfPath][ch]));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("Index24G_BW40_Base[%d][%d] = 0x%x\n", rfPath, ch, pHalData->Index24G_BW40_Base[rfPath][ch]));
-#endif
 		}
 
 		for (TxCount = 0; TxCount < MAX_TX_COUNT; TxCount++) {
@@ -2560,14 +2555,6 @@ void _rtl8188fu_read_txpower_info_from_hwpg(
 			pHalData->ofdm_diff[rfPath][TxCount] = pwrInfo24G.ofdm_diff[rfPath][TxCount];
 			pHalData->bw20_diff[rfPath][TxCount] = pwrInfo24G.bw20_diff[rfPath][TxCount];
 			pHalData->bw40_diff[rfPath][TxCount] = pwrInfo24G.bw40_diff[rfPath][TxCount];
-
-#ifdef CONFIG_DEBUG
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("--------------------------------------- 2.4G ---------------------------------------\n"));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("CCK_24G_Diff[%d][%d]= %d\n", rfPath, TxCount, pHalData->CCK_24G_Diff[rfPath][TxCount]));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("OFDM_24G_Diff[%d][%d]= %d\n", rfPath, TxCount, pHalData->OFDM_24G_Diff[rfPath][TxCount]));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("BW20_24G_Diff[%d][%d]= %d\n", rfPath, TxCount, pHalData->BW20_24G_Diff[rfPath][TxCount]));
-			RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("BW40_24G_Diff[%d][%d]= %d\n", rfPath, TxCount, pHalData->BW40_24G_Diff[rfPath][TxCount]));
-#endif
 		}
 	}
 
