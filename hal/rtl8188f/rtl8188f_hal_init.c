@@ -2525,8 +2525,7 @@ _rtl8188fu_read_power_value_fromprom(
 }
 
 
-void
-Hal_EfuseParseTxPowerInfo_8188F(
+void _rtl8188fu_read_txpower_info_from_hwpg(
 	IN	PADAPTER 		padapter,
 	IN	u8			*PROMContent,
 	IN	BOOLEAN			AutoLoadFail

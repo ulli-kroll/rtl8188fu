@@ -177,7 +177,7 @@ s32 _rtl8188fu_llt_table_init(PADAPTER padapter);
 u8 GetEEPROMSize8188F(PADAPTER padapter);
 void Hal_InitPGData(PADAPTER padapter, u8 *PROMContent);
 void Hal_EfuseParseIDCode(PADAPTER padapter, u8 *hwinfo);
-void Hal_EfuseParseTxPowerInfo_8188F(PADAPTER padapter, u8 *PROMContent, BOOLEAN AutoLoadFail);
+void _rtl8188fu_read_txpower_info_from_hwpg(PADAPTER padapter, u8 *PROMContent, BOOLEAN AutoLoadFail);
 /* void Hal_EfuseParseBTCoexistInfo_8188F(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoLoadFail); */
 void Hal_EfuseParseEEPROMVer_8188F(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseChnlPlan_8188F(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoLoadFail);

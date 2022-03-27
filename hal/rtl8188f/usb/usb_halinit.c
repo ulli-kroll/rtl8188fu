@@ -1537,7 +1537,7 @@ static void _rtl8188fu_read_power_value_fromprom(
 	Hal_EfuseParsePIDVID_8188FU(padapter, hwinfo, pHalData->bautoload_fail_flag);
 	Hal_EfuseParseEEPROMVer_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
 	hal_config_macaddr(padapter, pHalData->bautoload_fail_flag);
-	Hal_EfuseParseTxPowerInfo_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
+	_rtl8188fu_read_txpower_info_from_hwpg(padapter, hwinfo, pHalData->bautoload_fail_flag);
 /* Hal_EfuseParseBTCoexistInfo_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag); */
 
 	Hal_EfuseParseChnlPlan_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
