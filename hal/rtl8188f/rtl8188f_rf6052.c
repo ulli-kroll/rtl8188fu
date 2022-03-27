@@ -190,13 +190,13 @@ _rtl8188fu_phy_rf6052_config_parafile(
 		switch (eRFPath) {
 		case RF_PATH_A:
 			{
-				if (HAL_STATUS_FAILURE == ODM_ConfigRFWithHeaderFile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
+				if (HAL_STATUS_FAILURE == rtl8188fu_phy_config_rf_with_headerfile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
 					rtStatus = _FAIL;
 			}
 			break;
 		case RF_PATH_B:
 			{
-				if (HAL_STATUS_FAILURE == ODM_ConfigRFWithHeaderFile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
+				if (HAL_STATUS_FAILURE == rtl8188fu_phy_config_rf_with_headerfile(&pHalData->odmpriv, CONFIG_RF_RADIO, (ODM_RF_RADIO_PATH_E)eRFPath))
 					rtStatus = _FAIL;
 			}
 			break;

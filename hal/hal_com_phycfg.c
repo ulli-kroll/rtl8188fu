@@ -1296,7 +1296,7 @@ int phy_load_tx_power_limit(_adapter *adapter)
 		goto exit;
 	}
 
-	if (HAL_STATUS_SUCCESS == ODM_ConfigRFWithHeaderFile(&hal_data->odmpriv, CONFIG_RF_TXPWR_LMT, (ODM_RF_RADIO_PATH_E)0)) {
+	if (HAL_STATUS_SUCCESS == rtl8188fu_phy_config_rf_with_headerfile(&hal_data->odmpriv, CONFIG_RF_TXPWR_LMT, (ODM_RF_RADIO_PATH_E)0)) {
 		DBG_871X("default power limit loaded\n");
 		hal_data->txpwr_limit_from_file = 0;
 		goto post_hdl;

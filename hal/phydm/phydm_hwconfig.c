@@ -972,7 +972,7 @@ VOIDODM_MacStatusQuery(
 //
 
 HAL_STATUS
-ODM_ConfigRFWithHeaderFile(
+rtl8188fu_phy_config_rf_with_headerfile(
 	IN 	PDM_ODM_T	        	pDM_Odm,
 	IN 	ODM_RF_Config_Type 		ConfigType,
 	IN 	ODM_RF_RADIO_PATH_E 	eRFPath
