@@ -344,7 +344,7 @@ typedef struct hal_com_data
 						[MAX_RF_PATH];
 
 	// Power Limit Table for 5G
-	s8	TxPwrLimit_5G[MAX_REGULATION_NUM]
+	s8	txpwr_limit_5g[MAX_REGULATION_NUM]
 						[MAX_5G_BANDWIDTH_NUM]
 						[MAX_RATE_SECTION_NUM]
 						[CENTER_CH_5G_ALL_NUM]

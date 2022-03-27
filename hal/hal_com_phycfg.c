@@ -925,10 +925,10 @@ rtl8188fu_phy_get_txpower_limit(
 	} else if ( Band == BAND_ON_5G ) {
 		s8 limits[10] = {0}; u8 i = 0;
 		for (i = 0; i < MAX_REGULATION_NUM; ++i)
-			limits[i] = pHalData->TxPwrLimit_5G[i][bandwidth][rateSection][chnl_idx][RfPath];
+			limits[i] = pHalData->txpwr_limit_5g[i][bandwidth][rateSection][chnl_idx][RfPath];
 		
 		powerLimit = (regulation == TXPWR_LMT_WW) ? phy_GetWorldWideLimit(limits) : 
-					  pHalData->TxPwrLimit_5G[regulation][bandwidth][rateSection][chnl_idx][RfPath];
+					  pHalData->txpwr_limit_5g[regulation][bandwidth][rateSection][chnl_idx][RfPath];
 	} else 
 		DBG_871X("No power limit table of the specified band\n" );
 
@@ -1002,7 +1002,7 @@ phy_CrossReferenceHTAndVHTTxPowerLimit(
 						else
 							continue;
 
-						if (pHalData->TxPwrLimit_5G[regulation][bw][ref_rs][channel][RF_PATH_A] == MAX_POWER_INDEX)
+						if (pHalData->txpwr_limit_5g[regulation][bw][ref_rs][channel][RF_PATH_A] == MAX_POWER_INDEX)
 							continue;
 
 						if (IS_HT_RATE_SECTION(rs))
@@ -1012,7 +1012,7 @@ phy_CrossReferenceHTAndVHTTxPowerLimit(
 						else
 							continue;
 
-						if (pHalData->TxPwrLimit_5G[regulation][bw][rs][channel][RF_PATH_A] != MAX_POWER_INDEX)
+						if (pHalData->txpwr_limit_5g[regulation][bw][rs][channel][RF_PATH_A] != MAX_POWER_INDEX)
 							continue;
 
 						if (IS_HT_RATE_SECTION(rs) && IS_VHT_RATE_SECTION(ref_rs))
@@ -1025,8 +1025,8 @@ phy_CrossReferenceHTAndVHTTxPowerLimit(
 								, regulation, bw, channel
 								, rate_section_str(rs), rate_section_str(ref_rs));
 
-						pHalData->TxPwrLimit_5G[regulation][bw][rs][channel][RF_PATH_A] =
-							pHalData->TxPwrLimit_5G[regulation][bw][ref_rs][channel][RF_PATH_A];
+						pHalData->txpwr_limit_5g[regulation][bw][rs][channel][RF_PATH_A] =
+							pHalData->txpwr_limit_5g[regulation][bw][ref_rs][channel][RF_PATH_A];
 					}
 
 				}
@@ -1245,7 +1245,7 @@ static void _rtl8188fu_phy_init_tx_power_limit(PADAPTER Adapter)
 			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
 				for (m = 0; m < CENTER_CH_5G_ALL_NUM; ++m)
 					for (l = 0; l < MAX_RF_PATH; ++l)
-						pHalData->TxPwrLimit_5G[i][j][k][m][l] = MAX_POWER_INDEX;
+						pHalData->txpwr_limit_5g[i][j][k][m][l] = MAX_POWER_INDEX;
 }
 
 static void _rtl8188fu_convert_tx_power_limit_to_power_index(PADAPTER Adapter)
