@@ -680,44 +680,6 @@ PHY_ConfigRFWithParaFile_8188F(
 	return _SUCCESS;
 }
 
-/***************************************** */
-/*-----------------------------------------------------------------------------
- * Function:    PHY_ConfigRFWithHeaderFile()
- *
- * Overview:    This function read RF parameters from general file format, and do RF 3-wire
- *
- * Input:      	PADAPTER			Adapter
- *			ps1Byte 				pFileName
- *			RF_PATH				eRFPath
- *
- * Output:      NONE
- *
- * Return:      RT_STATUS_SUCCESS: configuration file exist
- *
- * Note:		Delay may be required for RF configuration
- *---------------------------------------------------------------------------*/
-void phy_PowerIndexCheck8188F(
-	IN	PADAPTER		Adapter,
-	IN	u8			channel,
-	IN OUT u8		*cckPowerLevel,
-	IN OUT u8		*ofdmPowerLevel,
-	IN OUT u8		*BW20PowerLevel,
-	IN OUT u8		*BW40PowerLevel
-)
-{
-
-	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-
-	pHalData->CurrentCckTxPwrIdx = cckPowerLevel[0];
-	pHalData->CurrentOfdm24GTxPwrIdx = ofdmPowerLevel[0];
-	pHalData->CurrentBW2024GTxPwrIdx = BW20PowerLevel[0];
-	pHalData->CurrentBW4024GTxPwrIdx = BW40PowerLevel[0];
-
-	RT_TRACE(_module_hal_init_c_, _drv_info_,
-			 ("PHY_SetTxPowerLevel8188F(): CurrentCckTxPwrIdx : 0x%x,CurrentOfdm24GTxPwrIdx: 0x%x\n",
-			  pHalData->CurrentCckTxPwrIdx, pHalData->CurrentOfdm24GTxPwrIdx));
-}
-
 /**************************************************************************************************************
  *   Description:
  *       The low-level interface to set TxAGC , called by both MP and Normal Driver.
