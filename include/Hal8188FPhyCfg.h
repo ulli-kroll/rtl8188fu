@@ -78,23 +78,6 @@ int rtl8188fu_phy_rf_config(PADAPTER	Adapter	);
 s32 rtl8188fu_phy_mac_config(PADAPTER padapter);
 
 VOID
-PHY_SetTxPowerIndex_8188F(
-	IN	PADAPTER			Adapter,
-	IN	u32					PowerIndex,
-	IN	u8					RFPath,	
-	IN	u8					Rate
-	);
-
-u8
-PHY_GetTxPowerIndex_8188F(
-	IN	PADAPTER			pAdapter,
-	IN	u8					RFPath,
-	IN	u8					Rate,	
-	IN	CHANNEL_WIDTH		BandWidth,	
-	IN	u8					Channel
-	);
-
-VOID
 rtl8188fu_phy_set_txpower_level(
 	IN	PADAPTER		Adapter,
 	IN	u8			channel
