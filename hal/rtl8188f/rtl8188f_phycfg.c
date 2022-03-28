@@ -1052,8 +1052,8 @@ void _rtl8188fu_phy_switch_channel(PADAPTER pAdapter)
 		return;
 	}
 
-	pHalData->RfRegChnlVal[0] = ((pHalData->RfRegChnlVal[0] & 0xfffff00) | channelToSW);
-	PHY_SetRFReg(pAdapter, ODM_RF_PATH_A, RF_CHNLBW, 0x3FF, pHalData->RfRegChnlVal[0]);
+	pHalData->rfreg_chnlval[0] = ((pHalData->rfreg_chnlval[0] & 0xfffff00) | channelToSW);
+	PHY_SetRFReg(pAdapter, ODM_RF_PATH_A, RF_CHNLBW, 0x3FF, pHalData->rfreg_chnlval[0]);
 	/* PHY_SetRFReg(pAdapter, ODM_RF_PATH_B, RF_CHNLBW, 0x3FF, pHalData->RfRegChnlVal[0] ); */
 
 	/* DBG_8192C("===>phy_SwChnl8188F: Channel = %d\n", channelToSW); */

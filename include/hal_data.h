@@ -403,7 +403,7 @@ typedef struct hal_com_data
 
 	BB_REGISTER_DEFINITION_T	PHYRegDef[MAX_RF_PATH];	//Radio A/B/C/D
 
-	u32	RfRegChnlVal[MAX_RF_PATH];
+	u32	rfreg_chnlval[MAX_RF_PATH];
 
 	u8	RegTxPause;
 	// Beacon function related global variable.

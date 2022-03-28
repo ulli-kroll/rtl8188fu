@@ -86,8 +86,8 @@ PHY_RF6052SetBandwidth8188F(
 		RF_A_reg 0x1b=0x00c6c (for SDIO)
 		RF_A_reg 0x1b=0x01c6c (for USB)
 		*/
-		pHalData->RfRegChnlVal[0] = ((pHalData->RfRegChnlVal[0] & 0xfffff3ff) | BIT10 | BIT11);
-		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x18, bRFRegOffsetMask, pHalData->RfRegChnlVal[0]); /* RF TRX_BW */
+		pHalData->rfreg_chnlval[0] = ((pHalData->rfreg_chnlval[0] & 0xfffff3ff) | BIT10 | BIT11);
+		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x18, bRFRegOffsetMask, pHalData->rfreg_chnlval[0]); /* RF TRX_BW */
 
 		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x87, bRFRegOffsetMask, 0x00065); /* FILTER BW&RC Corner (ACPR) */
 		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x1C, bRFRegOffsetMask, 0x00000); /* FILTER BW&RC Corner (ACPR) */
@@ -108,8 +108,8 @@ PHY_RF6052SetBandwidth8188F(
 		RF_A_reg 0x1b=0x00c6c (for SDIO)
 		RF_A_reg 0x1b=0x01c6c (for USB)
 		*/
-		pHalData->RfRegChnlVal[0] = ((pHalData->RfRegChnlVal[0] & 0xfffff3ff) | BIT10);
-		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x18, bRFRegOffsetMask, pHalData->RfRegChnlVal[0]); /* RF TRX_BW */
+		pHalData->rfreg_chnlval[0] = ((pHalData->rfreg_chnlval[0] & 0xfffff3ff) | BIT10);
+		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x18, bRFRegOffsetMask, pHalData->rfreg_chnlval[0]); /* RF TRX_BW */
 
 		PHY_SetRFReg(Adapter, ODM_RF_PATH_A, 0x87, bRFRegOffsetMask, 0x00025); /* FILTER BW&RC Corner (ACPR) */
 #ifdef CONFIG_USB_HCI
