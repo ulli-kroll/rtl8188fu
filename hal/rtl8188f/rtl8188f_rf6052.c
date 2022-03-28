@@ -126,19 +126,6 @@ _rtl8188_phy_rf6052_set_bandwith(
 
 }
 
-static VOID
-phy_RF6052_Config_HardCode(
-	IN	PADAPTER		Adapter
-)
-{
-
-	/* Set Default Bandwidth to 20M */
-	/*Adapter->HalFunc	.SetBWModeHandler(Adapter, CHANNEL_WIDTH_20); */
-
-	/* TODO: Set Default Channel to channel one for RTL8225 */
-
-}
-
 static int
 _rtl8188fu_phy_rf6052_config_parafile(
 	IN	PADAPTER		Adapter
