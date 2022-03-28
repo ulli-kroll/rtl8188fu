@@ -1519,7 +1519,7 @@ Hal_EfuseParsePIDVID_8188FU(
 	MSG_8192C("EEPROM PID = 0x%4x\n", pHalData->EEPROMPID);
 }
 
-static void _rtl8188fu_read_power_value_fromprom(
+static void _rtl8188fu_read_fromprom(
 	IN	PADAPTER	padapter
 )
 {
@@ -1581,7 +1581,7 @@ static void _ReadPROMContent(
 	DBG_8192C("Boot from %s, Autoload %s !\n", (pHalData->EepromOrEfuse ? "EEPROM" : "EFUSE"),
 			  (pHalData->bautoload_fail_flag ? "Fail" : "OK"));
 
-	_rtl8188fu_read_power_value_fromprom(Adapter);
+	_rtl8188fu_read_fromprom(Adapter);
 }
 
 static VOID
