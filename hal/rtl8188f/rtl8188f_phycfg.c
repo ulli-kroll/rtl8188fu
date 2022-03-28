@@ -1041,10 +1041,7 @@ phy_PostSetBwMode8188F(
 	PHY_RF6052SetBandwidth8188F(Adapter, pHalData->CurrentChannelBW);
 }
 
-VOID
-phy_SwChnl8188F(
-	IN	PADAPTER					pAdapter
-)
+void _rtl8188fu_phy_switch_channel(PADAPTER pAdapter)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 	u8				channelToSW = pHalData->CurrentChannel;
@@ -1085,7 +1082,7 @@ phy_SwChnlAndSetBwMode8188F(
 		return;
 
 	if (pHalData->bSwChnl) {
-		phy_SwChnl8188F(Adapter);
+		_rtl8188fu_phy_switch_channel(Adapter);
 		pHalData->bSwChnl = _FALSE;
 	}
 
