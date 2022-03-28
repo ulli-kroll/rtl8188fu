@@ -3947,7 +3947,11 @@ void rtl8188f_set_pll_ref_clk_sel(_adapter *adapter, u8 sel)
 	}
 }
 
-void _rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
+/*
+ * If variable not handled here,
+ * some variables will be processed in SetHwReg8188FU()
+ */
+void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 {
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
 	u8 val8;
@@ -3957,6 +3961,10 @@ void _rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 	_func_enter_;
 
 	switch (variable) {
+	case HW_VAR_SET_RPWM:
+		rtw_write8(padapter, REG_USB_HRPWM, *val);
+		break;
+
 	case HW_VAR_MEDIA_STATUS:
 		val8 = rtw_read8(padapter, MSR) & 0x0c;
 		val8 |= *val;
@@ -4195,12 +4203,6 @@ void _rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		rtw_write32(padapter, REG_AMPDU_MAX_LENGTH_8188F, AMPDULen);
 	}
 	break;
-
-#if 0
-	case HW_VAR_RXDMA_AGG_PG_TH:
-		rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, *val);
-		break;
-#endif
 
 	case HW_VAR_H2C_FW_PWRMODE: {
 		u8 psmode = *val;

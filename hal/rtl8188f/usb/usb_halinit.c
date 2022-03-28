@@ -1617,40 +1617,6 @@ static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
 }
 
 
-/*
- * If variable not handled here,
- * some variables will be processed in SetHwReg8188FU()
- */
-void rtl8188fu_set_hw_reg(PADAPTER Adapter, u8 variable, u8 *val)
-{
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
-
-	_func_enter_;
-
-	switch (variable) {
-	case HW_VAR_RXDMA_AGG_PG_TH:
-#ifdef CONFIG_USB_RX_AGGREGATION
-	{
-		u8 threshold = *val;
-
-		if (threshold == 0)
-			threshold = pHalData->UsbRxAggPageCount;
-		_rtl8188fu_set_hw_reg(Adapter, HW_VAR_RXDMA_AGG_PG_TH, &threshold);
-	}
-#endif
-	break;
-
-	case HW_VAR_SET_RPWM:
-		rtw_write8(Adapter, REG_USB_HRPWM, *val);
-		break;
-
-	default:
-		_rtl8188fu_set_hw_reg(Adapter, variable, val);
-		break;
-	}
-
-	_func_exit_;
-}
 
 /*
  * If variable not handled here,
