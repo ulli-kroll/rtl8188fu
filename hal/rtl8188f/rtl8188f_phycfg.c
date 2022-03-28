@@ -585,41 +585,6 @@ int rtl8188fu_phy_bb_config(
 	return rtStatus;
 }
 
-#if 0
-/* Block & Path enable */
-#define		rOFDMCCKEN_Jaguar		0x808 /* OFDM/CCK block enable */
-#define		bOFDMEN_Jaguar			0x20000000
-#define		bCCKEN_Jaguar			0x10000000
-#define		rRxPath_Jaguar			0x808	/* Rx antenna */
-#define		bRxPath_Jaguar			0xff
-#define		rTxPath_Jaguar			0x80c	/* Tx antenna */
-#define		bTxPath_Jaguar			0x0fffffff
-#define		rCCK_RX_Jaguar			0xa04	/* for cck rx path selection */
-#define		bCCK_RX_Jaguar			0x0c000000
-#define		rVhtlen_Use_Lsig_Jaguar	0x8c3	/* Use LSIG for VHT length */
-VOID
-PHY_BB8188F_Config_1T(
-	IN PADAPTER Adapter
-)
-{
-	/* BB OFDM RX Path_A */
-	PHY_SetBBReg(Adapter, rRxPath_Jaguar, bRxPath_Jaguar, 0x11);
-	/* BB OFDM TX Path_A */
-	PHY_SetBBReg(Adapter, rTxPath_Jaguar, bMaskLWord, 0x1111);
-	/* BB CCK R/Rx Path_A */
-	PHY_SetBBReg(Adapter, rCCK_RX_Jaguar, bCCK_RX_Jaguar, 0x0);
-	/* MCS support */
-	PHY_SetBBReg(Adapter, 0x8bc, 0xc0000060, 0x4);
-	/* RF Path_B HSSI OFF */
-	PHY_SetBBReg(Adapter, 0xe00, 0xf, 0x4);
-	/* RF Path_B Power Down */
-	PHY_SetBBReg(Adapter, 0xe90, bMaskDWord, 0);
-	/* ADDA Path_B OFF */
-	PHY_SetBBReg(Adapter, 0xe60, bMaskDWord, 0);
-	PHY_SetBBReg(Adapter, 0xe64, bMaskDWord, 0);
-}
-#endif
-
 int
 rtl8188fu_phy_rf_config(
 	IN	PADAPTER	Adapter
