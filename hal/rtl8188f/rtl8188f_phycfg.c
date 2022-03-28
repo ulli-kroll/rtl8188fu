@@ -1005,7 +1005,7 @@ void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
 	}
 
 	/*3<3>Set RF related register */
-	PHY_RF6052SetBandwidth8188F(Adapter, pHalData->CurrentChannelBW);
+	_rtl8188_phy_rf6052_set_bandwith(Adapter, pHalData->CurrentChannelBW);
 }
 
 void _rtl8188fu_phy_switch_channel(PADAPTER pAdapter)

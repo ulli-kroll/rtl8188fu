@@ -70,7 +70,7 @@ static	RF_SHADOW_T	RF_Shadow[RF6052_MAX_PATH][RF6052_MAX_REG];
  * Note:		For RF type 0222D
  *---------------------------------------------------------------------------*/
 VOID
-PHY_RF6052SetBandwidth8188F(
+_rtl8188_phy_rf6052_set_bandwith(
 	IN	PADAPTER				Adapter,
 	IN	CHANNEL_WIDTH		Bandwidth)	/*20M or 40M */
 {
