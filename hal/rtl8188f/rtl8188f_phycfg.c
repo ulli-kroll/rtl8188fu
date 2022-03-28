@@ -884,36 +884,6 @@ phy_SpurCalibration_8188F(
 
 }
 
-VOID
-phy_SetRegBW_8188F(
-	IN	PADAPTER		Adapter,
-	CHANNEL_WIDTH 	CurrentBW
-)
-{
-	u16	RegRfMod_BW, u2tmp = 0;
-	RegRfMod_BW = rtw_read16(Adapter, REG_TRXPTCL_CTL_8188F);
-
-	switch (CurrentBW) {
-	case CHANNEL_WIDTH_20:
-		rtw_write16(Adapter, REG_TRXPTCL_CTL_8188F, (RegRfMod_BW & 0xFE7F)); /* BIT 7 = 0, BIT 8 = 0 */
-		break;
-
-	case CHANNEL_WIDTH_40:
-		u2tmp = RegRfMod_BW | BIT7;
-		rtw_write16(Adapter, REG_TRXPTCL_CTL_8188F, (u2tmp & 0xFEFF)); /* BIT 7 = 1, BIT 8 = 0 */
-		break;
-
-	case CHANNEL_WIDTH_80:
-		u2tmp = RegRfMod_BW | BIT8;
-		rtw_write16(Adapter, REG_TRXPTCL_CTL_8188F, (u2tmp & 0xFF7F)); /* BIT 7 = 0, BIT 8 = 1 */
-		break;
-
-	default:
-		DBG_871X("phy_PostSetBWMode8188F():	unknown Bandwidth: %#X\n", CurrentBW);
-		break;
-	}
-}
-
 u8
 phy_GetSecondaryChnl_8188F(
 	IN	PADAPTER	Adapter
