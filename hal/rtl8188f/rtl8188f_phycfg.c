@@ -957,10 +957,7 @@ phy_GetSecondaryChnl_8188F(
 	return ((SCSettingOf40 << 4) | SCSettingOf20);
 }
 
-VOID
-phy_PostSetBwMode8188F(
-	IN	PADAPTER	Adapter
-)
+void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
 {
 	u1Byte			SubChnlNum = 0;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
@@ -1087,7 +1084,7 @@ phy_SwChnlAndSetBwMode8188F(
 	}
 
 	if (pHalData->bSetChnlBW) {
-		phy_PostSetBwMode8188F(Adapter);
+		_rtl8188fu_post_set_bw_mode(Adapter);
 		pHalData->bSetChnlBW = _FALSE;
 	}
 
