@@ -73,7 +73,7 @@ _rtl8188fu_config_bb_reg(
     );
 
 void
-odm_ConfigBB_TXPWR_LMT_8188F(
+_rtl8188_config_tx_power_limit(
 	IN 	PDM_ODM_T 	pDM_Odm,
 	IN	pu1Byte		Regulation,
 	IN	pu1Byte		Band,

@@ -1051,8 +1051,7 @@ phy_CrossReferenceHTAndVHTTxPowerLimit(
 /*
 * PHY_SetTxPowerLimit - Parsing TX power limit from phydm array, called by odm_ConfigBB_TXPWR_LMT_XXX in phydm
 */
-VOID
-PHY_SetTxPowerLimit(
+void _rtl8188_config_tx_power_limit(
 	IN	PDM_ODM_T		pDM_Odm,
 	IN	u8				*Regulation,
 	IN	u8				*Band,

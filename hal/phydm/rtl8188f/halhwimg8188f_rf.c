@@ -656,7 +656,7 @@ ODM_ReadAndConfig_MP_8188F_TXPWR_LMT(
 		pu1Byte chnl = Array[i+5];
 		pu1Byte val = Array[i+6];
 	
-		odm_ConfigBB_TXPWR_LMT_8188F(pDM_Odm, regulation, band, bandwidth, rate, rfPath, chnl, val);
+		_rtl8188_config_tx_power_limit(pDM_Odm, regulation, band, bandwidth, rate, rfPath, chnl, val);
 	}
 
 }
