@@ -77,13 +77,6 @@ int rtl8188fu_phy_rf_config(PADAPTER	Adapter	);
 
 s32 rtl8188fu_phy_mac_config(PADAPTER padapter);
 
-int
-PHY_ConfigRFWithParaFile_8188F(
-	IN	PADAPTER			Adapter,
-	IN	u8* 				pFileName,
-	RF_PATH				eRFPath
-);
-
 VOID
 PHY_SetTxPowerIndex_8188F(
 	IN	PADAPTER			Adapter,
