@@ -229,6 +229,8 @@ _rtl8188fu_phy_rf6052_config_parafile(
 	/*3 Configuration of Tx Power Tracking */
 	/*3 ----------------------------------------------------------------- */
 
+	/* Ulli : only copy tables !!! */
+
 	ODM_ReadAndConfig_MP_8188F_TxPowerTrack_USB(&pHalData->odmpriv);
 	/*RT_TRACE(COMP_INIT, DBG_LOUD, ("<---phy_RF6052_Config_ParaFile()\n")); */
 	return rtStatus;
