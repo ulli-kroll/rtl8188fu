@@ -1519,12 +1519,62 @@ Hal_EfuseParsePIDVID_8188FU(
 	MSG_8192C("EEPROM PID = 0x%4x\n", pHalData->EEPROMPID);
 }
 
-static void _rtl8188fu_read_fromprom(
-	IN	PADAPTER	padapter
+
+static VOID
+_ReadRFType(
+	IN	PADAPTER	Adapter
 )
+{
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+
+	pHalData->rf_chip = RF_6052;
+}
+
+
+
+/* */
+/*	Description: */
+/*		We should set Efuse cell selection to WiFi cell in default. */
+/* */
+/*	Assumption: */
+/*		PASSIVE_LEVEL */
+/* */
+/*	Added by Roger, 2010.11.23. */
+/* */
+void
+hal_EfuseCellSel(
+	IN	PADAPTER	Adapter
+)
+{
+	u32			value32;
+
+	value32 = rtw_read32(Adapter, EFUSE_TEST);
+	value32 = (value32 & ~EFUSE_SEL_MASK) | EFUSE_SEL(EFUSE_WIFI_SEL_0);
+	rtw_write32(Adapter, EFUSE_TEST, value32);
+}
+
+static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
 	u8			*hwinfo = NULL;
+	u8			eeValue;
+
+	/* Read EEPROM size before call any EEPROM function */
+	padapter->EepromAddressSize = GetEEPROMSize8188F(padapter);
+
+	/*Efuse_InitSomeVar(Adapter); */
+
+	hal_EfuseCellSel(padapter);
+
+	_ReadRFType(padapter);/*rf_chip -> _InitRFType() */
+
+	/* To check system boot selection. */
+	eeValue = rtw_read8(padapter, REG_SYS_EEPROM_CTRL);
+	pHalData->EepromOrEfuse = (eeValue & EEPROMSEL) ? _TRUE : _FALSE;
+	pHalData->bautoload_fail_flag = (eeValue & EEPROM_EN) ? _FALSE : _TRUE;
+
+	DBG_8192C("Boot from %s, Autoload %s !\n", (pHalData->EepromOrEfuse ? "EEPROM" : "EFUSE"),
+			  (pHalData->bautoload_fail_flag ? "Fail" : "OK"));
 
 	if (sizeof(pHalData->efuse_eeprom_data) < HWSET_MAX_SIZE_8188F)
 		DBG_871X("[WARNING] size of efuse_eeprom_data is less than HWSET_MAX_SIZE_8188F!\n");
@@ -1566,69 +1616,6 @@ static void _rtl8188fu_read_fromprom(
 	DBG_8192C("%s(): REPLACEMENT = %x\n", __func__, padapter->bDongle);
 }
 
-static void _ReadPROMContent(
-	IN PADAPTER 		Adapter
-)
-{
-	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(Adapter);
-	u8			eeValue;
-
-	/* To check system boot selection. */
-	eeValue = rtw_read8(Adapter, REG_SYS_EEPROM_CTRL);
-	pHalData->EepromOrEfuse = (eeValue & EEPROMSEL) ? _TRUE : _FALSE;
-	pHalData->bautoload_fail_flag = (eeValue & EEPROM_EN) ? _FALSE : _TRUE;
-
-	DBG_8192C("Boot from %s, Autoload %s !\n", (pHalData->EepromOrEfuse ? "EEPROM" : "EFUSE"),
-			  (pHalData->bautoload_fail_flag ? "Fail" : "OK"));
-
-	_rtl8188fu_read_fromprom(Adapter);
-}
-
-static VOID
-_ReadRFType(
-	IN	PADAPTER	Adapter
-)
-{
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
-	pHalData->rf_chip = RF_6052;
-}
-
-
-
-/* */
-/*	Description: */
-/*		We should set Efuse cell selection to WiFi cell in default. */
-/* */
-/*	Assumption: */
-/*		PASSIVE_LEVEL */
-/* */
-/*	Added by Roger, 2010.11.23. */
-/* */
-void
-hal_EfuseCellSel(
-	IN	PADAPTER	Adapter
-)
-{
-	u32			value32;
-
-	value32 = rtw_read32(Adapter, EFUSE_TEST);
-	value32 = (value32 & ~EFUSE_SEL_MASK) | EFUSE_SEL(EFUSE_WIFI_SEL_0);
-	rtw_write32(Adapter, EFUSE_TEST, value32);
-}
-
-static void _rtl8188fu_read_adapter_info(PADAPTER Adapter)
-{
-	/* Read EEPROM size before call any EEPROM function */
-	Adapter->EepromAddressSize = GetEEPROMSize8188F(Adapter);
-
-	/*Efuse_InitSomeVar(Adapter); */
-
-	hal_EfuseCellSel(Adapter);
-
-	_ReadRFType(Adapter);/*rf_chip -> _InitRFType() */
-	_ReadPROMContent(Adapter);
-}
 
 #define GPIO_DEBUG_PORT_NUM 0
 static void rtl8188fu_trigger_gpio_0(_adapter *padapter)
