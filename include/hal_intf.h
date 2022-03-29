@@ -304,10 +304,10 @@ struct hal_ops {
 
 	void (*EfusePowerSwitch)(_adapter *padapter, u8 bWrite, u8 PwrState);
 	void (*BTEfusePowerSwitch)(_adapter *padapter, u8 bWrite, u8 PwrState);
-	void (*ReadEFuse)(_adapter *padapter, u16 _offset, u16 _size_byte, u8 *pbuf, BOOLEAN bPseudoTest);
-	void (*EFUSEGetEfuseDefinition)(_adapter *padapter, u8 type, void *pOut, BOOLEAN bPseudoTest);
-	u16	(*EfuseGetCurrentSize)(_adapter *padapter, BOOLEAN bPseudoTest);
-	int 	(*Efuse_PgPacketRead)(_adapter *padapter, u8 offset, u8 *data, BOOLEAN bPseudoTest);
+	void (*ReadEFuse)(_adapter *padapter, u16 _offset, u16 _size_byte, u8 *pbuf);
+	void (*EFUSEGetEfuseDefinition)(_adapter *padapter, u8 type, void *pOut);
+	u16	(*EfuseGetCurrentSize)(_adapter *padapter);
+	int 	(*Efuse_PgPacketRead)(_adapter *padapter, u8 offset, u8 *data);
 	
 #ifdef CONFIG_IOL
 	int (*IOL_exec_cmds_sync)(_adapter *padapter, struct xmit_frame *xmit_frame, u32 max_wating_ms, u32 bndy_cnt);

@@ -118,12 +118,11 @@ Efuse_PowerSwitch(
  *---------------------------------------------------------------------------*/
 u16
 Efuse_GetCurrentSize(
-	IN PADAPTER		pAdapter,
-	IN BOOLEAN		bPseudoTest)
+	IN PADAPTER		pAdapter)
 {
 	u16 ret=0;
 
-	ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter, bPseudoTest);
+	ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter);
 
 	return ret;
 }
@@ -155,19 +154,13 @@ VOID
 ReadEFuseByte(
 		PADAPTER	Adapter,
 		u16 			_offset,
-		u8 			*pbuf,
-		IN BOOLEAN	bPseudoTest)
+		u8 			*pbuf)
 {
 	u32	value32;
 	u8	readbyte;
 	u16	retry;
 	//u32 start=rtw_get_current_time();
 
-	if(bPseudoTest)
-	{
-		Efuse_Read1ByteFromFakeContent(Adapter, _offset, pbuf);
-		return;
-	}
 	if (IS_HARDWARE_TYPE_8723B(Adapter))
 	{
 		// <20130121, Kordan> For SMIC S55 EFUSE specificatoin.
@@ -227,22 +220,20 @@ static void _rtl8188fu_efuse_read_efuse(
 	PADAPTER	Adapter,
 	u16		_offset,
 	u16 		_size_byte,
-	u8      	*pbuf,
-	IN	BOOLEAN	bPseudoTest
+	u8      	*pbuf
 	)
 {
-	Adapter->HalFunc.ReadEFuse(Adapter, _offset, _size_byte, pbuf, bPseudoTest);
+	Adapter->HalFunc.ReadEFuse(Adapter, _offset, _size_byte, pbuf);
 }
 
 VOID
 EFUSE_GetEfuseDefinition(
 	IN		PADAPTER	pAdapter,
 	IN		u8		type,
-	OUT		void		*pOut,
-	IN		BOOLEAN		bPseudoTest
+	OUT		void		*pOut
 	)
 {
-	pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, type, pOut, bPseudoTest);
+	pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, type, pOut);
 }
 
 /*-----------------------------------------------------------------------------
@@ -272,7 +263,7 @@ EFUSE_Read1Byte(
 	u32	k=0;
 	u16	contentLen=0;
 
-	EFUSE_GetEfuseDefinition(Adapter, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
+	EFUSE_GetEfuseDefinition(Adapter, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen);
 
 	if (Address < contentLen)	//E-fuse 512Byte
 	{
@@ -316,8 +307,7 @@ u8
 efuse_OneByteRead(
 	IN	PADAPTER	pAdapter,
 	IN	u16			addr,
-	IN	u8			*data,
-	IN	BOOLEAN		bPseudoTest)
+	IN	u8			*data)
 {
 	u32	tmpidx = 0;
 	u8	bResult;
@@ -326,12 +316,6 @@ efuse_OneByteRead(
 
 	//DBG_871X("===> EFUSE_OneByteRead(), addr = %x\n", addr);
 	//DBG_871X("===> EFUSE_OneByteRead() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
-
-	if(bPseudoTest)
-	{
-		bResult = Efuse_Read1ByteFromFakeContent(pAdapter, addr, data);
-		return bResult;
-	}
 
 	if(	IS_HARDWARE_TYPE_8723B(pAdapter) ||
 		(IS_HARDWARE_TYPE_8192E(pAdapter) && (!IS_A_CUT(pHalData->VersionID))) ||
@@ -379,12 +363,11 @@ efuse_OneByteRead(
 int
 Efuse_PgPacketRead(	IN	PADAPTER	pAdapter,
 					IN	u8			offset,
-					IN	u8			*data,
-					IN	BOOLEAN		bPseudoTest)
+					IN	u8			*data)
 {
 	int	ret=0;
 
-	ret =  pAdapter->HalFunc.Efuse_PgPacketRead(pAdapter, offset, data, bPseudoTest);
+	ret =  pAdapter->HalFunc.Efuse_PgPacketRead(pAdapter, offset, data);
 
 	return ret;
 }
@@ -435,7 +418,7 @@ efuse_WordEnableDataRead(IN	u8	word_en,
 
 static u8 efuse_read8(PADAPTER padapter, u16 address, u8 *value)
 {
-	return efuse_OneByteRead(padapter,address, value, _FALSE);
+	return efuse_OneByteRead(padapter,address, value);
 }
 
 //------------------------------------------------------------------------------
@@ -444,14 +427,14 @@ u16 efuse_GetMaxSize(PADAPTER padapter)
 	u16	max_size;
 
 	max_size = 0;
-	EFUSE_GetEfuseDefinition(padapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size);
 	return max_size;
 }
 //------------------------------------------------------------------------------
 u8 efuse_GetCurrentSize(PADAPTER padapter, u16 *size)
 {
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
-	*size = Efuse_GetCurrentSize(padapter, _FALSE);
+	*size = Efuse_GetCurrentSize(padapter);
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
 	return _SUCCESS;
@@ -462,14 +445,14 @@ u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 {
 	u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen);
 
 	if ((addr + cnts) > mapLen)
 		return _FAIL;
 
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
-	_rtl8188fu_efuse_read_efuse(padapter, addr, cnts, data, _FALSE);
+	_rtl8188fu_efuse_read_efuse(padapter, addr, cnts, data);
 
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
@@ -579,7 +562,7 @@ u8 rtw_efuse_mask_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 	u8	ret = _SUCCESS;
 	u16	mapLen = 0, i = 0;
 
-	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen);
 
 	ret = rtw_efuse_map_read(padapter, addr, cnts , data);
 
@@ -621,21 +604,19 @@ u8 rtw_efuse_mask_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 VOID
 Efuse_ReadAllMap(
 	IN		PADAPTER	pAdapter,
-	IN OUT	u8		*Efuse,
-	IN		BOOLEAN		bPseudoTest);
+	IN OUT	u8		*Efuse);
 VOID
 Efuse_ReadAllMap(
 	IN		PADAPTER	pAdapter,
-	IN OUT	u8		*Efuse,
-	IN		BOOLEAN		bPseudoTest)
+	IN OUT	u8		*Efuse)
 {
 	u16	mapLen=0;
 
 	Efuse_PowerSwitch(pAdapter,_FALSE, _TRUE);
 
-	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen);
 
-	_rtl8188fu_efuse_read_efuse(pAdapter, 0, mapLen, Efuse, bPseudoTest);
+	_rtl8188fu_efuse_read_efuse(pAdapter, 0, mapLen, Efuse);
 
 	Efuse_PowerSwitch(pAdapter,_FALSE, _FALSE);
 }
@@ -737,13 +718,12 @@ efuse_ShadowRead4Byte(
  *
  *---------------------------------------------------------------------------*/
 void EFUSE_ShadowMapUpdate(
-	IN PADAPTER	pAdapter,
-	IN BOOLEAN	bPseudoTest)
+	IN PADAPTER	pAdapter)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(pAdapter);
 	u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen);
 
 	if (pHalData->bautoload_fail_flag == _TRUE)
 	{
@@ -755,7 +735,7 @@ void EFUSE_ShadowMapUpdate(
 		if(_SUCCESS != retriveAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pHalData->efuse_eeprom_data)) {
 		#endif
 
-		Efuse_ReadAllMap(pAdapter, pHalData->efuse_eeprom_data, bPseudoTest);
+		Efuse_ReadAllMap(pAdapter, pHalData->efuse_eeprom_data);
 
 		#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
 			storeAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pHalData->efuse_eeprom_data);

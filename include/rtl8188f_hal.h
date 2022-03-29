@@ -237,17 +237,17 @@ s32 c2h_handler_8188f(PADAPTER padapter, u8 *pC2hEvent);
 u8 MRateToHwRate8188F(u8  rate);
 u8 HwRateToMRate8188F(u8	 rate);
 
-u16 Hal_EfuseGetCurrentSize(PADAPTER pAdapter, u8 bPseudoTest);
+u16 Hal_EfuseGetCurrentSize(PADAPTER pAdapter);
 void rtl8188fu_read_chip_version(PADAPTER padapter);
 void UpdateHalRAMask8188F(PADAPTER padapter, u32 mac_id, u8 rssi_level);
 void rtl8188f_SetBeaconRelatedRegisters(PADAPTER padapter);
 void rtl8188fu_EfusePowerSwitch(PADAPTER padapter, u8 bWrite, u8 PwrState);
 void rtl8188fu_efuse_read_efuse(PADAPTER padapter, u16 _offset, u16 _size_byte, 
-		   u8 *pbuf, u8	bPseudoTest);
+		   u8 *pbuf);
 void Hal_GetEfuseDefinition(PADAPTER padapter, u8 type,
-			    void *pOut, u8 bPseudoTest);
+			    void *pOut);
 s32 Hal_EfusePgPacketRead(PADAPTER padapter,u8 offset,
-			  u8 *data, u8 bPseudoTest);
+			  u8 *data);
 
 
 /* ULLI : hal/rtl8188f/usb/usb_halinit.c */
