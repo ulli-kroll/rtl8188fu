@@ -4460,7 +4460,7 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 #endif
 #endif
 	default:
-		SetHwReg(padapter, variable, val);
+		_rtl8188fu_set_hw_reg(padapter, variable, val);
 		break;
 	}
 
