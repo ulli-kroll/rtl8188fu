@@ -1818,15 +1818,6 @@ _func_enter_;
 	rtw_register_early_suspend(pwrctrlpriv);
 	#endif //CONFIG_HAS_EARLYSUSPEND
 
-#ifdef CONFIG_GPIO_WAKEUP
-	/*default low active*/
-	pwrctrlpriv->is_high_active = HIGH_ACTIVE;
-	val8 = (pwrctrlpriv->is_high_active == 0) ? 1 : 0;
-	rtw_hal_switch_gpio_wl_ctrl(padapter, WAKEUP_GPIO_IDX, _TRUE);
-	rtw_hal_set_output_gpio(padapter, WAKEUP_GPIO_IDX, val8);
-	DBG_871X("%s: set GPIO_%d %d as default.\n",
-		 __func__, WAKEUP_GPIO_IDX, val8);
-#endif /* CONFIG_GPIO_WAKEUP */
 
 _func_exit_;
 

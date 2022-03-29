@@ -315,9 +315,6 @@ struct pwrctrl_priv
 	u8		wowlan_mode;
 	u8		wowlan_p2p_mode;
 	u8		wowlan_pno_enable;
-#ifdef CONFIG_GPIO_WAKEUP
-	u8		is_high_active;
-#endif /* CONFIG_GPIO_WAKEUP */
 	_timer 	pwr_state_check_timer;
 	int		pwr_state_check_interval;
 	u8		pwr_state_check_cnts;

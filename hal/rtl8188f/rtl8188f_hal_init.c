@@ -3971,23 +3971,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		rtw_write32(padapter, reg_macid_sleep, val32);
 	}
 	break;
-#ifdef CONFIG_GPIO_WAKEUP
-	case HW_SET_GPIO_WL_CTRL: {
-		u8 enable = *val;
-		u8 value = rtw_read8(padapter, 0x4e);
-
-		if (enable && (value & BIT(6))) {
-			value &= ~BIT(6);
-			rtw_write8(padapter, 0x4e, value);
-		} else if (enable == _FALSE) {
-			value |= BIT(6);
-			rtw_write8(padapter, 0x4e, value);
-		}
-		DBG_871X("%s: set WL control, 0x4E=0x%02X\n",
-				 __func__, rtw_read8(padapter, 0x4e));
-	}
-	break;
-#endif
 	case HW_VAR_EN_HW_UPDATE_TSF:
 		hw_var_set_hw_update_tsf(padapter);
 		break;

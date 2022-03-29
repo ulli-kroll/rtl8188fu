@@ -183,12 +183,6 @@
 
 	#define BT_30_SUPPORT 0
 
-#ifdef CONFIG_GPIO_WAKEUP
-	#ifndef WAKEUP_GPIO_IDX
-		#define WAKEUP_GPIO_IDX	0	/* WIFI Chip Side */
-	#endif /* !WAKEUP_GPIO_IDX */
-#endif /* CONFIG_GPIO_WAKEUP */
-
 #ifdef CONFIG_AP_MODE
 	/* #define CONFIG_INTERRUPT_BASED_TXBCN */ /* Tx Beacon when driver BCN_OK ,BCN_ERR interrupt occurs */
 	#ifdef CONFIG_INTERRUPT_BASED_TXBCN

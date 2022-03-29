@@ -224,10 +224,6 @@ void _8051Reset8188(PADAPTER padapter);
 void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);
 
-#ifdef CONFIG_GPIO_WAKEUP
-void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
-#endif
-
 void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len);
 #ifdef CONFIG_FW_C2H_DEBUG
 void Debug_FwC2H_8188f(PADAPTER padapter, u8 *pdata, u8 len);
