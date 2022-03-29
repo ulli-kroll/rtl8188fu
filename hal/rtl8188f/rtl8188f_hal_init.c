@@ -798,7 +798,7 @@ hal_EfuseSwitchToBank(
 	return bRet;
 }
 
-static void
+void
 Hal_GetEfuseDefinition(
 	PADAPTER	padapter,
 	u8			type,
@@ -1079,7 +1079,7 @@ hal_ReadEFuse_WiFi(
 		rtw_mfree(efuseTbl, EFUSE_MAX_MAP_LEN);
 }
 
-static void
+void
 Hal_ReadEFuse(
 	PADAPTER	padapter,
 	u16			_offset,
@@ -1200,7 +1200,7 @@ exit:
 	return efuse_addr;
 }
 
-static u16
+u16
 Hal_EfuseGetCurrentSize(
 	PADAPTER	pAdapter,
 	u8			bPseudoTest)
@@ -1212,7 +1212,7 @@ Hal_EfuseGetCurrentSize(
 	return ret;
 }
 
-static s32
+s32
 Hal_EfusePgPacketRead(
 	PADAPTER	padapter,
 	u8			offset,
@@ -1389,7 +1389,7 @@ hal_EfuseCheckIfDatafollowed(
 }
 #endif
 
-static void rtl8188fu_read_chip_version(PADAPTER padapter)
+void rtl8188fu_read_chip_version(PADAPTER padapter)
 {
 	u32 value32;
 	HAL_DATA_TYPE *pHalData;
@@ -1544,7 +1544,7 @@ static void _BeaconFunctionEnable(PADAPTER padapter, u8 Enable, u8 Linked)
 	rtw_write8(padapter, REG_RD_CTRL + 1, 0x6F);
 }
 
-static void rtl8188f_SetBeaconRelatedRegisters(PADAPTER padapter)
+void rtl8188f_SetBeaconRelatedRegisters(PADAPTER padapter)
 {
 	u8 val8;
 	u32 value32;
@@ -1784,61 +1784,6 @@ void rtl8188f_fill_fake_txdesc(
 	/* Using this checksum can let hardware recovery from packet bulk out error (e.g. Cancel URC, Bulk out error.). */
 	rtl8188f_cal_txdesc_chksum((struct tx_desc *)pDesc);
 #endif
-}
-
-void rtl8188f_set_hal_ops(struct hal_ops *pHalFunc)
-{
-	pHalFunc->dm_init = &rtl8188f_init_dm_priv;
-	pHalFunc->dm_deinit = &rtl8188f_deinit_dm_priv;
-
-	pHalFunc->read_chip_version = &rtl8188fu_read_chip_version;
-
-	pHalFunc->UpdateRAMaskHandler = &UpdateHalRAMask8188F;
-	pHalFunc->set_bwmode_handler = &PHY_SetBWMode8188F;
-	pHalFunc->set_channel_handler = &PHY_SwChnl8188F;
-	pHalFunc->set_chnl_bw_handler = &PHY_SetSwChnlBWMode8188F;
-
-	pHalFunc->hal_dm_watchdog = &rtl8188f_HalDmWatchDog;
-#ifdef CONFIG_LPS_LCLK_WD_TIMER
-	pHalFunc->hal_dm_watchdog_in_lps = &rtl8188f_HalDmWatchDog_in_LPS;
-#endif /* CONFIG_LPS_LCLK_WD_TIMER */
-
-#ifdef CONFIG_C2H_PACKET_EN
-	pHalFunc->SetHwRegHandlerWithBuf = &SetHwRegWithBuf8188F;
-#endif /* CONFIG_C2H_PACKET_EN */
-
-	pHalFunc->SetBeaconRelatedRegistersHandler = &rtl8188f_SetBeaconRelatedRegisters;
-
-	pHalFunc->Add_RateATid = &rtl8188f_Add_RateATid;
-
-	pHalFunc->run_thread = &rtl8188f_start_thread;
-	pHalFunc->cancel_thread = &rtl8188f_stop_thread;
-
-	pHalFunc->read_bbreg = &rtl8188fu_phy_query_bb_reg;
-	pHalFunc->write_bbreg = &rtl8188fu_phy_set_bb_reg;
-	pHalFunc->read_rfreg = &rtl8188fu_phy_query_rf_reg;
-	pHalFunc->write_rfreg = &rtl8188fu_phy_set_rf_reg;
-
-	/* Efuse related function */
-	pHalFunc->EfusePowerSwitch = &rtl8188fu_EfusePowerSwitch;
-	pHalFunc->ReadEFuse = &Hal_ReadEFuse;
-	pHalFunc->EFUSEGetEfuseDefinition = &Hal_GetEfuseDefinition;
-	pHalFunc->EfuseGetCurrentSize = &Hal_EfuseGetCurrentSize;
-	pHalFunc->Efuse_PgPacketRead = &Hal_EfusePgPacketRead;
-
-	pHalFunc->GetHalODMVarHandler = GetHalODMVar;
-	pHalFunc->SetHalODMVarHandler = SetHalODMVar;
-
-#ifdef CONFIG_XMIT_THREAD_MODE
-	pHalFunc->xmit_thread_handler = &hal_xmit_handler;
-#endif
-	pHalFunc->c2h_handler = c2h_handler_8188f;
-	pHalFunc->c2h_id_filter_ccx = c2h_id_filter_ccx_8188f;
-
-	pHalFunc->fill_h2c_cmd = &FillH2CCmd8188F;
-	pHalFunc->fill_fake_txdesc = &rtl8188f_fill_fake_txdesc;
-	pHalFunc->fw_dl = &rtl8188f_FirmwareDownload;
-	pHalFunc->hal_get_tx_buff_rsvd_page_num = &GetTxBufferRsvdPageNum8188F;
 }
 
 void init_hal_spec_8188f(_adapter *adapter)
