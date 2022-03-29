@@ -934,8 +934,8 @@ void rtl8188fu_EfusePowerSwitch(
 	}
 }
 
-static void
-hal_ReadEFuse_WiFi(
+void
+rtl8188fu_efuse_read_efuse(
 	PADAPTER	padapter,
 	u16			_offset,
 	u16			_size_byte,
@@ -1077,17 +1077,6 @@ hal_ReadEFuse_WiFi(
 
 	if (efuseTbl)
 		rtw_mfree(efuseTbl, EFUSE_MAX_MAP_LEN);
-}
-
-void
-rtl8188fu_efuse_read_efuse(
-	PADAPTER	padapter,
-	u16			_offset,
-	u16			_size_byte,
-	u8			*pbuf,
-	u8			bPseudoTest)
-{
-	hal_ReadEFuse_WiFi(padapter, _offset, _size_byte, pbuf, bPseudoTest);
 }
 
 static u16
