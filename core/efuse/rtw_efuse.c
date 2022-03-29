@@ -470,23 +470,6 @@ u8 efuse_GetCurrentSize(PADAPTER padapter, u16 *size)
 	return _SUCCESS;
 }
 //------------------------------------------------------------------------------
-u16 efuse_bt_GetMaxSize(PADAPTER padapter)
-{
-	u16	max_size;
-
-	max_size = 0;
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_BT , TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
-	return max_size;
-}
-
-u8 efuse_bt_GetCurrentSize(PADAPTER padapter, u16 *size)
-{
-	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
-	*size = Efuse_GetCurrentSize(padapter, EFUSE_BT, _FALSE);
-	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
-
-	return _SUCCESS;
-}
 
 u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 {
@@ -500,24 +483,6 @@ u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
 	efuse_ReadEFuse(padapter, EFUSE_WIFI, addr, cnts, data, _FALSE);
-
-	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
-
-	return _SUCCESS;
-}
-
-u8 rtw_BT_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
-{
-	u16	mapLen=0;
-
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
-
-	if ((addr + cnts) > mapLen)
-		return _FAIL;
-
-	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
-
-	efuse_ReadEFuse(padapter, EFUSE_BT, addr, cnts, data, _FALSE);
 
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 

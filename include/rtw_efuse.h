@@ -36,7 +36,6 @@
 #define	PGPKT_DATA_SIZE		8
 
 #define	EFUSE_WIFI				0
-#define	EFUSE_BT				1
 
 enum _EFUSE_DEF_TYPE {
 	TYPE_EFUSE_MAX_SECTION				= 0,
