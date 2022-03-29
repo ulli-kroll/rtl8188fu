@@ -1618,24 +1618,6 @@ static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
 
 
 
-/*
- * If variable not handled here,
- * some variables will be processed in GetHwReg8188FU()
- */
-void rtl8188fu_get_hw_reg(PADAPTER Adapter, u8 variable, u8 *val)
-{
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
-
-	_func_enter_;
-
-	switch (variable) {
-	default:
-		_rtl8188fu_get_hw_reg(Adapter, variable, val);
-		break;
-	}
-
-	_func_exit_;
-}
 
 /* */
 /*	Description: */
