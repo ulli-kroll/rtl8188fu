@@ -756,11 +756,6 @@ hal_EfuseSwitchToBank(
 {
 	u8 bRet = _FALSE;
 	u32 value32 = 0;
-#ifdef HAL_EFUSE_MEMORY
-	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
-	PEFUSE_HAL pEfuseHal = &pHalData->EfuseHal;
-#endif
-
 
 	DBG_8192C("%s: Efuse switch bank to %d\n", __func__, bank);
 	{
@@ -932,10 +927,6 @@ rtl8188fu_efuse_read_efuse(
 	u16			_size_byte,
 	u8			*pbuf)
 {
-#ifdef HAL_EFUSE_MEMORY
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
-	PEFUSE_HAL		pEfuseHal = &pHalData->EfuseHal;
-#endif
 	u8	*efuseTbl = NULL;
 	u16	eFuse_Addr = 0;
 	u8	offset, wden;
@@ -1067,10 +1058,6 @@ rtl8188fu_efuse_read_efuse(
 static u16
 hal_EfuseGetCurrentSize_WiFi(PADAPTER	padapter)
 {
-#ifdef HAL_EFUSE_MEMORY
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
-	PEFUSE_HAL		pEfuseHal = &pHalData->EfuseHal;
-#endif
 	u16	efuse_addr = 0;
 	u16 start_addr = 0; /* for debug */
 	u8	hoffset = 0, hworden = 0;
@@ -1831,22 +1818,6 @@ void rtl8188f_init_default_value(PADAPTER padapter)
 	/* init Efuse variables */
 	pHalData->EfuseUsedBytes = 0;
 	pHalData->EfuseUsedPercentage = 0;
-#ifdef HAL_EFUSE_MEMORY
-	pHalData->EfuseHal.fakeEfuseBank = 0;
-	pHalData->EfuseHal.fakeEfuseUsedBytes = 0;
-	_rtw_memset(pHalData->EfuseHal.fakeEfuseContent, 0xFF, EFUSE_MAX_HW_SIZE);
-	_rtw_memset(pHalData->EfuseHal.fakeEfuseInitMap, 0xFF, EFUSE_MAX_MAP_LEN);
-	_rtw_memset(pHalData->EfuseHal.fakeEfuseModifiedMap, 0xFF, EFUSE_MAX_MAP_LEN);
-	pHalData->EfuseHal.BTEfuseUsedBytes = 0;
-	pHalData->EfuseHal.BTEfuseUsedPercentage = 0;
-	_rtw_memset(pHalData->EfuseHal.BTEfuseContent, 0xFF, EFUSE_MAX_BT_BANK * EFUSE_MAX_HW_SIZE);
-	_rtw_memset(pHalData->EfuseHal.BTEfuseInitMap, 0xFF, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset(pHalData->EfuseHal.BTEfuseModifiedMap, 0xFF, EFUSE_BT_MAX_MAP_LEN);
-	pHalData->EfuseHal.fakeBTEfuseUsedBytes = 0;
-	_rtw_memset(pHalData->EfuseHal.fakeBTEfuseContent, 0xFF, EFUSE_MAX_BT_BANK * EFUSE_MAX_HW_SIZE);
-	_rtw_memset(pHalData->EfuseHal.fakeBTEfuseInitMap, 0xFF, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset(pHalData->EfuseHal.fakeBTEfuseModifiedMap, 0xFF, EFUSE_BT_MAX_MAP_LEN);
-#endif
 }
 
 u8 GetEEPROMSize8188F(PADAPTER padapter)
@@ -3825,18 +3796,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		pHalData->EfuseUsedBytes = *((u16 *)val);
 		break;
 
-	case HW_VAR_EFUSE_BT_USAGE:
-#ifdef HAL_EFUSE_MEMORY
-		pHalData->EfuseHal.BTEfuseUsedPercentage = *val;
-#endif
-		break;
-
-	case HW_VAR_EFUSE_BT_BYTES:
-#ifdef HAL_EFUSE_MEMORY
-		pHalData->EfuseHal.BTEfuseUsedBytes = *((u16 *)val);
-#else
-		BTEfuseUsedBytes = *((u16 *)val);
-#endif
 		break;
 
 	case HW_VAR_FIFO_CLEARN_UP: {
@@ -4162,20 +4121,6 @@ void rtl8188fu_get_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 
 	case HW_VAR_EFUSE_BYTES:
 		*((u16 *)val) = pHalData->EfuseUsedBytes;
-		break;
-
-	case HW_VAR_EFUSE_BT_USAGE:
-#ifdef HAL_EFUSE_MEMORY
-		*val = pHalData->EfuseHal.BTEfuseUsedPercentage;
-#endif
-		break;
-
-	case HW_VAR_EFUSE_BT_BYTES:
-#ifdef HAL_EFUSE_MEMORY
-		*((u16 *)val) = pHalData->EfuseHal.BTEfuseUsedBytes;
-#else
-		*((u16 *)val) = BTEfuseUsedBytes;
-#endif
 		break;
 
 	case HW_VAR_APFM_ON_MAC:

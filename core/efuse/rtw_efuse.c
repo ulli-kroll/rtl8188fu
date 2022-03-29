@@ -24,23 +24,6 @@
 
 #include "../hal/efuse/efuse_mask.h"
 
-/*------------------------Define local variable------------------------------*/
-u8	fakeEfuseBank=0;
-u32	fakeEfuseUsedBytes=0;
-u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE]={0};
-u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN]={0};
-u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN]={0};
-
-u32	BTEfuseUsedBytes=0;
-u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]={0};
-u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]={0};
-
-u32	fakeBTEfuseUsedBytes=0;
-u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]={0};
-u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]={0};
-
 u8 	maskfileBuffer[32];
 /*------------------------Define local variable------------------------------*/
 
@@ -48,30 +31,6 @@ u8 	maskfileBuffer[32];
 #define REG_EFUSE_CTRL		0x0030
 #define EFUSE_CTRL			REG_EFUSE_CTRL		// E-Fuse Control.
 //------------------------------------------------------------------------------
-
-BOOLEAN
-Efuse_Read1ByteFromFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN OUT	u8		*Value	);
-BOOLEAN
-Efuse_Read1ByteFromFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN OUT	u8		*Value	)
-{
-	if(Offset >= EFUSE_MAX_HW_SIZE)
-	{
-		return _FALSE;
-	}
-	//DbgPrint("Read fake content, offset = %d\n", Offset);
-	if(fakeEfuseBank == 0)
-		*Value = fakeEfuseContent[Offset];
-	else
-		*Value = fakeBTEfuseContent[fakeEfuseBank-1][Offset];
-	return _TRUE;
-}
-
 
 /*-----------------------------------------------------------------------------
  * Function:	Efuse_PowerSwitch
@@ -789,25 +748,7 @@ Efuse_InitSomeVar(
 	IN		PADAPTER	pAdapter
 	)
 {
-	u8 i;
 
-	_rtw_memset((PVOID)&fakeEfuseContent[0], 0xff, EFUSE_MAX_HW_SIZE);
-	_rtw_memset((PVOID)&fakeEfuseInitMap[0], 0xff, EFUSE_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&fakeEfuseModifiedMap[0], 0xff, EFUSE_MAX_MAP_LEN);
-
-	for(i=0; i<EFUSE_MAX_BT_BANK; i++)
-	{
-		_rtw_memset((PVOID)&BTEfuseContent[i][0], EFUSE_MAX_HW_SIZE, 0xff);
-	}
-	_rtw_memset((PVOID)&BTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&BTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
-
-	for(i=0; i<EFUSE_MAX_BT_BANK; i++)
-	{
-		_rtw_memset((PVOID)&fakeBTEfuseContent[i][0], 0xff, EFUSE_MAX_HW_SIZE);
-	}
-	_rtw_memset((PVOID)&fakeBTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&fakeBTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
 }
 
 const u8 _mac_hidden_max_bw_to_hal_bw_cap[MAC_HIDDEN_MAX_BW_NUM] = {

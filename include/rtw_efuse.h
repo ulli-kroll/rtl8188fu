@@ -103,25 +103,9 @@ typedef enum
 
 /*------------------------------Define structure----------------------------*/ 
 typedef struct _EFUSE_HAL{
-	u8	fakeEfuseBank;
-	u32	fakeEfuseUsedBytes;
-	u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE];
-	u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN];
-	u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN];
 	u32	EfuseUsedBytes;
 	u8	EfuseUsedPercentage;
 	
-	u16	BTEfuseUsedBytes;
-	u8	BTEfuseUsedPercentage;
-	u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-	u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-	u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
-
-	u16	fakeBTEfuseUsedBytes;
-	u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-	u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-	u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
-
 	// EFUSE Configuration, initialized in HAL_CmnInitPGData().
 	const u16  MaxSecNum_WiFi;
 	const u16  MaxSecNum_BT;	
@@ -149,21 +133,11 @@ typedef struct _EFUSE_HAL{
 extern u8 maskfileBuffer[32];
 
 /*------------------------Export global variable----------------------------*/
-extern u8 fakeEfuseBank;
-extern u32 fakeEfuseUsedBytes;
-extern u8 fakeEfuseContent[];
-extern u8 fakeEfuseInitMap[];
-extern u8 fakeEfuseModifiedMap[];
-
 extern u32 BTEfuseUsedBytes;
 extern u8 BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
 extern u8 BTEfuseInitMap[];
 extern u8 BTEfuseModifiedMap[];
 
-extern u32 fakeBTEfuseUsedBytes;
-extern u8 fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-extern u8 fakeBTEfuseInitMap[];
-extern u8 fakeBTEfuseModifiedMap[];
 /*------------------------Export global variable----------------------------*/
 u8	efuse_bt_GetCurrentSize(PADAPTER padapter, u16 *size);
 u16	efuse_bt_GetMaxSize(PADAPTER padapter);
