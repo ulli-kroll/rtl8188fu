@@ -1697,9 +1697,6 @@ void UpdateHalRAMask8188F(PADAPTER padapter, u32 mac_id, u8 rssi_level)
 	mask &= rate_bitmap;
 
 
-#ifdef CONFIG_CMCC_TEST
-#endif
-
 	if (pHalData->fw_ractrl == _TRUE)
 		rtl8188f_set_FwMacIdConfig_cmd(padapter, mac_id, psta->raid, psta->bw_mode, shortGIrate, mask);
 
@@ -2636,6 +2633,7 @@ static void rtl8188f_fill_default_txdesc(
 			if (pattrib->stbc)
 				SET_TX_DESC_DATA_STBC_8188F(pbuf, 1);
 
+/* ULLI :we leave SET_TX_DESC_DATA_SHORT_8188F here */
 #ifdef CONFIG_CMCC_TEST
 			SET_TX_DESC_DATA_SHORT_8188F(pbuf, 1); /* use cck short premble */
 #endif
@@ -3634,11 +3632,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		BrateCfg |= rrsr_2g_force_mask;
 		BrateCfg &= rrsr_2g_allow_mask;
 		masked = BrateCfg;
-
-#ifdef CONFIG_CMCC_TEST
-		BrateCfg |= (RRSR_11M | RRSR_5_5M | RRSR_1M); /* use 11M to send ACK */
-		BrateCfg |= (RRSR_24M | RRSR_18M | RRSR_12M); /*CMCC_OFDM_ACK 12/18/24M */
-#endif
 
 		/* IOT consideration */
 		if (mlmext_info->assoc_AP_vendor == HT_IOT_PEER_CISCO) {
