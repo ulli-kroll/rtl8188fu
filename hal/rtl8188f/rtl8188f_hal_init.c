@@ -1080,7 +1080,7 @@ hal_ReadEFuse_WiFi(
 }
 
 void
-Hal_ReadEFuse(
+rtl8188fu_efuse_read_efuse(
 	PADAPTER	padapter,
 	u16			_offset,
 	u16			_size_byte,

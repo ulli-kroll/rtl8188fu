@@ -242,7 +242,7 @@ void rtl8188fu_read_chip_version(PADAPTER padapter);
 void UpdateHalRAMask8188F(PADAPTER padapter, u32 mac_id, u8 rssi_level);
 void rtl8188f_SetBeaconRelatedRegisters(PADAPTER padapter);
 void rtl8188fu_EfusePowerSwitch(PADAPTER padapter, u8 bWrite, u8 PwrState);
-void Hal_ReadEFuse(PADAPTER padapter, u16 _offset, u16 _size_byte, 
+void rtl8188fu_efuse_read_efuse(PADAPTER padapter, u16 _offset, u16 _size_byte, 
 		   u8 *pbuf, u8	bPseudoTest);
 void Hal_GetEfuseDefinition(PADAPTER padapter, u8 type,
 			    void *pOut, u8 bPseudoTest);

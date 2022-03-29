@@ -1753,7 +1753,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 
 	/* Efuse related function */
 	pHalFunc->EfusePowerSwitch = &rtl8188fu_EfusePowerSwitch;
-	pHalFunc->ReadEFuse = &Hal_ReadEFuse;
+	pHalFunc->ReadEFuse = &rtl8188fu_efuse_read_efuse;
 	pHalFunc->EFUSEGetEfuseDefinition = &Hal_GetEfuseDefinition;
 	pHalFunc->EfuseGetCurrentSize = &Hal_EfuseGetCurrentSize;
 	pHalFunc->Efuse_PgPacketRead = &Hal_EfusePgPacketRead;
