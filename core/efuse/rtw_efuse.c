@@ -223,16 +223,7 @@ ReadEFuseByte(
 //					write addr must be after sec5.
 //
 
-VOID
-efuse_ReadEFuse(
-	PADAPTER	Adapter,
-	u16		_offset,
-	u16 		_size_byte,
-	u8      	*pbuf,
-	IN	BOOLEAN	bPseudoTest
-	);
-VOID
-efuse_ReadEFuse(
+static void _rtl8188fu_efuse_read_efuse(
 	PADAPTER	Adapter,
 	u16		_offset,
 	u16 		_size_byte,
@@ -478,7 +469,7 @@ u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
-	efuse_ReadEFuse(padapter, addr, cnts, data, _FALSE);
+	_rtl8188fu_efuse_read_efuse(padapter, addr, cnts, data, _FALSE);
 
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
@@ -644,7 +635,7 @@ Efuse_ReadAllMap(
 
 	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
 
-	efuse_ReadEFuse(pAdapter, 0, mapLen, Efuse, bPseudoTest);
+	_rtl8188fu_efuse_read_efuse(pAdapter, 0, mapLen, Efuse, bPseudoTest);
 
 	Efuse_PowerSwitch(pAdapter,_FALSE, _FALSE);
 }
