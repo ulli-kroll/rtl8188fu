@@ -4612,7 +4612,7 @@ void rtl8188fu_get_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		dump_mac_qinfo_8188f(val, padapter);
 		break;
 	default:
-		GetHwReg(padapter, variable, val);
+		_rtl8188fu_get_hw_reg(padapter, variable, val);
 		break;
 	}
 }

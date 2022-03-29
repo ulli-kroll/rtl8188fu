@@ -2208,7 +2208,7 @@ _func_enter_;
 _func_exit_;
 }
 
-void GetHwReg(_adapter *adapter, u8 variable, u8 *val)
+void _rtl8188fu_get_hw_reg(_adapter *adapter, u8 variable, u8 *val)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
 
