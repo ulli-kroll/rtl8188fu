@@ -801,7 +801,6 @@ hal_EfuseSwitchToBank(
 static void
 Hal_GetEfuseDefinition(
 	PADAPTER	padapter,
-	u8			efuseType,
 	u8			type,
 	void		*pOut,
 	u8			bPseudoTest)
@@ -812,10 +811,7 @@ Hal_GetEfuseDefinition(
 
 		pMax_section = (u8 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pMax_section = EFUSE_MAX_SECTION_8188F;
-		else
-			*pMax_section = EFUSE_BT_MAX_SECTION;
+		*pMax_section = EFUSE_MAX_SECTION_8188F;
 	}
 	break;
 
@@ -824,10 +820,7 @@ Hal_GetEfuseDefinition(
 
 		pu2Tmp = (u16 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu2Tmp = EFUSE_REAL_CONTENT_LEN_8188F;
-		else
-			*pu2Tmp = EFUSE_BT_REAL_CONTENT_LEN;
+		*pu2Tmp = EFUSE_REAL_CONTENT_LEN_8188F;
 	}
 	break;
 
@@ -836,10 +829,7 @@ Hal_GetEfuseDefinition(
 
 		pu2Tmp = (u16 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu2Tmp = (EFUSE_REAL_CONTENT_LEN_8188F - EFUSE_OOB_PROTECT_BYTES);
-		else
-			*pu2Tmp = (EFUSE_BT_REAL_BANK_CONTENT_LEN - EFUSE_PROTECT_BYTES_BANK);
+		*pu2Tmp = (EFUSE_REAL_CONTENT_LEN_8188F - EFUSE_OOB_PROTECT_BYTES);
 	}
 	break;
 
@@ -848,10 +838,7 @@ Hal_GetEfuseDefinition(
 
 		pu2Tmp = (u16 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu2Tmp = (EFUSE_REAL_CONTENT_LEN_8188F - EFUSE_OOB_PROTECT_BYTES);
-		else
-			*pu2Tmp = (EFUSE_BT_REAL_CONTENT_LEN - (EFUSE_PROTECT_BYTES_BANK * 3));
+		*pu2Tmp = (EFUSE_REAL_CONTENT_LEN_8188F - EFUSE_OOB_PROTECT_BYTES);
 	}
 	break;
 
@@ -860,10 +847,7 @@ Hal_GetEfuseDefinition(
 
 		pu2Tmp = (u16 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu2Tmp = EFUSE_MAP_LEN_8188F;
-		else
-			*pu2Tmp = EFUSE_BT_MAP_LEN;
+		*pu2Tmp = EFUSE_MAP_LEN_8188F;
 	}
 	break;
 
@@ -872,10 +856,7 @@ Hal_GetEfuseDefinition(
 
 		pu1Tmp = (u8 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu1Tmp = EFUSE_OOB_PROTECT_BYTES;
-		else
-			*pu1Tmp = EFUSE_PROTECT_BYTES_BANK;
+		*pu1Tmp = EFUSE_OOB_PROTECT_BYTES;
 	}
 	break;
 
@@ -884,10 +865,7 @@ Hal_GetEfuseDefinition(
 
 		pu2Tmp = (u16 *)pOut;
 
-		if (efuseType == EFUSE_WIFI)
-			*pu2Tmp = EFUSE_REAL_CONTENT_LEN_8188F;
-		else
-			*pu2Tmp = EFUSE_BT_REAL_BANK_CONTENT_LEN;
+		*pu2Tmp = EFUSE_REAL_CONTENT_LEN_8188F;
 	}
 	break;
 
@@ -1080,7 +1058,7 @@ hal_ReadEFuse_WiFi(
 #endif
 	/* Calculate Efuse utilization */
 	total = 0;
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &total, bPseudoTest);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &total, bPseudoTest);
 	used = eFuse_Addr - 1;
 	if (total)
 		efuse_usage = (u8)((used * 100) / total);
@@ -1104,7 +1082,6 @@ hal_ReadEFuse_WiFi(
 static void
 Hal_ReadEFuse(
 	PADAPTER	padapter,
-	u8			efuseType,
 	u16			_offset,
 	u16			_size_byte,
 	u8			*pbuf,
@@ -1215,7 +1192,7 @@ hal_EfuseGetCurrentSize_WiFi(
 
 error:
 	/* report max size to prevent write efuse */
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &efuse_addr, bPseudoTest);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &efuse_addr, bPseudoTest);
 
 exit:
 	DBG_8192C("%s: CurrentSize=%d\n", __func__, efuse_addr);
@@ -1226,7 +1203,6 @@ exit:
 static u16
 Hal_EfuseGetCurrentSize(
 	PADAPTER	pAdapter,
-	u8			efuseType,
 	u8			bPseudoTest)
 {
 	u16	ret = 0;
@@ -1255,7 +1231,7 @@ Hal_EfusePgPacketRead(
 	if (data == NULL)
 		return _FALSE;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAX_SECTION, &max_section, bPseudoTest);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAX_SECTION, &max_section, bPseudoTest);
 	if (offset > max_section) {
 		DBG_8192C("%s: Packet offset(%d) is illegal(>%d)!\n", __func__, offset, max_section);
 		return _FALSE;
@@ -1319,17 +1295,16 @@ Hal_EfusePgPacketRead(
 static u8
 hal_EfusePgCheckAvailableAddr(
 	PADAPTER	pAdapter,
-	u8			efuseType,
 	u8		bPseudoTest)
 {
 	u16	max_available = 0;
 	u16 current_size;
 
 
-	EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &max_available, bPseudoTest);
+	EFUSE_GetEfuseDefinition(pAdapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, &max_available, bPseudoTest);
 	/*DBG_8192C("%s: max_available=%d\n", __func__, max_available); */
 
-	current_size = Efuse_GetCurrentSize(pAdapter, efuseType, bPseudoTest);
+	current_size = Efuse_GetCurrentSize(pAdapter, bPseudoTest);
 	if (current_size >= max_available) {
 		DBG_8192C("%s: Error!! current_size(%d)>max_available(%d)\n", __func__, current_size, max_available);
 		return _FALSE;
@@ -2075,7 +2050,7 @@ Hal_InitPGData(
 			}
 		} else {
 			/* Read EFUSE real map to shadow. */
-			EFUSE_ShadowMapUpdate(padapter, EFUSE_WIFI, _FALSE);
+			EFUSE_ShadowMapUpdate(padapter, _FALSE);
 			_rtw_memcpy((void *)PROMContent, (void *)pHalData->efuse_eeprom_data, HWSET_MAX_SIZE_8188F);
 		}
 	} else {
@@ -2084,7 +2059,7 @@ Hal_InitPGData(
 		/*pHalData->AutoloadFailFlag = _TRUE; */
 		/*update to default value 0xFF */
 		if (_FALSE == pHalData->EepromOrEfuse)
-			EFUSE_ShadowMapUpdate(padapter, EFUSE_WIFI, _FALSE);
+			EFUSE_ShadowMapUpdate(padapter, _FALSE);
 		_rtw_memcpy((void *)PROMContent, (void *)pHalData->efuse_eeprom_data, HWSET_MAX_SIZE_8188F);
 	}
 

@@ -119,12 +119,11 @@ Efuse_PowerSwitch(
 u16
 Efuse_GetCurrentSize(
 	IN PADAPTER		pAdapter,
-	IN u8			efuseType,
 	IN BOOLEAN		bPseudoTest)
 {
 	u16 ret=0;
 
-	ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter, efuseType, bPseudoTest);
+	ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter, bPseudoTest);
 
 	return ret;
 }
@@ -227,7 +226,6 @@ ReadEFuseByte(
 VOID
 efuse_ReadEFuse(
 	PADAPTER	Adapter,
-	u8		efuseType,
 	u16		_offset,
 	u16 		_size_byte,
 	u8      	*pbuf,
@@ -236,26 +234,24 @@ efuse_ReadEFuse(
 VOID
 efuse_ReadEFuse(
 	PADAPTER	Adapter,
-	u8		efuseType,
 	u16		_offset,
 	u16 		_size_byte,
 	u8      	*pbuf,
 	IN	BOOLEAN	bPseudoTest
 	)
 {
-	Adapter->HalFunc.ReadEFuse(Adapter, efuseType, _offset, _size_byte, pbuf, bPseudoTest);
+	Adapter->HalFunc.ReadEFuse(Adapter, _offset, _size_byte, pbuf, bPseudoTest);
 }
 
 VOID
 EFUSE_GetEfuseDefinition(
 	IN		PADAPTER	pAdapter,
-	IN		u8		efuseType,
 	IN		u8		type,
 	OUT		void		*pOut,
 	IN		BOOLEAN		bPseudoTest
 	)
 {
-	pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, efuseType, type, pOut, bPseudoTest);
+	pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, type, pOut, bPseudoTest);
 }
 
 /*-----------------------------------------------------------------------------
@@ -285,7 +281,7 @@ EFUSE_Read1Byte(
 	u32	k=0;
 	u16	contentLen=0;
 
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI , TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
+	EFUSE_GetEfuseDefinition(Adapter, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
 
 	if (Address < contentLen)	//E-fuse 512Byte
 	{
@@ -457,14 +453,14 @@ u16 efuse_GetMaxSize(PADAPTER padapter)
 	u16	max_size;
 
 	max_size = 0;
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI , TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
 	return max_size;
 }
 //------------------------------------------------------------------------------
 u8 efuse_GetCurrentSize(PADAPTER padapter, u16 *size)
 {
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
-	*size = Efuse_GetCurrentSize(padapter, EFUSE_WIFI, _FALSE);
+	*size = Efuse_GetCurrentSize(padapter, _FALSE);
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
 	return _SUCCESS;
@@ -475,14 +471,14 @@ u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 {
 	u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
 	if ((addr + cnts) > mapLen)
 		return _FAIL;
 
 	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
-	efuse_ReadEFuse(padapter, EFUSE_WIFI, addr, cnts, data, _FALSE);
+	efuse_ReadEFuse(padapter, addr, cnts, data, _FALSE);
 
 	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
@@ -592,7 +588,7 @@ u8 rtw_efuse_mask_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 	u8	ret = _SUCCESS;
 	u16	mapLen = 0, i = 0;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+	EFUSE_GetEfuseDefinition(padapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
 	ret = rtw_efuse_map_read(padapter, addr, cnts , data);
 
@@ -634,13 +630,11 @@ u8 rtw_efuse_mask_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 VOID
 Efuse_ReadAllMap(
 	IN		PADAPTER	pAdapter,
-	IN		u8		efuseType,
 	IN OUT	u8		*Efuse,
 	IN		BOOLEAN		bPseudoTest);
 VOID
 Efuse_ReadAllMap(
 	IN		PADAPTER	pAdapter,
-	IN		u8		efuseType,
 	IN OUT	u8		*Efuse,
 	IN		BOOLEAN		bPseudoTest)
 {
@@ -648,9 +642,9 @@ Efuse_ReadAllMap(
 
 	Efuse_PowerSwitch(pAdapter,_FALSE, _TRUE);
 
-	EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
 
-	efuse_ReadEFuse(pAdapter, efuseType, 0, mapLen, Efuse, bPseudoTest);
+	efuse_ReadEFuse(pAdapter, 0, mapLen, Efuse, bPseudoTest);
 
 	Efuse_PowerSwitch(pAdapter,_FALSE, _FALSE);
 }
@@ -753,13 +747,12 @@ efuse_ShadowRead4Byte(
  *---------------------------------------------------------------------------*/
 void EFUSE_ShadowMapUpdate(
 	IN PADAPTER	pAdapter,
-	IN u8		efuseType,
 	IN BOOLEAN	bPseudoTest)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(pAdapter);
 	u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+	EFUSE_GetEfuseDefinition(pAdapter, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
 
 	if (pHalData->bautoload_fail_flag == _TRUE)
 	{
@@ -771,7 +764,7 @@ void EFUSE_ShadowMapUpdate(
 		if(_SUCCESS != retriveAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pHalData->efuse_eeprom_data)) {
 		#endif
 
-		Efuse_ReadAllMap(pAdapter, efuseType, pHalData->efuse_eeprom_data, bPseudoTest);
+		Efuse_ReadAllMap(pAdapter, pHalData->efuse_eeprom_data, bPseudoTest);
 
 		#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
 			storeAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pHalData->efuse_eeprom_data);
