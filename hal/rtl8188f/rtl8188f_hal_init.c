@@ -4535,7 +4535,7 @@ void dump_mac_qinfo_8188f(void *sel, _adapter *adapter)
 	dump_bcn_qinfo_8188f(sel, (struct bcn_qinfo_8188f *)&bcn_q_info, "BCN ");
 }
 
-void GetHwReg8188F(PADAPTER padapter, u8 variable, u8 *val)
+void _rtl8188fu_get_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
 	u8 val8;

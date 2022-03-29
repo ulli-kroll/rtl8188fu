@@ -1622,7 +1622,7 @@ static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
  * If variable not handled here,
  * some variables will be processed in GetHwReg8188FU()
  */
-void GetHwReg8188FU(PADAPTER Adapter, u8 variable, u8 *val)
+void rtl8188fu_get_hw_reg(PADAPTER Adapter, u8 variable, u8 *val)
 {
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
@@ -1630,7 +1630,7 @@ void GetHwReg8188FU(PADAPTER Adapter, u8 variable, u8 *val)
 
 	switch (variable) {
 	default:
-		GetHwReg8188F(Adapter, variable, val);
+		_rtl8188fu_get_hw_reg(Adapter, variable, val);
 		break;
 	}
 
@@ -1766,7 +1766,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 	pHalFunc->read_adapter_info = &_rtl8188fu_read_adapter_info;
 
 	pHalFunc->SetHwRegHandler = &rtl8188fu_set_hw_reg;
-	pHalFunc->GetHwRegHandler = &GetHwReg8188FU;
+	pHalFunc->GetHwRegHandler = &rtl8188fu_get_hw_reg;
 	pHalFunc->GetHalDefVarHandler = &GetHalDefVar8188FUsb;
 	pHalFunc->SetHalDefVarHandler = &SetHalDefVar8188FUsb;
 
