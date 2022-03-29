@@ -1617,22 +1617,6 @@ static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
 }
 
 
-#define GPIO_DEBUG_PORT_NUM 0
-static void rtl8188fu_trigger_gpio_0(_adapter *padapter)
-{
-
-	u32 gpioctrl;
-	DBG_871X("==> trigger_gpio_0...\n");
-	rtw_write16_async(padapter, REG_GPIO_PIN_CTRL, 0);
-	rtw_write8_async(padapter, REG_GPIO_PIN_CTRL + 2, 0xFF);
-	gpioctrl = (BIT(GPIO_DEBUG_PORT_NUM) << 24) | (BIT(GPIO_DEBUG_PORT_NUM) << 16);
-	rtw_write32_async(padapter, REG_GPIO_PIN_CTRL, gpioctrl);
-	gpioctrl |= (BIT(GPIO_DEBUG_PORT_NUM) << 8);
-	rtw_write32_async(padapter, REG_GPIO_PIN_CTRL, gpioctrl);
-	DBG_871X("<=== trigger_gpio_0...\n");
-
-}
-
 /*
  * If variable not handled here,
  * some variables will be processed in SetHwReg8188FU()
@@ -1658,10 +1642,6 @@ void rtl8188fu_set_hw_reg(PADAPTER Adapter, u8 variable, u8 *val)
 
 	case HW_VAR_SET_RPWM:
 		rtw_write8(Adapter, REG_USB_HRPWM, *val);
-		break;
-
-	case HW_VAR_TRIGGER_GPIO_0:
-		rtl8188fu_trigger_gpio_0(Adapter);
 		break;
 
 	default:
