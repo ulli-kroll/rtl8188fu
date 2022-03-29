@@ -1637,7 +1637,7 @@ static void rtl8188fu_trigger_gpio_0(_adapter *padapter)
  * If variable not handled here,
  * some variables will be processed in SetHwReg8188FU()
  */
-void SetHwReg8188FU(PADAPTER Adapter, u8 variable, u8 *val)
+void rtl8188fu_set_hw_reg(PADAPTER Adapter, u8 variable, u8 *val)
 {
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
@@ -1651,7 +1651,7 @@ void SetHwReg8188FU(PADAPTER Adapter, u8 variable, u8 *val)
 
 		if (threshold == 0)
 			threshold = pHalData->UsbRxAggPageCount;
-		SetHwReg8188F(Adapter, HW_VAR_RXDMA_AGG_PG_TH, &threshold);
+		_rtl8188fu_set_hw_reg(Adapter, HW_VAR_RXDMA_AGG_PG_TH, &threshold);
 	}
 #endif
 	break;
@@ -1665,7 +1665,7 @@ void SetHwReg8188FU(PADAPTER Adapter, u8 variable, u8 *val)
 		break;
 
 	default:
-		SetHwReg8188F(Adapter, variable, val);
+		_rtl8188fu_set_hw_reg(Adapter, variable, val);
 		break;
 	}
 
@@ -1819,7 +1819,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 	pHalFunc->intf_chip_configure = &rtl8188fu_interface_configure;
 	pHalFunc->read_adapter_info = &_rtl8188fu_read_adapter_info;
 
-	pHalFunc->SetHwRegHandler = &SetHwReg8188FU;
+	pHalFunc->SetHwRegHandler = &rtl8188fu_set_hw_reg;
 	pHalFunc->GetHwRegHandler = &GetHwReg8188FU;
 	pHalFunc->GetHalDefVarHandler = &GetHalDefVar8188FUsb;
 	pHalFunc->SetHalDefVarHandler = &SetHalDefVar8188FUsb;
