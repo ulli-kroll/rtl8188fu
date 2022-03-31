@@ -1177,20 +1177,11 @@ static void _rtl8188fu_phy_init_tx_power_idx_by_rate(PADAPTER	pAdapter)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 	u8	band = 0, rfPath = 0, TxNum = 0, rate = 0, i = 0, j = 0;
 
-	if ( IS_HARDWARE_TYPE_8188E( pAdapter ) )
-	{
-		for ( i = 0; i < MAX_PG_GROUP; ++i )
-			for ( j = 0; j < 16; ++j )
-				pHalData->MCSTxPowerLevelOriginalOffset[i][j] = 0;
-	}
-	else
-	{
-		for ( band = BAND_ON_2_4G; band <= BAND_ON_5G; ++band )
-				for ( rfPath = 0; rfPath < TX_PWR_BY_RATE_NUM_RF; ++rfPath )
-					for ( TxNum = 0; TxNum < TX_PWR_BY_RATE_NUM_RF; ++TxNum )
-						for ( rate = 0; rate < TX_PWR_BY_RATE_NUM_RATE; ++rate )
-							pHalData->tx_power_by_rate_offset[band][rfPath][TxNum][rate] = 0;
-	}
+	for ( band = BAND_ON_2_4G; band <= BAND_ON_5G; ++band )
+		for ( rfPath = 0; rfPath < TX_PWR_BY_RATE_NUM_RF; ++rfPath )
+			for ( TxNum = 0; TxNum < TX_PWR_BY_RATE_NUM_RF; ++TxNum )
+				for ( rate = 0; rate < TX_PWR_BY_RATE_NUM_RATE; ++rate )
+					pHalData->tx_power_by_rate_offset[band][rfPath][TxNum][rate] = 0;
 }
 
 int phy_load_tx_power_by_rate(_adapter *adapter)

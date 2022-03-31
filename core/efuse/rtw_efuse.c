@@ -120,12 +120,6 @@ ReadEFuseByte(
 	u16	retry;
 	//u32 start=rtw_get_current_time();
 
-	if (IS_HARDWARE_TYPE_8723B(Adapter))
-	{
-		// <20130121, Kordan> For SMIC S55 EFUSE specificatoin.
-		//0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
-		PHY_SetMacReg(Adapter, EFUSE_TEST, BIT11, 0);
-	}
 	//Write Address
 	rtw_write8(Adapter, EFUSE_CTRL+1, (_offset & 0xff));
 	readbyte = rtw_read8(Adapter, EFUSE_CTRL+2);
