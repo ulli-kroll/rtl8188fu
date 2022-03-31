@@ -276,17 +276,6 @@ efuse_OneByteRead(
 	//DBG_871X("===> EFUSE_OneByteRead(), addr = %x\n", addr);
 	//DBG_871X("===> EFUSE_OneByteRead() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
 
-	if(	IS_HARDWARE_TYPE_8723B(pAdapter) ||
-		(IS_HARDWARE_TYPE_8192E(pAdapter) && (!IS_A_CUT(pHalData->VersionID))) ||
-		(IS_VENDOR_8188E_I_CUT_SERIES(pAdapter)) || (IS_CHIP_VENDOR_SMIC(pHalData->VersionID))
-	  )
-	{
-		// <20130121, Kordan> For SMIC EFUSE specificatoin.
-		//0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
-		//PHY_SetMacReg(pAdapter, 0x34, BIT11, 0);
-		rtw_write16(pAdapter, 0x34, rtw_read16(pAdapter,0x34)& (~BIT11) );
-	}
-
 	// -----------------e-fuse reg ctrl ---------------------------------
 	//address
 	rtw_write8(pAdapter, EFUSE_CTRL+1, (u8)(addr&0xff));
