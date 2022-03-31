@@ -1994,16 +1994,7 @@ _func_enter_;
 			u8 rate_index = 0;
 			HAL_VERSION *hal_ver = &hal_data->VersionID;
 
-			if (IS_8188E(*hal_ver)) {
-
-				while (brate_cfg > 0x1) {
-					brate_cfg = (brate_cfg >> 1);
-					rate_index++;
-				}
-				rtw_write8(adapter, REG_INIRTS_RATE_SEL, rate_index);
-			} else {
 				rtw_warn_on(1);
-			}
 		}
 			break;
 		case HW_VAR_SEC_CFG:
@@ -2721,9 +2712,7 @@ void rtw_hal_check_rxfifo_full(_adapter *adapter)
 	int save_cnt=_FALSE;
 	
 	//switch counter to RX fifo
-	if (IS_8188E(pHalData->VersionID) || IS_8188F(pHalData->VersionID)
-		|| IS_8812_SERIES(pHalData->VersionID) || IS_8821_SERIES(pHalData->VersionID)
-		|| IS_8723B_SERIES(pHalData->VersionID) || IS_8192E(pHalData->VersionID) || IS_8703B_SERIES(pHalData->VersionID))
+	if (IS_8188F(pHalData->VersionID))
 	{
 		rtw_write8(adapter, REG_RXERR_RPT+3, rtw_read8(adapter, REG_RXERR_RPT+3)|0xa0);
 		save_cnt = _TRUE;

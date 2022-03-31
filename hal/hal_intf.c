@@ -547,13 +547,7 @@ bool rtw_hal_c2h_valid(_adapter *adapter, u8 *buf)
 	HAL_VERSION *hal_ver = &HalData->VersionID;
 	bool ret = _FAIL;
 
-	if (IS_8188E(*hal_ver)) {
-		ret = c2h_evt_valid((struct c2h_evt_hdr *)buf);
-	} else if(IS_8192E(*hal_ver) || IS_8812_SERIES(*hal_ver) || IS_8821_SERIES(*hal_ver) || IS_8723B_SERIES(*hal_ver)) {
-		ret = c2h_evt_valid((struct c2h_evt_hdr_88xx*)buf);
-	} else {
 		rtw_warn_on(1);
-	}
 
 	return ret;
 }
@@ -564,13 +558,7 @@ s32 rtw_hal_c2h_evt_read(_adapter *adapter, u8 *buf)
 	HAL_VERSION *hal_ver = &HalData->VersionID;
 	s32 ret = _FAIL;
 
-	if (IS_8188E(*hal_ver)) {
-		ret = c2h_evt_read(adapter, buf);
-	} else if(IS_8192E(*hal_ver) || IS_8812_SERIES(*hal_ver) || IS_8821_SERIES(*hal_ver) || IS_8723B_SERIES(*hal_ver)) {
-		ret = c2h_evt_read_88xx(adapter, buf);
-	} else {
 		rtw_warn_on(1);
-	}
 
 	return ret;
 }
