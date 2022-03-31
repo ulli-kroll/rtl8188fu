@@ -1353,25 +1353,7 @@ void rtl8188fu_read_chip_version(PADAPTER padapter)
 
 	pHalData->VersionID.CUTVersion = (value32 & CHIP_VER_RTL_MASK) >> CHIP_VER_RTL_SHIFT; /* IC version (CUT) */
 
-	#if 0
-	/* For regulator mode. by tynli. 2011.01.14 */
-	pHalData->RegulatorMode = ((value32 & SPS_SEL) ? RT_LDO_REGULATOR : RT_SWITCHING_REGULATOR);
-	#endif
-
-	#if 0
-	value32 = rtw_read32(padapter, REG_GPIO_OUTSTS);
-	pHalData->VersionID.ROMVer = ((value32 & RF_RL_ID) >> 20);	/* ROM code version. */
-	#endif
-
 	rtw_hal_config_rftype(padapter);
-
-#if 0 /* mark for chage to use efuse */
-	if (IS_B_CUT(pHalData->VersionID) || IS_C_CUT(pHalData->VersionID)) {
-		MSG_8192C(" IS_B/C_CUT SWR up 1 level !!!!!!!!!!!!!!!!!\n");
-		PHY_SetMacReg(padapter, 0x14, BIT23 | BIT22 | BIT21 | BIT20, 0x5); /* MAC reg 0x14[23:20] = 4b'0101 (SWR 1.220V) */
-	} else if (IS_D_CUT(pHalData->VersionID))
-		MSG_8192C(" IS_D_CUT SKIP SWR !!!!!!!!!!!!!!!!!\n");
-#endif /* mark for chage to use efuse */
 
 }
 
