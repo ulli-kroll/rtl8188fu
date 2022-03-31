@@ -249,7 +249,6 @@ struct dbg_rx_counter
 };
 void rtw_reset_phy_trx_ok_counters(_adapter *padapter);
 
-void dump_chip_info(HAL_VERSION	ChipVersion);
 void rtw_hal_config_rftype(PADAPTER  padapter);
 
 #define BAND_CAP_2G			BIT0

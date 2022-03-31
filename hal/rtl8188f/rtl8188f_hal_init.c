@@ -1373,10 +1373,6 @@ void rtl8188fu_read_chip_version(PADAPTER padapter)
 		MSG_8192C(" IS_D_CUT SKIP SWR !!!!!!!!!!!!!!!!!\n");
 #endif /* mark for chage to use efuse */
 
-#if 1
-	dump_chip_info(pHalData->VersionID);
-#endif
-
 }
 
 
