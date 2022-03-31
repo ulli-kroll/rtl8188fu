@@ -32,6 +32,19 @@ CheckPositive(
 	IN	const u4Byte  Condition4
 )
 {
+#if 0
+	value32 = rtl_read_dword(rtlpriv, REG_SYS_CFG);
+	/* cut version */
+	version |= (enum version_8723e)(value32 & CHIP_VER_RTL_MASK);
+	/* Manufacture */
+	if (((value32 & EXT_VENDOR_ID) >> 18) == 0x01)
+		version = (enum version_8723e)(version | CHIP_VENDOR_SMIC);
+
+	u32 cut_ver = ((rtlhal->version & CHIP_VER_RTL_MASK)
+					>> CHIP_VER_RTL_SHIFT);
+	u32 intf = (rtlhal->interface == INTF_USB ? BIT(1) : BIT(0));
+#endif
+
 	u1Byte    _board_type = ((pDM_Odm->board_type & BIT4) >> 4) << 0 | /* _GLNA*/
 				((pDM_Odm->board_type & BIT3) >> 3) << 1 | /* _GPA*/ 
 				((pDM_Odm->board_type & BIT7) >> 7) << 2 | /* _ALNA*/
@@ -40,10 +53,13 @@ CheckPositive(
 
 	u4Byte	cond1   = Condition1, cond2 = Condition2, cond3 = Condition3, cond4 = Condition4;
 	u4Byte    driver1 = pDM_Odm->CutVersion       << 24 | 
-				(pDM_Odm->SupportInterface & 0xF0) << 16 | 
-				pDM_Odm->SupportPlatform  << 16 | 
-				pDM_Odm->PackageType      << 12 | 
-				(pDM_Odm->SupportInterface & 0x0F) << 8  |
+				/* rtlhal->interface 0x01 PCI, 0x02 USB, 0x03 SDIO */
+				0 << 24 |
+				/*-DDM_ODM_SUPPORT_TYPE=0x04 CE*/
+				0x04  << 16 |
+				pDM_Odm->PackageType      << 12 |
+				/* rtlhal->interface 0x01 PCI, 0x01 USB, 0x02 SDIO */
+				0x02 << 8  |
 				_board_type;
 
 	u4Byte    driver2 = (pDM_Odm->TypeGLNA & 0xFF) <<  0 |  
@@ -53,6 +69,9 @@ CheckPositive(
 
 u4Byte    driver3 = 0;
 
+				/* No valid values after bitmask,
+				 * two bit for each type and stream
+				 * this makes 8 bit */
 	u4Byte    driver4 = (pDM_Odm->TypeGLNA & 0xFF00) >>  8 |
 				(pDM_Odm->TypeGPA & 0xFF00) |
 				(pDM_Odm->TypeALNA & 0xFF00) << 8 |
