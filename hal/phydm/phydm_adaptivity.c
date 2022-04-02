@@ -44,7 +44,7 @@ Phydm_CheckAdaptivity(
 			} else {
 				pDM_Odm->Adaptivity_enable = TRUE;
 
-				if (pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA))
+				if (pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA))
 					pDM_Odm->adaptivity_flag = FALSE;
 				else
 					pDM_Odm->adaptivity_flag = TRUE;
@@ -315,7 +315,7 @@ Phydm_CheckEnvironment(
 	BOOLEAN 	isCleanEnvironment = FALSE;
 
 	if (Adaptivity->bFirstLink == TRUE) {
-		if (pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA))
+		if (pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA))
 			pDM_Odm->adaptivity_flag = FALSE;
 		else
 			pDM_Odm->adaptivity_flag = TRUE;
@@ -336,7 +336,7 @@ Phydm_CheckEnvironment(
 
 				pDM_Odm->Adaptivity_enable = TRUE;
 
-				if (pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA))
+				if (pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA))
 					pDM_Odm->adaptivity_flag = FALSE;
 				else
 					pDM_Odm->adaptivity_flag = TRUE;
@@ -506,12 +506,8 @@ Phydm_AdaptivityInit(
 		/*ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_DOWN_OPT_11N, BIT12 | BIT11 | BIT10, 0x7);*/		/*interfernce need > 2^x us, and then EDCCA will be 1*/
 		ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_DCNF_11N, BIT21 | BIT20, 0x1);		/*0:rx_dfir, 1: dcnf_out, 2 :rx_iq, 3: rx_nbi_nf_out*/
 	}
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_GAIN_IDX_EDCCA) {		/*8814a no need to find pwdB lower bound, maybe*/
-		/*ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_DOWN_OPT, BIT30 | BIT29 | BIT28, 0x7);*/		/*interfernce need > 2^x us, and then EDCCA will be 1*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_ACBB_EDCCA_ENHANCE, BIT29 | BIT28, 0x1);		/*0:rx_dfir, 1: dcnf_out, 2 :rx_iq, 3: rx_nbi_nf_out*/
-	}
 
-	if(!(pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA)))
+	if(!(pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA)))
 		Phydm_SearchPwdBLowerBound(pDM_Odm);
 
 /*we need to consider PwdB upper bound for 8814 later IC*/
@@ -566,7 +562,7 @@ Phydm_Adaptivity(
 		return;
 	}
 
-	if (pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA)) {
+	if (pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA)) {
 		if ((Adaptivity->AdajustIGILevel > IGI) && (pDM_Odm->Adaptivity_enable == TRUE)) 
 			Diff = Adaptivity->AdajustIGILevel - IGI;
 		
@@ -608,7 +604,7 @@ phydm_setEDCCAThresholdAPI(
 
 	if (pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY) {
 
-		if (pDM_Odm->SupportICType & (ODM_IC_11AC_GAIN_IDX_EDCCA | ODM_IC_11N_GAIN_IDX_EDCCA)) {
+		if (pDM_Odm->SupportICType & (ODM_IC_11N_GAIN_IDX_EDCCA)) {
 			if (Adaptivity->AdajustIGILevel > IGI) 
 				Diff = Adaptivity->AdajustIGILevel - IGI;
 		
