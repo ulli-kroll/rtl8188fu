@@ -77,17 +77,6 @@ Phydm_NHMCounterStatisticsInit(
 		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11N, BIT10 | BIT9 | BIT8, 0x1);	/*0x890[10:8]=1			ignoreCCA ignore PHYTXON enable CCX*/
 		ODM_SetBBReg(pDM_Odm, ODM_REG_OFDM_FA_RSTC_11N, BIT7, 0x1);			/*0xc0c[7]=1				max power among all RX ants*/
 	}
-	else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		/*PHY parameters initialize for ac series*/
-		ODM_Write2Byte(pDM_Odm, ODM_REG_NHM_TIMER_11AC + 2, 0xC350);			/*0x990[31:16]=0xC350	Time duration for NHM unit: us, 0xc350=200ms*/
-		ODM_Write2Byte(pDM_Odm, ODM_REG_NHM_TH9_TH10_11AC + 2, 0xffff);		/*0x994[31:16]=0xffff		th_9, th_10*/
-		ODM_Write4Byte(pDM_Odm, ODM_REG_NHM_TH3_TO_TH0_11AC, 0xffffff50);	/*0x998=0xffffff52			th_3, th_2, th_1, th_0*/
-		ODM_Write4Byte(pDM_Odm, ODM_REG_NHM_TH7_TO_TH4_11AC, 0xffffffff);	/*0x99c=0xffffffff			th_7, th_6, th_5, th_4*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH8_11AC, bMaskByte0, 0xff);		/*0x9a0[7:0]=0xff			th_8*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11AC, BIT8 | BIT9 | BIT10, 0x1); /*0x994[10:8]=1			ignoreCCA ignore PHYTXON	enable CCX*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_9E8_11AC, BIT0, 0x1);				/*0x9e8[7]=1				max power among all RX ants*/
-
-	}
 }
 
 VOID
@@ -114,9 +103,8 @@ Phydm_GetNHMCounterStatistics(
 {
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u4Byte		value32 = 0;
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_NHM_CNT_11AC, bMaskDWord);
-	else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
+	
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_NHM_CNT_11N, bMaskDWord);
 
 	pDM_Odm->NHM_cnt_0 = (u1Byte)(value32 & bMaskByte0);
@@ -135,10 +123,6 @@ Phydm_NHMCounterStatisticsReset(
 		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11N, BIT1, 0);
 		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11N, BIT1, 1);
 	}
-	else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11AC, BIT1, 0);
-		ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11AC, BIT1, 1);
-	}
 }
 
 VOID
@@ -152,8 +136,6 @@ Phydm_SetEDCCAThreshold(
 
 	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 		ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, bMaskByte2|bMaskByte0, (u4Byte)((u1Byte)L2H|(u1Byte)H2L<<16));
-	else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		ODM_SetBBReg(pDM_Odm, rFPGA0_XB_LSSIReadBack, bMaskLWord, (u2Byte)((u1Byte)L2H|(u1Byte)H2L<<8));
 }
 
 VOID
@@ -281,15 +263,6 @@ Phydm_SetTRxMux(
 			ODM_SetBBReg(pDM_Odm, ODM_REG_CCK_RPT_FORMAT_11N_B, BIT22 | BIT21 | BIT20, rxMode);	/*set RXmod to standby mode to remove outside noise affect*/
 		}
 	}
-	else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC, BIT11 | BIT10 | BIT9 | BIT8, txMode);				/*set TXmod to standby mode to remove outside noise affect*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC, BIT7 | BIT6 | BIT5 | BIT4, rxMode);				/*set RXmod to standby mode to remove outside noise affect*/
-		if (pDM_Odm->RFType > ODM_1T1R) {
-			ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC_B, BIT11 | BIT10 | BIT9 | BIT8, txMode);		/*set TXmod to standby mode to remove outside noise affect*/
-			ODM_SetBBReg(pDM_Odm, ODM_REG_TRMUX_11AC_B, BIT7 | BIT6 | BIT5 | BIT4, rxMode);			/*set RXmod to standby mode to remove outside noise affect*/
-		}
-	}
-
 }
 
 VOID
@@ -418,8 +391,6 @@ Phydm_SearchPwdBLowerBound(
 		for (cnt = 0; cnt < 20; cnt++) {
 			if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 				value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_RPT_11N, bMaskDWord);
-			else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-				value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_RPT_11AC, bMaskDWord);
 			if (value32 & BIT30 && (pDM_Odm->SupportICType & (ODM_RTL8723A | ODM_RTL8723B | ODM_RTL8188E)))
 				txEdcca1 = txEdcca1 + 1;
 			else if (value32 & BIT29)
@@ -530,8 +501,6 @@ Phydm_AdaptivityInit(
 	/*Search pwdB lower bound*/
 	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 		ODM_SetBBReg(pDM_Odm, ODM_REG_DBG_RPT_11N, bMaskDWord, 0x208);
-	else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		ODM_SetBBReg(pDM_Odm, ODM_REG_DBG_RPT_11AC, bMaskDWord, 0x209);
 
 	if (pDM_Odm->SupportICType & ODM_IC_11N_GAIN_IDX_EDCCA) {
 		/*ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_DOWN_OPT_11N, BIT12 | BIT11 | BIT10, 0x7);*/		/*interfernce need > 2^x us, and then EDCCA will be 1*/
@@ -575,11 +544,6 @@ Phydm_Adaptivity(
 	ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("odm_Adaptivity() =====>\n"));
 	ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("IGI_Base=0x%x, TH_L2H_ini = %d, TH_EDCCA_HL_diff = %d\n",
 			 Adaptivity->IGI_Base, pDM_Odm->TH_L2H_ini, pDM_Odm->TH_EDCCA_HL_diff));
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		/*fix AC series when enable EDCCA hang issue*/
-		ODM_SetBBReg(pDM_Odm, 0x800, BIT10, 1);	/*ADC_mask disable*/
-		ODM_SetBBReg(pDM_Odm, 0x800, BIT10, 0);	/*ADC_mask enable*/
-	}
 
 	if (*pDM_Odm->pBandWidth == ODM_BW20M)		/*CHANNEL_WIDTH_20*/
 		IGI_target = Adaptivity->IGI_Base;

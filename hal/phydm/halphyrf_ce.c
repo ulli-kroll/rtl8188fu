@@ -447,7 +447,5 @@ void phydm_rf_watchdog(IN	PVOID		pDM_VOID)
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_TXPowerTrackingCheck(pDM_Odm);
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		odm_IQCalibrate(pDM_Odm);
 #endif
 }

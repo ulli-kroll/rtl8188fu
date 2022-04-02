@@ -288,10 +288,8 @@ ODM_InbandNoise_Monitor(PVOID pDM_VOID, u8 bPauseDIG, u8 IGIValue, u32 max_time)
 {
 
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		return odm_InbandNoise_Monitor_ACSeries(pDM_Odm, bPauseDIG, IGIValue, max_time);
-	else
-		return odm_InbandNoise_Monitor_NSeries(pDM_Odm, bPauseDIG, IGIValue, max_time);
+
+	return odm_InbandNoise_Monitor_NSeries(pDM_Odm, bPauseDIG, IGIValue, max_time);
 }
 
 #endif

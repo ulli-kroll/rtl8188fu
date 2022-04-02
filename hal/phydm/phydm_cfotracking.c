@@ -291,9 +291,7 @@ ODM_CfoTracking(
 			pCfoTrack->CrystalCap, pCfoTrack->DefXCap));
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-		if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-			return;
-		
+	
 		//3 2. Dynamic ATC switch
 		if(CFO_ave < CFO_TH_ATC && CFO_ave > -CFO_TH_ATC)
 		{

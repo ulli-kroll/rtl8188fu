@@ -70,12 +70,6 @@ odm_AutoChannelSelectSetting(
 		NHMType = 0x1;
 	}
 
-	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-	{
-		//PHY parameters initialize for ac series
-		ODM_Write2Byte(pDM_Odm, ODM_REG_NHM_TIMER_11AC+2, period);	//0x990[31:16]=0x2710	Time duration for NHM unit: 4us, 0x2710=40ms
-		//ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11AC, BIT8|BIT9|BIT10, NHMType);	//0x994[9:8]=3			enable CCX
-	}
 	else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 	{
 		//PHY parameters initialize for n series
@@ -112,14 +106,6 @@ odm_AutoChannelSelectInit(
 		pACS->Channel_Info_2G[1][i] = 0;
 	}
 
-	if(pDM_Odm->SupportICType & (ODM_IC_11AC_SERIES|ODM_RTL8192D))
-	{
-		for (i = 0; i < ODM_MAX_CHANNEL_5G; ++i)
-		{
-			pACS->Channel_Info_5G[0][i] = 0;
-			pACS->Channel_Info_5G[1][i] = 0;
-		}
-	}
 #endif
 }
 
@@ -220,10 +206,7 @@ phydm_CLMInit(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;		
 
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_TIME_PERIOD_11AC, bMaskLWord, sampleNum);	/*4us sample 1 time*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11AC, BIT8, 0x1);							/*Enable CCX for CLM*/
-	} else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES) {
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES) {
 		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_TIME_PERIOD_11N, bMaskLWord, sampleNum);	/*4us sample 1 time*/
 		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11N, BIT8, 0x1);								/*Enable CCX for CLM*/	
 	}
@@ -239,10 +222,7 @@ phydm_CLMtrigger(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11AC, BIT0, 0x0);	/*Trigger CLM*/
-		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11AC, BIT0, 0x1);
-	} else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES) {
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES) {
 		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11N, BIT0, 0x0);	/*Trigger CLM*/
 		ODM_SetBBReg(pDM_Odm, ODM_REG_CLM_11N, BIT0, 0x1);
 	}
@@ -257,9 +237,7 @@ phydm_checkCLMready(
 	u4Byte			value32 = 0;
 	BOOLEAN			ret = FALSE;
 	
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_CLM_RESULT_11AC, bMaskDWord);				/*make sure CLM calc is ready*/
-	else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_CLM_READY_11N, bMaskDWord);				/*make sure CLM calc is ready*/
 
 	if (value32 & BIT16)
@@ -281,9 +259,7 @@ phydm_getCLMresult(
 	u4Byte			value32 = 0;
 	u2Byte			results = 0;
 	
-	if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_CLM_RESULT_11AC, bMaskDWord);				/*read CLM calc result*/
-	else if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 		value32 = ODM_GetBBReg(pDM_Odm, ODM_REG_CLM_RESULT_11N, bMaskDWord);				/*read CLM calc result*/
 
 	results = (u2Byte)(value32 & bMaskLWord);
