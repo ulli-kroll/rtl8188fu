@@ -465,20 +465,20 @@ u8 rtl8188fu_phy_get_txpower_index_base(
 		// OFDM-1T
 		if ( (MGN_6M <= Rate && Rate <= MGN_54M) && ! IS_CCK_RATE(Rate) )
 		{
-			txPower += pHalData->ofdm_diff[RFPath][TX_1S];
+			txPower += pHalData->txpwr_legacyhtdiff[RFPath][TX_1S];
 			//DBG_871X("+PowerDiff 2.4G (RF-%c): (OFDM-1T) = (%d)\n", ((RFPath==0)?'A':'B'), pHalData->OFDM_24G_Diff[RFPath][TX_1S]);
 		}
 		// BW20-1S, BW20-2S
 		if (BandWidth == CHANNEL_WIDTH_20)
 		{
 			if ( (MGN_MCS0 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT1SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw20_diff[RFPath][TX_1S];
+				txPower += pHalData->txpwr_ht20diff[RFPath][TX_1S];
 			if ( (MGN_MCS8 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT2SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw20_diff[RFPath][TX_2S];
+				txPower += pHalData->txpwr_ht20diff[RFPath][TX_2S];
 			if ( (MGN_MCS16 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT3SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw20_diff[RFPath][TX_3S];
+				txPower += pHalData->txpwr_ht20diff[RFPath][TX_3S];
 			if ( (MGN_MCS24 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT4SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw20_diff[RFPath][TX_4S];
+				txPower += pHalData->txpwr_ht20diff[RFPath][TX_4S];
 
 			//DBG_871X("+PowerDiff 2.4G (RF-%c): (BW20-1S, BW20-2S, BW20-3S, BW20-4S) = (%d, %d, %d, %d)\n", ((RFPath==0)?'A':(RFPath==1)?'B':(RFPath==2)?'C':'D'), 
 			//	pHalData->BW20_24G_Diff[RFPath][TX_1S], pHalData->BW20_24G_Diff[RFPath][TX_2S], 
@@ -488,13 +488,13 @@ u8 rtl8188fu_phy_get_txpower_index_base(
 		else if (BandWidth == CHANNEL_WIDTH_40)
 		{
 			if ( (MGN_MCS0 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT1SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_1S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_1S];
 			if ( (MGN_MCS8 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT2SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_2S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_2S];
 			if ( (MGN_MCS16 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT3SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_3S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_3S];
 			if ( (MGN_MCS24 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT4SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_4S];			 
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_4S];			 
 
 			//DBG_871X("+PowerDiff 2.4G (RF-%c): (BW40-1S, BW40-2S, BW40-3S, BW40-4S) = (%d, %d, %d, %d)\n", ((RFPath==0)?'A':(RFPath==1)?'B':(RFPath==2)?'C':'D'), 
 			//	pHalData->BW40_24G_Diff[RFPath][TX_1S], pHalData->BW40_24G_Diff[RFPath][TX_2S],
@@ -504,13 +504,13 @@ u8 rtl8188fu_phy_get_txpower_index_base(
 		else if ( BandWidth == CHANNEL_WIDTH_80 )
 		{
 			if ( (MGN_MCS0 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT1SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_1S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_1S];
 			if ( (MGN_MCS8 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT2SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_2S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_2S];
 			if ( (MGN_MCS16 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT3SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_3S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_3S];
 			if ( (MGN_MCS24 <= Rate && Rate <= MGN_MCS31) || (MGN_VHT4SS_MCS0 <= Rate && Rate <= MGN_VHT4SS_MCS9))
-				txPower += pHalData->bw40_diff[RFPath][TX_4S];
+				txPower += pHalData->txpwr_ht40diff[RFPath][TX_4S];
 
 			//DBG_871X("+PowerDiff 2.4G (RF-%c): (BW40-1S, BW40-2S, BW40-3S, BW40-4T) = (%d, %d, %d, %d) P.S. Current is in BW 80MHz\n", ((RFPath==0)?'A':(RFPath==1)?'B':(RFPath==2)?'C':'D'), 
 			//	pHalData->BW40_24G_Diff[RFPath][TX_1S], pHalData->BW40_24G_Diff[RFPath][TX_2S],

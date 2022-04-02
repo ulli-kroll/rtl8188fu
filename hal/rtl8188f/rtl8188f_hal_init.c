@@ -2075,19 +2075,19 @@ void _rtl8188fu_read_txpower_info_from_hwpg(
 			group = _rtl8188fu_get_chnl_group(ch + 1);
 
 			if (ch == 14 - 1) {
-				pHalData->index_cck_base[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][5];
-				pHalData->index_bw40_base[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
+				pHalData->txpwr_cckdiff[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][5];
+				pHalData->txpwr_ht40diff[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
 			} else {
-				pHalData->index_cck_base[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][group];
-				pHalData->index_bw40_base[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
+				pHalData->txpwr_cckdiff[rfPath][ch] = pwrInfo24G.index_cck_base[rfPath][group];
+				pHalData->txpwr_ht40diff[rfPath][ch] = pwrInfo24G.index_bw40_base[rfPath][group];
 			}
 		}
 
 		for (TxCount = 0; TxCount < MAX_TX_COUNT; TxCount++) {
-			pHalData->cck_diff[rfPath][TxCount] = pwrInfo24G.cck_diff[rfPath][TxCount];
-			pHalData->ofdm_diff[rfPath][TxCount] = pwrInfo24G.ofdm_diff[rfPath][TxCount];
-			pHalData->bw20_diff[rfPath][TxCount] = pwrInfo24G.bw20_diff[rfPath][TxCount];
-			pHalData->bw40_diff[rfPath][TxCount] = pwrInfo24G.bw40_diff[rfPath][TxCount];
+			pHalData->txpwr_cckdiff[rfPath][TxCount] = pwrInfo24G.cck_diff[rfPath][TxCount];
+			pHalData->txpwr_legacyhtdiff[rfPath][TxCount] = pwrInfo24G.ofdm_diff[rfPath][TxCount];
+			pHalData->txpwr_ht20diff[rfPath][TxCount] = pwrInfo24G.bw20_diff[rfPath][TxCount];
+			pHalData->txpwr_ht40diff[rfPath][TxCount] = pwrInfo24G.bw40_diff[rfPath][TxCount];
 		}
 	}
 
