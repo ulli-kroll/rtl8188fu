@@ -280,12 +280,4 @@ ODM_Write_CCK_CCA_Thres(
 	);
 
 
-#if (DM_ODM_SUPPORT_TYPE != ODM_CE)
-VOID
-ODM_MPT_DIG(
-	IN		PVOID					pDM_VOID
-);
-#endif
-
-
 #endif
