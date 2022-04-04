@@ -2071,7 +2071,7 @@ void _rtl8188fu_read_txpower_info_from_hwpg(
 	/*RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("%s(): AutoLoadFail = %d\n", __func__, AutoLoadFail)); */
 	_rtl8188fu_read_power_value_fromprom(padapter, &pwrInfo24G, PROMContent, AutoLoadFail);
 	for (rfPath = 0; rfPath < MAX_RF_PATH; rfPath++) {
-		for (ch = 0; ch < CENTER_CH_2G_NUM; ch++) {
+		for (ch = 0; ch < CHANNEL_MAX_NUMBER_2G; ch++) {
 			group = _rtl8188fu_get_chnl_group(ch + 1);
 
 			if (ch == 14 - 1) {

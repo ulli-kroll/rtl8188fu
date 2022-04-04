@@ -44,7 +44,7 @@
 #define	MAX_CHANNEL_NUM_5G				24
 #define	MAX_CHANNEL_NUM					38//14+24
 
-#define CENTER_CH_2G_NUM		14
+#define CHANNEL_MAX_NUMBER_2G		14
 #define CENTER_CH_5G_20M_NUM	28	/* 20M center channels */
 #define CENTER_CH_5G_40M_NUM	14	/* 40M center channels */
 #define CENTER_CH_5G_80M_NUM	7	/* 80M center channels */

@@ -288,8 +288,8 @@ typedef struct hal_com_data
 
 	/*---------------------------------------------------------------------------------*/
 	//3 [2.4G]
-	u8	index_cck_base[MAX_RF_PATH][CENTER_CH_2G_NUM];
-	u8	index_bw40_base[MAX_RF_PATH][CENTER_CH_2G_NUM];
+	u8	index_cck_base[MAX_RF_PATH][CHANNEL_MAX_NUMBER_2G];
+	u8	index_bw40_base[MAX_RF_PATH][CHANNEL_MAX_NUMBER_2G];
 	//If only one tx, only BW20 and OFDM are used.
 	s8	txpwr_cckdiff[MAX_RF_PATH][MAX_TX_COUNT];
 	s8	txpwr_legacyhtdiff[MAX_RF_PATH][MAX_TX_COUNT];
@@ -340,7 +340,7 @@ typedef struct hal_com_data
 	s8	txpwr_limit_2_4g[MAX_REGULATION_NUM]
 						[MAX_2_4G_BANDWIDTH_NUM]
 						[MAX_RATE_SECTION_NUM]
-						[CENTER_CH_2G_NUM]
+						[CHANNEL_MAX_NUMBER_2G]
 						[MAX_RF_PATH];
 
 	// Power Limit Table for 5G

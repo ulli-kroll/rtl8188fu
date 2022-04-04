@@ -1226,7 +1226,7 @@ static void _rtl8188fu_phy_init_tx_power_limit(PADAPTER Adapter)
 	for (i = 0; i < MAX_REGULATION_NUM; ++i)
 		for (j = 0; j < MAX_2_4G_BANDWIDTH_NUM; ++j)
 			for (k = 0; k < MAX_RATE_SECTION_NUM; ++k)
-				for (m = 0; m < CENTER_CH_2G_NUM; ++m)
+				for (m = 0; m < CHANNEL_MAX_NUMBER_2G; ++m)
 					for (l = 0; l < MAX_RF_PATH; ++l)
 						pHalData->txpwr_limit_2_4g[i][j][k][m][l] = MAX_POWER_INDEX;
 
@@ -1252,7 +1252,7 @@ static void _rtl8188fu_convert_tx_power_limit_to_power_index(PADAPTER Adapter)
 
 		for (bw = 0; bw < MAX_2_4G_BANDWIDTH_NUM; ++bw) {
 
-			for (channel = 0; channel < CENTER_CH_2G_NUM; ++channel) {
+			for (channel = 0; channel < CHANNEL_MAX_NUMBER_2G; ++channel) {
 
 				for (rateSection = CCK; rateSection <= HT_4SS; ++rateSection) {
 					tempPwrLmt = pHalData->txpwr_limit_2_4g[regulation][bw][rateSection][channel][RF_PATH_A];
