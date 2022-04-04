@@ -2629,28 +2629,6 @@ void rtw_dynamic_check_timer_handlder(_adapter *adapter)
 		return;
 	}	
 
-#ifdef CONFIG_LPS_LCLK_WD_TIMER /* to avoid leaving lps 32k frequently*/
-	if ((adapter_to_pwrctl(adapter)->bFwCurrentInPSMode ==_TRUE )
-		) 
-	{
-		u8 bEnterPS;	
-		
-		linked_status_chk(adapter, 1);	
-			
-		bEnterPS = traffic_status_watchdog(adapter, 1);
-		if(bEnterPS)
-		{
-			//rtw_lps_ctrl_wk_cmd(adapter, LPS_CTRL_ENTER, 1);
-			rtw_hal_dm_watchdog_in_lps(adapter);
-		}
-		else
-		{
-			//call rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_LEAVE, 1) in traffic_status_watchdog()
-		}
-			
-	}
-	else
-#endif //CONFIG_LPS_LCLK_WD_TIMER	
 	{
 		{	
 			rtw_dynamic_chk_wk_cmd(adapter);		

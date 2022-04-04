@@ -265,9 +265,6 @@ struct hal_ops {
 	void	(*set_chnl_bw_handler)(_adapter *padapter, u8 channel, CHANNEL_WIDTH Bandwidth, u8 Offset40, u8 Offset80);
 
 	void	(*hal_dm_watchdog)(_adapter *padapter);
-#ifdef CONFIG_LPS_LCLK_WD_TIMER
-	void	(*hal_dm_watchdog_in_lps)(_adapter *padapter);
-#endif
 
 	void	(*SetHwRegHandler)(_adapter *padapter, u8	variable,u8* val);
 	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable,u8* val);

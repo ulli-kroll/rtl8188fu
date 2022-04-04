@@ -8234,7 +8234,7 @@ void linked_status_chk(_adapter *padapter, u8 from_timer)
 
 		#if defined(DBG_ROAMING_TEST)
 		rx_chk_limit = 1;
-		#elif defined(CONFIG_ACTIVE_KEEP_ALIVE_CHECK) && !defined(CONFIG_LPS_LCLK_WD_TIMER)
+		#elif defined(CONFIG_ACTIVE_KEEP_ALIVE_CHECK)
 		rx_chk_limit = 4;
 		#else
 		rx_chk_limit = 8;
@@ -8281,7 +8281,7 @@ void linked_status_chk(_adapter *padapter, u8 from_timer)
 			if (pxmitpriv->last_tx_pkts == pxmitpriv->tx_pkts)
 				tx_chk = _FAIL;
 
-			#if defined(CONFIG_ACTIVE_KEEP_ALIVE_CHECK) && !defined(CONFIG_LPS_LCLK_WD_TIMER)
+			#if defined(CONFIG_ACTIVE_KEEP_ALIVE_CHECK)
 			if (pmlmeext->active_keep_alive_check && (rx_chk == _FAIL || tx_chk == _FAIL)) {
 				u8 backup_oper_channel=0;
 

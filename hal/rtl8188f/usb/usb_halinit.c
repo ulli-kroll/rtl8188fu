@@ -1731,9 +1731,6 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 	pHalFunc->set_chnl_bw_handler = &PHY_SetSwChnlBWMode8188F;
 
 	pHalFunc->hal_dm_watchdog = &rtl8188fu_dm_watchdog;
-#ifdef CONFIG_LPS_LCLK_WD_TIMER
-	pHalFunc->hal_dm_watchdog_in_lps = &rtl8188f_HalDmWatchDog_in_LPS;
-#endif /* CONFIG_LPS_LCLK_WD_TIMER */
 
 #ifdef CONFIG_C2H_PACKET_EN
 	pHalFunc->SetHwRegHandlerWithBuf = &SetHwRegWithBuf8188F;

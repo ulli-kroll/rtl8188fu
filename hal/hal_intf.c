@@ -501,16 +501,6 @@ void	rtw_hal_dm_watchdog(_adapter *padapter)
 	
 }
 
-#ifdef CONFIG_LPS_LCLK_WD_TIMER
-void	rtw_hal_dm_watchdog_in_lps(_adapter *padapter)
-{
-
-	if (adapter_to_pwrctl(padapter)->bFwCurrentInPSMode ==_TRUE ) {
-		padapter->HalFunc.hal_dm_watchdog_in_lps(padapter);//this fuction caller is in interrupt context				 	
-	}
-}
-#endif
-
 void rtw_hal_bcn_related_reg_setting(_adapter *padapter)
 {	
 	padapter->HalFunc.SetBeaconRelatedRegistersHandler(padapter);	
@@ -765,12 +755,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		rtw_hal_error_msg("hal_dm_watchdog");
 		ret = _FAIL;
 	}
-	#ifdef CONFIG_LPS_LCLK_WD_TIMER
-	if (NULL == padapter->HalFunc.hal_dm_watchdog_in_lps) {
-		rtw_hal_error_msg("hal_dm_watchdog_in_lps");
-		ret = _FAIL;
-	}
-	#endif
 
 	/*** xxx section ***/
 	if (NULL == padapter->HalFunc.set_bwmode_handler) {
