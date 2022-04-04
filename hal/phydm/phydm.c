@@ -429,7 +429,7 @@ _rtl8188fu_dm_watchdog(
 	phydm_BasicDbgMessage(pDM_Odm);
 	odm_HWSetting(pDM_Odm);
 
-	odm_FalseAlarmCounterStatistics(pDM_Odm);
+	rtl9188fu_dm_false_alarm_counter_statistics(pDM_Odm);
 	phydm_NoisyDetection(pDM_Odm);
 	
 	odm_RSSIMonitorCheck(pDM_Odm);

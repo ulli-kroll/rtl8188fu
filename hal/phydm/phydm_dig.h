@@ -255,7 +255,7 @@ odm_DIGbyRSSI_LPS(
 	);
 
 VOID 
-odm_FalseAlarmCounterStatistics(
+rtl9188fu_dm_false_alarm_counter_statistics(
 	IN		PVOID					pDM_VOID
 	);
 
