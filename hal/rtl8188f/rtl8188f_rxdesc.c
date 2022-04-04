@@ -21,7 +21,7 @@
 
 #include <rtl8188f_hal.h>
 
-void rtl8188f_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc)
+void rtl8188fu_rx_query_desc(union recv_frame *precvframe, u8 *pdesc)
 {
 	struct rx_pkt_attrib *pattrib;
 

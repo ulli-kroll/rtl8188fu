@@ -83,7 +83,7 @@ int recvbuf2recvframe(PADAPTER padapter, void *ptr)
 		precvframe->u.hdr.precvbuf = NULL;	/*can't access the precvbuf for new arch. */
 		precvframe->u.hdr.len = 0;
 
-		rtl8188f_query_rx_desc_status(precvframe, pbuf);
+		rtl8188fu_rx_query_desc(precvframe, pbuf);
 
 		pattrib = &precvframe->u.hdr.attrib;
 

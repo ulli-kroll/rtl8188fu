@@ -53,7 +53,7 @@ void rtl8188fu_free_recv_priv (_adapter *padapter);
 void rtl8188fu_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
 #endif
 
-void rtl8188f_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc);
+void rtl8188fu_rx_query_desc(union recv_frame *precvframe, u8 *pdesc);
 
 #endif /* __RTL8188F_RECV_H__ */
 
