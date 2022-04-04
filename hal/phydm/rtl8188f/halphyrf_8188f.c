@@ -59,7 +59,7 @@
 //3============================================================
 
 
-void setIqkMatrix_8188F(
+static void rtl8188fu_set_iqk_matrix(
 	PDM_ODM_T pDM_Odm,
 	s1Byte OFDM_index,
 	u1Byte RFPath,
@@ -201,7 +201,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 		if (RFPath == ODM_RF_PATH_A) {
 
-			setIqkMatrix_8188F(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
+			rtl8188fu_set_iqk_matrix(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
 				pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 				pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
@@ -233,7 +233,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 			if (Final_OFDM_Swing_Index > PwrTrackingLimit_OFDM) {     //BBSwing higher then Limit
 				pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - PwrTrackingLimit_OFDM;
 
-				setIqkMatrix_8188F(pDM_Odm, PwrTrackingLimit_OFDM, RFPath,
+				rtl8188fu_set_iqk_matrix(pDM_Odm, PwrTrackingLimit_OFDM, RFPath,
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
@@ -246,7 +246,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 							  PwrTrackingLimit_OFDM, pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath]));
 				} else if (Final_OFDM_Swing_Index < pRFCalibrateInfo->default_ofdm_index) {
 					pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - pRFCalibrateInfo->default_ofdm_index;
-					setIqkMatrix_8188F(pDM_Odm, pRFCalibrateInfo->default_ofdm_index, ODM_RF_PATH_A,
+					rtl8188fu_set_iqk_matrix(pDM_Odm, pRFCalibrateInfo->default_ofdm_index, ODM_RF_PATH_A,
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
@@ -257,7 +257,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 							 ("******Path_A Lower then BBSwing lower bound  28 , Remnant TxAGC Value = %d\n",
 							  pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath]));
 			} else {
-				setIqkMatrix_8188F(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
+				rtl8188fu_set_iqk_matrix(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
