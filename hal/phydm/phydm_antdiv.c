@@ -37,13 +37,6 @@ ODM_SetAntConfig(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	if(pDM_Odm->SupportICType == ODM_RTL8723B)
-	{
-		if(antSetting == 0)		// ant A
-			ODM_SetBBReg(pDM_Odm, 0x948, bMaskDWord, 0x00000000);
-		else if(antSetting == 1)
-			ODM_SetBBReg(pDM_Odm, 0x948, bMaskDWord, 0x00000280);
-	}
 }
 
 //======================================================

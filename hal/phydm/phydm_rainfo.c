@@ -1181,9 +1181,6 @@ ODM_UpdateNoisyState(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
 	/*DbgPrint("Get C2H Command! NoisyState=0x%x\n ", bNoisyStateFromC2H);*/
-	if (pDM_Odm->SupportICType == ODM_RTL8821  || pDM_Odm->SupportICType == ODM_RTL8812  ||
-		pDM_Odm->SupportICType == ODM_RTL8723B || pDM_Odm->SupportICType == ODM_RTL8192E || pDM_Odm->SupportICType == ODM_RTL8188E)
-		pDM_Odm->bNoisyState = bNoisyStateFromC2H;
 	odm_Set_RA_DM_ARFB_by_Noisy(pDM_Odm);
 };
 

@@ -118,17 +118,6 @@ odm_DynamicTxPowerNIC(
 	
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 
-	if(pDM_Odm->SupportICType == ODM_RTL8192C)	
-	{
-		odm_DynamicTxPower_92C(pDM_Odm);
-	}
-	else if(pDM_Odm->SupportICType == ODM_RTL8192D)
-	{
-		odm_DynamicTxPower_92D(pDM_Odm);
-	}
-	else if (pDM_Odm->SupportICType == ODM_RTL8821)
-	{
-	}
 #endif	
 }
 

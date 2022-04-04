@@ -331,114 +331,12 @@ odm_RxPhyStatus92CSeries_Parsing(
 		//2011.11.28 LukeLee: 88E use different LNA & VGA gain table
 		//The RSSI formula should be modified according to the gain table
 		//In 88E, cck_highpwr is always set to 1
-		if (pDM_Odm->SupportICType & (ODM_RTL8703B)) {
-			
-		} else if (pDM_Odm->SupportICType & (ODM_RTL8188E | ODM_RTL8192E | ODM_RTL8723B | ODM_RTL8188F)) /*3 bit LNA*/
+		if (pDM_Odm->SupportICType & (ODM_RTL8188F)) /*3 bit LNA*/
 		{
 			LNA_idx = ((cck_agc_rpt & 0xE0) >>5);
 			VGA_idx = (cck_agc_rpt & 0x1F); 
-			if(pDM_Odm->SupportICType & (ODM_RTL8188E|ODM_RTL8192E))
-			{
-				if(pDM_Odm->cck_agc_report_type == 0 && (pDM_Odm->SupportICType & ODM_RTL8192E) )
-				{
-					switch(LNA_idx)
-					{
-						case 7:
-							rx_pwr_all = -45  - 2*(VGA_idx);
-							break;
-						case 6:
-							rx_pwr_all = -43 -2*(VGA_idx); 
-							break;
-						case 5:
-							rx_pwr_all = -27 - 2*(VGA_idx); 
-							break;
-						case 4:
-							rx_pwr_all = -21 - 2*(VGA_idx); 
-							break;
-						case 3:
-							rx_pwr_all = -18 - 2*(VGA_idx); 
-							break;
-						case 2:
-							rx_pwr_all = -6 - 2*(VGA_idx);
-							break;
-						case 1:
-							rx_pwr_all = 9 -2*(VGA_idx);
-							break;
-						case 0:
-							rx_pwr_all = 15 -2*(VGA_idx);
-							break;
-						default:
 
-							break;
-					}
-
-					if(pDM_Odm->board_type & ODM_BOARD_EXT_LNA)
-					{
-						rx_pwr_all -= pDM_Odm->ExtLNAGain;
-					}
-					
-					PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-				}
-				else
-				{					
-					switch(LNA_idx)
-					{
-						case 7:
-							if(VGA_idx <= 27)
-								rx_pwr_all = -100 + 2*(27-VGA_idx); //VGA_idx = 27~2
-							else
-							rx_pwr_all = -100;
-							break;
-						case 6:
-							rx_pwr_all = -48 + 2*(2-VGA_idx); //VGA_idx = 2~0
-							break;
-						case 5:
-							rx_pwr_all = -42 + 2*(7-VGA_idx); //VGA_idx = 7~5
-							break;
-						case 4:
-							rx_pwr_all = -36 + 2*(7-VGA_idx); //VGA_idx = 7~4
-							break;
-						case 3:
-							//rx_pwr_all = -28 + 2*(7-VGA_idx); //VGA_idx = 7~0
-							rx_pwr_all = -24 + 2*(7-VGA_idx); //VGA_idx = 7~0
-							break;
-						case 2:
-							if(cck_highpwr)
-								rx_pwr_all = -12 + 2*(5-VGA_idx); //VGA_idx = 5~0
-							else
-								rx_pwr_all = -6+ 2*(5-VGA_idx);
-							break;
-						case 1:
-								rx_pwr_all = 8-2*VGA_idx;
-							break;
-						case 0:
-							rx_pwr_all = 14-2*VGA_idx;
-							break;
-						default:
-							//DbgPrint("CCK Exception default\n");
-							break;
-					}
-					rx_pwr_all += 8;
-
-					//2012.10.08 LukeLee: Modify for 92E CCK RSSI
-					if(pDM_Odm->SupportICType == ODM_RTL8192E)
-						rx_pwr_all += 8;
-					
-					PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-					if(cck_highpwr == FALSE)
-					{
-						if(PWDB_ALL >= 80)
-							PWDB_ALL = ((PWDB_ALL-80)<<1)+((PWDB_ALL-80)>>1)+80;
-						else if((PWDB_ALL <= 78) && (PWDB_ALL >= 20))
-							PWDB_ALL += 3;
-						if(PWDB_ALL>100)
-							PWDB_ALL = 100;
-					}
-				}
-			}
-			else if(pDM_Odm->SupportICType & (ODM_RTL8723B))
-			{
-			} else if (pDM_Odm->SupportICType & (ODM_RTL8188F)) {
+			if (pDM_Odm->SupportICType & (ODM_RTL8188F)) {
 #if (RTL8188F_SUPPORT == 1)
 				rx_pwr_all = odm_CCKRSSI_8188F(LNA_idx, VGA_idx);
 				PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
@@ -594,22 +492,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 			RSSI = odm_QueryRxPwrPercentage(rx_pwr[i]);
 			total_rssi += RSSI;
 			//RT_DISP(FRX, RX_PHY_SS, ("RF-%d RXPWR=%x RSSI=%d\n", i, rx_pwr[i], RSSI));
-
-
-			if(pDM_Odm->SupportICType&ODM_RTL8192C)
-			{	
-			        //Modification for ext-LNA board	
-				if(pDM_Odm->board_type & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
-				{
-					if((pPhyStaRpt->path_agc[i].trsw) == 1)
-						RSSI = (RSSI>94)?100:(RSSI +6);
-					else
-						RSSI = (RSSI<=16)?(RSSI>>3):(RSSI -16);
-
-					if((RSSI <= 34) && (RSSI >=4))
-						RSSI -= 4;
-				}		
-			}
 		
 			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
 

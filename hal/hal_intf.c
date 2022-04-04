@@ -25,13 +25,6 @@
 
 const u32 _chip_type_to_odm_ic_type[] = {
 	0,
-	ODM_RTL8188E,
-	ODM_RTL8192E,
-	ODM_RTL8812,
-	ODM_RTL8821,
-	ODM_RTL8723B,
-	ODM_RTL8814A,
-	ODM_RTL8703B,
 	ODM_RTL8188F,
 	0,
 };

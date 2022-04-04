@@ -101,21 +101,6 @@ odm_FAThresholdCheck(
 	
 	if(pDM_Odm->bLinked && (bPerformance||bDFSBand))
 	{
-		if(pDM_Odm->SupportICType == ODM_RTL8192D)
-		{
-			// 8192D special case
-			dm_FA_thres[0] = DM_DIG_FA_TH0_92D;
-			dm_FA_thres[1] = DM_DIG_FA_TH1_92D;
-			dm_FA_thres[2] = DM_DIG_FA_TH2_92D;
-		}
-		else if(pDM_Odm->SupportICType == ODM_RTL8723A && pDM_Odm->bBtLimitedDig)
-		{
-			// 8723A BT special case
-			dm_FA_thres[0] = DM_DIG_FA_TH0;
-			dm_FA_thres[1] = 0x250;
-			dm_FA_thres[2] = 0x300;
-		}
-		else
 		{
 			// For NIC
 			dm_FA_thres[0] = DM_DIG_FA_TH0;
@@ -542,15 +527,8 @@ odm_DIG(
 	//1 Boundary Decision
 	{
 		//2 For WIN\CE
-		if(pDM_Odm->SupportICType >= ODM_RTL8188E)
-			dm_dig_max = 0x5A;
-		else
-			dm_dig_max = DM_DIG_MAX_NIC;
-		
-		if(pDM_Odm->SupportICType != ODM_RTL8821)
-			dm_dig_min = DM_DIG_MIN_NIC;
-		else
-			dm_dig_min = 0x1C;
+		dm_dig_max = 0x5A;
+		dm_dig_min = DM_DIG_MIN_NIC;
 
 		DIG_MaxOfMin = DM_DIG_MAX_AP;
 	}
@@ -561,13 +539,7 @@ odm_DIG(
 	{
 		//2 Modify DIG upper bound
 		//4 Modify DIG upper bound for 92E, 8723A\B, 8821 & 8812 BT
-		if((pDM_Odm->SupportICType & (ODM_RTL8192E|ODM_RTL8723B|ODM_RTL8812|ODM_RTL8821|ODM_RTL8723A)) && (pDM_Odm->bBtLimitedDig==1))
-		{
-			offset = 10;
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Coex. case: Force upper bound to RSSI + %d !!!!!!\n", offset));		
-		}
-		else
-			offset = 15;
+		offset = 15;
 
 		if((pDM_Odm->RSSI_Min + offset) > dm_dig_max )
 			pDM_DigTable->rx_gain_range_max = dm_dig_max;
@@ -893,7 +865,6 @@ rtl9188fu_dm_false_alarm_counter_statistics(
 
 		FalseAlmCnt->cnt_cca_all = FalseAlmCnt->cnt_ofdm_cca + FalseAlmCnt->cnt_cck_cca;
 
-		if(pDM_Odm->SupportICType >=ODM_RTL8723A)
 		{
 			//reset false alarm counter registers
 			ODM_SetBBReg(pDM_Odm, ODM_REG_OFDM_FA_RSTC_11N, BIT31, 1);
