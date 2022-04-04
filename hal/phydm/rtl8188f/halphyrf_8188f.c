@@ -298,8 +298,6 @@ ODM_TxPwrTrackSetPwr_8188F(
 				ODM_Write1Byte(pDM_Odm, 0xaa2, CCKSwingTable_Ch1_Ch14_88F[PwrTrackingLimit_CCK][14]);
 				ODM_Write1Byte(pDM_Odm, 0xaa3, CCKSwingTable_Ch1_Ch14_88F[PwrTrackingLimit_CCK][15]);
 
-				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA_CCK = TRUE;
-
 			} else if(Final_CCK_Swing_Index < 0) {   // Lowest CCK Index = 0
 				pRFCalibrateInfo->remnant_cck_idx = Final_CCK_Swing_Index;
 
@@ -320,7 +318,6 @@ ODM_TxPwrTrackSetPwr_8188F(
 				ODM_Write1Byte(pDM_Odm, 0xaa1, CCKSwingTable_Ch1_Ch14_88F[0][13]);
 				ODM_Write1Byte(pDM_Odm, 0xaa2, CCKSwingTable_Ch1_Ch14_88F[0][14]);
 				ODM_Write1Byte(pDM_Odm, 0xaa3, CCKSwingTable_Ch1_Ch14_88F[0][15]);
-				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA_CCK = TRUE;
 
 			} else {
 				ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("******Path_A CCK Compensate with BBSwing , Final_CCK_Swing_Index = %d \n", Final_CCK_Swing_Index));
@@ -340,8 +337,6 @@ ODM_TxPwrTrackSetPwr_8188F(
 				ODM_Write1Byte(pDM_Odm, 0xaa1, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][13]);
 				ODM_Write1Byte(pDM_Odm, 0xaa2, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][14]);
 				ODM_Write1Byte(pDM_Odm, 0xaa3, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][15]);
-
-				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA_CCK=FALSE;
 				pRFCalibrateInfo->remnant_cck_idx = 0;
 			}
 			{

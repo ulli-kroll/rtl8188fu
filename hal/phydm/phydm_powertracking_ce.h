@@ -144,7 +144,6 @@ typedef struct ODM_RF_Calibration_Structure
 	BOOLEAN			Modify_TxAGC_Flag_PathB;
 	BOOLEAN			Modify_TxAGC_Flag_PathC;
 	BOOLEAN			Modify_TxAGC_Flag_PathD;
-	BOOLEAN			Modify_TxAGC_Flag_PathA_CCK;
 	
 	s1Byte			KfreeOffset[MAX_RF_PATH];
     
