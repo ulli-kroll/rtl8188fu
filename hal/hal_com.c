@@ -2327,7 +2327,7 @@ void SetHalODMVar(
 
 			DBG_871X_SEL(sel , "============ Rx Info dump ===================\n");
 			DBG_871X_SEL(sel , "bLinked = %d, RSSI_Min = %d(%%), CurrentIGI = 0x%x\n", podmpriv->bLinked, podmpriv->RSSI_Min, pDM_DigTable->CurIGValue);
-			DBG_871X_SEL(sel , "Cnt_Cck_fail = %d, Cnt_Ofdm_fail = %d, Total False Alarm = %d\n", FalseAlmCnt->Cnt_Cck_fail, FalseAlmCnt->Cnt_Ofdm_fail, FalseAlmCnt->Cnt_all);
+			DBG_871X_SEL(sel , "Cnt_Cck_fail = %d, Cnt_Ofdm_fail = %d, Total False Alarm = %d\n", FalseAlmCnt->cnt_cck_fail, FalseAlmCnt->cnt_ofdm_fail, FalseAlmCnt->cnt_all);
 
 			if (podmpriv->bLinked) {
 					DBG_871X_SEL(sel , "RxRate = %s", HDATA_RATE(podmpriv->RxRate));

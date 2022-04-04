@@ -146,7 +146,7 @@ odm_ForbiddenIGICheck(
 	PFALSE_ALARM_STATISTICS 	pFalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm, PHYDM_FALSEALMCNT);
 	u1Byte						rx_gain_range_min = pDM_DigTable->rx_gain_range_min;
 
-	if(pFalseAlmCnt->Cnt_all > 10000)
+	if(pFalseAlmCnt->cnt_all > 10000)
 	{
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Abnormally false alarm case. \n"));
 
@@ -711,16 +711,16 @@ odm_DIG(
 		}
 		else
 		{
-			if(pFalseAlmCnt->Cnt_all > dm_FA_thres[2])
+			if(pFalseAlmCnt->cnt_all > dm_FA_thres[2])
 				CurrentIGI = CurrentIGI + 4;
-			else if (pFalseAlmCnt->Cnt_all > dm_FA_thres[1])
+			else if (pFalseAlmCnt->cnt_all > dm_FA_thres[1])
 				CurrentIGI = CurrentIGI + 2;
-			else if(pFalseAlmCnt->Cnt_all < dm_FA_thres[0])
+			else if(pFalseAlmCnt->cnt_all < dm_FA_thres[0])
 				CurrentIGI = CurrentIGI - 2;
 
 			//4 Abnormal # beacon case
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-			if((pDM_Odm->PhyDbgInfo.NumQryBeaconPkt < 5) && (pFalseAlmCnt->Cnt_all < DM_DIG_FA_TH1) && (pDM_Odm->bsta_state))
+			if((pDM_Odm->PhyDbgInfo.NumQryBeaconPkt < 5) && (pFalseAlmCnt->cnt_all < DM_DIG_FA_TH1) && (pDM_Odm->bsta_state))
 			{						
 				CurrentIGI = pDM_DigTable->rx_gain_range_min;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Abnormal #beacon (%d) case: IGI does one-shot to 0x%x\n", 
@@ -741,11 +741,11 @@ odm_DIG(
 		}
 		else
 		{
-			if(pFalseAlmCnt->Cnt_all > dm_FA_thres[2])
+			if(pFalseAlmCnt->cnt_all > dm_FA_thres[2])
 				CurrentIGI = CurrentIGI + 4;
-			else if (pFalseAlmCnt->Cnt_all > dm_FA_thres[1])
+			else if (pFalseAlmCnt->cnt_all > dm_FA_thres[1])
 				CurrentIGI = CurrentIGI + 2;
-			else if(pFalseAlmCnt->Cnt_all < dm_FA_thres[0])
+			else if(pFalseAlmCnt->cnt_all < dm_FA_thres[0])
 				CurrentIGI = CurrentIGI - 2;
 		}
 	}
@@ -757,7 +757,7 @@ odm_DIG(
 	if(CurrentIGI > pDM_DigTable->rx_gain_range_max)
 		CurrentIGI = pDM_DigTable->rx_gain_range_max;
 
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): CurIGValue=0x%x, TotalFA = %d\n\n", CurrentIGI, pFalseAlmCnt->Cnt_all));	
+	ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): CurIGValue=0x%x, TotalFA = %d\n\n", CurrentIGI, pFalseAlmCnt->cnt_all));	
 
 	//1 High power RSSI threshold
 
@@ -792,11 +792,11 @@ odm_DIGbyRSSI_LPS(
 
 	// Using FW PS mode to make IGI
 	//Adjust by  FA in LPS MODE
-	if(pFalseAlmCnt->Cnt_all> DM_DIG_FA_TH2_LPS)
+	if(pFalseAlmCnt->cnt_all> DM_DIG_FA_TH2_LPS)
 		CurrentIGI = CurrentIGI+4;
-	else if (pFalseAlmCnt->Cnt_all > DM_DIG_FA_TH1_LPS)
+	else if (pFalseAlmCnt->cnt_all > DM_DIG_FA_TH1_LPS)
 		CurrentIGI = CurrentIGI+2;
-	else if(pFalseAlmCnt->Cnt_all < DM_DIG_FA_TH0_LPS)
+	else if(pFalseAlmCnt->cnt_all < DM_DIG_FA_TH0_LPS)
 		CurrentIGI = CurrentIGI-2;	
 
 
@@ -814,7 +814,7 @@ odm_DIGbyRSSI_LPS(
 	 else if(CurrentIGI < RSSI_Lower)
 		CurrentIGI =RSSI_Lower;
 
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): pFalseAlmCnt->Cnt_all = %d\n",pFalseAlmCnt->Cnt_all));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): pFalseAlmCnt->cnt_all = %d\n",pFalseAlmCnt->cnt_all));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): pDM_Odm->RSSI_Min = %d\n",pDM_Odm->RSSI_Min));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): CurrentIGI = 0x%x\n",CurrentIGI));
 
@@ -850,23 +850,23 @@ odm_FalseAlarmCounterStatistics(
 		ODM_SetBBReg(pDM_Odm, ODM_REG_OFDM_FA_RSTD_11N, BIT31, 1); //hold page D counter
 	
 		ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_OFDM_FA_TYPE1_11N, bMaskDWord);
-		FalseAlmCnt->Cnt_Fast_Fsync = (ret_value&0xffff);
-		FalseAlmCnt->Cnt_SB_Search_fail = ((ret_value&0xffff0000)>>16);		
+		FalseAlmCnt->cnt_fast_fsync_fail = (ret_value&0xffff);
+		FalseAlmCnt->cnt_sb_search_fail = ((ret_value&0xffff0000)>>16);		
 
 		ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_OFDM_FA_TYPE2_11N, bMaskDWord);
-		FalseAlmCnt->Cnt_OFDM_CCA = (ret_value&0xffff); 
-		FalseAlmCnt->Cnt_Parity_Fail = ((ret_value&0xffff0000)>>16);	
+		FalseAlmCnt->cnt_ofdm_cca = (ret_value&0xffff); 
+		FalseAlmCnt->cnt_parity_fail = ((ret_value&0xffff0000)>>16);	
 
 		ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_OFDM_FA_TYPE3_11N, bMaskDWord);
-		FalseAlmCnt->Cnt_Rate_Illegal = (ret_value&0xffff);
-		FalseAlmCnt->Cnt_Crc8_fail = ((ret_value&0xffff0000)>>16);
+		FalseAlmCnt->cnt_rate_illegal = (ret_value&0xffff);
+		FalseAlmCnt->cnt_crc8_fail = ((ret_value&0xffff0000)>>16);
 
 		ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_OFDM_FA_TYPE4_11N, bMaskDWord);
-		FalseAlmCnt->Cnt_Mcs_fail = (ret_value&0xffff);
+		FalseAlmCnt->cnt_mcs_fail = (ret_value&0xffff);
 
-		FalseAlmCnt->Cnt_Ofdm_fail = 	FalseAlmCnt->Cnt_Parity_Fail + FalseAlmCnt->Cnt_Rate_Illegal +
-								FalseAlmCnt->Cnt_Crc8_fail + FalseAlmCnt->Cnt_Mcs_fail +
-								FalseAlmCnt->Cnt_Fast_Fsync + FalseAlmCnt->Cnt_SB_Search_fail;
+		FalseAlmCnt->cnt_ofdm_fail = 	FalseAlmCnt->cnt_parity_fail + FalseAlmCnt->cnt_rate_illegal +
+								FalseAlmCnt->cnt_crc8_fail + FalseAlmCnt->cnt_mcs_fail +
+								FalseAlmCnt->cnt_fast_fsync_fail + FalseAlmCnt->cnt_sb_search_fail;
 
 		{
 			//hold cck counter
@@ -874,24 +874,24 @@ odm_FalseAlarmCounterStatistics(
 			ODM_SetBBReg(pDM_Odm, ODM_REG_CCK_FA_RST_11N, BIT14, 1); 
 		
 			ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_CCK_FA_LSB_11N, bMaskByte0);
-			FalseAlmCnt->Cnt_Cck_fail = ret_value;
+			FalseAlmCnt->cnt_cck_fail = ret_value;
 
 			ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_CCK_FA_MSB_11N, bMaskByte3);
-			FalseAlmCnt->Cnt_Cck_fail +=  (ret_value& 0xff)<<8;
+			FalseAlmCnt->cnt_cck_fail +=  (ret_value& 0xff)<<8;
 
 			ret_value = ODM_GetBBReg(pDM_Odm, ODM_REG_CCK_CCA_CNT_11N, bMaskDWord);
-			FalseAlmCnt->Cnt_CCK_CCA = ((ret_value&0xFF)<<8) |((ret_value&0xFF00)>>8);
+			FalseAlmCnt->cnt_cck_cca = ((ret_value&0xFF)<<8) |((ret_value&0xFF00)>>8);
 		}
 	
-		FalseAlmCnt->Cnt_all = (	FalseAlmCnt->Cnt_Fast_Fsync + 
-							FalseAlmCnt->Cnt_SB_Search_fail +
-							FalseAlmCnt->Cnt_Parity_Fail +
-							FalseAlmCnt->Cnt_Rate_Illegal +
-							FalseAlmCnt->Cnt_Crc8_fail +
-							FalseAlmCnt->Cnt_Mcs_fail +
-							FalseAlmCnt->Cnt_Cck_fail);	
+		FalseAlmCnt->cnt_all = (	FalseAlmCnt->cnt_fast_fsync_fail + 
+							FalseAlmCnt->cnt_sb_search_fail +
+							FalseAlmCnt->cnt_parity_fail +
+							FalseAlmCnt->cnt_rate_illegal +
+							FalseAlmCnt->cnt_crc8_fail +
+							FalseAlmCnt->cnt_mcs_fail +
+							FalseAlmCnt->cnt_cck_fail);	
 
-		FalseAlmCnt->Cnt_CCA_all = FalseAlmCnt->Cnt_OFDM_CCA + FalseAlmCnt->Cnt_CCK_CCA;
+		FalseAlmCnt->cnt_cca_all = FalseAlmCnt->cnt_ofdm_cca + FalseAlmCnt->cnt_cck_cca;
 
 		if(pDM_Odm->SupportICType >=ODM_RTL8723A)
 		{
@@ -915,21 +915,21 @@ odm_FalseAlarmCounterStatistics(
 		
 
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Fast_Fsync=%d, Cnt_SB_Search_fail=%d\n",
-			FalseAlmCnt->Cnt_Fast_Fsync, FalseAlmCnt->Cnt_SB_Search_fail));
+			FalseAlmCnt->cnt_fast_fsync_fail, FalseAlmCnt->cnt_sb_search_fail));
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Parity_Fail=%d, Cnt_Rate_Illegal=%d\n",
-			FalseAlmCnt->Cnt_Parity_Fail, FalseAlmCnt->Cnt_Rate_Illegal));
+			FalseAlmCnt->cnt_parity_fail, FalseAlmCnt->cnt_rate_illegal));
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Crc8_fail=%d, Cnt_Mcs_fail=%d\n",
-		FalseAlmCnt->Cnt_Crc8_fail, FalseAlmCnt->Cnt_Mcs_fail));
+		FalseAlmCnt->cnt_crc8_fail, FalseAlmCnt->cnt_mcs_fail));
 	}
 #endif
 
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_OFDM_CCA=%d\n", FalseAlmCnt->Cnt_OFDM_CCA));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_CCK_CCA=%d\n", FalseAlmCnt->Cnt_CCK_CCA));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_CCA_all=%d\n", FalseAlmCnt->Cnt_CCA_all));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Ofdm_fail=%d\n", FalseAlmCnt->Cnt_Ofdm_fail));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Cck_fail=%d\n", FalseAlmCnt->Cnt_Cck_fail));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Ofdm_fail=%d\n", FalseAlmCnt->Cnt_Ofdm_fail));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Total False Alarm=%d\n\n", FalseAlmCnt->Cnt_all));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_OFDM_CCA=%d\n", FalseAlmCnt->cnt_ofdm_cca));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_CCK_CCA=%d\n", FalseAlmCnt->cnt_cck_cca));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_CCA_all=%d\n", FalseAlmCnt->cnt_cca_all));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Ofdm_fail=%d\n", FalseAlmCnt->cnt_ofdm_fail));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Cck_fail=%d\n", FalseAlmCnt->cnt_cck_fail));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Cnt_Ofdm_fail=%d\n", FalseAlmCnt->cnt_ofdm_fail));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_FA_CNT, ODM_DBG_LOUD, ("odm_FalseAlarmCounterStatistics(): Total False Alarm=%d\n\n", FalseAlmCnt->cnt_all));
 }
 
 //3============================================================
@@ -1082,13 +1082,13 @@ odm_CCKPacketDetectionThresh(
 			CurCCK_CCAThres = 0x83;
 		else
 		{
-			if(FalseAlmCnt->Cnt_Cck_fail > 1000)
+			if(FalseAlmCnt->cnt_cck_fail > 1000)
 				CurCCK_CCAThres = 0x83;
 			else
 				CurCCK_CCAThres = 0x40;
 		}
 	} else {
-		if(FalseAlmCnt->Cnt_Cck_fail > 1000)
+		if(FalseAlmCnt->cnt_cck_fail > 1000)
 			CurCCK_CCAThres = 0x83;
 		else
 			CurCCK_CCAThres = 0x40;

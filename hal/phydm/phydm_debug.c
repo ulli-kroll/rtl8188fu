@@ -111,13 +111,13 @@ phydm_BasicDbgMessage
 		(pDM_Odm->RxRate >= ODM_RATEMCS0) ? "" : "M"));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_COMMON, ODM_DBG_LOUD, ("[CCA Cnt] {CCK, OFDM, Total} = {%d, %d, %d}\n",	
-		FalseAlmCnt->Cnt_CCK_CCA, FalseAlmCnt->Cnt_OFDM_CCA, FalseAlmCnt->Cnt_CCA_all));
+		FalseAlmCnt->cnt_cck_cca, FalseAlmCnt->cnt_ofdm_cca, FalseAlmCnt->cnt_cca_all));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_COMMON, ODM_DBG_LOUD, ("[FA Cnt] {CCK, OFDM, Total} = {%d, %d, %d}\n",	
-		FalseAlmCnt->Cnt_Cck_fail, FalseAlmCnt->Cnt_Ofdm_fail, FalseAlmCnt->Cnt_all));
+		FalseAlmCnt->cnt_cck_fail, FalseAlmCnt->cnt_ofdm_fail, FalseAlmCnt->cnt_all));
 	
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_COMMON, ODM_DBG_LOUD, ("[OFDM FA Detail] Parity_Fail = (( %d )), Rate_Illegal = (( %d )), CRC8_fail = (( %d )), Mcs_fail = (( %d )), Fast_Fsync = (( %d )), SB_Search_fail = (( %d ))\n",	
-		FalseAlmCnt->Cnt_Parity_Fail, FalseAlmCnt->Cnt_Rate_Illegal, FalseAlmCnt->Cnt_Crc8_fail, FalseAlmCnt->Cnt_Mcs_fail, FalseAlmCnt->Cnt_Fast_Fsync, FalseAlmCnt->Cnt_SB_Search_fail));
+		FalseAlmCnt->cnt_parity_fail, FalseAlmCnt->cnt_rate_illegal, FalseAlmCnt->cnt_crc8_fail, FalseAlmCnt->cnt_mcs_fail, FalseAlmCnt->cnt_fast_fsync_fail, FalseAlmCnt->cnt_sb_search_fail));
 	
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_COMMON, ODM_DBG_LOUD, ("bLinked = %d, RSSI_Min = %d, CurrentIGI = 0x%x, bNoisy=%d\n\n",
 		pDM_Odm->bLinked, pDM_Odm->RSSI_Min, pDM_DigTable->CurIGValue, pDM_Odm->NoisyDecision));    

@@ -1283,17 +1283,17 @@ odm_UpdatePowerTrainingState(
 		
 		RX_Pkt_Cnt = (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM) + (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK);
 		
-		if((FalseAlmCnt->Cnt_CCA_all > 31 && RX_Pkt_Cnt > 31) && (FalseAlmCnt->Cnt_CCA_all >= RX_Pkt_Cnt))
+		if((FalseAlmCnt->cnt_cca_all > 31 && RX_Pkt_Cnt > 31) && (FalseAlmCnt->cnt_cca_all >= RX_Pkt_Cnt))
 		{
-			if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 1)) <= FalseAlmCnt->Cnt_CCA_all)
+			if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 1)) <= FalseAlmCnt->cnt_cca_all)
 				score = 0;
-			else if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 2)) <= FalseAlmCnt->Cnt_CCA_all)
+			else if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 2)) <= FalseAlmCnt->cnt_cca_all)
 				score = 1;
 			else
 				score = 2;
 		}
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): RX_Pkt_Cnt = %d, Cnt_CCA_all = %d\n", 
-			RX_Pkt_Cnt, FalseAlmCnt->Cnt_CCA_all));
+			RX_Pkt_Cnt, FalseAlmCnt->cnt_cca_all));
 	}
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): NumQryPhyStatusOFDM = %d, NumQryPhyStatusCCK = %d\n",
 			(u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM), (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK)));
@@ -1349,8 +1349,8 @@ phydm_NoisyDetection(
 	u4Byte  Total_FA_Cnt, Total_CCA_Cnt;
 	u4Byte  Score = 0, i, Score_Smooth;
     
-	Total_CCA_Cnt = pDM_Odm->FalseAlmCnt.Cnt_CCA_all;
-	Total_FA_Cnt  = pDM_Odm->FalseAlmCnt.Cnt_all;    
+	Total_CCA_Cnt = pDM_Odm->FalseAlmCnt.cnt_cca_all;
+	Total_FA_Cnt  = pDM_Odm->FalseAlmCnt.cnt_all;    
 
 /*
     if( Total_FA_Cnt*16>=Total_CCA_Cnt*14 )         // 87.5

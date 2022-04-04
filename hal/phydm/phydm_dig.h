@@ -86,21 +86,20 @@ typedef struct _Dynamic_Initial_Gain_Threshold_
 }DIG_T,*pDIG_T;
 
 typedef struct _FALSE_ALARM_STATISTICS{
-	u4Byte	Cnt_Parity_Fail;
-	u4Byte	Cnt_Rate_Illegal;
-	u4Byte	Cnt_Crc8_fail;
-	u4Byte	Cnt_Mcs_fail;
-	u4Byte	Cnt_Ofdm_fail;
-	u4Byte	Cnt_Ofdm_fail_pre;	//For RTL8881A
-	u4Byte	Cnt_Cck_fail;
-	u4Byte	Cnt_all;
-	u4Byte	Cnt_Fast_Fsync;
-	u4Byte	Cnt_SB_Search_fail;
-	u4Byte	Cnt_OFDM_CCA;
-	u4Byte	Cnt_CCK_CCA;
-	u4Byte	Cnt_CCA_all;
-	u4Byte	Cnt_BW_USC;	//Gary
-	u4Byte	Cnt_BW_LSC;	//Gary
+	u32 cnt_parity_fail;
+	u32 cnt_rate_illegal;
+	u32 cnt_crc8_fail;
+	u32 cnt_mcs_fail;
+	u32 cnt_fast_fsync_fail;
+	u32 cnt_sb_search_fail;
+	u32 cnt_ofdm_fail;
+	u32 cnt_cck_fail;
+	u32 cnt_all;
+	u32 cnt_ofdm_cca;
+	u32 cnt_cck_cca;
+	u32 cnt_cca_all;
+	u32 cnt_bw_usc;
+	u32 cnt_bw_lsc;
 }FALSE_ALARM_STATISTICS, *PFALSE_ALARM_STATISTICS;
 
 typedef enum tag_Dynamic_Init_Gain_Operation_Type_Definition
