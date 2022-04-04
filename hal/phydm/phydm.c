@@ -421,7 +421,7 @@ phydm_support_ablity_debug(
 // to perform any new ODM_DM.
 //
 VOID
-ODM_DMWatchdog(
+_rtl8188fu_dm_watchdog(
 	IN		PDM_ODM_T		pDM_Odm
 	)
 {

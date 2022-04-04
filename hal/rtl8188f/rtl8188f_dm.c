@@ -271,7 +271,7 @@ VOID rtl8188fu_dm_watchdog(PADAPTER Adapter)
 
 		ODM_CmnInfoUpdate(&pHalData->odmpriv, ODM_CMNINFO_BT_ENABLED, ((bBtDisabled == _TRUE) ? _FALSE : _TRUE));
 
-		ODM_DMWatchdog(&pHalData->odmpriv);
+		_rtl8188fu_dm_watchdog(&pHalData->odmpriv);
 	}
 
 skip_dm:

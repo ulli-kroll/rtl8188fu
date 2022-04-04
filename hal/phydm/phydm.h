@@ -1016,7 +1016,7 @@ phydm_support_ablity_debug(
 	);
 
 VOID
-ODM_DMWatchdog(
+_rtl8188fu_dm_watchdog(
 	IN		PDM_ODM_T			pDM_Odm			// For common use in the future
 	);
 
