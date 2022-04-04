@@ -222,10 +222,7 @@ FindMinimumRSSI_8188f(
 }
 #endif
 
-VOID
-rtl8188f_HalDmWatchDog(
-	IN	PADAPTER	Adapter
-)
+VOID rtl8188fu_dm_watchdog(PADAPTER Adapter)
 {
 	BOOLEAN		bFwCurrentInPSMode = _FALSE;
 	BOOLEAN		bFwPSAwake = _TRUE;
