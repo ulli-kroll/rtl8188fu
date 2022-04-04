@@ -58,7 +58,7 @@ static u8 _is_fw_read_cmd_down(_adapter *padapter, u8 msgbox_num)
 *| Ext msg					|
 *
 ******************************************/
-s32 FillH2CCmd8188F(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
+s32 rtl8188fu_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
 {
 	u8 h2c_box_num;
 	u32	msgbox_addr;
@@ -395,7 +395,7 @@ static void rtl8188f_set_FwRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpag
 	SET_8188F_H2CCMD_RSVDPAGE_LOC_BT_QOS_NULL_DATA(u1H2CRsvdPageParm, rsvdpageloc->LocBTQosNull);
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CRsvdPageParm:", u1H2CRsvdPageParm, H2C_RSVDPAGE_LOC_LEN);
-	FillH2CCmd8188F(padapter, H2C_8188F_RSVD_PAGE, H2C_RSVDPAGE_LOC_LEN, u1H2CRsvdPageParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_RSVD_PAGE, H2C_RSVDPAGE_LOC_LEN, u1H2CRsvdPageParm);
 }
 
 static void rtl8188f_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
@@ -423,7 +423,7 @@ static void rtl8188f_set_FwKeepAlive_cmd(PADAPTER padapter, u8 benable, u8 pkt_t
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CKeepAliveParm:", u1H2CKeepAliveParm, H2C_KEEP_ALIVE_CTRL_LEN);
 
-	FillH2CCmd8188F(padapter, H2C_8188F_KEEP_ALIVE, H2C_KEEP_ALIVE_CTRL_LEN, u1H2CKeepAliveParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_KEEP_ALIVE, H2C_KEEP_ALIVE_CTRL_LEN, u1H2CKeepAliveParm);
 }
 
 static void rtl8188f_set_FwDisconDecision_cmd(PADAPTER padapter, u8 benable)
@@ -439,7 +439,7 @@ static void rtl8188f_set_FwDisconDecision_cmd(PADAPTER padapter, u8 benable)
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CDisconDecisionParm:", u1H2CDisconDecisionParm, H2C_DISCON_DECISION_LEN);
 
-	FillH2CCmd8188F(padapter, H2C_8188F_DISCON_DECISION, H2C_DISCON_DECISION_LEN, u1H2CDisconDecisionParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_DISCON_DECISION, H2C_DISCON_DECISION_LEN, u1H2CDisconDecisionParm);
 }
 
 void rtl8188f_set_FwMacIdConfig_cmd(_adapter *padapter, u8 mac_id, u8 raid, u8 bw, u8 sgi, u32 mask)
@@ -475,7 +475,7 @@ void rtl8188f_set_FwMacIdConfig_cmd(_adapter *padapter, u8 mac_id, u8 raid, u8 b
 	SET_8188F_H2CCMD_MACID_CFG_RATE_MASK3(u1H2CMacIdConfigParm, (u8)((mask & 0xff000000) >> 24));
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CMacIdConfigParm:", u1H2CMacIdConfigParm, H2C_MACID_CFG_LEN);
-	FillH2CCmd8188F(padapter, H2C_8188F_MACID_CFG, H2C_MACID_CFG_LEN, u1H2CMacIdConfigParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_MACID_CFG, H2C_MACID_CFG_LEN, u1H2CMacIdConfigParm);
 
 	_func_exit_;
 }
@@ -496,7 +496,7 @@ void rtl8188f_set_FwRssiSetting_cmd(_adapter *padapter, u8 *param)
 	SET_8188F_H2CCMD_RSSI_SETTING_ULDL_STATE(u1H2CRssiSettingParm, uldl_state);
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_notice_, "u1H2CRssiSettingParm:", u1H2CRssiSettingParm, H2C_RSSI_SETTING_LEN);
-	FillH2CCmd8188F(padapter, H2C_8188F_RSSI_SETTING, H2C_RSSI_SETTING_LEN, u1H2CRssiSettingParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_RSSI_SETTING, H2C_RSSI_SETTING_LEN, u1H2CRssiSettingParm);
 
 	_func_exit_;
 }
@@ -512,7 +512,7 @@ void rtl8188f_set_FwAPReqRPT_cmd(PADAPTER padapter, u32 need_ack)
 	SET_8188F_H2CCMD_APREQRPT_PARM_MACID2(u1H2CApReqRptParm, macid2);
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CApReqRptParm:", u1H2CApReqRptParm, H2C_AP_REQ_TXRPT_LEN);
-	FillH2CCmd8188F(padapter, H2C_8188F_AP_REQ_TXRPT, H2C_AP_REQ_TXRPT_LEN, u1H2CApReqRptParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_AP_REQ_TXRPT, H2C_AP_REQ_TXRPT_LEN, u1H2CApReqRptParm);
 }
 
 void rtl8188f_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
@@ -639,7 +639,7 @@ void rtl8188f_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CPwrModeParm:", u1H2CPwrModeParm, H2C_PWRMODE_LEN);
 
-	FillH2CCmd8188F(padapter, H2C_8188F_SET_PWR_MODE, H2C_PWRMODE_LEN, u1H2CPwrModeParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_SET_PWR_MODE, H2C_PWRMODE_LEN, u1H2CPwrModeParm);
 	_func_exit_;
 }
 
@@ -657,7 +657,7 @@ void rtl8188f_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable)
 	SET_8188F_H2CCMD_PWRMODE_PARM_BCN_EARLY_C2H_RPT(u1H2CSetPwrMode, enable);
 	SET_8188F_H2CCMD_PWRMODE_PARM_PWR_STATE(u1H2CSetPwrMode, 0x0C);
 	SET_8188F_H2CCMD_PWRMODE_PARM_BYTE5(u1H2CSetPwrMode, 0);
-	FillH2CCmd8188F(padapter, H2C_8188F_SET_PWR_MODE, sizeof(u1H2CSetPwrMode), u1H2CSetPwrMode);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_SET_PWR_MODE, sizeof(u1H2CSetPwrMode), u1H2CSetPwrMode);
 }
 #endif
 #endif
@@ -682,7 +682,7 @@ void rtl8188f_set_FwPsTuneParam_cmd(PADAPTER padapter)
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CPsTuneParm:", u1H2CPsTuneParm, H2C_PSTUNEPARAM_LEN);
 
-	FillH2CCmd8188F(padapter, H2C_8188F_PS_TUNING_PARA, H2C_PSTUNEPARAM_LEN, u1H2CPsTuneParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_PS_TUNING_PARA, H2C_PSTUNEPARAM_LEN, u1H2CPsTuneParm);
 	_func_exit_;
 }
 
@@ -703,7 +703,7 @@ void rtl8188f_set_FwBtMpOper_cmd(PADAPTER padapter, u8 idx, u8 ver, u8 reqnum, u
 
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CBtMpOperParm:", u1H2CBtMpOperParm, H2C_BTMP_OPER_LEN);
 
-	FillH2CCmd8188F(padapter, H2C_8188F_BT_MP_OPER, H2C_BTMP_OPER_LEN, u1H2CBtMpOperParm);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_BT_MP_OPER, H2C_BTMP_OPER_LEN, u1H2CBtMpOperParm);
 	_func_exit_;
 }
 
@@ -715,7 +715,7 @@ void rtl8188f_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param)
 
 	cmd_param = cmd_param;
 
-	FillH2CCmd8188F(padapter, H2C_8188F_FWLPS_IN_IPS_, 1, &cmd_param);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_FWLPS_IN_IPS_, 1, &cmd_param);
 
 }
 
@@ -902,7 +902,7 @@ u8 rtl8188f_reset_tsf(_adapter *padapter, u8 reset_port)
 		buf[0] = 0x0;
 		buf[1] = 0x1;
 	}
-	FillH2CCmd8188F(padapter, H2C_8188F_RESET_TSF, 2, buf);
+	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_RESET_TSF, 2, buf);
 	_func_exit_;
 
 	return res;

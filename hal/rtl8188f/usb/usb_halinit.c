@@ -1764,7 +1764,7 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 	pHalFunc->c2h_handler = c2h_handler_8188f;
 	pHalFunc->c2h_id_filter_ccx = c2h_id_filter_ccx_8188f;
 
-	pHalFunc->fill_h2c_cmd = &FillH2CCmd8188F;
+	pHalFunc->fill_h2c_cmd = &rtl8188fu_fill_h2c_cmd;
 	pHalFunc->fill_fake_txdesc = &rtl8188f_fill_fake_txdesc;
 	pHalFunc->fw_dl = &rtl8188f_FirmwareDownload;
 	pHalFunc->hal_get_tx_buff_rsvd_page_num = &GetTxBufferRsvdPageNum8188F;
