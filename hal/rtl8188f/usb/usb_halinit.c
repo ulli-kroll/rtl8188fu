@@ -733,9 +733,6 @@ _initUsbAggregationSetting(
 
 	/* Rx aggregation setting */
 	usb_AggSettingRxUpdate(Adapter);
-
-	/* 201/12/10 MH Add for USB agg mode dynamic switch. */
-	pHalData->UsbRxHighSpeedMode = _FALSE;
 }
 
 static VOID
