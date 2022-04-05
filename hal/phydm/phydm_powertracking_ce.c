@@ -193,7 +193,6 @@ odm_TXPowerTrackingThermalMeterInit(
 	u1Byte defaultSwingIndex = getSwingIndex(pDM_Odm);
 	u1Byte 			p = 0;
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 
@@ -207,7 +206,6 @@ odm_TXPowerTrackingThermalMeterInit(
 
 	MSG_8192C("pDM_Odm TxPowerTrackControl = %d\n", pRFCalibrateInfo->TxPowerTrackControl);
 	
-#endif
 
 	//pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = TRUE;
 	pRFCalibrateInfo->ThermalValue = pHalData->EEPROMThermalMeter;
@@ -242,16 +240,8 @@ ODM_TXPowerTrackingCheck(
 	at the same time. In the stage2/3, we need to prive universal interface and merge all
 	HW dynamic mechanism. */
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	switch	(pDM_Odm->SupportPlatform)
-	{
-		case	ODM_CE:
-			odm_TXPowerTrackingCheckCE(pDM_Odm);
-			break;
 
-		default:
-			break;	
-	}
-
+	odm_TXPowerTrackingCheckCE(pDM_Odm);
 }
 
 VOID
@@ -260,7 +250,6 @@ odm_TXPowerTrackingCheckCE(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PADAPTER	Adapter = pDM_Odm->Adapter;
 
 	if (!(pDM_Odm->SupportAbility & ODM_RF_TX_PWR_TRACK))
@@ -288,7 +277,6 @@ odm_TXPowerTrackingCheckCE(
 		pDM_Odm->RFCalibrateInfo.TM_Trigger = 0;
 	}
 	
-#endif	
 }
 
 VOID

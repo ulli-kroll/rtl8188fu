@@ -41,7 +41,7 @@ CheckPositive(
 	u4Byte	cond1   = Condition1, cond2 = Condition2, cond3 = Condition3, cond4 = Condition4;
 	u4Byte    driver1 = pDM_Odm->CutVersion       << 24 | 
 				(pDM_Odm->SupportInterface & 0xF0) << 16 | 
-				pDM_Odm->SupportPlatform  << 16 | 
+				0x04  << 16 | 
 				pDM_Odm->PackageType      << 12 | 
 				(pDM_Odm->SupportInterface & 0x0F) << 8  |
 				_board_type;
@@ -64,7 +64,7 @@ u4Byte    driver3 = 0;
 	("===> CheckPositive (driver1, driver2, driver3, driver4) = (0x%X 0x%X 0x%X 0x%X)\n", driver1, driver2, driver3, driver4));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_TRACE, 
-	("	(Platform, Interface) = (0x%X, 0x%X)\n", pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface));
+	("	(Interface) = (0x%X)\n", pDM_Odm->SupportInterface));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_TRACE, 
 	("	(Board, Package) = (0x%X, 0x%X)\n", pDM_Odm->board_type, pDM_Odm->PackageType));
 

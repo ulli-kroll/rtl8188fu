@@ -34,7 +34,6 @@ ODM_GetAutoChannelSelectResult(
 	PDM_ODM_T				pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS					pACS = &pDM_Odm->DM_ACS;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if(Band == ODM_BAND_2_4G)
 	{
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ACS, ODM_DBG_LOUD, ("[ACS] ODM_GetAutoChannelSelectResult(): CleanChannel_2G(%d)\n", pACS->CleanChannel_2G));
@@ -45,10 +44,6 @@ ODM_GetAutoChannelSelectResult(
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_ACS, ODM_DBG_LOUD, ("[ACS] ODM_GetAutoChannelSelectResult(): CleanChannel_5G(%d)\n", pACS->CleanChannel_5G));
 		return (u1Byte)pACS->CleanChannel_5G;	
 	}
-#else
-	return (u1Byte)pACS->CleanChannel_2G;
-#endif
-
 }
 
 VOID
@@ -57,7 +52,6 @@ odm_AutoChannelSelectSetting(
 	IN		BOOLEAN			IsEnable
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u2Byte						period = 0x2710;// 40ms in default
 	u2Byte						NHMType = 0x7;
@@ -76,7 +70,6 @@ odm_AutoChannelSelectSetting(
 		ODM_Write2Byte(pDM_Odm, ODM_REG_NHM_TIMER_11N+2, period);	//0x894[31:16]=0x2710	Time duration for NHM unit: 4us, 0x2710=40ms
 		//ODM_SetBBReg(pDM_Odm, ODM_REG_NHM_TH9_TH10_11N, BIT10|BIT9|BIT8, NHMType);	//0x890[9:8]=3			enable CCX		
 	}
-#endif
 }
 
 VOID
@@ -84,7 +77,6 @@ odm_AutoChannelSelectInit(
 	IN		PVOID			pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 	u1Byte						i;
@@ -106,7 +98,6 @@ odm_AutoChannelSelectInit(
 		pACS->Channel_Info_2G[1][i] = 0;
 	}
 
-#endif
 }
 
 VOID
@@ -114,7 +105,6 @@ odm_AutoChannelSelectReset(
 	IN		PVOID			pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 
@@ -128,7 +118,6 @@ odm_AutoChannelSelectReset(
 
 	odm_AutoChannelSelectSetting(pDM_Odm,TRUE);// for 20ms measurement
 	Phydm_NHMCounterStatisticsReset(pDM_Odm);
-#endif
 }
 
 VOID
@@ -137,7 +126,6 @@ odm_AutoChannelSelect(
 	IN		u1Byte			Channel
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PACS						pACS = &pDM_Odm->DM_ACS;
 	u1Byte						ChannelIDX = 0, SearchIDX = 0;
@@ -195,7 +183,6 @@ odm_AutoChannelSelect(
 		// Need to do
 		pACS->CleanChannel_5G = Channel;
 	}
-#endif
 }
 
 VOID

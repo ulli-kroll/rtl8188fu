@@ -533,9 +533,7 @@ phydm_c2h_ra_report_handler(
 	u1Byte	pre_vht_en=(pre_rate_idx >= ODM_RATEVHTSS1MCS0)? 1 :0;	
 	u1Byte	pre_b_sgi = (pre_rate & 0x80)>>7;
 	
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_UpdateInitRate(pDM_Odm, rate_idx);
-	#endif
 
 	/*ODM_RT_TRACE(pDM_Odm, ODM_COMP_RATE_ADAPTIVE, ODM_DBG_LOUD,("RA: rate_idx=0x%x , sgi = %d\n", rate_idx, b_sgi));*/
 	/*if (pDM_Odm->SupportICType & (ODM_RTL8703B))*/
@@ -594,12 +592,10 @@ odm_RSSIMonitorInit(
 	IN		PVOID		pDM_VOID
 )
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pRA_T		pRA_Table = &pDM_Odm->DM_RA_Table;
 	pRA_Table->firstconnect = FALSE;
 
-#endif
 }
 
 VOID
@@ -632,12 +628,7 @@ odm_RSSIMonitorCheck(
 	// at the same time. In the stage2/3, we need to prive universal interface and merge all
 	// HW dynamic mechanism.
 	//
-	switch	(pDM_Odm->SupportPlatform) {
-	case	ODM_CE:
-		odm_RSSIMonitorCheckCE(pDM_Odm);
-		break;
-
-	}
+	odm_RSSIMonitorCheckCE(pDM_Odm);
 
 }	// odm_RSSIMonitorCheck
 
@@ -648,7 +639,6 @@ odm_RSSIMonitorCheckMP(
 {
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*H2C_RSSI_REPORT*/
 s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
 {
@@ -775,14 +765,12 @@ void phydm_ra_rssi_rpt_wk(PVOID pContext)
 	
 	rtw_run_in_thread_cmd(pDM_Odm->Adapter, phydm_ra_rssi_rpt_wk_hdl, pDM_Odm);
 }
-#endif
 
 VOID
 odm_RSSIMonitorCheckCE(
 	IN		PVOID		pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);	
@@ -829,7 +817,6 @@ odm_RSSIMonitorCheckCE(
 
 	pDM_Odm->RSSI_Min = pHalData->MinUndecoratedPWDBForDM;
 	//ODM_CmnInfoUpdate(&pHalData->odmpriv ,ODM_CMNINFO_RSSI_MIN, pdmpriv->MinUndecoratedPWDBForDM);
-#endif//if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 }
 
 
@@ -850,24 +837,16 @@ odm_RateAdaptiveMaskInit(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PODM_RATE_ADAPTIVE	pOdmRA = &pDM_Odm->RateAdaptive;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	pOdmRA->Type = DM_Type_ByDriver;
 	if (pOdmRA->Type == DM_Type_ByDriver)
 		pDM_Odm->bUseRAMask = _TRUE;
 	else
 		pDM_Odm->bUseRAMask = _FALSE;
-#endif
 
 	pOdmRA->RATRState = DM_RATR_STA_INIT;
 
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	pOdmRA->LdpcThres = 35;
 	pOdmRA->bUseLdpc = FALSE;
-
-#else
-	pOdmRA->UltraLowRSSIThresh = 9;
-
-#endif
 
 	pOdmRA->HighRSSIThresh = 50;
 	pOdmRA->LowRSSIThresh = 20;
@@ -904,13 +883,8 @@ odm_RefreshRateAdaptiveMask(
 	// at the same time. In the stage2/3, we need to prive universal interface and merge all
 	// HW dynamic mechanism.
 	//
-	switch	(pDM_Odm->SupportPlatform) {
-	case	ODM_CE:
-		odm_RefreshRateAdaptiveMaskCE(pDM_Odm);
-		break;
-
-	}
-
+	odm_RefreshRateAdaptiveMaskCE(pDM_Odm);
+		
 }
 
 VOID
@@ -926,7 +900,6 @@ odm_RefreshRateAdaptiveMaskCE(
 	IN	PVOID	pDM_VOID
 )
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u1Byte	i;
 	PADAPTER	pAdapter	 =  pDM_Odm->Adapter;
@@ -963,7 +936,6 @@ odm_RefreshRateAdaptiveMaskCE(
 		}
 	}
 
-#endif
 }
 
 VOID
@@ -1059,7 +1031,6 @@ phydm_ra_info_init(
 }
 
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 u1Byte
 odm_Find_RTS_Rate(
 	IN		PVOID			pDM_VOID,
@@ -1269,7 +1240,6 @@ ODM_UpdateInitRate(
 
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 static void
 FindMinimumRSSI(
@@ -1547,8 +1517,4 @@ ODM_Get_Rate_Bitmap(
 	return (ra_mask & rate_bitmap);
 
 }
-
-#endif //#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-
-#endif /*#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))*/
 

@@ -30,13 +30,11 @@ ODM_EdcaTurboInit(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
-#if(DM_ODM_SUPPORT_TYPE==ODM_CE)
 	PADAPTER	Adapter = pDM_Odm->Adapter;	
 	pDM_Odm->DM_EDCA_Table.bCurrentTurboEDCA = FALSE;	
 	pDM_Odm->DM_EDCA_Table.bIsCurRDLState = FALSE;
 	Adapter->recvpriv.bIsAnyNonBEPkts =FALSE;
 
-#endif	
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_EDCA_TURBO,ODM_DBG_LOUD,("Orginial VO PARAM: 0x%x\n",ODM_Read4Byte(pDM_Odm,ODM_EDCA_VO_PARAM)));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_EDCA_TURBO,ODM_DBG_LOUD,("Orginial VI PARAM: 0x%x\n",ODM_Read4Byte(pDM_Odm,ODM_EDCA_VI_PARAM)));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_EDCA_TURBO,ODM_DBG_LOUD,("Orginial BE PARAM: 0x%x\n",ODM_Read4Byte(pDM_Odm,ODM_EDCA_BE_PARAM)));
@@ -66,20 +64,11 @@ odm_EdcaTurboCheck(
 	if(!(pDM_Odm->SupportAbility& ODM_MAC_EDCA_TURBO ))
 		return;
 
-	switch	(pDM_Odm->SupportPlatform)
-	{
-		case	ODM_CE:
-#if(DM_ODM_SUPPORT_TYPE==ODM_CE)
-			odm_EdcaTurboCheckCE(pDM_Odm);
-#endif
-			break;
-	}
+	odm_EdcaTurboCheckCE(pDM_Odm);
+
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_EDCA_TURBO,ODM_DBG_LOUD,("<========================odm_EdcaTurboCheck\n"));
 
 }	// odm_CheckEdcaTurbo
-
-#if(DM_ODM_SUPPORT_TYPE==ODM_CE)
-
 
 VOID
 odm_EdcaTurboCheckCE(
@@ -212,6 +201,5 @@ odm_EdcaTurboCheckCE(
 
 }
 
-#endif
 
 

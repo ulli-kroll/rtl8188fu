@@ -22,15 +22,12 @@
 
 
 /*Define Different SW team support*/
-#define	ODM_CE			0x04	/*BIT2*/
 
 /*Deifne HW endian support*/
 #define	ODM_ENDIAN_BIG	0
 #define	ODM_ENDIAN_LITTLE	1
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #define GET_PDM_ODM(__pAdapter)	((PDM_ODM_T)(&((GET_HAL_DATA(__pAdapter))->odmpriv)))
-#endif
 
 typedef enum _HAL_STATUS{
 	HAL_STATUS_SUCCESS,
@@ -98,7 +95,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#include <drv_types.h>
 #if 0
 	typedef u8					u1Byte, *pu1Byte;
@@ -162,7 +158,6 @@ typedef enum _RT_SPINLOCK_TYPE{
 	/*#define	BT_30_SUPPORT			0*/
 	#define	RTL8881A_SUPPORT	0
 
-#endif
 
 #define READ_NEXT_PAIR(v1, v2, i) do { if (i+2 >= ArrayLen) break; i += 2; v1 = Array[i]; v2 = Array[i+1]; } while(0)
 #define COND_ELSE  2

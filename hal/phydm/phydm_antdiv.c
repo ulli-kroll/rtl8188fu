@@ -1201,8 +1201,6 @@ odm_S0S1_SwAntDiv(
 }
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-
 VOID
 ODM_SW_AntDiv_WorkitemCallback(
 	IN PVOID	pContext
@@ -1232,8 +1230,6 @@ ODM_SW_AntDiv_Callback(void *FunctionContext)
 	#endif
 }
 
-
-#endif
 
 VOID
 odm_S0S1_SwAntDivByCtrlFrame(
@@ -1379,30 +1375,17 @@ odm_SetNextMACAddrTarget(
 			if (IS_STA_VALID(pEntry)) {
 				
 				/*Match MAC ADDR*/
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				value32 = (pEntry->hwaddr[5]<<8)|pEntry->hwaddr[4];
-				#else
-				value32 = (pEntry->MacAddr[5]<<8)|pEntry->MacAddr[4];
-				#endif
 				
 				ODM_SetMACReg(pDM_Odm, 0x7b4, 0xFFFF, value32);/*0x7b4~0x7b5*/
 				
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				value32 = (pEntry->hwaddr[3]<<24)|(pEntry->hwaddr[2]<<16) |(pEntry->hwaddr[1]<<8) |pEntry->hwaddr[0];
-				#else
-				value32 = (pEntry->MacAddr[3]<<24)|(pEntry->MacAddr[2]<<16) |(pEntry->MacAddr[1]<<8) |pEntry->MacAddr[0];
-				#endif
 				ODM_SetMACReg(pDM_Odm, 0x7b0, bMaskDWord, value32);/*0x7b0~0x7b3*/
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("pDM_FatTable->TrainIdx=%d\n", pDM_FatTable->TrainIdx));
 				
-				#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Training MAC Addr = %x:%x:%x:%x:%x:%x\n",
 					pEntry->hwaddr[5], pEntry->hwaddr[4], pEntry->hwaddr[3], pEntry->hwaddr[2], pEntry->hwaddr[1], pEntry->hwaddr[0]));
-				#else
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_ANT_DIV, ODM_DBG_LOUD, ("Training MAC Addr = %x:%x:%x:%x:%x:%x\n",
-					pEntry->MacAddr[5], pEntry->MacAddr[4], pEntry->MacAddr[3], pEntry->MacAddr[2], pEntry->MacAddr[1], pEntry->MacAddr[0]));
-				#endif
 
 				break;
 			}
@@ -1674,13 +1657,11 @@ odm_FastAntTrainingCallback(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PADAPTER	padapter = pDM_Odm->Adapter;
 	if(padapter->net_closed == _TRUE)
 	    return;
 	//if(*pDM_Odm->pbNet_closed == TRUE)
 	   // return;
-#endif
 
 #if USE_WORKITEM
 	ODM_ScheduleWorkItem(&pDM_Odm->FastAntTrainingWorkitem);

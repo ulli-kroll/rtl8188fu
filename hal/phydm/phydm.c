@@ -111,16 +111,9 @@ ODM_InitMpDriverStatus(
 	IN		PDM_ODM_T		pDM_Odm
 )
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
-#else
-
-	// MP mode is always false at AP side
-	pDM_Odm->mp_mode = FALSE;
-
-#endif
 }
 
 VOID
@@ -128,15 +121,9 @@ ODM_UpdateMpDriverStatus(
 	IN		PDM_ODM_T		pDM_Odm
 )
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER	Adapter =  pDM_Odm->Adapter;
 
 
-#else
-
-	// Do nothing.
-
-#endif
 }
 
 VOID
@@ -174,9 +161,6 @@ odm_CommonInfoSelfInit(
 {
 	phydm_Init_cck_setting(pDM_Odm);
 	pDM_Odm->RFPathRxEnable = (u1Byte) ODM_GetBBReg(pDM_Odm, ODM_REG(BB_RX_PATH,pDM_Odm), ODM_BIT(BB_RX_PATH,pDM_Odm));
-#if (DM_ODM_SUPPORT_TYPE != ODM_CE)	
-	pDM_Odm->pbNet_closed = &pDM_Odm->BOOLEAN_temp;
-#endif
 
 	PHYDM_InitDebugSetting(pDM_Odm);
 	ODM_InitMpDriverStatus(pDM_Odm);
@@ -248,9 +232,7 @@ odm_CommonInfoSelfReset(
 	IN		PDM_ODM_T		pDM_Odm
 	)
 {
-#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	pDM_Odm->PhyDbgInfo.NumQryBeaconPkt = 0;
-#endif
 }
 
 PVOID
@@ -317,9 +299,6 @@ ODM_DMInit(
 		odm_DynamicBBPowerSavingInit(pDM_Odm);
 		odm_DynamicTxPowerInit(pDM_Odm);
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-	
-#endif
 
 	}
 
@@ -441,9 +420,7 @@ _rtl8188fu_dm_watchdog(
 			pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 			Phydm_Adaptivity(pDM_Odm, pDM_DigTable->CurIGValue);
 		}
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		odm_AntennaDiversity(pDM_Odm); /*enable AntDiv in PS mode, request from SD4 Jeff*/
-		#endif
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("DMWatchdog in power saving mode\n"));
 		return;
 	}
@@ -472,14 +449,9 @@ _rtl8188fu_dm_watchdog(
 	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 	{
 	        
-#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
-
-#endif
 	}
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	odm_dtc(pDM_Odm);
-#endif
 
 	odm_CommonInfoSelfReset(pDM_Odm);
 	
@@ -510,10 +482,6 @@ ODM_CmnInfoInit(
 
 		case	ODM_CMNINFO_RF_TYPE:
 			pDM_Odm->RFType = (u1Byte)Value;
-			break;
-
-		case	ODM_CMNINFO_PLATFORM:
-			pDM_Odm->SupportPlatform = (u1Byte)Value;
 			break;
 
 		case	ODM_CMNINFO_INTERFACE:
@@ -1028,7 +996,6 @@ ODM_ReleaseAllTimers(
 // need to ODM CE Platform
 //move to here for ANT detection mechanism using
 
-#if ((DM_ODM_SUPPORT_TYPE == ODM_CE))
 u4Byte
 GetPSDData(
 	IN PDM_ODM_T	pDM_Odm,
@@ -1065,7 +1032,6 @@ GetPSDData(
 	return psd_report;
 	
 }
-#endif
 
 u4Byte 
 odm_ConvertTo_dB(
@@ -1133,7 +1099,6 @@ ODM_AsocEntry_Init(
 {
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /* Justin: According to the current RRSI to adjust Response Frame TX power, 2012/11/05 */
 void odm_dtc(PDM_ODM_T pDM_Odm)
 {
@@ -1218,14 +1183,12 @@ void odm_dtc(PDM_ODM_T pDM_Odm)
 #endif /* CONFIG_RESP_TXAGC_ADJUST */
 }
 
-#endif /* #if (DM_ODM_SUPPORT_TYPE == ODM_CE) */
 
 VOID
 odm_UpdatePowerTrainingState(
 	IN	PDM_ODM_T	pDM_Odm
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PHYDM_FALSEALMCNT);
 	pDIG_T						pDM_DigTable = &pDM_Odm->DM_DigTable;
 	u4Byte						score = 0;
@@ -1330,7 +1293,6 @@ odm_UpdatePowerTrainingState(
 
 	pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM = 0;
 	pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK = 0;
-#endif
 }
 
 

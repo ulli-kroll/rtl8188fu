@@ -106,9 +106,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 {
 
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
-	#endif
 	PODM_RF_CAL_T	pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	u1Byte			ThermalValue = 0, delta, delta_LCK, delta_IQK, p = 0, i = 0;
@@ -436,16 +434,12 @@ void phydm_rf_init(IN	PVOID		pDM_VOID)
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	odm_TXPowerTrackingInit(pDM_Odm);
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_ClearTxPowerTrackingState(pDM_Odm);	
-#endif
 
 }
 
 void phydm_rf_watchdog(IN	PVOID		pDM_VOID)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	ODM_TXPowerTrackingCheck(pDM_Odm);
-#endif
 }

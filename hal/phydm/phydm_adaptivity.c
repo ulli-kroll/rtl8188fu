@@ -349,36 +349,26 @@ Phydm_AdaptivityInit(
 	PADAPTIVITY_STATISTICS	Adaptivity = (PADAPTIVITY_STATISTICS)PhyDM_Get_Structure(pDM_Odm, PHYDM_ADAPTIVITY);
 	s1Byte	IGItarget = 0x32;
 	/*pDIG_T pDM_DigTable = &pDM_Odm->DM_DigTable;*/
-#if(DM_ODM_SUPPORT_TYPE == ODM_CE)
 	pDM_Odm->Carrier_Sense_enable = (pDM_Odm->Adapter->registrypriv.adaptivity_mode != 0) ? TRUE : FALSE;
 	pDM_Odm->DCbackoff = pDM_Odm->Adapter->registrypriv.adaptivity_dc_backoff;
 	Adaptivity->DynamicLinkAdaptivity = (pDM_Odm->Adapter->registrypriv.adaptivity_dml != 0) ? TRUE : FALSE;
-#endif
 
-
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 
 	if (pDM_Odm->Carrier_Sense_enable == FALSE) {
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 		if (pDM_Odm->Adapter->registrypriv.adaptivity_th_l2h_ini != 0)
 			pDM_Odm->TH_L2H_ini = pDM_Odm->Adapter->registrypriv.adaptivity_th_l2h_ini;
 		else
-#endif
 			pDM_Odm->TH_L2H_ini = 0xf5;
 	} else
 			pDM_Odm->TH_L2H_ini = 0xa;
 
-#if(DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (pDM_Odm->Adapter->registrypriv.adaptivity_th_edcca_hl_diff != 0)
 		pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->Adapter->registrypriv.adaptivity_th_edcca_hl_diff;
 	else
-#endif
 		pDM_Odm->TH_EDCCA_HL_diff = 7;
 
 	Adaptivity->TH_L2H_ini_backup = pDM_Odm->TH_L2H_ini;
 	Adaptivity->TH_EDCCA_HL_diff_backup = pDM_Odm->TH_EDCCA_HL_diff;
-
-#endif
 
 	pDM_Odm->Adaptivity_IGI_upper = 0;
 	pDM_Odm->Adaptivity_enable = FALSE;	/*use this flag to decide enable or disable*/

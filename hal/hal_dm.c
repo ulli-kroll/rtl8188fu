@@ -70,8 +70,6 @@ void Init_ODM_ComInfo(_adapter *adapter)
 
 	pDM_Odm->Adapter = adapter;
 
-	ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_PLATFORM, ODM_CE);
-
 	rtw_odm_init_ic_type(adapter);
 
 		ODM_CmnInfoInit(pDM_Odm, ODM_CMNINFO_INTERFACE, rtw_get_intf_type(adapter));

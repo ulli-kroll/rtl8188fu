@@ -44,12 +44,8 @@
 #define ODM_RF_PATH_MAX_JAGUAR 4
 
 //number of entry
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	#define	ASSOCIATE_ENTRY_NUM					MACID_NUM_SW_LIMIT  /* Max size of AsocEntry[].*/
 	#define	ODM_ASSOCIATE_ENTRY_NUM				ASSOCIATE_ENTRY_NUM
-#else
-	#define ODM_ASSOCIATE_ENTRY_NUM				((ASSOCIATE_ENTRY_NUM*3)+1)
-#endif
 
 /* -----MGN rate--------------------------------- */
 
@@ -334,7 +330,6 @@ typedef enum tag_Operation_Mode_Definition
 }ODM_OPERATION_MODE_E;
 
 // ODM_CMNINFO_WM_MODE
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 typedef enum tag_Wireless_Mode_Definition
 {
 	ODM_WM_UNKNOW	= 0x0,
@@ -346,23 +341,6 @@ typedef enum tag_Wireless_Mode_Definition
 	ODM_WM_AUTO		= BIT5,
 	ODM_WM_AC		= BIT6,
 }ODM_WIRELESS_MODE_E;
-#else
-typedef enum tag_Wireless_Mode_Definition
-{
-	ODM_WM_UNKNOWN	= 0x00,/*0x0*/
-	ODM_WM_A			= BIT0, /* 0x1*/
-	ODM_WM_B			= BIT1, /* 0x2*/
-	ODM_WM_G			= BIT2,/* 0x4*/
-	ODM_WM_AUTO		= BIT3,/* 0x8*/
-	ODM_WM_N24G		= BIT4,/* 0x10*/
-	ODM_WM_N5G		= BIT5,/* 0x20*/
-	ODM_WM_AC_5G		= BIT6,/* 0x40*/
-	ODM_WM_AC_24G	= BIT7,/* 0x80*/
-	ODM_WM_AC_ONLY	= BIT8,/* 0x100*/
-	ODM_WM_MAX		= BIT11/* 0x800*/
-
-}ODM_WIRELESS_MODE_E;
-#endif
 
 // ODM_CMNINFO_BAND
 typedef enum tag_Band_Type_Definition

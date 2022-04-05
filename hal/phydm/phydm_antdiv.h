@@ -236,7 +236,6 @@ typedef struct _FAST_ANTENNA_TRAINNING_
 	u4Byte	MainCRC32_Fail_Cnt;
 	u4Byte	AuxCRC32_Fail_Cnt;
 	#endif	
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u4Byte    CCK_CtrlFrame_Cnt_main;
 	u4Byte    CCK_CtrlFrame_Cnt_aux;
 	u4Byte    OFDM_CtrlFrame_Cnt_main;
@@ -245,7 +244,6 @@ typedef struct _FAST_ANTENNA_TRAINNING_
 	u4Byte	AuxAnt_CtrlFrame_Sum;
 	u4Byte	MainAnt_CtrlFrame_Cnt;
 	u4Byte	AuxAnt_CtrlFrame_Cnt;
-	#endif
 	BOOLEAN	fix_ant_bfee;
 	BOOLEAN	enable_ctrl_frame_antdiv;
 	BOOLEAN	use_ctrl_frame_antdiv;
@@ -324,8 +322,6 @@ phydm_update_rx_idle_antenna_8188F(
 
 #ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-
 VOID
 ODM_SW_AntDiv_WorkitemCallback(
 	IN PVOID	pContext
@@ -335,8 +331,6 @@ VOID
 ODM_SW_AntDiv_Callback(
 	void 		*FunctionContext
 	);
-
-#endif
 
 VOID
 odm_S0S1_SwAntDivByCtrlFrame(
@@ -443,15 +437,12 @@ ODM_Process_RSSIForAntDiv(
 
 
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 VOID
 ODM_SetTxAntByTxInfo(
 	IN		PVOID			pDM_VOID,
 	IN		pu1Byte			pDesc,
 	IN		u1Byte			macId	
 );
-
-#endif
 
 
 VOID

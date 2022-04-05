@@ -39,11 +39,9 @@ odm_DynamicTxPowerSavePowerIndex(
 	)
 {	
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u1Byte		index;
 	u4Byte		Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
 	
-#endif
 }
 
 VOID
@@ -52,12 +50,10 @@ odm_DynamicTxPowerRestorePowerIndex(
 	)
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u1Byte			index;
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	u4Byte			Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
-#endif
 }
 
 VOID
@@ -95,14 +91,8 @@ odm_DynamicTxPower(
 	// at the same time. In the stage2/3, we need to prive universal interface and merge all
 	// HW dynamic mechanism.
 	//
-	switch	(pDM_Odm->SupportPlatform)
-	{
-		case	ODM_CE:
-			odm_DynamicTxPowerNIC(pDM_Odm);
-			break;	
-	}
+	odm_DynamicTxPowerNIC(pDM_Odm);
 
-	
 }
 
 
@@ -116,9 +106,6 @@ odm_DynamicTxPowerNIC(
 	if (!(pDM_Odm->SupportAbility & ODM_BB_DYNAMIC_TXPWR))
 		return;
 	
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-
-#endif	
 }
 
 VOID 

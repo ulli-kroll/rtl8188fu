@@ -55,10 +55,8 @@
 #define	RA_MASK_VHT1SS	0x3ff000
 #define	RA_MASK_VHT2SS	0xffc00000
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*#define	EXT_RA_INFO_SUPPORT_IC (ODM_RTL8192E|ODM_RTL8812|ODM_RTL8821|ODM_RTL8723B|ODM_RTL8814A|ODM_RTL8822B|ODM_RTL8703B) */
 #define		RA_FIRST_MACID 	0
-#endif
 
 
 #define AP_InitRateAdaptiveState	ODM_RateAdaptiveStateApInit
@@ -181,17 +179,10 @@ typedef struct _ODM_RATE_ADAPTIVE {
 	u1Byte				LowRSSIThresh;		// if RSSI <= LowRSSIThresh	=> RATRState is DM_RATR_STA_LOW
 	u1Byte				RATRState;			// Current RSSI level, DM_RATR_STA_HIGH/DM_RATR_STA_MIDDLE/DM_RATR_STA_LOW
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u1Byte				LdpcThres;			// if RSSI > LdpcThres => switch from LPDC to BCC
 	BOOLEAN				bLowerRtsRate;
-#endif
 
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	BOOLEAN				bUseLdpc;
-#else
-	u1Byte				UltraLowRSSIThresh;
-	u4Byte				LastRATR;			// RATR Register Content
-#endif
 
 } ODM_RATE_ADAPTIVE, *PODM_RATE_ADAPTIVE;
 
@@ -320,8 +311,6 @@ ODM_RAPostActionOnAssoc(
 	IN		PVOID	pDM_Odm
 );
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-
 u1Byte
 odm_Find_RTS_Rate(
 	IN	PVOID		pDM_VOID,
@@ -349,8 +338,6 @@ ODM_UpdateInitRate(
 	IN	u1Byte		Rate
 );
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-
 static void
 FindMinimumRSSI(
 	IN	PADAPTER	pAdapter
@@ -373,10 +360,6 @@ ODM_Get_Rate_Bitmap(
 	IN	u1Byte 		rssi_level
 );
 void phydm_ra_rssi_rpt_wk(PVOID pContext);
-
-#endif/*#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)*/
-
-#endif/*#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))*/
 
 #endif /*#ifndef	__ODMRAINFO_H__*/
 

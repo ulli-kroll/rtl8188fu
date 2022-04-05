@@ -245,7 +245,6 @@ rtl8188fu_dm_write_dig(
 			Phydm_Adaptivity(pDM_Odm, CurrentIGI);
 
 		//1 Set IGI value
-		if(pDM_Odm->SupportPlatform & (ODM_CE))
 		{ 
 			ODM_SetBBReg(pDM_Odm, ODM_REG(IGI_A,pDM_Odm), ODM_BIT(IGI,pDM_Odm), CurrentIGI);
 
@@ -415,7 +414,6 @@ odm_DigAbort(
 		return	TRUE;
 	}
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#ifdef CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV	
 	if((pDM_Odm->bLinked) && (pDM_Odm->Adapter->registrypriv.force_igi !=0))
 	{	
@@ -424,13 +422,6 @@ odm_DigAbort(
 		return	TRUE;
 	}
 	#endif
-#else
-	if (!(priv->up_time > 5))
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: Not In DIG Operation Period \n"));
-		return	TRUE;
-	}
-#endif
 
 	return	FALSE;
 }
@@ -548,7 +539,6 @@ odm_DIG(
 		else
 			pDM_DigTable->rx_gain_range_max = pDM_Odm->RSSI_Min + offset;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		//2 Modify DIG lower bound
 		//if(pDM_Odm->bOneEntryOnly)
 		{
@@ -559,30 +549,6 @@ odm_DIG(
 			else
 				DIG_Dynamic_MIN = pDM_Odm->RSSI_Min;
 		}
-#else
-		{
-			//4 For AP
-#ifdef __ECOS
-			HAL_REORDER_BARRIER();
-#else
-			rmb();
-#endif
-			if (bDFSBand)
-			{
-				DIG_Dynamic_MIN = dm_dig_min;
-				ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): DFS band: Force lower bound to 0x%x after link !!!!!!\n", dm_dig_min));
-			}
-			else 
-			{
-				if(pDM_Odm->RSSI_Min < dm_dig_min)
-					DIG_Dynamic_MIN = dm_dig_min;
-				else if (pDM_Odm->RSSI_Min > DIG_MaxOfMin)
-					DIG_Dynamic_MIN = DIG_MaxOfMin;
-				else
-					DIG_Dynamic_MIN = pDM_Odm->RSSI_Min;
-			}
-		}
-#endif
 	}
 	else
 	{
@@ -627,7 +593,6 @@ odm_DIG(
 	}
 
 	//2 Abnormal # beacon case
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if(pDM_Odm->bLinked && !FirstConnect)
 	{
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("Beacon Num (%d)\n", pDM_Odm->PhyDbgInfo.NumQryBeaconPkt));
@@ -638,7 +603,6 @@ odm_DIG(
 				pDM_Odm->PhyDbgInfo.NumQryBeaconPkt, pDM_DigTable->rx_gain_range_min));
 		}
 	}
-#endif
 
 	//2 Abnormal lower bound case
 	if(pDM_DigTable->rx_gain_range_min > pDM_DigTable->rx_gain_range_max)
@@ -674,8 +638,6 @@ odm_DIG(
 						CurrentIGI = DIG_MaxOfMin;
 				}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-#endif
 			}
 
 			ODM_RT_TRACE(pDM_Odm,	ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): First connect case: IGI does on-shot to 0x%x\n", CurrentIGI));
@@ -691,14 +653,6 @@ odm_DIG(
 				CurrentIGI = CurrentIGI - 2;
 
 			//4 Abnormal # beacon case
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-			if((pDM_Odm->PhyDbgInfo.NumQryBeaconPkt < 5) && (pFalseAlmCnt->cnt_all < DM_DIG_FA_TH1) && (pDM_Odm->bsta_state))
-			{						
-				CurrentIGI = pDM_DigTable->rx_gain_range_min;
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Abnormal #beacon (%d) case: IGI does one-shot to 0x%x\n", 
-					pDM_Odm->PhyDbgInfo.NumQryBeaconPkt, CurrentIGI));
-			}
-#endif
 		}
 	}	
 	else
@@ -748,7 +702,6 @@ odm_DIGbyRSSI_LPS(
 	IN		PVOID		pDM_VOID
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PFALSE_ALARM_STATISTICS		pFalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm, PHYDM_FALSEALMCNT);
 
@@ -791,7 +744,6 @@ odm_DIGbyRSSI_LPS(
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIGbyRSSI_LPS(): CurrentIGI = 0x%x\n",CurrentIGI));
 
 	rtl8188fu_dm_write_dig(pDM_Odm, CurrentIGI);//ODM_Write_DIG(pDM_Odm, pDM_DigTable->CurIGValue);
-#endif
 }
 
 //3============================================================
@@ -1038,10 +990,8 @@ odm_CCKPacketDetectionThresh(
 		return;
 	}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if(pDM_Odm->external_lna_2g)
 		return;
-#endif
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_CCK_PD, ODM_DBG_LOUD, ("odm_CCKPacketDetectionThresh()  ==========>\n"));
 

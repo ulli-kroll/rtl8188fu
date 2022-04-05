@@ -372,9 +372,7 @@ rtl8188fu_get_delta_swing_table(
 
 		if (!rate) { /*auto rate*/
 			if (rate != 0xFF) {
-				#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
-						TxRate = HwRateToMRate(pDM_Odm->TxRate);
-				#endif
+					TxRate = HwRateToMRate(pDM_Odm->TxRate);
 			}
 		} else { /*force rate*/
 			TxRate = (u1Byte)rate;
@@ -429,9 +427,8 @@ phy_PathA_IQK_8188F(
 	u4Byte regEAC, regE94, regE9C/*, regEA4*/;
 	u1Byte result = 0x00;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A IQK!\n"));
 
 	//  enable path A PA in TXIQK mode
@@ -507,9 +504,8 @@ phy_PathA_RxIQK8188F(
 	u4Byte regEAC, regE94, regE9C, regEA4, u4tmp;
 	u1Byte result = 0x00;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A Rx IQK!\n"));
 
 	//1 Get TXIMR setting
@@ -656,9 +652,8 @@ phy_PathB_IQK_8188F(
 	u4Byte regEAC, regE94, regE9C/*, regEC4, regECC*/;
 	u1Byte result = 0x00;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B IQK!\n"));
 
 	ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, bMaskH3Bytes, 0x000000);
@@ -744,9 +739,8 @@ phy_PathB_RxIQK8188F(
 	u4Byte regEAC, regEB4, regEBC, regECC, regEC4, u4tmp;
 	u1Byte result = 0x00;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B Rx IQK!\n"));
 
 	//1 Get TXIMR setting
@@ -896,9 +890,7 @@ _PHY_PathAFillIQKMatrix8188F(
 	u4Byte Oldval_0, X, TX0_A, reg;
 	s4Byte Y, TX0_C;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 	PODM_RF_CAL_T pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A IQ Calibration %s !\n", (bIQKOK) ? "Success" : "Failed"));
@@ -977,9 +969,7 @@ _PHY_PathBFillIQKMatrix8188F(
 	u4Byte Oldval_1, X, TX1_A, reg;
 	s4Byte Y, TX1_C;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 	PODM_RF_CAL_T pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B IQ Calibration %s !\n", (bIQKOK) ? "Success" : "Failed"));
@@ -1090,9 +1080,7 @@ _PHY_SaveADDARegisters8188F(
 {
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 
 	if (ODM_CheckPowerStatus(pAdapter) == FALSE)
 		return;
@@ -1112,9 +1100,8 @@ _PHY_SaveMACRegisters8188F(
 {
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Save MAC parameters.\n"));
 	for (i = 0; i < (IQK_MAC_REG_NUM - 1); i++)
 		MACBackup[i] = ODM_Read1Byte(pDM_Odm, MACReg[i]);
@@ -1133,9 +1120,7 @@ _PHY_ReloadADDARegisters8188F(
 {
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Reload ADDA power saving parameters !\n"));
 	for (i = 0; i < RegiesterNum; i++)
@@ -1151,9 +1136,8 @@ _PHY_ReloadMACRegisters8188F(
 {
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Reload MAC parameters !\n"));
 	for (i = 0; i < (IQK_MAC_REG_NUM - 1); i++)
 		ODM_Write1Byte(pDM_Odm, MACReg[i], (u1Byte)MACBackup[i]);
@@ -1172,9 +1156,8 @@ _PHY_PathADDAOn8188F(
 	u4Byte pathOn;
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("ADDA ON.\n"));
 
 	pathOn = isPathAOn ? 0x03c00014 : 0x03c00014;
@@ -1198,9 +1181,8 @@ _PHY_MACSettingCalibration8188F(
 {
 	u4Byte i = 0;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("MAC settings for Calibration.\n"));
 
 #if 0
@@ -1221,9 +1203,8 @@ _PHY_PathAStandBy8188F(
 )
 {
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path-A standby mode!\n"));
 
 	ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, bMaskH3Bytes, 0x000000);
@@ -1242,9 +1223,8 @@ _PHY_PIModeSwitch8188F(
 {
 	u4Byte mode;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+	
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("BB Switch to %s mode!\n", (PIMode ? "PI" : "SI")));
 
 	mode = PIMode ? 0x01000100 : 0x01000000;
@@ -1263,9 +1243,7 @@ phy_SimularityCompare_8188F(
 	u4Byte i, j, diff, SimularityBitMap, bound = 0;
 #if DBG
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 #endif
 	u1Byte final_candidate[2] = { 0xFF, 0xFF };  //for path A and path B
 	BOOLEAN bResult = TRUE;
@@ -1360,9 +1338,8 @@ phy_IQCalibrate_8188F(
 )
 {
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
+
 	u4Byte i;
 	u1Byte PathAOK, PathBOK;
 	u1Byte tmp0xc50 = (u1Byte)ODM_GetBBReg(pDM_Odm, 0xC50, bMaskByte0);
@@ -1709,29 +1686,11 @@ PHY_IQCalibrate_8188F(
 	};
 	u4Byte Path_SEL_BB = 0, Path_SEL_RF = 0;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE) )
 	if (ODM_CheckPowerStatus(pAdapter) == FALSE)
 		return;
-#else
-	prtl8192cd_priv priv = pDM_Odm->priv;
 
-#ifdef MP_TEST
-	if (priv->pshare->rf_ft_var.mp_specific) {
-		if ((OPMODE & WIFI_MP_CTX_PACKET) || (OPMODE & WIFI_MP_CTX_ST))
-			return;
-	}
-#endif
-
-	if (priv->pshare->IQK_88E_done)
-		bReCovery = 1;
-	priv->pshare->IQK_88E_done = 1;
-
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
 		return;
-#endif
 
 	// 20120213<Kordan> Turn on when continuous Tx to pass lab testing. (required by Edlu)
 	if (bSingleTone || bCarrierSuppression)
@@ -1784,9 +1743,7 @@ PHY_IQCalibrate_8188F(
 
 	}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if (bReCovery)
-#endif
 	{
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("PHY_IQCalibrate_8188F: Return due to bReCovery!\n"));
 		_PHY_ReloadADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
@@ -1941,10 +1898,9 @@ PHY_LCCalibrate_8188F(
 
 	PDM_ODM_T pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
 		return;
-#endif
+
 	// 20120213<Kordan> Turn on when continuous Tx to pass lab testing. (required by Edlu)
 	if (bSingleTone || bCarrierSuppression)
 		return;

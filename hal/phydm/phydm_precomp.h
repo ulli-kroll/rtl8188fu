@@ -28,10 +28,8 @@
 
 //2 Config Flags and Structs - defined by each ODM Type
 
-#if (DM_ODM_SUPPORT_TYPE ==ODM_CE)
 	#define __PACK
 	#define __WLAN_ATTRIB_PACK__
-#endif
 
 //2 OutSrc Header Files
  
@@ -43,8 +41,6 @@
 #include "phydm_interface.h"
 #include "phydm_reg.h"
 
-
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 
 VOID
 PHY_SetTxPowerLimit(
@@ -58,8 +54,6 @@ PHY_SetTxPowerLimit(
 	IN	u8	*PowerLimit
 );
 
-#endif
-
 #if (RTL8188F_SUPPORT == 1) 
 #include "rtl8188f/halhwimg8188f_mac.h"
 #include "rtl8188f/halhwimg8188f_rf.h"
@@ -68,9 +62,7 @@ PHY_SetTxPowerLimit(
 #include "rtl8188f/phydm_rtl8188f.h"
 #include "rtl8188f/phydm_regconfig8188f.h"
 #include "rtl8188f/halphyrf_8188f.h" /* for IQK,LCK,Power-tracking */
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #include "rtl8188f_hal.h"
-#endif
 #endif
 
 #endif	// __ODM_PRECOMP_H__

@@ -83,7 +83,6 @@ phydm_BasicDbgMessage
 	IN		PVOID			pDM_VOID
 )
 {
-#if( DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure(pDM_Odm , PHYDM_FALSEALMCNT);
 	pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
@@ -135,7 +134,6 @@ phydm_BasicDbgMessage
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("RF 0x0[13:5] = 0x%x\n\n",temp_reg));
 */	
 
-#endif
 }
 
 
@@ -505,11 +503,7 @@ phydm_cmd_parser(
 	case PHYDM_DEMO: /*echo demo 10 0x3a z abcde >cmd*/
 			{
 				u4Byte   directory = 0;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))				
 				char   char_temp;
-#else
-				u4Byte char_temp = ' ';
-#endif
 		PHYDM_SSCANF(input[1], DCMD_DECIMAL, &directory);
 		PHYDM_SNPRINTF((output + used, out_len - used, "Decimal Value = %d\n", directory));
 		PHYDM_SSCANF(input[2], DCMD_HEX, &directory);
@@ -688,7 +682,6 @@ char *strsep(char **s, const char *ct)
 }
 #endif
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 s4Byte
 phydm_cmd(
 	IN PDM_ODM_T	pDM_Odm,
@@ -719,7 +712,6 @@ phydm_cmd(
 
 	return 0;
 }
-#endif
 
 
 VOID

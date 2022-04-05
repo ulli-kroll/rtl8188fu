@@ -26,18 +26,13 @@ odm_SetCrystalCap(
 	IN		u1Byte					CrystalCap
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 	BOOLEAN 					bEEPROMCheck;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER					Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE				*pHalData = GET_HAL_DATA(Adapter);
 
 	bEEPROMCheck = (pHalData->EEPROMVersion >= 0x01)?TRUE:FALSE;
-#else
-	bEEPROMCheck = TRUE;
-#endif
 
 	if(pCfoTrack->CrystalCap == CrystalCap)
 		return;
@@ -54,7 +49,6 @@ odm_SetCrystalCap(
 	}
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("odm_SetCrystalCap(): CrystalCap = 0x%x\n", CrystalCap));
-#endif
 }
 
 u1Byte
@@ -65,17 +59,10 @@ odm_GetDefaultCrytaltalCap(
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u1Byte						CrystalCap = 0x20;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER					Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE				*pHalData = GET_HAL_DATA(Adapter);
 
 	CrystalCap = pHalData->CrystalCap;
-#else
-	prtl8192cd_priv	priv		= pDM_Odm->priv;
-
-	if(priv->pmib->dot11RFEntry.xcap > 0)
-		CrystalCap = priv->pmib->dot11RFEntry.xcap;
-#endif
 
 	CrystalCap = CrystalCap & 0x3f;
 
@@ -133,9 +120,7 @@ ODM_CfoTrackingReset(
 			("ODM_CfoTrackingReset(): approch default value (0x%x)\n", pCfoTrack->CrystalCap));
 	}
 
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	odm_SetATCStatus(pDM_Odm, TRUE);
-	#endif
 }
 
 VOID
@@ -227,7 +212,6 @@ ODM_CfoTracking(
 				pCfoTrack->bAdjust = FALSE;
 		}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		//4 1.5 BT case: Disable CFO tracking
 		if(pDM_Odm->bBtEnabled)
 		{
@@ -247,7 +231,6 @@ ODM_CfoTracking(
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking(): Crystal cap offset = %d\n", Adjust_Xtal));
 		}
 */
-#endif
 		
 		//4 1.7 Adjust Crystal Cap.
 		if(pCfoTrack->bAdjust)
@@ -267,7 +250,6 @@ ODM_CfoTracking(
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking(): Crystal cap = 0x%x, Default Crystal cap = 0x%x\n", 
 			pCfoTrack->CrystalCap, pCfoTrack->DefXCap));
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	
 		//3 2. Dynamic ATC switch
 		if(CFO_ave < CFO_TH_ATC && CFO_ave > -CFO_TH_ATC)
@@ -280,7 +262,6 @@ ODM_CfoTracking(
 			odm_SetATCStatus(pDM_Odm, TRUE);
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking(): Enable ATC!!\n"));
 		}
-#endif
 	}
 }
 
@@ -299,11 +280,7 @@ ODM_ParsingCFO(
 	if(!(pDM_Odm->SupportAbility & ODM_BB_CFO_TRACKING))
 		return;
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	if(pPktinfo->bPacketMatchBSSID)
-#else
-	if(pPktinfo->StationID != 0)
-#endif
 	{				
 		//3 Update CFO report for path-A & path-B
 		// Only paht-A and path-B have CFO tail and short CFO

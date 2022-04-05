@@ -38,11 +38,9 @@
 #include "phydm_acs.h"
 #include "phydm_adaptivity.h"
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 #include "phydm_noisemonitor.h"
 #include "halphyrf_ce.h"
 #include "phydm_powertracking_ce.h"
-#endif
 
 //============================================================
 // Definition 
@@ -93,12 +91,10 @@
 // 2011/09/20 MH Add for AP/ADSLpseudo DM structuer requirement.
 // We need to remove to other position???
 //
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 typedef		struct rtl8192cd_priv {
 	u1Byte		temp;
 
 }rtl8192cd_priv, *prtl8192cd_priv;
-#endif
 
 
 typedef struct _Dynamic_Primary_CCA{
@@ -259,7 +255,7 @@ typedef enum _ODM_Common_Info_Definition
 	//
 
 	//-----------HOOK BEFORE REG INIT-----------//
-	ODM_CMNINFO_PLATFORM = 0,
+	__ODM_CMNINFO_PLATFORM__ = 0,
 	ODM_CMNINFO_ABILITY,					// ODM_ABILITY_E
 	ODM_CMNINFO_INTERFACE,				// ODM_INTERFACE_E
 	ODM_CMNINFO_MP_TEST_CHIP,
@@ -443,9 +439,7 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	// WHen you use Adapter or priv pointer, you must make sure the pointer is ready.
 	BOOLEAN			odm_ready;
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	rtl8192cd_priv		fake_priv;
-#endif
 	
 	u1Byte				PhyRegPgVersion;
 
@@ -483,7 +477,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	//
 //-----------HOOK BEFORE REG INIT-----------//	
 	// ODM Platform info AP/ADSL/CE/MP = 1/2/3/4
-	u1Byte			SupportPlatform;		
 	// ODM Support Ability DIG/RATR/TX_PWR_TRACK/ ¡K¡K = 1/2/3/¡K
 	u4Byte			SupportAbility;
 	// ODM PCIE/USB/SDIO = 1/2/3
@@ -694,9 +687,7 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	BOOLEAN			pre_b_noisy;	
 	u4Byte			NoisyDecision_Smooth;
 
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 	ODM_NOISE_MONITOR noise_level;//[ODM_MAX_CHANNEL_NUM];
-#endif
 	//
 	//2 Define STA info.
 	// _ODM_STA_INFO
@@ -795,7 +786,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			bUseRAMask;
 
 	ODM_RATE_ADAPTIVE	RateAdaptive;
-//#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 #if(defined(CONFIG_ANT_DETECTION))
 	ANT_DETECTED_INFO	AntDetectedInfo; // Antenna detected information for RSSI tool
 #endif
@@ -806,7 +796,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	// Dynamic ATC switch
 	//
 
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))	
 	//
 	// Power Training
 	//
@@ -815,7 +804,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u4Byte			PT_score;
 	u8Byte			OFDM_RX_Cnt;
 	u8Byte			CCK_RX_Cnt;
-#endif
 	BOOLEAN			bDisablePowerTraining;
 
 	//
@@ -972,15 +960,12 @@ u4Byte odm_ConvertTo_dB(u4Byte Value);
 
 u4Byte odm_ConvertTo_linear(u4Byte Value);
 
-#if((DM_ODM_SUPPORT_TYPE==ODM_CE))
 
 u4Byte
 GetPSDData(
 	PDM_ODM_T	pDM_Odm,
 	unsigned int 	point,
 	u1Byte initial_gain_psd);
-
-#endif
 
 
 s4Byte
@@ -1081,7 +1066,6 @@ PhyDM_Get_Structure(
 	IN		u1Byte			Structure_Type
 );
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*===========================================================*/
 /* The following is for compile only*/
 /*===========================================================*/
@@ -1113,11 +1097,8 @@ PhyDM_Get_Structure(
 #define TARGET_CHNL_NUM_2G_5G	59
 
 //===========================================================
-#endif //#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void odm_dtc(PDM_ODM_T pDM_Odm);
-#endif /* #if (DM_ODM_SUPPORT_TYPE == ODM_CE) */
 
 
 VOID phydm_NoisyDetection(IN	PDM_ODM_T	pDM_Odm	);

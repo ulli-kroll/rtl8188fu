@@ -55,7 +55,6 @@ odm_DynamicTxPowerNIC(
 	IN		PVOID					pDM_VOID
 	);
 
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 VOID
 odm_DynamicTxPowerSavePowerIndex(
 	IN		PVOID					pDM_VOID
@@ -83,7 +82,6 @@ odm_DynamicTxPower_8821(
 	IN		u1Byte					macId
 	);
 
-#endif
 
 VOID 
 odm_DynamicTxPower(

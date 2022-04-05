@@ -426,10 +426,8 @@ odm_RxPhyStatus92CSeries_Parsing(
 		pDM_Odm->cck_lna_idx = LNA_idx;
 		pDM_Odm->cck_vga_idx = VGA_idx;
 		pPhyInfo->RxPWDBAll = PWDB_ALL;
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 		pPhyInfo->BTRxRSSIPercentage = PWDB_ALL;
 		pPhyInfo->RecvSignalPower = rx_pwr_all;
-#endif		
 		//
 		// (3) Get Signal Quality (EVM)
 		//
@@ -484,9 +482,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			rx_pwr[i] = ((pPhyStaRpt->path_agc[i].gain& 0x3F)*2) - 110;
 			pDM_Odm->ofdm_agc_idx[i] = (pPhyStaRpt->path_agc[i].gain & 0x3F);
 
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 			pPhyInfo->RxPwr[i] = rx_pwr[i];
-		#endif	
 
 			/* Translate DBM to percentage. */
 			RSSI = odm_QueryRxPwrPercentage(rx_pwr[i]);
@@ -495,10 +491,8 @@ odm_RxPhyStatus92CSeries_Parsing(
 		
 			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
 
-		#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 			//Get Rx snr value in DB		
 			pPhyInfo->RxSNR[i] = pDM_Odm->PhyDbgInfo.RxSNRdB[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
-		#endif
 		
 			/* Record Signal Strength for next packet */
 			//if(pPktinfo->bPacketMatchBSSID)
@@ -517,11 +511,9 @@ odm_RxPhyStatus92CSeries_Parsing(
 	
 		pPhyInfo->RxPWDBAll = PWDB_ALL;
 		//ODM_RT_TRACE(pDM_Odm,ODM_COMP_RSSI_MONITOR, ODM_DBG_LOUD, ("ODM OFDM RSSI=%d\n",pPhyInfo->RxPWDBAll));
-	#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 		pPhyInfo->BTRxRSSIPercentage = PWDB_ALL_BT;
 		pPhyInfo->RxPower = rx_pwr_all;
 		pPhyInfo->RecvSignalPower = rx_pwr_all;
-	#endif
 		
 		    {//pMgntInfo->CustomerID != RT_CID_819x_Lenovo
 			//
@@ -555,7 +547,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 		ODM_ParsingCFO(pDM_Odm, pPktinfo, pPhyStaRpt->path_cfotail);
 		
 	}
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))
 	//UI BSS List signal strength(in percentage), make it good looking, from 0~100.
 	//It is assigned to the BSS List in GetValueFromBeaconOrProbeRsp().
 	if(isCCKrate)
@@ -578,7 +569,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 			#endif
 		}
 	}
-#endif /*#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))*/
 
 	//DbgPrint("isCCKrate = %d, pPhyInfo->RxPWDBAll = %d, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a = 0x%x\n", 
 		//isCCKrate, pPhyInfo->RxPWDBAll, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a);
@@ -779,10 +769,9 @@ odm_Process_RSSIForDM(
 						UndecoratedSmoothedPWDB = 0;
 				}
 			}
-			#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 			if (pEntry->rssi_stat.UndecoratedSmoothedPWDB == -1)
 				phydm_ra_rssi_rpt_wk(pDM_Odm);
-			#endif
+
 			pEntry->rssi_stat.UndecoratedSmoothedCCK = UndecoratedSmoothedCCK;
 			pEntry->rssi_stat.UndecoratedSmoothedOFDM = UndecoratedSmoothedOFDM;
 			pEntry->rssi_stat.UndecoratedSmoothedPWDB = UndecoratedSmoothedPWDB;
@@ -864,8 +853,8 @@ rtl8188fu_phy_config_rf_with_headerfile(
    ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
 		 		("===>ODM_ConfigRFWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
     ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, 
-				("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->board_type: 0x%X\n",
-				pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->board_type));
+				("pDM_Odm->SupportInterface: 0x%X, pDM_Odm->board_type: 0x%X\n",
+				pDM_Odm->SupportInterface, pDM_Odm->board_type));
 
 //1 AP doesn't use PHYDM power tracking table in these ICs
 

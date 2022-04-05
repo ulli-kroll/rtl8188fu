@@ -192,15 +192,11 @@ typedef enum tag_PHYDM_Pause_Level {
 
 //vivi 92c&92d has different definition, 20110504
 //this is for 92c
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 	#ifdef CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV
 	#define		DM_DIG_FA_TH0				0x80//0x20
 	#else
 	#define		DM_DIG_FA_TH0				0x200//0x20
 	#endif
-#else
-	#define		DM_DIG_FA_TH0				0x200//0x20
-#endif
 
 #define		DM_DIG_FA_TH1					0x300
 #define		DM_DIG_FA_TH2					0x400

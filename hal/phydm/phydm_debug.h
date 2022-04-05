@@ -114,14 +114,9 @@
 #define	ODM_COMP_NOISY_DETECT		BIT32
 
 /*------------------------Export Marco Definition---------------------------*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	#define DbgPrint	printk
 	#define RT_PRINTK(fmt, args...)	DbgPrint( "%s(): " fmt, __FUNCTION__, ## args);
 	#define	RT_DISP(dbgtype, dbgflag, printstr)
-#else
-	#define DbgPrint	panic_printk
-	#define RT_PRINTK(fmt, args...)	DbgPrint( "%s(): " fmt, __FUNCTION__, ## args);
-#endif
 
 #ifndef ASSERT
 	#define ASSERT(expr)
@@ -185,11 +180,7 @@ PHYDM_InitDebugSetting(IN		PDM_ODM_T		pDM_Odm);
 VOID phydm_BB_Debug_Info(IN PDM_ODM_T pDM_Odm);
 VOID phydm_BasicDbgMessage(	IN		PVOID			pDM_VOID);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #define	PHYDM_DBGPRINT		0
-#else
-#define	PHYDM_DBGPRINT		1
-#endif
 #define	MAX_ARGC				20
 #define	MAX_ARGV				16
 #define	DCMD_DECIMAL			"%d"
@@ -218,7 +209,6 @@ VOID phydm_BasicProfile(
 	OUT		char				*output,
 	IN		u4Byte			*_out_len
 	);
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 s4Byte
 phydm_cmd(
 	IN PDM_ODM_T	pDM_Odm,
@@ -228,7 +218,6 @@ phydm_cmd(
 	OUT char	*output,
 	IN u4Byte	out_len
 );
-#endif
 VOID
 phydm_cmd_parser(
 	IN PDM_ODM_T	pDM_Odm,

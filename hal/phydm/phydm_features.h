@@ -22,7 +22,6 @@
 #define __PHYDM_FEATURES
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 	/*Antenna Diversity*/
 	
@@ -31,7 +30,6 @@
 	/*#define CONFIG_PATH_DIVERSITY*/
 	/*#define CONFIG_RA_DYNAMIC_RTY_LIMIT*/
 
-#endif
 
 
 #endif

@@ -35,10 +35,8 @@ ODM_Read1Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read8(Adapter,RegAddr);
-#endif	
 
 }
 
@@ -49,10 +47,8 @@ ODM_Read2Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read16(Adapter,RegAddr);
-#endif	
 
 }
 
@@ -63,10 +59,8 @@ ODM_Read4Byte(
 	IN	u4Byte			RegAddr
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return rtw_read32(Adapter,RegAddr);
-#endif	
 
 }
 
@@ -78,10 +72,8 @@ ODM_Write1Byte(
 	IN	u1Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write8(Adapter,RegAddr, Data);
-#endif
 	
 }
 
@@ -93,10 +85,8 @@ ODM_Write2Byte(
 	IN	u2Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write16(Adapter,RegAddr, Data);
-#endif	
 
 }
 
@@ -108,10 +98,8 @@ ODM_Write4Byte(
 	IN	u4Byte			Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	rtw_write32(Adapter,RegAddr, Data);
-#endif	
 
 }
 
@@ -124,10 +112,8 @@ ODM_SetMACReg(
 	IN	u4Byte		Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	PHY_SetBBReg(Adapter, RegAddr, BitMask, Data);
-#endif	
 }
 
 
@@ -138,9 +124,7 @@ ODM_GetMACReg(
 	IN	u4Byte		BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	return PHY_QueryMacReg(pDM_Odm->Adapter, RegAddr, BitMask);
-#endif	
 }
 
 
@@ -152,10 +136,8 @@ ODM_SetBBReg(
 	IN	u4Byte		Data
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	PHY_SetBBReg(Adapter, RegAddr, BitMask, Data);
-#endif	
 }
 
 
@@ -166,10 +148,8 @@ ODM_GetBBReg(
 	IN	u4Byte		BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return PHY_QueryBBReg(Adapter, RegAddr, BitMask);
-#endif	
 }
 
 
@@ -182,9 +162,7 @@ ODM_SetRFReg(
 	IN	u4Byte				Data
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PHY_SetRFReg(pDM_Odm->Adapter, eRFPath, RegAddr, BitMask, Data);
-#endif	
 }
 
 
@@ -196,10 +174,8 @@ ODM_GetRFReg(
 	IN	u4Byte				BitMask
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	return PHY_QueryRFReg(Adapter, eRFPath, RegAddr, BitMask);
-#endif	
 }
 
 
@@ -215,9 +191,7 @@ ODM_AllocateMemory(
 	IN	u4Byte		length
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )
 	*pPtr = rtw_zvmalloc(length);
-#endif	
 }
 
 // length could be ignored, used to detect memory leakage.
@@ -228,9 +202,7 @@ ODM_FreeMemory(
 	IN	u4Byte		length
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	rtw_vmfree(pPtr, length);
-#endif	
 }
 
 VOID
@@ -241,9 +213,7 @@ ODM_MoveMemory(
 	IN  u4Byte		Length
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	_rtw_memcpy(pDest, pSrc, Length);
-#endif	
 }
 
 void ODM_Memory_Set(
@@ -253,9 +223,7 @@ void ODM_Memory_Set(
 	IN	u4Byte		length
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	_rtw_memset(pbuf,value, length);
-#endif
 }
 s4Byte ODM_CompareMemory(
 	IN 	PDM_ODM_T		pDM_Odm,
@@ -264,9 +232,7 @@ s4Byte ODM_CompareMemory(
 	IN	u4Byte          length
        )
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )	
 	return _rtw_memcmp(pBuf1,pBuf2,length);
-#endif	
 }
 
 
@@ -280,10 +246,8 @@ ODM_AcquireSpinLock(
 	IN	RT_SPINLOCK_TYPE	type
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	rtw_odm_acquirespinlock(Adapter, type);
-#endif	
 }
 VOID
 ODM_ReleaseSpinLock(	
@@ -291,10 +255,8 @@ ODM_ReleaseSpinLock(
 	IN	RT_SPINLOCK_TYPE	type
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE )
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	rtw_odm_releasespinlock(Adapter, type);
-#endif	
 }
 
 //
@@ -309,9 +271,6 @@ ODM_InitializeWorkItem(
 	IN	const char*					szID
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-	
-#endif	
 }
 
 
@@ -320,9 +279,6 @@ ODM_StartWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif	
 }
 
 
@@ -331,9 +287,6 @@ ODM_StopWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif	
 }
 
 
@@ -342,9 +295,6 @@ ODM_FreeWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif	
 }
 
 
@@ -353,9 +303,6 @@ ODM_ScheduleWorkItem(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif	
 }
 
 
@@ -364,9 +311,6 @@ ODM_IsWorkItemScheduled(
 	IN	PRT_WORK_ITEM	pRtWorkItem
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif	
 }
 
 
@@ -379,41 +323,31 @@ ODM_StallExecution(
 	IN	u4Byte	usDelay
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_udelay_os(usDelay);
-#endif	
 }
 
 VOID
 ODM_delay_ms(IN u4Byte	ms)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_mdelay_os(ms);
-#endif			
 }
 
 VOID
 ODM_delay_us(IN u4Byte	us)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_udelay_os(us);
-#endif			
 }
 
 VOID
 ODM_sleep_ms(IN u4Byte	ms)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_msleep_os(ms);
-#endif		
 }
 
 VOID
 ODM_sleep_us(IN u4Byte	us)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	rtw_usleep_os(us);
-#endif		
 }
 
 VOID
@@ -423,9 +357,7 @@ ODM_SetTimer(
 	IN	u4Byte 			msDelay
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	_set_timer(pTimer,msDelay ); //ms
-#endif	
 
 }
 
@@ -438,10 +370,8 @@ ODM_InitializeTimer(
 	IN	const char*			szID
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	_init_timer(pTimer,Adapter->pnetdev,CallBackFunc,pDM_Odm);
-#endif	
 }
 
 
@@ -451,9 +381,7 @@ ODM_CancelTimer(
 	IN	PRT_TIMER		pTimer
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 	_cancel_timer_ex(pTimer);
-#endif
 }
 
 
@@ -463,9 +391,6 @@ ODM_ReleaseTimer(
 	IN	PRT_TIMER		pTimer
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-#endif
 }
 
 BOOLEAN
@@ -477,14 +402,12 @@ phydm_actingDetermine(
 	BOOLEAN		ret = FALSE;
 	PADAPTER	Adapter = pDM_Odm->Adapter;
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 	struct mlme_priv			*pmlmepriv = &(Adapter->mlmepriv);
 
 	if (type == PhyDM_ACTING_AS_AP)
 		ret = check_fwstate(pmlmepriv, WIFI_AP_STATE);
 	else if (type == PhyDM_ACTING_AS_IBSS)
 		ret = check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) || check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE);
-#endif
 
 	return ret;
 
@@ -505,34 +428,24 @@ phydm_trans_h2c_id(
 		//1 [0]
 		case ODM_H2C_RSSI_REPORT:
 
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 				platform_h2c_id = H2C_RSSI_SETTING;
 
-			#endif
 			
 				break;
 
 		//1 [3]	
 		case ODM_H2C_WIFI_CALIBRATION:
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-				
-			#endif
 			
 				break;		
 	
 			
 		//1 [4]
 		case ODM_H2C_IQ_CALIBRATION:
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-			#endif
 			
 				break;
 		//1 [5]
 		case ODM_H2C_RA_PARA_ADJUST:
 
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-				
-			#endif
 			
 				break;
 
@@ -540,18 +453,12 @@ phydm_trans_h2c_id(
 		//1 [6]
 		case PHYDM_H2C_DYNAMIC_TX_PATH:
 
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-			#endif
 			
 				break;
 
 		/* [7]*/
 		case PHYDM_H2C_FW_TRACE_EN:
 
-			#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-
-				
-			#endif
 			
 				break;
 
@@ -590,10 +497,8 @@ ODM_FillH2CCmd(
 		return;
 	}
 
-	#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 		rtw_hal_fill_h2c_cmd(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
 
-	#endif
 }
 
 u1Byte
@@ -645,9 +550,7 @@ ODM_GetCurrentTime(
 	IN 	PDM_ODM_T		pDM_Odm
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	return (u8Byte)rtw_get_current_time();
-#endif
 }
 
 u8Byte
@@ -656,9 +559,7 @@ ODM_GetProgressingTime(
 	IN	u8Byte			Start_Time
 	)
 {
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	return rtw_get_passing_time_ms((u4Byte)Start_Time);
-#endif
 }
 
 
