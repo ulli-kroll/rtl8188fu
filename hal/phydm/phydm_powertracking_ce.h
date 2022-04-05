@@ -123,11 +123,7 @@ typedef struct ODM_RF_Calibration_Structure
     
 	u1Byte			BbSwingIdxOfdm[MAX_RF_PATH];
 	u1Byte			BbSwingIdxOfdmCurrent;
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE))	
 	u1Byte			BbSwingIdxOfdmBase[MAX_RF_PATH];
-#else
-	u1Byte			BbSwingIdxOfdmBase;
-#endif
 	BOOLEAN			swing_flag_ofdm;
 	u1Byte			swing_idx_cck;
 	u1Byte			swing_idx_cck_cur;
