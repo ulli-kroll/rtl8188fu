@@ -459,7 +459,6 @@ typedef struct hal_com_data
 #ifdef CONFIG_USB_HCI
 
 	// 2010/12/10 MH Add for USB aggreation mode dynamic shceme.
-	BOOLEAN		UsbTxVeryHighSpeedMode;
 	u32			UsbBulkOutSize;
 	BOOLEAN		bSupportUSB3;
 
