@@ -216,8 +216,8 @@ odm_TXPowerTrackingThermalMeterInit(
 
 	pRFCalibrateInfo->default_ofdm_index =28;							//OFDM: -1dB
 	pRFCalibrateInfo->default_cck_index =20;							//CCK:-6dB
-	pRFCalibrateInfo->BbSwingIdxCckBase = pRFCalibrateInfo->default_cck_index;
-	pRFCalibrateInfo->CCK_index = pRFCalibrateInfo->default_cck_index;
+	pRFCalibrateInfo->swing_idx_cck_base = pRFCalibrateInfo->default_cck_index;
+	pRFCalibrateInfo->cck_index = pRFCalibrateInfo->default_cck_index;
 	
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{

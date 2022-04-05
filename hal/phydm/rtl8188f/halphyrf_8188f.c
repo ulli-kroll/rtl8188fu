@@ -196,7 +196,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 		if (Final_CCK_Swing_Index >= CCK_TABLE_SIZE_88F)
 			Final_CCK_Swing_Index = CCK_TABLE_SIZE_88F - 1;
-		else if ((s1Byte)pRFCalibrateInfo->BbSwingIdxCck < 0)
+		else if ((s1Byte)pRFCalibrateInfo->swing_idx_cck < 0)
 			Final_CCK_Swing_Index = 0;
 
 		if (RFPath == ODM_RF_PATH_A) {
@@ -237,7 +237,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
-				pRFCalibrateInfo->Modify_TxAGC_Flag_PathA = TRUE;
+				pRFCalibrateInfo->modify_txagc_flag_path_a = TRUE;
 
 				//Set TxAGC Page C{};
 
@@ -250,7 +250,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
 						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
 
-					pRFCalibrateInfo->Modify_TxAGC_Flag_PathA = TRUE;
+					pRFCalibrateInfo->modify_txagc_flag_path_a = TRUE;
 				/* Set TxAGC Page C{}; */
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
@@ -264,7 +264,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 							 ("******Path_A Compensate with BBSwing , Final_OFDM_Swing_Index = %d\n", Final_OFDM_Swing_Index));
 
-				if (pRFCalibrateInfo->Modify_TxAGC_Flag_PathA) {  //If TxAGC has changed, reset TxAGC again
+				if (pRFCalibrateInfo->modify_txagc_flag_path_a) {  //If TxAGC has changed, reset TxAGC again
 					pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = 0;
 					}
 			}

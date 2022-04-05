@@ -100,7 +100,7 @@ typedef struct ODM_RF_Calibration_Structure
 
 	//------------------------- Tx power Tracking -------------------------//
 	u1Byte 	bCCKinCH14;
-	u1Byte 	CCK_index;
+	u1Byte 	cck_index;
 	u1Byte 	OFDM_index[MAX_RF_PATH];
 	s1Byte	PowerIndexOffset[MAX_RF_PATH];
 	s1Byte	DeltaPowerIndex[MAX_RF_PATH];
@@ -128,20 +128,20 @@ typedef struct ODM_RF_Calibration_Structure
 #else
 	u1Byte			BbSwingIdxOfdmBase;
 #endif
-	BOOLEAN			BbSwingFlagOfdm;
-	u1Byte			BbSwingIdxCck;
-	u1Byte			BbSwingIdxCckCurrent;
-	u1Byte			BbSwingIdxCckBase;
+	BOOLEAN			swing_flag_ofdm;
+	u1Byte			swing_idx_cck;
+	u1Byte			swing_idx_cck_cur;
+	u1Byte			swing_idx_cck_base;
 	u1Byte			default_ofdm_index;
 	u1Byte			default_cck_index;	
-	BOOLEAN			BbSwingFlagCck;
+	BOOLEAN			swing_flag_cck;
 	
 	s1Byte			Absolute_OFDMSwingIdx[MAX_RF_PATH];   
 	s1Byte			remnant_ofdm_swing_idx[MAX_RF_PATH];
 	s1Byte			remnant_cck_idx;
 	s1Byte			Modify_TxAGC_Value;       /*Remnat compensate value at TxAGC */
-	BOOLEAN			Modify_TxAGC_Flag_PathA;
-	BOOLEAN			Modify_TxAGC_Flag_PathB;
+	BOOLEAN			modify_txagc_flag_path_a;
+	BOOLEAN			modify_txagc_flag_path_b;
 	BOOLEAN			Modify_TxAGC_Flag_PathC;
 	BOOLEAN			Modify_TxAGC_Flag_PathD;
 	
