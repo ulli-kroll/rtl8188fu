@@ -318,12 +318,6 @@ odm_Find_RTS_Rate(
 	IN		BOOLEAN			bErpProtect
 );
 
-VOID
-ODM_UpdateNoisyState(
-	IN	PVOID		pDM_VOID,
-	IN	BOOLEAN		bNoisyStateFromC2H
-);
-
 u4Byte
 Set_RA_DM_Ratrbitmap_by_Noisy(
 	IN	PVOID			pDM_VOID,
