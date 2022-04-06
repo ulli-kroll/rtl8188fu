@@ -3736,11 +3736,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 	case HW_VAR_H2C_FW_PWRMODE: {
 		u8 psmode = *val;
 
-		/* Forece leave RF low power mode for 1T1R to prevent conficting setting in Fw power */
-		/* saving sequence. 2010.06.07. Added by tynli. Suggested by SD3 yschang. */
-		if (psmode != PS_MODE_ACTIVE)
-			ODM_RF_Saving(&pHalData->odmpriv, _TRUE);
-
 		/*if (psmode != PS_MODE_ACTIVE)	{ */
 		/*	rtl8188f_set_lowpwr_lps_cmd(padapter, _TRUE); */
 		/*} else { */

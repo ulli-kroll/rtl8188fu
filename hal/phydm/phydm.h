@@ -31,7 +31,6 @@
 #include "phydm_pathdiv.h"
 #include "phydm_antdiv.h"
 #include "phydm_antdect.h"
-#include "phydm_dynamicbbpowersaving.h"
 #include "phydm_rainfo.h"
 #include "phydm_dynamictxpower.h"
 #include "phydm_cfotracking.h"
@@ -735,7 +734,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	FAT_T						DM_FatTable;
 	DIG_T						DM_DigTable;
 
-	PS_T						DM_PSTable;
 	Pri_CCA_T					DM_PriCCA;
 	RA_T						DM_RA_Table;  
 	FALSE_ALARM_STATISTICS		FalseAlmCnt;

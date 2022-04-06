@@ -296,7 +296,6 @@ ODM_DMInit(
 
 	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 	{
-		odm_DynamicBBPowerSavingInit(pDM_Odm);
 		odm_DynamicTxPowerInit(pDM_Odm);
 
 
@@ -437,7 +436,6 @@ _rtl8188fu_dm_watchdog(
 	phydm_ra_dynamic_retry_count(pDM_Odm);
 	odm_RefreshRateAdaptiveMask(pDM_Odm);
 	odm_RefreshBasicRateMask(pDM_Odm);
-	odm_DynamicBBPowerSaving(pDM_Odm);
 	odm_EdcaTurboCheck(pDM_Odm);
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);

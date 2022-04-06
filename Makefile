@@ -90,7 +90,6 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
 		hal/phydm/phydm_dig.o\
 		hal/phydm/phydm_pathdiv.o\
 		hal/phydm/phydm_rainfo.o\
-		hal/phydm/phydm_dynamicbbpowersaving.o\
 		hal/phydm/phydm_powertracking_ce.o\
 		hal/phydm/phydm_dynamictxpower.o\
 		hal/phydm/phydm_adaptivity.o\
