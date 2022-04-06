@@ -91,21 +91,6 @@ odm_DynamicTxPower(
 	// at the same time. In the stage2/3, we need to prive universal interface and merge all
 	// HW dynamic mechanism.
 	//
-	odm_DynamicTxPowerNIC(pDM_Odm);
-
-}
-
-
-VOID 
-odm_DynamicTxPowerNIC(
-	IN		PVOID					pDM_VOID
-	)
-{	
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	
-	if (!(pDM_Odm->SupportAbility & ODM_BB_DYNAMIC_TXPWR))
-		return;
-	
 }
 
 VOID 

@@ -50,11 +50,6 @@ odm_DynamicTxPowerRestorePowerIndex(
 	IN		PVOID					pDM_VOID
 	);
 
-VOID 
-odm_DynamicTxPowerNIC(
-	IN		PVOID					pDM_VOID
-	);
-
 VOID
 odm_DynamicTxPowerSavePowerIndex(
 	IN		PVOID					pDM_VOID
