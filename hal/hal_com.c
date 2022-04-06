@@ -3456,58 +3456,6 @@ u8 rtw_get_current_tx_rate(_adapter *padapter, u8 macid)
 
 }
 
-#ifdef CONFIG_FW_C2H_DEBUG
-
-/*	C2H RX package original is 128.
-if enable CONFIG_FW_C2H_DEBUG, it should increase to 256.
- C2H FW debug message:
- without aggregate:
- {C2H_CmdID,Seq,SubID,Len,Content[0~n]}
- Content[0~n]={'a','b','c',...,'z','\n'}
- with aggregate:
- {C2H_CmdID,Seq,SubID,Len,Content[0~n]}
- Content[0~n]={'a','b','c',...,'z','\n',Extend C2H pkt 2...}
- Extend C2H pkt 2={C2H CmdID,Seq,SubID,Len,Content = {'a','b','c',...,'z','\n'}}
- Author: Isaac	*/
-
-void Debug_FwC2H(PADAPTER padapter, u8 *pdata, u8 len)
-{
-	int i = 0;
-	int cnt = 0, total_length = 0;
-	u8 buf[128] = {0};
-	u8 more_data = _FALSE;
-	u8 *nextdata = NULL;
-	u8 test = 0;
-
-	u8 data_len;
-	u8 seq_no;
-
-	nextdata = pdata;
-	do {
-		data_len = *(nextdata + 1);
-		seq_no = *(nextdata + 2);
-
-		for (i = 0 ; i < data_len - 2 ; i++) {
-			cnt += sprintf((buf+cnt), "%c", nextdata[3 + i]);
-
-			if (nextdata[3 + i] == 0x0a && nextdata[4 + i] == 0xff)
-				more_data = _TRUE;
-			else if (nextdata[3 + i] == 0x0a && nextdata[4 + i] != 0xff)
-				more_data = _FALSE;
-		}
-
-		DBG_871X("[RTKFW, SEQ=%d]: %s", seq_no, buf);
-		data_len += 3;
-		total_length += data_len;
-
-		if (more_data == _TRUE) {
-			_rtw_memset(buf, '\0', 128);
-			cnt = 0;
-			nextdata = (pdata + total_length);
-		}
-	} while (more_data == _TRUE);
-}
-#endif /*CONFIG_FW_C2H_DEBUG*/
 void update_IOT_info(_adapter *padapter)
 {
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;

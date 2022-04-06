@@ -507,11 +507,6 @@ static inline u32 rtw_phydm_ability_get(_adapter *adapter)
 	return rtw_phydm_ability_ops(adapter, HAL_PHYDM_ABILITY_GET, 0);
 }
 
-#ifdef CONFIG_FW_C2H_DEBUG
-void Debug_FwC2H(PADAPTER padapter, u8 *pdata, u8 len);
-#endif
-/*CONFIG_FW_C2H_DEBUG*/
-
 void update_IOT_info(_adapter *padapter);
 
 #ifdef CONFIG_AUTO_CHNL_SEL_NHM

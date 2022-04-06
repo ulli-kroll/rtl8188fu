@@ -80,11 +80,7 @@ typedef struct _RT_8188F_FIRMWARE_HDR
 #define PAGE_SIZE_RX_8188F			8
 
 #define RX_DMA_SIZE_8188F			0x4000	// 16K
-#ifdef CONFIG_FW_C2H_DEBUG 
-#define RX_DMA_RESERVED_SIZE_8188F	0x100	// 256B, reserved for c2h debug message
-#else
 #define RX_DMA_RESERVED_SIZE_8188F	0x80	// 128B, reserved for tx report
-#endif
 
 #define RESV_FMWF	0
 
@@ -225,9 +221,6 @@ void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);
 
 void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len);
-#ifdef CONFIG_FW_C2H_DEBUG
-void Debug_FwC2H_8188f(PADAPTER padapter, u8 *pdata, u8 len);
-#endif //CONFIG_FW_C2H_DEBUG
 s32 c2h_id_filter_ccx_8188f(u8 *buf);
 s32 c2h_handler_8188f(PADAPTER padapter, u8 *pC2hEvent);
 u8 MRateToHwRate8188F(u8  rate);

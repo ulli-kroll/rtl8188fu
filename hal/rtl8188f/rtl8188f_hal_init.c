@@ -3185,69 +3185,6 @@ void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len)
 #endif
 }
 
-#ifdef CONFIG_FW_C2H_DEBUG
-/*
- * C2H RX package original is 128.
- * If enable CONFIG_FW_C2H_DEBUG, it should increase to 256.
- * C2H FW debug message:
- * without aggregate:
- * {C2H CmdID, Seq, SubID, Len, Content[0~n]}
- * Content[0~n] = { 'a' , 'b' , 'c' ,..., 'z' , '\n'}
- *
- * with aggregate:
- * {C2H CmdID, Seq, SubID, Len, Content[0~n]}
- * Content[0~n] = { 'a' , 'b' , 'c' ,..., 'z', '\n' , Extend C2H pkt 2...}
- * Extend C2H pkt 2 = {C2H CmdID, Seq, SubID, Len, Content = { 'a' , 'b' , 'c' ,..., 'z' , '\n'}}
- *
- * Author: Isaac
- */
-void Debug_FwC2H_8188f(PADAPTER padapter, u8 *pdata, u8 len)
-{
-	int i = 0;
-	int cnt = 0, total_length = 0;
-	u8 buf[128] = {0};
-	u8 more_data = _FALSE;
-	u8 *nextdata = NULL;
-	u8 test = 0;
-
-	u8 data_len;
-	u8 seq_no;
-
-	nextdata = pdata;
-#if 0
-	for (i = 0; i < len; i++) {
-		printk("%02x ", pdata[i]);
-		if ((i + 1) % 8 == 0)
-			printk("\n");
-	}
-	printk("\n");
-#endif
-	do {
-		data_len = *(nextdata + 1);
-		seq_no = *(nextdata + 2);
-
-		for (i = 0; i < data_len - 2; i++) {
-			cnt += sprintf((buf + cnt), "%c", nextdata[3 + i]);
-
-			if (nextdata[3 + i] == 0x0a && nextdata[4 + i] == 0xff)
-				more_data = _TRUE;
-			else if (nextdata[3 + i] == 0x0a && nextdata[4 + i] != 0xff)
-				more_data = _FALSE;
-		}
-
-		DBG_871X("[RTKFW, SEQ=%d]: %s", seq_no, buf);
-		data_len += 3;
-		total_length += data_len;
-
-		if (more_data == _TRUE) {
-			_rtw_memset(buf, '\0', 128);
-			cnt = 0;
-			nextdata = (pdata + total_length);
-		}
-	} while (more_data == _TRUE);
-}
-#endif /*CONFIG_FW_C2H_DEBUG */
-
 s32 c2h_id_filter_ccx_8188f(u8 *buf)
 {
 	struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)buf;
@@ -3324,13 +3261,6 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 		CCX_FwC2HTxRpt_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
 		break;
 
-
-#ifdef CONFIG_FW_C2H_DEBUG
-	case C2H_EXTEND:
-		Debug_FwC2H_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
-	break;
-#endif /* CONFIG_FW_C2H_DEBUG */
-
 #ifdef CONFIG_RTW_CUSTOMER_STR
 	case C2H_CUSTOMER_STR_RPT:
 		c2h_customer_str_rpt_hdl(padapter, c2hBuf, pC2hEvent->CmdLen);
@@ -3395,9 +3325,6 @@ void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
 
 	switch (C2hEvent.CmdID) {
 	case C2H_CCX_TX_RPT:
-#ifdef CONFIG_FW_C2H_DEBUG
-	case C2H_EXTEND:
-#endif /* CONFIG_FW_C2H_DEBUG */
 		process_c2h_event(padapter, &C2hEvent, pdata);
 		break;
 
