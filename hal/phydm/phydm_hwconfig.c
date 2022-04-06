@@ -574,12 +574,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 		//isCCKrate, pPhyInfo->RxPWDBAll, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a);
 
 	//For 92C/92D HW (Hybrid) Antenna Diversity
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	//For 88E HW Antenna Diversity
-	pDM_Odm->DM_FatTable.antsel_rx_keep_0 = pPhyStaRpt->ant_sel;
-	pDM_Odm->DM_FatTable.antsel_rx_keep_1 = pPhyStaRpt->ant_sel_b;
-	pDM_Odm->DM_FatTable.antsel_rx_keep_2 = pPhyStaRpt->antsel_rx_keep_2;
-#endif
 }
 #endif
 

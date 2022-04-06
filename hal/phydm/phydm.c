@@ -948,9 +948,6 @@ ODM_InitAllTimers(
 	IN PDM_ODM_T	pDM_Odm 
 	)
 {
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	ODM_AntDivTimers(pDM_Odm,INIT_ANTDIV_TIMMER);
-#endif
 
 }
 
@@ -960,9 +957,6 @@ ODM_CancelAllTimers(
 	)
 {
 
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	ODM_AntDivTimers(pDM_Odm,CANCEL_ANTDIV_TIMMER);
-#endif
 
 }
 
@@ -972,9 +966,6 @@ ODM_ReleaseAllTimers(
 	IN PDM_ODM_T	pDM_Odm 
 	)
 {
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	ODM_AntDivTimers(pDM_Odm,RELEASE_ANTDIV_TIMMER);
-#endif
 
 
 }

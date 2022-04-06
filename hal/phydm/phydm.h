@@ -724,13 +724,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	//
 	//ODM Structure
 	//
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	
-	#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
-	SAT_T						dm_sat_table;
-	#endif
-	
-#endif
 	FAT_T						DM_FatTable;
 	DIG_T						DM_DigTable;
 

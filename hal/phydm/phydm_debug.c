@@ -601,11 +601,6 @@ phydm_cmd_parser(
 		}
 
 		if (input_idx >= 1) {
-			#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-			#ifdef CONFIG_HL_SMART_ANTENNA_TYPE1
-			phydm_hl_smart_ant_cmd(pDM_Odm, (u4Byte *)var1, &used, output, &out_len);
-			#endif
-			#endif
 		}
 
 		break;
