@@ -77,12 +77,6 @@ odm_DynamicTxPower_8821(
 	IN		u1Byte					macId
 	);
 
-
-VOID 
-odm_DynamicTxPower(
-	IN		PVOID					pDM_VOID
-	);
-
 VOID 
 odm_DynamicTxPowerAP(
 	IN		PVOID					pDM_VOID

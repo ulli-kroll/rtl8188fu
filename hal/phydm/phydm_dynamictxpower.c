@@ -71,28 +71,6 @@ odm_DynamicTxPowerWritePowerIndex(
 
 }
 
-
-VOID 
-odm_DynamicTxPower(
-	IN		PVOID					pDM_VOID
-	)
-{
-	// 
-	// For AP/ADSL use prtl8192cd_priv
-	// For CE/NIC use PADAPTER
-	//
-	//PADAPTER		pAdapter = pDM_Odm->Adapter;
-//	prtl8192cd_priv	priv		= pDM_Odm->priv;
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	if (!(pDM_Odm->SupportAbility & ODM_BB_DYNAMIC_TXPWR))
-		return;
-	//
-	// 2011/09/29 MH In HW integration first stage, we provide 4 different handle to operate
-	// at the same time. In the stage2/3, we need to prive universal interface and merge all
-	// HW dynamic mechanism.
-	//
-}
-
 VOID 
 odm_DynamicTxPowerAP(
 	IN		PVOID					pDM_VOID

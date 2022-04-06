@@ -439,7 +439,6 @@ _rtl8188fu_dm_watchdog(
 	odm_EdcaTurboCheck(pDM_Odm);
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);
-	odm_DynamicTxPower(pDM_Odm);
 	odm_AntennaDiversity(pDM_Odm);
 
 	phydm_rf_watchdog(pDM_Odm);
