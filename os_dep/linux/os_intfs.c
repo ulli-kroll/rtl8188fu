@@ -1282,11 +1282,6 @@ struct dvobj_priv *devobj_init(void)
 	_rtw_mutex_init(&pdvobj->sd_indirect_access_mutex);
 #endif
 
-#ifdef CONFIG_RTW_CUSTOMER_STR
-	_rtw_mutex_init(&pdvobj->customer_str_mutex);
-	_rtw_memset(pdvobj->customer_str, 0xFF, RTW_CUSTOMER_STR_LEN);
-#endif
-
 	pdvobj->processing_dev_remove = _FALSE;
 
 	ATOMIC_SET(&pdvobj->disable_func, 0);
@@ -1311,10 +1306,6 @@ void devobj_deinit(struct dvobj_priv *pdvobj)
 
 	_rtw_mutex_free(&pdvobj->hw_init_mutex);
 	_rtw_mutex_free(&pdvobj->h2c_fwcmd_mutex);
-
-#ifdef CONFIG_RTW_CUSTOMER_STR
-	_rtw_mutex_free(&pdvobj->customer_str_mutex);
-#endif
 
 	_rtw_mutex_free(&pdvobj->setch_mutex);
 	_rtw_mutex_free(&pdvobj->setbw_mutex);

@@ -3221,15 +3221,6 @@ s32 c2h_handler_8188f(PADAPTER padapter, u8 *buf)
 		/*CCX_FwC2HTxRpt(padapter, QueueID, pC2hEvent->payload); */
 		break;
 
-#ifdef CONFIG_RTW_CUSTOMER_STR
-	case C2H_CUSTOMER_STR_RPT:
-		c2h_customer_str_rpt_hdl(padapter, pC2hEvent->payload, pC2hEvent->plen);
-		break;
-	case C2H_CUSTOMER_STR_RPT_2:
-		c2h_customer_str_rpt_2_hdl(padapter, pC2hEvent->payload, pC2hEvent->plen);
-		break;
-#endif
-
 
 	default:
 		break;
