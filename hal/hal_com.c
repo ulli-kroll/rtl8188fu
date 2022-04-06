@@ -1982,7 +1982,6 @@ s32 rtw_hal_ch_sw_oper_offload(_adapter *padapter, u8 channel, u8 channel_offset
 void _rtl8188fu_set_hw_reg(_adapter *adapter, u8 variable, u8 *val)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
-_func_enter_;
 
 	switch (variable) {
 		case HW_VAR_PORT_SWITCH:
@@ -2064,14 +2063,12 @@ _func_enter_;
 			break;
 	}
 
-_func_exit_;
 }
 
 void _rtl8188fu_get_hw_reg(_adapter *adapter, u8 variable, u8 *val)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
 
-_func_enter_;
 
 	switch (variable) {
 	case HW_VAR_BASIC_RATE:
@@ -2097,7 +2094,6 @@ _func_enter_;
 		break;
 	}
 
-_func_exit_;
 }
 
 u8

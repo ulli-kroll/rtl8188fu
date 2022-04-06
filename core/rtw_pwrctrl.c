@@ -380,7 +380,6 @@ void rtw_set_rpwm(PADAPTER padapter, u8 pslv)
 #endif // CONFIG_DETECT_CPWM_BY_POLLING
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
-_func_enter_;
 
 	pslv = PS_STATE(pslv);
 
@@ -513,7 +512,6 @@ _func_enter_;
 		pwrpriv->cpwm = pslv;
 	}
 
-_func_exit_;
 }
 
 u8 PS_RDY_CHECK(_adapter * padapter)
@@ -684,7 +682,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	struct sta_info *ptdls_sta;
 #endif //CONFIG_TDLS
 
-_func_enter_;
 
 	RT_TRACE(_module_rtl871x_pwrctrl_c_, _drv_notice_,
 			 ("%s: PowerMode=%d Smart_PS=%d\n",
@@ -799,7 +796,6 @@ _func_enter_;
 	_exit_pwrlock(&pwrpriv->lock);
 #endif
 
-_func_exit_;
 }
 
 /*
@@ -854,7 +850,6 @@ void LPS_Enter(PADAPTER padapter, const char *msg)
 	int i;
 	char buf[32] = {0};
 
-_func_enter_;
 
 //	DBG_871X("+LeisurePSEnter\n");
 
@@ -893,7 +888,6 @@ _func_enter_;
 
 //	DBG_871X("-LeisurePSEnter\n");
 
-_func_exit_;
 }
 
 //
@@ -911,7 +905,6 @@ void LPS_Leave(PADAPTER padapter, const char *msg)
 	char buf[32] = {0};
 	struct debug_priv *pdbgpriv = &dvobj->drv_dbg;
 
-_func_enter_;
 
 //	DBG_871X("+LeisurePSLeave\n");
 
@@ -938,7 +931,6 @@ _func_enter_;
 #endif //DBG_CHECK_FW_PS_STATE
 //	DBG_871X("-LeisurePSLeave\n");
 
-_func_exit_;
 }
 #endif
 
@@ -954,7 +946,6 @@ void LeaveAllPowerSaveModeDirect(PADAPTER Adapter)
 	u32 start_time;
 #endif // CONFIG_DETECT_CPWM_BY_POLLING
 
-_func_enter_;
 
 	DBG_871X("%s.....\n",__FUNCTION__);
 
@@ -1056,7 +1047,6 @@ _func_enter_;
 		}
 	}
 
-_func_exit_;
 }
 
 //
@@ -1071,7 +1061,6 @@ void LeaveAllPowerSaveMode(IN PADAPTER Adapter)
 	int n_assoc_iface = 0;
 	int i;
 
-_func_enter_;
 
 	//DBG_871X("%s.....\n",__FUNCTION__);
 
@@ -1134,7 +1123,6 @@ _func_enter_;
 		}	
 	}
 
-_func_exit_;
 }
 
 #ifdef CONFIG_LPS_LCLK
@@ -1145,7 +1133,6 @@ void LPS_Leave_check(
 	u32	start_time;
 	u8	bReady;
 
-_func_enter_;
 
 	pwrpriv = adapter_to_pwrctl(padapter);
 
@@ -1182,7 +1169,6 @@ _func_enter_;
 		rtw_msleep_os(1);
 	}
 
-_func_exit_;
 }
 
 /*
@@ -1198,7 +1184,6 @@ void cpwm_int_hdl(
 {
 	struct pwrctrl_priv *pwrpriv;
 
-_func_enter_;
 
 	pwrpriv = adapter_to_pwrctl(padapter);
 #if 0
@@ -1239,7 +1224,6 @@ exit:
 	RT_TRACE(_module_rtl871x_pwrctrl_c_, _drv_notice_,
 			 ("cpwm_int_hdl: cpwm=0x%02x\n", pwrpriv->cpwm));
 
-_func_exit_;
 }
 
 static void cpwm_event_callback(struct work_struct *work)
@@ -1361,7 +1345,6 @@ s32 rtw_register_task_alive(PADAPTER padapter, u32 task)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	res = _SUCCESS;
 	pwrctrl = adapter_to_pwrctl(padapter);
@@ -1396,7 +1379,6 @@ _func_enter_;
 	}
 #endif // CONFIG_DETECT_CPWM_BY_POLLING
 
-_func_exit_;
 
 	return res;	
 }
@@ -1416,7 +1398,6 @@ void rtw_unregister_task_alive(PADAPTER padapter, u32 task)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 	pslv = PS_STATE_S0;
@@ -1441,7 +1422,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 }
 
 /*
@@ -1463,7 +1443,6 @@ s32 rtw_register_tx_alive(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	res = _SUCCESS;
 	pwrctrl = adapter_to_pwrctl(padapter);
@@ -1498,7 +1477,6 @@ _func_enter_;
 	}
 #endif // CONFIG_DETECT_CPWM_BY_POLLING
 
-_func_exit_;
 
 	return res;	
 }
@@ -1522,7 +1500,6 @@ s32 rtw_register_cmd_alive(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	res = _SUCCESS;
 	pwrctrl = adapter_to_pwrctl(padapter);
@@ -1557,7 +1534,6 @@ _func_enter_;
 	}
 #endif // CONFIG_DETECT_CPWM_BY_POLLING
 
-_func_exit_;
 
 	return res;
 }
@@ -1575,7 +1551,6 @@ s32 rtw_register_rx_alive(PADAPTER padapter)
 {
 	struct pwrctrl_priv *pwrctrl;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 
@@ -1588,7 +1563,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 
 	return _SUCCESS;
 }
@@ -1606,7 +1580,6 @@ s32 rtw_register_evt_alive(PADAPTER padapter)
 {
 	struct pwrctrl_priv *pwrctrl;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 
@@ -1619,7 +1592,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 
 	return _SUCCESS;
 }
@@ -1636,7 +1608,6 @@ void rtw_unregister_tx_alive(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 	pslv = PS_STATE_S0;
@@ -1661,7 +1632,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 }
 
 /*
@@ -1676,7 +1646,6 @@ void rtw_unregister_cmd_alive(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctrl;
 	u8 pslv;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 	pslv = PS_STATE_S0;
@@ -1701,7 +1670,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 }
 
 /*
@@ -1711,7 +1679,6 @@ void rtw_unregister_rx_alive(PADAPTER padapter)
 {
 	struct pwrctrl_priv *pwrctrl;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 
@@ -1725,14 +1692,12 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 }
 
 void rtw_unregister_evt_alive(PADAPTER padapter)
 {
 	struct pwrctrl_priv *pwrctrl;
 
-_func_enter_;
 
 	pwrctrl = adapter_to_pwrctl(padapter);
 
@@ -1744,7 +1709,6 @@ _func_enter_;
 
 	_exit_pwrlock(&pwrctrl->lock);
 
-_func_exit_;
 }
 #endif	/* CONFIG_LPS_LCLK */
 
@@ -1754,7 +1718,6 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 	int i = 0;
 	u8 val8 = 0;
 
-_func_enter_;
 
 
 	_init_pwrlock(&pwrctrlpriv->lock);
@@ -1819,7 +1782,6 @@ _func_enter_;
 	#endif //CONFIG_HAS_EARLYSUSPEND
 
 
-_func_exit_;
 
 }
 
@@ -1829,7 +1791,6 @@ void rtw_free_pwrctrl_priv(PADAPTER adapter)
 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(adapter);
 
 
-_func_enter_;
 
 	//_rtw_memset((unsigned char *)pwrctrlpriv, 0, sizeof(struct pwrctrl_priv));
 
@@ -1841,7 +1802,6 @@ _func_enter_;
 	_free_pwrlock(&pwrctrlpriv->lock);
 	_free_pwrlock(&pwrctrlpriv->check_32k_lock);
 
-_func_exit_;
 }
 
 #if defined(CONFIG_HAS_EARLYSUSPEND)

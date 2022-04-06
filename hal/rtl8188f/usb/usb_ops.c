@@ -183,7 +183,6 @@ void rtl8188fu_xmit_tasklet(void *priv)
 
 void rtl8188fu_set_intf_ops(struct _io_ops	*pops)
 {
-	_func_enter_;
 
 	_rtw_memset((u8 *)pops, 0, sizeof(struct _io_ops));
 
@@ -209,7 +208,6 @@ void rtl8188fu_set_intf_ops(struct _io_ops	*pops)
 	pops->_read_port_cancel = &usb_read_port_cancel;
 	pops->_write_port_cancel = &usb_write_port_cancel;
 
-	_func_exit_;
 
 }
 void rtl8188fu_set_hw_type(struct dvobj_priv *pdvobj)

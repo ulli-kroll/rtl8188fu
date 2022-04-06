@@ -921,7 +921,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 	u32 NavUpper = WiFiNavUpperUs;
 	u32 value32;
 
-	_func_enter_;
 
 	status = rtl8188fu_init_power_on(padapter);
 	if (status == _FAIL) {
@@ -1136,7 +1135,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 exit:
 
-	_func_exit_;
 
 	return status;
 }
@@ -1353,7 +1351,6 @@ unsigned int rtl8188fu_inirp_init(PADAPTER Adapter)
 
 	u32 (*_read_port)(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pmem);
 
-	_func_enter_;
 
 	_read_port = pintfhdl->io_ops._read_port;
 
@@ -1381,7 +1378,6 @@ exit:
 
 	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("<=== usb_inirp_init\n"));
 
-	_func_exit_;
 
 	return status;
 
@@ -1715,7 +1711,6 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 {
 	struct hal_ops	*pHalFunc = &padapter->HalFunc;
 
-	_func_enter_;
 
 	pHalFunc->dm_init = &rtl8188f_init_dm_priv;
 	pHalFunc->dm_deinit = &rtl8188f_deinit_dm_priv;
@@ -1809,6 +1804,5 @@ void rtl8188fu_set_hal_ops(_adapter *padapter)
 	pHalFunc->xmit_thread_handler = &rtl8188fu_xmit_buf_handler;
 #endif
 
-	_func_exit_;
 }
 

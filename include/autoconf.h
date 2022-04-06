@@ -217,7 +217,6 @@
 #endif /* CONFIG_DEBUG */
 
 #if DBG_PHYDM_MORE
-	#define CONFIG_DEBUG_RTL871X /* RT_TRACE, RT_PRINT_DATA, _func_enter_, _func_exit_ */
 #endif /* DBG_MORE */
 
 

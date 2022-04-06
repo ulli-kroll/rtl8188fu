@@ -194,7 +194,6 @@ uint rtw_hal_deinit(_adapter *padapter)
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
 	int i;
-_func_enter_;
 
 	status = padapter->HalFunc.hal_deinit(padapter);
 
@@ -207,7 +206,6 @@ _func_enter_;
 		DBG_871X("\n rtw_hal_deinit: hal_init fail\n");
 	}
 
-_func_exit_;
 	
 	return status;
 }

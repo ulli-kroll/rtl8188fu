@@ -3492,7 +3492,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 	u16 val16;
 	u32 val32;
 
-	_func_enter_;
 
 	switch (variable) {
 	case HW_VAR_SET_RPWM:
@@ -3959,7 +3958,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		break;
 	}
 
-	_func_exit_;
 }
 
 struct qinfo_8188f {
@@ -4125,7 +4123,6 @@ void SetHwRegWithBuf8188F(PADAPTER padapter, u8 variable, u8 *pbuf, int len)
 {
 	PHAL_DATA_TYPE pHalData;
 
-	_func_enter_;
 
 	pHalData = GET_HAL_DATA(padapter);
 
@@ -4137,7 +4134,6 @@ void SetHwRegWithBuf8188F(PADAPTER padapter, u8 variable, u8 *pbuf, int len)
 	default:
 		break;
 	}
-	_func_exit_;
 }
 #endif /* CONFIG_C2H_PACKET_EN */
 
