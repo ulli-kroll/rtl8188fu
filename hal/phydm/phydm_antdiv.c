@@ -31,18 +31,6 @@
 //======================================================
 
 VOID
-ODM_SetAntConfig(
-	IN	PVOID	pDM_VOID,
-	IN	u1Byte		antSetting	// 0=A, 1=B, 2=C, ....
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-}
-
-//======================================================
-
-
-VOID
 ODM_SwAntDivRestAfterLink(
 	IN		PVOID		pDM_VOID
 	)

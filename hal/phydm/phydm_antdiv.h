@@ -280,13 +280,6 @@ typedef enum _ANT_DIV_TYPE
 //1 ============================================================
 
 
-VOID
-ODM_SetAntConfig(
-	IN	PVOID	pDM_VOID,
-	IN	u1Byte		antSetting	// 0=A, 1=B, 2=C, ....
-	);
-
-
 #define SwAntDivRestAfterLink	ODM_SwAntDivRestAfterLink
 
 VOID ODM_SwAntDivRestAfterLink(	
