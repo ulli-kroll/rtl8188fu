@@ -738,10 +738,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 
 
 
-#if(defined(CONFIG_PATH_DIVERSITY))
-	PATHDIV_T	DM_PathDiv;
-#endif	
-
 	EDCA_T		DM_EDCA_Table;
 	u4Byte		WMMEDCA_BE;
 

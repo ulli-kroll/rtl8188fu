@@ -636,12 +636,6 @@ odm_Process_RSSIForDM(
 			ODM_Process_RSSIForAntDiv(pDM_Odm,pPhyInfo,pPktinfo);
 		#endif
 	}
-	#if(defined(CONFIG_PATH_DIVERSITY))
-	else if(pDM_Odm->SupportAbility & ODM_BB_PATH_DIV)
-	{
-		phydm_process_rssi_for_path_div(pDM_Odm,pPhyInfo,pPktinfo);
-	}
-	#endif
 	//-----------------Smart Antenna Debug Message------------------//
 	
 	UndecoratedSmoothedCCK =  pEntry->rssi_stat.UndecoratedSmoothedCCK;

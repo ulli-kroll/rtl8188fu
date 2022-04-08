@@ -547,9 +547,6 @@ phydm_cmd_parser(
 
 		if (input_idx >= 1) {
 			/*PHYDM_SNPRINTF((output+used, out_len-used, "odm_PATHDIV_debug\n"));*/
-#if (defined(CONFIG_PATH_DIVERSITY))
-			odm_pathdiv_debug(pDM_Odm, (u4Byte *)var1, &used, output, &out_len);
-#endif
 		}
 
 		break;
