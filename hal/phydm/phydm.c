@@ -55,12 +55,6 @@ odm_GlobalAdapterCheck(
 //move to odm_PowerTacking.h by YuChen
 
 
-
-VOID
-odm_UpdatePowerTrainingState(
-	IN	PDM_ODM_T	pDM_Odm
-);
-
 //============================================================
 //3 Export Interface
 //============================================================
@@ -331,21 +325,11 @@ phydm_support_ablity_debug(
 		PHYDM_SNPRINTF((output+used, out_len-used, "03. (( %s ))FA_CNT  \n", ((pDM_Odm->SupportAbility & ODM_BB_FA_CNT)?("V"):("."))  ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "04. (( %s ))RSSI_MONITOR  \n", ((pDM_Odm->SupportAbility & ODM_BB_RSSI_MONITOR)?("V"):("."))   ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "05. (( %s ))CCK_PD  \n", ((pDM_Odm->SupportAbility & ODM_BB_CCK_PD)?("V"):("."))   ));	
-		PHYDM_SNPRINTF((output+used, out_len-used, "06. (( %s ))ANT_DIV  \n", ((pDM_Odm->SupportAbility & ODM_BB_ANT_DIV)?("V"):("."))  ));
-		PHYDM_SNPRINTF((output+used, out_len-used, "07. (( %s ))PWR_SAVE  \n", ((pDM_Odm->SupportAbility & ODM_BB_PWR_SAVE)?("V"):("."))  ));
-		PHYDM_SNPRINTF((output+used, out_len-used, "08. (( %s ))PWR_TRAIN  \n", ((pDM_Odm->SupportAbility & ODM_BB_PWR_TRAIN)?("V"):("."))   ));	
 		PHYDM_SNPRINTF((output+used, out_len-used, "09. (( %s ))RATE_ADAPTIVE  \n", ((pDM_Odm->SupportAbility & ODM_BB_RATE_ADAPTIVE)?("V"):("."))   ));
-		PHYDM_SNPRINTF((output+used, out_len-used, "10. (( %s ))PATH_DIV  \n", ((pDM_Odm->SupportAbility & ODM_BB_PATH_DIV)?("V"):("."))));
-		PHYDM_SNPRINTF((output+used, out_len-used, "11. (( %s ))PSD  \n", ((pDM_Odm->SupportAbility & ODM_BB_PSD)?("V"):(".")) ));	
-		PHYDM_SNPRINTF((output+used, out_len-used, "12. (( %s ))RXHP  \n", ((pDM_Odm->SupportAbility & ODM_BB_RXHP)?("V"):("."))   ));
-		PHYDM_SNPRINTF((output+used, out_len-used, "13. (( %s ))ADAPTIVITY  \n", ((pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY)?("V"):(".")) ));	
 		PHYDM_SNPRINTF((output+used, out_len-used, "14. (( %s ))CFO_TRACKING  \n", ((pDM_Odm->SupportAbility & ODM_BB_CFO_TRACKING)?("V"):(".")) ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "15. (( %s ))NHM_CNT  \n", ((pDM_Odm->SupportAbility & ODM_BB_NHM_CNT)?("V"):("."))  ));	
-		PHYDM_SNPRINTF((output+used, out_len-used, "16. (( %s ))PRIMARY_CCA  \n", ((pDM_Odm->SupportAbility & ODM_BB_PRIMARY_CCA)?("V"):(".")) ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "20. (( %s ))EDCA_TURBO  \n", ((pDM_Odm->SupportAbility & ODM_MAC_EDCA_TURBO)?("V"):("."))  ));	
-		PHYDM_SNPRINTF((output+used, out_len-used, "21. (( %s ))EARLY_MODE  \n", ((pDM_Odm->SupportAbility & ODM_MAC_EARLY_MODE)?("V"):(".")) ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "24. (( %s ))TX_PWR_TRACK  \n", ((pDM_Odm->SupportAbility & ODM_RF_TX_PWR_TRACK)?("V"):("."))  ));	
-		PHYDM_SNPRINTF((output+used, out_len-used, "25. (( %s ))RX_GAIN_TRACK  \n", ((pDM_Odm->SupportAbility & ODM_RF_RX_GAIN_TRACK)?("V"):("."))  ));
 		PHYDM_SNPRINTF((output+used, out_len-used, "26. (( %s ))RF_CALIBRATION  \n", ((pDM_Odm->SupportAbility & ODM_RF_CALIBRATION)?("V"):("."))   ));
 		PHYDM_SNPRINTF((output+used, out_len-used,"%s\n", "================================"));
 	}
@@ -360,23 +344,6 @@ phydm_support_ablity_debug(
 	else
 	{
 
-		if(dm_value[1] == 1) //enable
-		{
-			pDM_Odm->SupportAbility |= BIT(dm_value[0]) ;
-			if(BIT(dm_value[0]) & ODM_BB_PATH_DIV)
-			{
-				odm_PathDiversityInit(pDM_Odm);
-			}
-		}
-		else if(dm_value[1] == 2) //disable
-		{
-			pDM_Odm->SupportAbility &= ~(BIT(dm_value[0])) ;
-		}
-		else
-		{
-			//DbgPrint("\n[Warning!!!]  1:enable,  2:disable \n\n");
-			PHYDM_SNPRINTF((output+used, out_len-used,"%s\n", "[Warning!!!]  1:enable,  2:disable"));
-		}
 	}
 	PHYDM_SNPRINTF((output+used, out_len-used,"pre-SupportAbility  =  0x%x\n",  pre_support_ability ));	
 	PHYDM_SNPRINTF((output+used, out_len-used,"Curr-SupportAbility =  0x%x\n", pDM_Odm->SupportAbility ));
@@ -414,7 +381,6 @@ _rtl8188fu_dm_watchdog(
 	}
 	
 	Phydm_CheckAdaptivity(pDM_Odm);
-	odm_UpdatePowerTrainingState(pDM_Odm);
 	odm_DIG(pDM_Odm);
 	{
 		pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
@@ -1153,120 +1119,6 @@ void odm_dtc(PDM_ODM_T pDM_Odm)
 		__func__, pDM_Odm->RSSI_Min, sign?"minus":"plus", dtc_steps);
 #endif /* CONFIG_RESP_TXAGC_ADJUST */
 }
-
-
-VOID
-odm_UpdatePowerTrainingState(
-	IN	PDM_ODM_T	pDM_Odm
-	)
-{
-	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PHYDM_FALSEALMCNT);
-	pDIG_T						pDM_DigTable = &pDM_Odm->DM_DigTable;
-	u4Byte						score = 0;
-
-	if(!(pDM_Odm->SupportAbility & ODM_BB_PWR_TRAIN))
-		return;
-
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState()============>\n"));
-	pDM_Odm->bChangeState = FALSE;
-
-	// Debug command
-	if(pDM_Odm->ForcePowerTrainingState)
-	{
-		if(pDM_Odm->ForcePowerTrainingState == 1 && !pDM_Odm->bDisablePowerTraining)
-		{
-			pDM_Odm->bChangeState = TRUE;
-			pDM_Odm->bDisablePowerTraining = TRUE;
-		}
-		else if(pDM_Odm->ForcePowerTrainingState == 2 && pDM_Odm->bDisablePowerTraining)
-		{
-			pDM_Odm->bChangeState = TRUE;
-			pDM_Odm->bDisablePowerTraining = FALSE;
-		}
-
-		pDM_Odm->PT_score = 0;
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM = 0;
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK = 0;
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): ForcePowerTrainingState = %d\n", 
-			pDM_Odm->ForcePowerTrainingState));
-		return;
-	}
-	
-	if(!pDM_Odm->bLinked)
-		return;
-	
-	// First connect
-	if((pDM_Odm->bLinked) && (pDM_DigTable->bMediaConnect_0 == FALSE))
-	{
-		pDM_Odm->PT_score = 0;
-		pDM_Odm->bChangeState = TRUE;
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM = 0;
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK = 0;
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): First Connect\n"));
-		return;
-	}
-
-	// Compute score
-	if(pDM_Odm->NHM_cnt_0 >= 215)
-		score = 2;
-	else if(pDM_Odm->NHM_cnt_0 >= 190) 
-		score = 1;							// unknow state
-	else
-	{
-		u4Byte	RX_Pkt_Cnt;
-		
-		RX_Pkt_Cnt = (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM) + (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK);
-		
-		if((FalseAlmCnt->cnt_cca_all > 31 && RX_Pkt_Cnt > 31) && (FalseAlmCnt->cnt_cca_all >= RX_Pkt_Cnt))
-		{
-			if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 1)) <= FalseAlmCnt->cnt_cca_all)
-				score = 0;
-			else if((RX_Pkt_Cnt + (RX_Pkt_Cnt >> 2)) <= FalseAlmCnt->cnt_cca_all)
-				score = 1;
-			else
-				score = 2;
-		}
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): RX_Pkt_Cnt = %d, Cnt_CCA_all = %d\n", 
-			RX_Pkt_Cnt, FalseAlmCnt->cnt_cca_all));
-	}
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): NumQryPhyStatusOFDM = %d, NumQryPhyStatusCCK = %d\n",
-			(u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM), (u4Byte)(pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK)));
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): NHM_cnt_0 = %d, score = %d\n", 
-		pDM_Odm->NHM_cnt_0, score));
-
-	// smoothing
-	pDM_Odm->PT_score = (score << 4) + (pDM_Odm->PT_score>>1) + (pDM_Odm->PT_score>>2);
-	score = (pDM_Odm->PT_score + 32) >> 6;
-	ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): PT_score = %d, score after smoothing = %d\n", 
-		pDM_Odm->PT_score, score));
-
-	// Mode decision
-	if(score == 2)
-	{
-		if(pDM_Odm->bDisablePowerTraining)
-		{
-			pDM_Odm->bChangeState = TRUE;
-			pDM_Odm->bDisablePowerTraining = FALSE;
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): Change state\n"));
-		}
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): Enable Power Training\n"));
-	}
-	else if(score == 0)
-	{
-		if(!pDM_Odm->bDisablePowerTraining)
-		{
-			pDM_Odm->bChangeState = TRUE;
-			pDM_Odm->bDisablePowerTraining = TRUE;
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): Change state\n"));
-		}
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_RA_MASK, ODM_DBG_LOUD,("odm_UpdatePowerTrainingState(): Disable Power Training\n"));
-	}
-
-	pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM = 0;
-	pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK = 0;
-}
-
-
 
 /*===========================================================*/
 /* The following is for compile only*/

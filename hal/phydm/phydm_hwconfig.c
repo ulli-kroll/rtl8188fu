@@ -628,15 +628,6 @@ odm_Process_RSSIForDM(
 	isCCKrate = (pPktinfo->DataRate <= ODM_RATE11M )?TRUE :FALSE;
 	pDM_Odm->RxRate = pPktinfo->DataRate;
 
-	//--------------Statistic for antenna/path diversity------------------
-	if(pDM_Odm->SupportAbility & ODM_BB_ANT_DIV)
-	{
-		#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-			ODM_Process_RSSIForAntDiv(pDM_Odm,pPhyInfo,pPktinfo);
-		#endif
-	}
-	//-----------------Smart Antenna Debug Message------------------//
-	
 	UndecoratedSmoothedCCK =  pEntry->rssi_stat.UndecoratedSmoothedCCK;
 	UndecoratedSmoothedOFDM = pEntry->rssi_stat.UndecoratedSmoothedOFDM;
 	UndecoratedSmoothedPWDB = pEntry->rssi_stat.UndecoratedSmoothedPWDB;	

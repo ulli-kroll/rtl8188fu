@@ -228,21 +228,10 @@ rtl8188fu_dm_write_dig(
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_TRACE, ("ODM_Write_DIG(): CurrentIGI(0x%02x) is larger than upper bound !!\n", CurrentIGI));
 			CurrentIGI = pDM_DigTable->rx_gain_range_max;
 		}
-		if (pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY && pDM_Odm->adaptivity_flag == TRUE)
-		{
-			if(CurrentIGI > pDM_Odm->Adaptivity_IGI_upper)
-				CurrentIGI = pDM_Odm->Adaptivity_IGI_upper;
-	
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("ODM_Write_DIG(): Adaptivity case: Force upper bound to 0x%x !!!!!!\n", CurrentIGI));
-		}
 	}
 
 	if(pDM_DigTable->CurIGValue != CurrentIGI)
 	{
-
-		/*Add by YuChen for USB IO too slow issue*/
-		if ((pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY) && (CurrentIGI > pDM_DigTable->CurIGValue))
-			Phydm_Adaptivity(pDM_Odm, CurrentIGI);
 
 		//1 Set IGI value
 		{ 
