@@ -127,13 +127,6 @@ ODM_UpdateMpDriverStatus(
 }
 
 VOID
-PHYDM_InitTRXAntennaSetting(
-	IN		PDM_ODM_T		pDM_Odm
-)
-{
-}
-
-VOID
 phydm_Init_cck_setting(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -164,7 +157,6 @@ odm_CommonInfoSelfInit(
 
 	PHYDM_InitDebugSetting(pDM_Odm);
 	ODM_InitMpDriverStatus(pDM_Odm);
-	PHYDM_InitTRXAntennaSetting(pDM_Odm);
 
 	pDM_Odm->TxRate = 0xFF;
 
