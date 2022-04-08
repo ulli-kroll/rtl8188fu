@@ -80,7 +80,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 
 			
 _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
-		hal/phydm/phydm_antdiv.o\
 		hal/phydm/phydm_interface.o\
 		hal/phydm/phydm_hwconfig.o\
 		hal/phydm/phydm.o\

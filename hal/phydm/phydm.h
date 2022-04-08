@@ -29,7 +29,6 @@
 #include "phydm_dig.h"
 #include "phydm_edcaturbocheck.h"
 #include "phydm_pathdiv.h"
-#include "phydm_antdiv.h"
 #include "phydm_rainfo.h"
 #include "phydm_dynamictxpower.h"
 #include "phydm_cfotracking.h"
@@ -723,14 +722,12 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	//
 	//ODM Structure
 	//
-	FAT_T						DM_FatTable;
 	DIG_T						DM_DigTable;
 
 	Pri_CCA_T					DM_PriCCA;
 	RA_T						DM_RA_Table;  
 	FALSE_ALARM_STATISTICS		FalseAlmCnt;
 	FALSE_ALARM_STATISTICS		FlaseAlmCntBuddyAdapter;
-	SWAT_T						DM_SWAT_Table;
 	CFO_TRACKING    				DM_CfoTrack;
 	ACS							DM_ACS;
 

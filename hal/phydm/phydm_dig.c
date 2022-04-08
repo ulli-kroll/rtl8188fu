@@ -561,17 +561,6 @@ odm_DIG(
 	//1 Force Lower Bound for AntDiv
 	if(pDM_Odm->bLinked && !pDM_Odm->bOneEntryOnly)
 	{
-		if((pDM_Odm->SupportICType & ODM_ANTDIV_SUPPORT) && (pDM_Odm->SupportAbility & ODM_BB_ANT_DIV))
-		{
-			if (pDM_Odm->AntDivType == CG_TRX_HW_ANTDIV || pDM_Odm->AntDivType == CG_TRX_SMART_ANTDIV) {
-				if (pDM_DigTable->AntDiv_RSSI_max > DIG_MaxOfMin)
-					DIG_Dynamic_MIN = DIG_MaxOfMin;
-				else
-					DIG_Dynamic_MIN = (u1Byte) pDM_DigTable->AntDiv_RSSI_max;
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Antenna diversity case: Force lower bound to 0x%x !!!!!!\n", DIG_Dynamic_MIN));
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Antenna diversity case: RSSI_max = 0x%x !!!!!!\n", pDM_DigTable->AntDiv_RSSI_max));
-			}
-		}
 	}
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Adjust boundary by RSSI Upper bound = 0x%x, Lower bound = 0x%x\n",
 		pDM_DigTable->rx_gain_range_max, DIG_Dynamic_MIN));

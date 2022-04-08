@@ -290,7 +290,6 @@ ODM_DMInit(
 	odm_RSSIMonitorInit(pDM_Odm);
 	phydm_rf_init(pDM_Odm);
 	odm_TXPowerTrackingInit(pDM_Odm);
-	odm_AntennaDiversityInit(pDM_Odm);
 	odm_AutoChannelSelectInit(pDM_Odm);
 	odm_PathDiversityInit(pDM_Odm);
 
@@ -310,7 +309,6 @@ ODM_DMReset(
 {
 	pDIG_T pDM_DigTable = &pDM_Odm->DM_DigTable;
 	
-	ODM_AntDivReset(pDM_Odm);	
 	phydm_setEDCCAThresholdAPI(pDM_Odm, pDM_DigTable->CurIGValue);
 }
 
@@ -419,7 +417,6 @@ _rtl8188fu_dm_watchdog(
 			pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 			Phydm_Adaptivity(pDM_Odm, pDM_DigTable->CurIGValue);
 		}
-		odm_AntennaDiversity(pDM_Odm); /*enable AntDiv in PS mode, request from SD4 Jeff*/
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("DMWatchdog in power saving mode\n"));
 		return;
 	}
@@ -439,7 +436,6 @@ _rtl8188fu_dm_watchdog(
 	odm_EdcaTurboCheck(pDM_Odm);
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);
-	odm_AntennaDiversity(pDM_Odm);
 
 	phydm_rf_watchdog(pDM_Odm);
 
