@@ -394,121 +394,12 @@ phydm_ra_dynamic_retry_count(
 	}
 }
 
-#if (defined(CONFIG_RA_DYNAMIC_RTY_LIMIT))
-
-VOID
-phydm_retry_limit_table_bound(
-	IN	PVOID	pDM_VOID,
-	IN	u1Byte	*retry_limit,
-	IN	u1Byte	offset
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pRA_T		        pRA_Table = &pDM_Odm->DM_RA_Table;
-
-	if (*retry_limit >  offset) {
-		
-		*retry_limit -= offset;
-		
-		if (*retry_limit < pRA_Table->retrylimit_low)
-			*retry_limit = pRA_Table->retrylimit_low;
-		else if (*retry_limit > pRA_Table->retrylimit_high)
-			*retry_limit = pRA_Table->retrylimit_high;
-	} else
-		*retry_limit = pRA_Table->retrylimit_low;
-}
-
-VOID
-phydm_reset_retry_limit_table(
-	IN	PVOID	pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pRA_T		        pRA_Table = &pDM_Odm->DM_RA_Table;
-	u1Byte			i;
-
-		#if ((RTL8192E_SUPPORT == 1) || (RTL8723B_SUPPORT == 1) || (RTL8188E_SUPPORT == 1)) 
-			u1Byte per_rate_retrylimit_table_20M[ODM_RATEMCS15+1] = {
-				1, 1, 2, 4,					/*CCK*/
-				2, 2, 4, 6, 8, 12, 16, 18,		/*OFDM*/
-				2, 4, 6, 8, 12, 18, 20, 22,		/*20M HT-1SS*/
-				2, 4, 6, 8, 12, 18, 20, 22		/*20M HT-2SS*/
-			};
-			u1Byte per_rate_retrylimit_table_40M[ODM_RATEMCS15+1] = {
-				1, 1, 2, 4,					/*CCK*/
-				2, 2, 4, 6, 8, 12, 16, 18,		/*OFDM*/
-				4, 8, 12, 16, 24, 32, 32, 32,		/*40M HT-1SS*/
-				4, 8, 12, 16, 24, 32, 32, 32		/*40M HT-2SS*/
-			};
-
-		#endif
-
-	memcpy(&(pRA_Table->per_rate_retrylimit_20M[0]), &(per_rate_retrylimit_table_20M[0]), ODM_NUM_RATE_IDX);
-	memcpy(&(pRA_Table->per_rate_retrylimit_40M[0]), &(per_rate_retrylimit_table_40M[0]), ODM_NUM_RATE_IDX);
-
-	for (i = 0; i < ODM_NUM_RATE_IDX; i++) {
-		phydm_retry_limit_table_bound(pDM_Odm, &(pRA_Table->per_rate_retrylimit_20M[i]), 0);
-		phydm_retry_limit_table_bound(pDM_Odm, &(pRA_Table->per_rate_retrylimit_40M[i]), 0);
-	}	
-}
-
-VOID
-phydm_ra_dynamic_retry_limit(
-	IN	PVOID	pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pRA_T		        pRA_Table = &pDM_Odm->DM_RA_Table;
-	PSTA_INFO_T		pEntry;
-	u1Byte	i, retry_offset;
-	u4Byte	ma_rx_tp;
-
-
-	if (pDM_Odm->pre_number_active_client == pDM_Odm->number_active_client) {
-		
-		ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, (" pre_number_active_client ==  number_active_client\n"));
-		return;
-		
-	} else {
-		if (pDM_Odm->number_active_client == 1) {
-			phydm_reset_retry_limit_table(pDM_Odm);
-			ODM_RT_TRACE(pDM_Odm, PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, ("one client only->reset to default value\n"));
-		} else {
-
-			retry_offset = pDM_Odm->number_active_client * pRA_Table->retry_descend_num;
-			
-			for (i = 0; i < ODM_NUM_RATE_IDX; i++) {
-
-				phydm_retry_limit_table_bound(pDM_Odm, &(pRA_Table->per_rate_retrylimit_20M[i]), retry_offset);
-				phydm_retry_limit_table_bound(pDM_Odm, &(pRA_Table->per_rate_retrylimit_40M[i]), retry_offset);	
-			}				
-		}
-	}
-}
-
-VOID
-phydm_ra_dynamic_retry_limit_init(
-	IN	PVOID	pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pRA_T		        pRA_Table = &pDM_Odm->DM_RA_Table;
-
-	pRA_Table->retry_descend_num = RA_RETRY_DESCEND_NUM;
-	pRA_Table->retrylimit_low = RA_RETRY_LIMIT_LOW;
-	pRA_Table->retrylimit_high = RA_RETRY_LIMIT_HIGH;
-	
-	phydm_reset_retry_limit_table(pDM_Odm);
-	
-}
-#else
 VOID
 phydm_ra_dynamic_retry_limit(
 	IN	PVOID	pDM_VOID
 )
 {
 }
-#endif
 
 
 VOID
@@ -1022,10 +913,6 @@ phydm_ra_info_init(
 	)
 {
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
-
-	#if (defined(CONFIG_RA_DYNAMIC_RTY_LIMIT))
-	phydm_ra_dynamic_retry_limit_init(pDM_Odm);
-	#endif
 
 	/*phydm_fw_trace_en_h2c(pDM_Odm, 1, 0, 0);*/
 }

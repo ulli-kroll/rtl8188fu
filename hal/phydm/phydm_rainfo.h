@@ -162,15 +162,6 @@ typedef struct _Rate_Adaptive_Table_ {
 #endif
 	u1Byte	link_tx_rate[ODM_ASSOCIATE_ENTRY_NUM];
 
-	#if (defined(CONFIG_RA_DYNAMIC_RTY_LIMIT))
-	u1Byte per_rate_retrylimit_20M[ODM_NUM_RATE_IDX];
-	u1Byte per_rate_retrylimit_40M[ODM_NUM_RATE_IDX];	
-	u1Byte			retry_descend_num;
-	u1Byte			retrylimit_low;
-	u1Byte			retrylimit_high;
-	#endif
-
-
 } RA_T, *pRA_T;
 
 typedef struct _ODM_RATE_ADAPTIVE {
