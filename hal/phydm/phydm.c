@@ -431,11 +431,6 @@ _rtl8188fu_dm_watchdog(
 
 	phydm_rf_watchdog(pDM_Odm);
 
-	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
-	{
-	        
-	}
-
 	odm_dtc(pDM_Odm);
 
 	odm_CommonInfoSelfReset(pDM_Odm);
