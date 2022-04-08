@@ -30,7 +30,6 @@
 #include "phydm_edcaturbocheck.h"
 #include "phydm_pathdiv.h"
 #include "phydm_antdiv.h"
-#include "phydm_antdect.h"
 #include "phydm_rainfo.h"
 #include "phydm_dynamictxpower.h"
 #include "phydm_cfotracking.h"
