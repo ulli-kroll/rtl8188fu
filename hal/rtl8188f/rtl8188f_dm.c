@@ -147,13 +147,6 @@ static void Update_ODM_ComInfo_8188f(PADAPTER	Adapter)
 					 | ODM_BB_NHM_CNT
 					 /*| ODM_BB_PWR_TRAIN */
 					 ;
-
-	if (rtw_odm_adaptivity_needed(Adapter) == _TRUE) {
-		rtw_odm_adaptivity_config_msg(RTW_DBGDUMP, Adapter);
-		SupportAbility |= ODM_BB_ADAPTIVITY;
-	}
-
-
 	ODM_CmnInfoUpdate(pDM_Odm, ODM_CMNINFO_ABILITY, SupportAbility);
 }
 

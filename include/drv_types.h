@@ -301,12 +301,6 @@ struct registry_priv
 	u8 qos_opt_enable;
 
 	u8 hiq_filter;
-	u8 adaptivity_en;
-	u8 adaptivity_mode;
-	u8 adaptivity_dml;
-	u8 adaptivity_dc_backoff;
-	s8 adaptivity_th_l2h_ini;
-	s8 adaptivity_th_edcca_hl_diff;
 
 	u8 boffefusemask;
 	BOOLEAN bFileMaskEfuse;

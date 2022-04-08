@@ -100,11 +100,6 @@ void dump_drv_cfg(void *sel)
 	DBG_871X_SEL_NL(sel, "CONFIG_MINIMAL_MEMORY_USAGE\n");
 #endif
 
-	DBG_871X_SEL_NL(sel, "CONFIG_RTW_ADAPTIVITY_EN = %d\n", CONFIG_RTW_ADAPTIVITY_EN);
-#if (CONFIG_RTW_ADAPTIVITY_EN)
-	DBG_871X_SEL_NL(sel, "ADAPTIVITY_MODE = %s\n", (CONFIG_RTW_ADAPTIVITY_MODE) ? "carrier_sense" : "normal");
-#endif
-
 #ifdef CONFIG_TDLS
 	DBG_871X_SEL_NL(sel, "CONFIG_TDLS\n");
 #endif

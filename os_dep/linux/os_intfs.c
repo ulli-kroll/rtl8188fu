@@ -291,30 +291,6 @@ uint rtw_hiq_filter = CONFIG_RTW_HIQ_FILTER;
 module_param(rtw_hiq_filter, uint, 0644);
 MODULE_PARM_DESC(rtw_hiq_filter, "0:allow all, 1:allow special, 2:deny all");
 
-uint rtw_adaptivity_en = CONFIG_RTW_ADAPTIVITY_EN;
-module_param(rtw_adaptivity_en, uint, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_en, "0:disable, 1:enable");
-
-uint rtw_adaptivity_mode = CONFIG_RTW_ADAPTIVITY_MODE;
-module_param(rtw_adaptivity_mode, uint, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_mode, "0:normal, 1:carrier sense");
-
-uint rtw_adaptivity_dml = CONFIG_RTW_ADAPTIVITY_DML;
-module_param(rtw_adaptivity_dml, uint, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_dml, "0:disable, 1:enable");
-
-uint rtw_adaptivity_dc_backoff = CONFIG_RTW_ADAPTIVITY_DC_BACKOFF;
-module_param(rtw_adaptivity_dc_backoff, uint, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_dc_backoff, "DC backoff for Adaptivity");
-
-int rtw_adaptivity_th_l2h_ini = CONFIG_RTW_ADAPTIVITY_TH_L2H_INI;
-module_param(rtw_adaptivity_th_l2h_ini, int, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_th_l2h_ini, "TH_L2H_ini for Adaptivity");
-
-int rtw_adaptivity_th_edcca_hl_diff = CONFIG_RTW_ADAPTIVITY_TH_EDCCA_HL_DIFF;
-module_param(rtw_adaptivity_th_edcca_hl_diff, int, 0644);
-MODULE_PARM_DESC(rtw_adaptivity_th_edcca_hl_diff, "TH_EDCCA_HL_diff for Adaptivity");
-
 uint rtw_amplifier_type_2g = CONFIG_RTW_AMPLIFIER_TYPE_2G;
 module_param(rtw_amplifier_type_2g, uint, 0644);
 MODULE_PARM_DESC(rtw_amplifier_type_2g, "BIT3:2G ext-PA, BIT4:2G ext-LNA");
@@ -518,13 +494,6 @@ uint loadparam(_adapter *padapter)
 	registry_par->qos_opt_enable = (u8)rtw_qos_opt_enable;
 
 	registry_par->hiq_filter = (u8)rtw_hiq_filter;
-
-	registry_par->adaptivity_en = (u8)rtw_adaptivity_en;
-	registry_par->adaptivity_mode = (u8)rtw_adaptivity_mode;
-	registry_par->adaptivity_dml = (u8)rtw_adaptivity_dml;
-	registry_par->adaptivity_dc_backoff = (u8)rtw_adaptivity_dc_backoff;
-	registry_par->adaptivity_th_l2h_ini = (s8)rtw_adaptivity_th_l2h_ini;
-	registry_par->adaptivity_th_edcca_hl_diff = (s8)rtw_adaptivity_th_edcca_hl_diff;
 
 	registry_par->boffefusemask = (u8)rtw_OffEfuseMask;
 	registry_par->bFileMaskEfuse = (u8)rtw_FileMaskEfuse;
