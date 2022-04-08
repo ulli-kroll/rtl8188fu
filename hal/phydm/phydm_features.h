@@ -26,7 +26,6 @@
 	/*Antenna Diversity*/
 	
 	/*#define CONFIG_RA_DBG_CMD*/
-	/*#define CONFIG_ANT_DETECTION*/
 	/*#define CONFIG_PATH_DIVERSITY*/
 	/*#define CONFIG_RA_DYNAMIC_RTY_LIMIT*/
 

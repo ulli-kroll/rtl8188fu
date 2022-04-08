@@ -777,9 +777,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	u1Byte			bUseRAMask;
 
 	ODM_RATE_ADAPTIVE	RateAdaptive;
-#if(defined(CONFIG_ANT_DETECTION))
-	ANT_DETECTED_INFO	AntDetectedInfo; // Antenna detected information for RSSI tool
-#endif
 	ODM_RF_CAL_T	RFCalibrateInfo;
 
 	
