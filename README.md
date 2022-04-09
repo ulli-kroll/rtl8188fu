@@ -1,4 +1,4 @@
-RTL8188FU driver for Linux kernel 4.15.x ~ 5.17.x (Linux Mint, Ubuntu or Debian Derivatives)
+RTL8188FU driver for Linux kernel 4.15.x ~ 5.18.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 ------------------
 
