@@ -240,7 +240,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_ap.o \
 		core/rtw_xmit.o	\
 		core/rtw_p2p.o \
-		core/rtw_tdls.o \
 		core/rtw_iol.o \
 		core/rtw_odm.o \
 		core/efuse/rtw_efuse.o 
