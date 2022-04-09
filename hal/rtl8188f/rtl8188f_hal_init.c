@@ -3252,15 +3252,6 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 		CCX_FwC2HTxRpt_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
 		break;
 
-#ifdef CONFIG_RTW_CUSTOMER_STR
-	case C2H_CUSTOMER_STR_RPT:
-		c2h_customer_str_rpt_hdl(padapter, c2hBuf, pC2hEvent->CmdLen);
-		break;
-	case C2H_CUSTOMER_STR_RPT_2:
-		c2h_customer_str_rpt_2_hdl(padapter, c2hBuf, pC2hEvent->CmdLen);
-		break;
-#endif
-
 	default:
 		if (!(phydm_c2H_content_parsing(pDM_Odm, pC2hEvent->CmdID, pC2hEvent->CmdLen, c2hBuf)))
 			RT_TRACE(_module_hal_init_c_, _drv_info_, ("%s: [WARNING] unknown C2H(0x%02x)\n", __func__, c2hCmdId));
