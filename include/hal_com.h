@@ -445,12 +445,6 @@ void rtw_get_noise(_adapter* padapter);
 u8 rtw_get_current_tx_rate(_adapter *padapter, u8 macid);
 void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished);
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-s32 rtw_hal_ch_sw_oper_offload(_adapter *padapter, u8 channel, u8 channel_offset, u16 bwmode);
-#endif
-#endif
-
 #ifdef CONFIG_GPIO_API
 u8 rtw_hal_get_gpio(_adapter* adapter, u8 gpio_num);
 int rtw_hal_set_gpio_output_value(_adapter* adapter, u8 gpio_num, bool isHigh);

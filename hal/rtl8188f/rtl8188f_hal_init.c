@@ -2560,18 +2560,6 @@ static void rtl8188f_fill_default_txdesc(
 		SET_TX_DESC_USB_TXAGG_NUM_8188F(pbuf, pxmitframe->agg_num);
 #endif
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_XMIT_ACK
-		/* CCX-TXRPT ack for xmit mgmt frames. */
-		if (pxmitframe->ack_report) {
-#ifdef DBG_CCX
-			DBG_8192C("%s set spe_rpt\n", __func__);
-#endif
-			SET_TX_DESC_SPE_RPT_8188F(pbuf, 1);
-			SET_TX_DESC_SW_DEFINE_8188F(pbuf, (u8)(GET_PRIMARY_ADAPTER(padapter)->xmitpriv.seq_no));
-		}
-#endif /* CONFIG_XMIT_ACK */
-#endif
 	} else if (pxmitframe->frame_tag == MGNT_FRAMETAG) {
 		/* RT_TRACE(_module_hal_xmit_c_, _drv_notice_, ("%s: MGNT_FRAMETAG\n", __func__)); */
 
@@ -2999,11 +2987,6 @@ static void hw_var_set_mlme_sitesurvey(PADAPTER padapter, u8 variable, u8 *val)
 	if ((check_fwstate(pmlmepriv, WIFI_AP_STATE) == _TRUE)
 	   )
 		rcr_clear_bit = RCR_CBSSID_BCN;
-#ifdef CONFIG_TDLS
-	/* TDLS will clear RCR_CBSSID_DATA bit for connection. */
-	else if (padapter->tdlsinfo.link_established == _TRUE)
-		rcr_clear_bit = RCR_CBSSID_BCN;
-#endif /* CONFIG_TDLS */
 
 	value_rcr = rtw_read32(padapter, REG_RCR);
 
@@ -3311,19 +3294,9 @@ void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
 		break;
 
 	case C2H_BCN_EARLY_RPT:
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-		rtw_tdls_ch_sw_back_to_base_chnl(padapter);
-#endif
-#endif
 		break;
 
 	case C2H_FW_CHNL_SWITCH_COMPLETE:
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-		rtw_tdls_chsw_oper_done(padapter);
-#endif
-#endif
 		break;
 
 	default:
@@ -3660,15 +3633,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		rtl8188f_set_FwJoinBssRpt_cmd(padapter, *val);
 		break;
 
-#ifdef CONFIG_TDLS
-	case HW_VAR_TDLS_WRCR:
-		rtw_write32(padapter, REG_RCR, rtw_read32(padapter, REG_RCR) & (~RCR_CBSSID_DATA));
-		break;
-	case HW_VAR_TDLS_RS_RCR:
-		rtw_write32(padapter, REG_RCR, rtw_read32(padapter, REG_RCR) | (RCR_CBSSID_DATA));
-		break;
-#endif /*CONFIG_TDLS */
-
 	case HW_VAR_EFUSE_USAGE:
 		pHalData->EfuseUsedPercentage = *val;
 		break;
@@ -3855,13 +3819,6 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 	case HW_VAR_EN_HW_UPDATE_TSF:
 		hw_var_set_hw_update_tsf(padapter);
 		break;
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-	case HW_VAR_TDLS_BCN_EARLY_C2H_RPT:
-		rtl8188f_set_BcnEarly_C2H_Rpt_cmd(padapter, *val);
-		break;
-#endif
-#endif
 	default:
 		_rtl8188fu_set_hw_reg(padapter, variable, val);
 		break;

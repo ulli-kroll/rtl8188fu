@@ -1731,34 +1731,6 @@ error:
 	rtw_free_xmitframe(pxmitpriv, pcmdframe);
 }
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-s32 rtw_hal_ch_sw_oper_offload(_adapter *padapter, u8 channel, u8 channel_offset, u16 bwmode)
-{
-	PHAL_DATA_TYPE	pHalData =  GET_HAL_DATA(padapter);
-	u8 ch_sw_h2c_buf[4] = {0x00, 0x00, 0x00, 0x00};
-
-
-	SET_H2CCMD_CH_SW_OPER_OFFLOAD_CH_NUM(ch_sw_h2c_buf, channel);	
-	SET_H2CCMD_CH_SW_OPER_OFFLOAD_BW_MODE(ch_sw_h2c_buf, bwmode);
-	switch (bwmode) {
-		case CHANNEL_WIDTH_40:
-			SET_H2CCMD_CH_SW_OPER_OFFLOAD_BW_40M_SC(ch_sw_h2c_buf, channel_offset);	
-			break;
-		case CHANNEL_WIDTH_80:
-			SET_H2CCMD_CH_SW_OPER_OFFLOAD_BW_80M_SC(ch_sw_h2c_buf, channel_offset);
-			break;
-		case CHANNEL_WIDTH_20:	
-		default:
-			break;
-	}
-	SET_H2CCMD_CH_SW_OPER_OFFLOAD_RFE_TYPE(ch_sw_h2c_buf, pHalData->RFEType);
-
-	return rtw_hal_fill_h2c_cmd(padapter, H2C_CHNL_SWITCH_OPER_OFFLOAD, sizeof(ch_sw_h2c_buf), ch_sw_h2c_buf);
-}
-#endif
-#endif
-
 void _rtl8188fu_set_hw_reg(_adapter *adapter, u8 variable, u8 *val)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);

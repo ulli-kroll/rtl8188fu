@@ -6629,8 +6629,6 @@ static int rtw_wx_tdls_wfd_enable(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -6641,19 +6639,6 @@ static int rtw_tdls_weaksec(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-
-	u8 i, j;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	if ( extra[ 0 ] == '0' )
-		padapter->wdinfo.wfd_tdls_weaksec = 0;
-	else
-		padapter->wdinfo.wfd_tdls_weaksec = 1;
-
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -6665,61 +6650,6 @@ static int rtw_tdls_enable(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info	*ptdlsinfo = &padapter->tdlsinfo;
-	_irqL	 irqL;
-	_list	*plist, *phead;
-	s32	index;
-	struct sta_info *psta = NULL;
-	struct	sta_priv *pstapriv = &padapter->stapriv;
-	u8 tdls_sta[NUM_STA][ETH_ALEN];
-	u8 empty_hwaddr[ETH_ALEN] = { 0x00 };
-	struct tdls_txmgmt txmgmt;
-
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	_rtw_memset(tdls_sta, 0x00, sizeof(tdls_sta));
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-
-	if (extra[ 0 ] == '0') {
-		ptdlsinfo->tdls_enable = 0;
-
-		if(pstapriv->asoc_sta_count==1)
-			return ret;
-
-		_enter_critical_bh(&pstapriv->sta_hash_lock, &irqL);
-		for (index=0; index< NUM_STA; index++) {
-			phead = &(pstapriv->sta_hash[index]);
-			plist = get_next(phead);
-			
-			while (rtw_end_of_queue_search(phead, plist) == _FALSE) {
-				psta = LIST_CONTAINOR(plist, struct sta_info ,hash_list);
-
-				plist = get_next(plist);
-
-				if (psta->tdls_sta_state != TDLS_STATE_NONE) {
-					_rtw_memcpy(tdls_sta[index], psta->hwaddr, ETH_ALEN);
-				}
-			}
-		}
-		_exit_critical_bh(&pstapriv->sta_hash_lock, &irqL);
-
-		for (index=0; index< NUM_STA; index++) {
-			if (!_rtw_memcmp(tdls_sta[index], empty_hwaddr, ETH_ALEN)) {
-				DBG_871X("issue tear down to "MAC_FMT"\n", MAC_ARG(tdls_sta[index]));
-				txmgmt.status_code = _RSON_TDLS_TEAR_UN_RSN_;
-				_rtw_memcpy(txmgmt.peer, tdls_sta[index], ETH_ALEN);
-				issue_tdls_teardown(padapter, &txmgmt, _TRUE);
-			}
-		}
-		rtw_tdls_cmd(padapter, NULL, TDLS_RS_RCR);
-		rtw_reset_tdls_info(padapter);
-	}	else if (extra[0] == '1') {
-		ptdlsinfo->tdls_enable = 1;
-	}
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -6729,27 +6659,6 @@ static int rtw_tdls_setup(struct net_device *dev,
 				union iwreq_data *wrqu, char *extra)
 {
 	int ret = 0;
-#ifdef CONFIG_TDLS
-	u8 i, j;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_txmgmt txmgmt;
-
-	DBG_871X("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1);
-
-	if (wrqu->data.length - 1 != 17) {
-		DBG_871X("[%s] length:%d != 17\n", __FUNCTION__, (wrqu->data.length -1));
-		return ret;
-	}
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	for( i=0, j=0 ; i < ETH_ALEN; i++, j+=3 ){
-		txmgmt.peer[i]=key_2char2num(*(extra+j), *(extra+j+1));
-	}
-
-	{
-		issue_tdls_setup_req(padapter, &txmgmt, _TRUE);
-	}
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -6760,37 +6669,6 @@ static int rtw_tdls_teardown(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-
-	u8 i,j;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct sta_info *ptdls_sta = NULL;
-	struct tdls_txmgmt txmgmt;
-
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	if (wrqu->data.length - 1 != 17 && wrqu->data.length - 1 != 19) {
-		DBG_871X("[%s] length:%d != 17 or 19\n",
-			__FUNCTION__, (wrqu->data.length -1));
-		return ret;
-	}
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	for (i=0, j=0; i < ETH_ALEN; i++, j+=3)
-		txmgmt.peer[i]=key_2char2num(*(extra+j), *(extra+j+1));
-
-	ptdls_sta = rtw_get_stainfo( &(padapter->stapriv), txmgmt.peer);
-	
-	if (ptdls_sta != NULL) {
-		txmgmt.status_code = _RSON_TDLS_TEAR_UN_RSN_;
-		if (wrqu->data.length - 1 == 19)
-			issue_tdls_teardown(padapter, &txmgmt, _FALSE);
-		else 
-			issue_tdls_teardown(padapter, &txmgmt, _TRUE);
-	} else {
-		DBG_871X( "TDLS peer not found\n");
-	}
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -6801,22 +6679,6 @@ static int rtw_tdls_discovery(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_txmgmt	txmgmt;
-	int i = 0, j=0;
-
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	for( i=0, j=0 ; i < ETH_ALEN; i++, j+=3 ){
-		txmgmt.peer[i]=key_2char2num(*(extra+j), *(extra+j+1));
-	}
-
-	issue_tdls_dis_req(padapter, &txmgmt);
-
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -6828,61 +6690,6 @@ static int rtw_tdls_ch_switch(struct net_device *dev,
 	int ret = 0;
 	u8 tmp;
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_ch_switch *pchsw_info = &padapter->tdlsinfo.chsw_info;
-	u8 i, j;
-	struct sta_info *ptdls_sta = NULL;
-	u8 take_care_iqk;
-
-	DBG_8192C( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	if (rtw_tdls_is_chsw_allowed(padapter) == _FALSE)
-	{
-		DBG_871X("TDLS channel switch is not allowed\n");
-		return ret;
-	}
-
-	for( i=0, j=0 ; i < ETH_ALEN; i++, j+=3 ){
-		pchsw_info->addr[i] = key_2char2num(*(extra+j), *(extra+j+1));
-	}
-
-	ptdls_sta = rtw_get_stainfo(&padapter->stapriv, pchsw_info->addr);
-	if( ptdls_sta == NULL )
-		return ret;
-
-	pchsw_info->ch_sw_state |= TDLS_CH_SW_INITIATOR_STATE;
-
-	if (ptdls_sta != NULL) {
-		if (pchsw_info->off_ch_num == 0)
-			pchsw_info->off_ch_num = 11;
-	}else {
-		DBG_871X( "TDLS peer not found\n");
-	}
-
-	rtw_pm_set_lps(padapter, PS_MODE_ACTIVE);
-
-	rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
-	if (take_care_iqk == _TRUE) {
-		u8 central_chnl;
-		u8 bw_mode;
-
-		bw_mode = (pchsw_info->ch_offset) ? CHANNEL_WIDTH_40 : CHANNEL_WIDTH_20;
-		central_chnl = rtw_get_center_ch(pchsw_info->off_ch_num, bw_mode, pchsw_info->ch_offset);
-		if (rtw_hal_ch_sw_iqk_info_search(padapter, central_chnl, bw_mode) >= 0)
-			rtw_tdls_cmd(padapter, ptdls_sta->hwaddr, TDLS_CH_SW_START);
-		else
-			rtw_tdls_cmd(padapter, ptdls_sta->hwaddr, TDLS_CH_SW_PREPARE);
-	}
-	else
-		rtw_tdls_cmd(padapter, ptdls_sta->hwaddr, TDLS_CH_SW_START);
-	
-	//issue_tdls_ch_switch_req(padapter, ptdls_sta);
-	/* DBG_871X("issue tdls ch switch req\n"); */
-
-#endif /* CONFIG_TDLS_CH_SW */
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -6893,51 +6700,6 @@ static int rtw_tdls_ch_switch_off(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW	
-	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_ch_switch *pchsw_info = &padapter->tdlsinfo.chsw_info;
-	u8 i, j, mac_addr[ETH_ALEN];
-	struct sta_info *ptdls_sta = NULL;
-	struct tdls_txmgmt txmgmt;
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	if (rtw_tdls_is_chsw_allowed(padapter) == _FALSE)
-	{
-		DBG_871X("TDLS channel switch is not allowed\n");
-		return ret;
-	}
-
-	if (wrqu->data.length >= 17) {
-		for (i=0, j=0 ; i < ETH_ALEN; i++, j+=3)
-		mac_addr[i]=key_2char2num(*(extra+j), *(extra+j+1));
-			ptdls_sta = rtw_get_stainfo(&padapter->stapriv, mac_addr);
-	}
-
-	if (ptdls_sta == NULL)
-		return ret;	
-
-	rtw_tdls_cmd(padapter, ptdls_sta->hwaddr, TDLS_CH_SW_END_TO_BASE_CHNL);
-
-	pchsw_info->ch_sw_state &= ~(TDLS_CH_SW_INITIATOR_STATE |
-								TDLS_CH_SWITCH_ON_STATE |
-								TDLS_PEER_AT_OFF_STATE);
-	_rtw_memset(pchsw_info->addr, 0x00, ETH_ALEN);
-
-	ptdls_sta->ch_switch_time = 0;
-	ptdls_sta->ch_switch_timeout = 0;
-	_cancel_timer_ex(&ptdls_sta->ch_sw_timer);
-	_cancel_timer_ex(&ptdls_sta->delay_timer);
-	_cancel_timer_ex(&ptdls_sta->stay_on_base_chnl_timer);
-	_cancel_timer_ex(&ptdls_sta->ch_sw_monitor_timer);
-
-	rtw_pm_set_lps(padapter, PS_MODE_MAX);
-#endif /* CONFIG_TDLS_CH_SW */
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -6948,20 +6710,6 @@ static int rtw_tdls_dump_ch(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-
-	DBG_8192C("[%s] dump_stack:%s\n", __FUNCTION__, extra);
-
-	extra[ wrqu->data.length ] = 0x00;
-	ptdlsinfo->chsw_info.dump_stack = rtw_atoi( extra );
-
-	return ret;
-
-#endif
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -6972,20 +6720,6 @@ static int rtw_tdls_off_ch_num(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-
-	DBG_8192C("[%s] off_ch_num:%s\n", __FUNCTION__, extra);
-
-	extra[ wrqu->data.length ] = 0x00;
-	ptdlsinfo->chsw_info.off_ch_num = rtw_atoi(extra);
-
-	return ret;
-	
-#endif
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -6996,33 +6730,6 @@ static int rtw_tdls_ch_offset(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-
-	DBG_8192C("[%s] ch_offset:%s\n", __FUNCTION__, extra);
-
-	extra[ wrqu->data.length ] = 0x00;
-	switch (rtw_atoi(extra))
-	{
-	case SCA:
-		ptdlsinfo->chsw_info.ch_offset = HAL_PRIME_CHNL_OFFSET_LOWER;
-		break;
-
-	case SCB:
-		ptdlsinfo->chsw_info.ch_offset = HAL_PRIME_CHNL_OFFSET_UPPER;
-		break;
-		
-	default:
-		ptdlsinfo->chsw_info.ch_offset = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
-		break;
-	}
-
-	return ret;
-
-#endif
-#endif /* CONFIG_TDLS */
 
 		return ret;
 }
@@ -7033,22 +6740,6 @@ static int rtw_tdls_pson(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	u8 i, j, mac_addr[ETH_ALEN];
-	struct sta_info *ptdls_sta = NULL;
-
-	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	for (i=0, j=0; i < ETH_ALEN; i++, j+=3)
-		mac_addr[i]=key_2char2num(*(extra+j), *(extra+j+1));
-
-	ptdls_sta = rtw_get_stainfo(&padapter->stapriv, mac_addr);
-
-	issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->hwaddr, 1, 3, 500);
-
-#endif /* CONFIG_TDLS */
 
 		return ret;
 }
@@ -7059,23 +6750,6 @@ static int rtw_tdls_psoff(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-	
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	u8 i, j, mac_addr[ETH_ALEN];
-	struct sta_info *ptdls_sta = NULL;
-	
-	DBG_8192C( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
-
-	for (i=0, j=0; i < ETH_ALEN; i++, j+=3)
-		mac_addr[i]=key_2char2num(*(extra+j), *(extra+j+1));
-
-	ptdls_sta = rtw_get_stainfo(&padapter->stapriv, mac_addr);
-
-	if(ptdls_sta)
-		issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->hwaddr, 0, 3, 500);
-
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -7086,8 +6760,6 @@ static int rtw_tdls_setip(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -7098,8 +6770,6 @@ static int rtw_tdls_getip(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }
@@ -7111,8 +6781,6 @@ static int rtw_tdls_getport(struct net_device *dev,
 	
 	int ret = 0;	
 
-#ifdef CONFIG_TDLS
-#endif /* CONFIG_TDLS */
 
 	return ret;
 		
@@ -7126,8 +6794,6 @@ static int rtw_tdls_dis_result(struct net_device *dev,
 	
 	int ret = 0;	
 
-#ifdef CONFIG_TDLS
-#endif /* CONFIG_TDLS */
 
 	return ret;
 		
@@ -7141,44 +6807,6 @@ static int rtw_wfd_tdls_status(struct net_device *dev,
 	
 	int ret = 0;	
 
-#ifdef CONFIG_TDLS
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-
-	DBG_871X("[%s]\n", __FUNCTION__);
-
-	sprintf( extra, "\nlink_established:%d \n"
-		"sta_cnt:%d \n"
-		"sta_maximum:%d \n"
-		"cur_channel:%d \n"
-		"tdls_enable:%d"
-#ifdef CONFIG_TDLS_CH_SW
-		"ch_sw_state:%08x\n"
-		"chsw_on:%d\n"
-		"off_ch_num:%d\n"
-		"cur_time:%d\n"
-		"ch_offset:%d\n"
-		"delay_swtich_back:%d"
-#endif
-		,
-		ptdlsinfo->link_established, ptdlsinfo->sta_cnt,
-		ptdlsinfo->sta_maximum, ptdlsinfo->cur_channel, 
-		ptdlsinfo->tdls_enable
-#ifdef CONFIG_TDLS_CH_SW
-,
-		ptdlsinfo->chsw_info.ch_sw_state,
-		ATOMIC_READ(&padapter->tdlsinfo.chsw_info.chsw_on),
-		ptdlsinfo->chsw_info.off_ch_num,
-		ptdlsinfo->chsw_info.cur_time,
-		ptdlsinfo->chsw_info.ch_offset,
-		ptdlsinfo->chsw_info.delay_switch_back
-#endif
-);
-
-	wrqu->data.length = strlen( extra );
-
-#endif /* CONFIG_TDLS */
 
 	return ret;
 		
@@ -7190,38 +6818,6 @@ static int rtw_tdls_getsta(struct net_device *dev,
 	{
 	
 	int ret = 0;
-#ifdef CONFIG_TDLS
-	u8 i, j;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	u8 addr[ETH_ALEN] = {0};
-	char charmac[17];
-	struct sta_info *ptdls_sta = NULL;
-
-	DBG_871X("[%s] %s %d\n", __FUNCTION__,
-		(char *)wrqu->data.pointer, wrqu->data.length -1);
-
-	if(copy_from_user(charmac, wrqu->data.pointer+9, 17)){
-		ret = -EFAULT;
-		goto exit;
-	}
-	
-	DBG_871X("[%s] %d, charmac:%s\n", __FUNCTION__, __LINE__, charmac);
-	for (i=0, j=0 ; i < ETH_ALEN; i++, j+=3)
-		addr[i]=key_2char2num(*(charmac+j), *(charmac+j+1));
-
-	DBG_871X("[%s] %d, charmac:%s, addr:"MAC_FMT"\n",
-		__FUNCTION__, __LINE__, charmac, MAC_ARG(addr));
-	ptdls_sta = rtw_get_stainfo(&padapter->stapriv, addr);	
-	if(ptdls_sta) {
-		sprintf(extra, "\n\ntdls_sta_state=0x%08x\n", ptdls_sta->tdls_sta_state);
-		DBG_871X("\n\ntdls_sta_state=%d\n", ptdls_sta->tdls_sta_state);
-	} else {
-		sprintf(extra, "\n\nNot found this sta\n");
-		DBG_871X("\n\nNot found this sta\n");
-	}
-	wrqu->data.length = strlen( extra );
-
-#endif /* CONFIG_TDLS */
 exit:
 	return ret;
 		
@@ -7301,75 +6897,6 @@ static int rtw_tdls(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-
-	DBG_871X( "[%s] extra = %s\n", __FUNCTION__, extra );
-
-	if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == _FALSE) {
-		DBG_871X("Discard tdls oper since hal doesn't support tdls\n");
-		return 0;
-	}
-
-	if (padapter->tdlsinfo.tdls_enable == 0) {
-		DBG_871X("tdls haven't enabled\n");
-		return 0;
-	}
-
-	/* WFD Sigma will use the tdls enable command to let the driver know we want to test the tdls now! */
-
-	if (hal_chk_wl_func(padapter, WL_FUNC_MIRACAST)) {
-		if (_rtw_memcmp(extra, "wfdenable=", 10)) {
-			wrqu->data.length -= 10;
-			rtw_wx_tdls_wfd_enable(dev, info, wrqu, &extra[10]);
-			return ret;
-		}
-	}
-
-	if (_rtw_memcmp(extra, "weaksec=", 8)) {
-		wrqu->data.length -=8;
-		rtw_tdls_weaksec( dev, info, wrqu, &extra[8] );
-		return ret;
-	} else if (_rtw_memcmp( extra, "tdlsenable=", 11)) {
-		wrqu->data.length -=11;
-		rtw_tdls_enable( dev, info, wrqu, &extra[11] );
-		return ret;
-	}
-
-	if (_rtw_memcmp(extra, "setup=", 6)) {
-		wrqu->data.length -=6;
-		rtw_tdls_setup( dev, info, wrqu, &extra[6] );
-	} else if (_rtw_memcmp(extra, "tear=", 5)) {
-		wrqu->data.length -= 5;
-		rtw_tdls_teardown( dev, info, wrqu, &extra[5] );
-	} else if (_rtw_memcmp(extra, "dis=", 4)) {
-		wrqu->data.length -= 4;
-		rtw_tdls_discovery( dev, info, wrqu, &extra[4] );
-	} else if (_rtw_memcmp(extra, "swoff=", 6)) {
-		wrqu->data.length -= 6;
-		rtw_tdls_ch_switch_off(dev, info, wrqu, &extra[6]);
-	} else if (_rtw_memcmp(extra, "sw=", 3)) {
-		wrqu->data.length -= 3;
-		rtw_tdls_ch_switch( dev, info, wrqu, &extra[3] );
-	} else if (_rtw_memcmp(extra, "dumpstack=", 10)) {
-		wrqu->data.length -= 10;
-		rtw_tdls_dump_ch(dev, info, wrqu, &extra[10]);
-	} else if (_rtw_memcmp(extra, "offchnum=", 9)) {
-		wrqu->data.length -= 9;
-		rtw_tdls_off_ch_num(dev, info, wrqu, &extra[9]);
-	} else if (_rtw_memcmp(extra, "choffset=", 9)) {
-		wrqu->data.length -= 9;
-		rtw_tdls_ch_offset(dev, info, wrqu, &extra[9]);
-	} else if (_rtw_memcmp(extra, "pson=", 5)) {
-		wrqu->data.length -= 5;
-		rtw_tdls_pson( dev, info, wrqu, &extra[5] );
-	} else if (_rtw_memcmp(extra, "psoff=", 6)) {
-		wrqu->data.length -= 6;
-		rtw_tdls_psoff( dev, info, wrqu, &extra[6] );
-	}
-
-#endif /* CONFIG_TDLS */
 	
 	return ret;
 }
@@ -7381,24 +6908,6 @@ static int rtw_tdls_get(struct net_device *dev,
 {
 	int ret = 0;
 
-#ifdef CONFIG_TDLS
-
-	DBG_871X( "[%s] extra = %s\n", __FUNCTION__, (char*) wrqu->data.pointer );
-
-	if ( _rtw_memcmp( wrqu->data.pointer, "ip", 2 ) )
-		rtw_tdls_getip( dev, info, wrqu, extra );
-	else if (_rtw_memcmp(wrqu->data.pointer, "port", 4))
-		rtw_tdls_getport( dev, info, wrqu, extra );
-	/* WFDTDLS, for sigma test */
-	else if ( _rtw_memcmp(wrqu->data.pointer, "dis", 3))
-		rtw_tdls_dis_result( dev, info, wrqu, extra );
-	else if ( _rtw_memcmp(wrqu->data.pointer, "status", 6))
-		rtw_wfd_tdls_status( dev, info, wrqu, extra );
-	else if ( _rtw_memcmp(wrqu->data.pointer, "tdls_sta=", 9))
-		rtw_tdls_getsta( dev, info, wrqu, extra );
-	else if (_rtw_memcmp(wrqu->data.pointer, "best_ch", 7))
-		rtw_tdls_get_best_ch(dev, info, wrqu, extra);
-#endif /* CONFIG_TDLS */
 
 	return ret;
 }

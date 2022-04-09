@@ -537,10 +537,6 @@ u8 PS_RDY_CHECK(_adapter * padapter)
 		|| check_fwstate(pmlmepriv, WIFI_AP_STATE)
 		|| check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE|WIFI_ADHOC_STATE)
 		|| rtw_is_scan_deny(padapter)
-#ifdef CONFIG_TDLS
-		// TDLS link is established.
-		|| ( padapter->tdlsinfo.link_established == _TRUE )
-#endif // CONFIG_TDLS		
 	)
 		return _FALSE;
 
@@ -674,13 +670,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
-#ifdef CONFIG_TDLS
-	struct sta_priv *pstapriv = &padapter->stapriv;
-	_irqL irqL;
-	int i, j;
-	_list	*plist, *phead;
-	struct sta_info *ptdls_sta;
-#endif //CONFIG_TDLS
 
 
 	RT_TRACE(_module_rtl871x_pwrctrl_c_, _drv_notice_,
@@ -720,22 +709,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				pwrpriv->lps_leave_cnts++;
 			else
 				pwrpriv->lps_leave_cnts = 0;
-#ifdef CONFIG_TDLS
-			for(i=0; i< NUM_STA; i++)
-			{
-				phead = &(pstapriv->sta_hash[i]);
-				plist = get_next(phead);
-
-				while ((rtw_end_of_queue_search(phead, plist)) == _FALSE)
-				{
-					ptdls_sta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
-
-					if( ptdls_sta->tdls_sta_state & TDLS_LINKED_STATE )
-						issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->hwaddr, 0, 0, 0);
-					plist = get_next(plist);
-				}
-			}
-#endif //CONFIG_TDLS
 
 			pwrpriv->pwr_mode = ps_mode;
 			rtw_set_rpwm(padapter, PS_STATE_S4);
@@ -759,22 +732,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				pwrpriv->lps_enter_cnts++;
 			else
 				pwrpriv->lps_enter_cnts = 0;
-#ifdef CONFIG_TDLS
-			for(i=0; i< NUM_STA; i++)
-			{
-				phead = &(pstapriv->sta_hash[i]);
-				plist = get_next(phead);
-
-				while ((rtw_end_of_queue_search(phead, plist)) == _FALSE)
-				{
-					ptdls_sta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
-
-					if( ptdls_sta->tdls_sta_state & TDLS_LINKED_STATE )
-						issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->hwaddr, 1, 0, 0);
-					plist = get_next(plist);
-				}
-			}
-#endif //CONFIG_TDLS
 
 			pwrpriv->bFwCurrentInPSMode = _TRUE;
 			pwrpriv->pwr_mode = ps_mode;

@@ -71,14 +71,6 @@
 /*
  * Added by Kurt 20110511
  */
-#ifdef CONFIG_TDLS
-	#define CONFIG_TDLS_DRIVER_SETUP
-/*
-	#define CONFIG_TDLS_AUTOSETUP
-*/
-	#define CONFIG_TDLS_AUTOCHECKALIVE
-	#define CONFIG_TDLS_CH_SW	/* Enable this flag only when we confirm that TDLS CH SW is supported in FW */
-#endif
 
 #define CONFIG_80211D
 

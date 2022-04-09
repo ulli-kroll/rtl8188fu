@@ -194,12 +194,6 @@ void rtl8188f_download_rsvd_page(PADAPTER padapter, u8 mstatus);
 
 void CheckFwRsvdPageContent(PADAPTER padapter);
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-void rtl8188f_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable);
-#endif
-#endif
-
 void rtl8188f_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param);
 
 #ifdef CONFIG_TSF_RESET_OFFLOAD

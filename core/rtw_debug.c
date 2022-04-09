@@ -61,9 +61,6 @@ u32 GlobalDebugLevel = _drv_err_;
 
 #include <rtw_version.h>
 
-#ifdef CONFIG_TDLS
-#define TDLS_DBG_INFO_SPACE_BTWN_ITEM_AND_VALUE	41
-#endif
 
 void dump_drv_version(void *sel)
 {
@@ -98,10 +95,6 @@ void dump_drv_cfg(void *sel)
 
 #ifdef CONFIG_MINIMAL_MEMORY_USAGE
 	DBG_871X_SEL_NL(sel, "CONFIG_MINIMAL_MEMORY_USAGE\n");
-#endif
-
-#ifdef CONFIG_TDLS
-	DBG_871X_SEL_NL(sel, "CONFIG_TDLS\n");
 #endif
 
 #ifdef CONFIG_USB_HCI

@@ -1499,9 +1499,6 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
 	struct wireless_dev *rtw_wdev = padapter->rtw_wdev;
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-#ifdef CONFIG_TDLS
-	struct sta_info *ptdls_sta;
-#endif /* CONFIG_TDLS */
 	
 	DBG_871X(FUNC_NDEV_FMT" adding key for %pM\n", FUNC_NDEV_ARG(ndev), mac_addr);
 	DBG_871X("cipher=0x%x\n", params->cipher);
@@ -1591,16 +1588,6 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
 
 	if(check_fwstate(pmlmepriv, WIFI_STATION_STATE) == _TRUE)
 	{
-#ifdef CONFIG_TDLS
-		if (rtw_tdls_is_driver_setup(padapter) == _FALSE && mac_addr) {
-			ptdls_sta = rtw_get_stainfo(&padapter->stapriv, (void *)mac_addr);
-			if (ptdls_sta != NULL && ptdls_sta->tdls_sta_state) {
-				_rtw_memcpy(ptdls_sta->tpk.tk, params->key, params->key_len);
-				rtw_tdls_set_key(padapter, ptdls_sta);
-				goto addkey_end;
-			}
-		}
-#endif /* CONFIG_TDLS */
 
 		ret =  rtw_cfg80211_set_encryption(ndev, param, param_len);	
 	}
@@ -3882,24 +3869,8 @@ static int	cfg80211_rtw_add_station(struct wiphy *wiphy, struct net_device *ndev
 			       struct station_parameters *params)
 {
 	int ret = 0;
-#ifdef CONFIG_TDLS
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
-   	struct sta_priv *pstapriv = &padapter->stapriv;
-	struct sta_info *psta;
-#endif /* CONFIG_TDLS */
 	DBG_871X(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(ndev));
 	
-#ifdef CONFIG_TDLS
-	psta = rtw_get_stainfo(pstapriv, (u8 *)mac);
-	if (psta == NULL) {
-		psta = rtw_alloc_stainfo(pstapriv, (u8 *)mac);
-		if (psta ==NULL) {
-			DBG_871X("[%s] Alloc station for "MAC_FMT" fail\n", __FUNCTION__, MAC_ARG(mac));
-			ret =-EOPNOTSUPP;
-			goto exit;
-		}
-	}
-#endif /* CONFIG_TDLS */
 
 exit:
 	return ret;
@@ -4648,172 +4619,6 @@ exit:
 	return;
 }
 
-#if defined(CONFIG_TDLS) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
-static int cfg80211_rtw_tdls_mgmt(struct wiphy *wiphy,
-	struct net_device *ndev,
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 16, 0))
-	const u8 *peer,
-#else
-	u8 *peer,
-#endif
-	u8 action_code,
-	u8 dialog_token,
-	u16 status_code,
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0))
-	u32 peer_capability,
-#endif
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 17, 0))
-	bool initiator,
-#endif
-	const u8 *buf,
-	size_t len)
-{
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
-	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-	struct mlme_ext_info	*pmlmeinfo = &pmlmeext->mlmext_info;
-	int ret = 0;
-	struct tdls_txmgmt txmgmt;
-
-	if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == _FALSE) {
-		DBG_871X("Discard tdls action:%d, since hal doesn't support tdls\n", action_code);
-		goto discard;
-	}
-
-	if (rtw_tdls_is_driver_setup(padapter)) {
-		DBG_871X("Discard tdls action:%d, let driver to set up direct link\n", action_code);
-		goto discard;
-	}
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	_rtw_memcpy(txmgmt.peer, peer, ETH_ALEN);
-	txmgmt.action_code = action_code;
-	txmgmt.dialog_token= dialog_token;
-	txmgmt.status_code = status_code;
-	txmgmt.len = len;
-	txmgmt.buf = (u8 *)rtw_malloc(txmgmt.len);
-	if (txmgmt.buf == NULL) {
-		ret = -ENOMEM;
-		goto bad;
-	}
-	_rtw_memcpy(txmgmt.buf, (void*)buf, txmgmt.len);
-
-/* Debug purpose */
-#if 1
-	DBG_871X("%s %d\n", __FUNCTION__, __LINE__);
-	DBG_871X("peer:"MAC_FMT", action code:%d, dialog:%d, status code:%d\n",
-				MAC_ARG(txmgmt.peer), txmgmt.action_code, 
-				txmgmt.dialog_token, txmgmt.status_code);
-	if (txmgmt.len > 0) {
-		int i=0;
-		for(;i < len; i++)
-			printk("%02x ", *(txmgmt.buf+i));
-			DBG_871X("len:%d\n", (u32)txmgmt.len);
-	}
-#endif
-
-	switch (txmgmt.action_code) {
-	case TDLS_SETUP_REQUEST:
-		issue_tdls_setup_req(padapter, &txmgmt, _TRUE);
-		break;
-	case TDLS_SETUP_RESPONSE:
-		issue_tdls_setup_rsp(padapter, &txmgmt);
-		break;
-	case TDLS_SETUP_CONFIRM:
-		issue_tdls_setup_cfm(padapter, &txmgmt);
-		break;
-	case TDLS_TEARDOWN:
-		issue_tdls_teardown(padapter, &txmgmt, _TRUE);
-		break;
-	case TDLS_DISCOVERY_REQUEST:
-		issue_tdls_dis_req(padapter, &txmgmt);
-		break;
-	case TDLS_DISCOVERY_RESPONSE:
-		issue_tdls_dis_rsp(padapter, &txmgmt, pmlmeinfo->enc_algo? _TRUE : _FALSE);
-		break;
-	}
-
-bad:
-	if (txmgmt.buf)
-		rtw_mfree(txmgmt.buf, txmgmt.len);
-
-discard:
-	return ret;
-}
-
-static int cfg80211_rtw_tdls_oper(struct wiphy *wiphy,
-	struct net_device *ndev,
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 16, 0))
-	const u8 *peer,
-#else
-	u8 *peer,
-#endif
-	enum nl80211_tdls_operation oper)
-{
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct tdls_txmgmt	txmgmt;
-	struct sta_info *ptdls_sta = NULL;
-
-	DBG_871X(FUNC_NDEV_FMT", nl80211_tdls_operation:%d\n", FUNC_NDEV_ARG(ndev), oper);
-
-	if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == _FALSE) {
-		DBG_871X("Discard tdls oper:%d, since hal doesn't support tdls\n", oper);
-		return 0;
-	}
-
-#ifdef CONFIG_LPS
-	rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_LEAVE, 1);
-#endif //CONFIG_LPS
-
-	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
-	if (peer)
-		_rtw_memcpy(txmgmt.peer, peer, ETH_ALEN);
-
-	if (rtw_tdls_is_driver_setup(padapter)) {
-		/* these two cases are done by driver itself */
-		if (oper == NL80211_TDLS_ENABLE_LINK || oper == NL80211_TDLS_DISABLE_LINK)
-			return 0;
-	}
-
-	switch (oper) {
-	case NL80211_TDLS_DISCOVERY_REQ:
-		issue_tdls_dis_req(padapter, &txmgmt);
-		break;
-	case NL80211_TDLS_SETUP:
-		{
-			issue_tdls_setup_req(padapter, &txmgmt, _TRUE);
-		}
-		break;
-	case NL80211_TDLS_TEARDOWN:
-		ptdls_sta = rtw_get_stainfo( &(padapter->stapriv), txmgmt.peer);
-		if (ptdls_sta != NULL) {
-			txmgmt.status_code = _RSON_TDLS_TEAR_UN_RSN_;
-			issue_tdls_teardown(padapter, &txmgmt, _TRUE);
-		}else {
-			DBG_871X( "TDLS peer not found\n");
-		}
-		break;
-	case NL80211_TDLS_ENABLE_LINK:
-		DBG_871X(FUNC_NDEV_FMT", NL80211_TDLS_ENABLE_LINK;mac:"MAC_FMT"\n", FUNC_NDEV_ARG(ndev), MAC_ARG(peer));
-		ptdls_sta = rtw_get_stainfo(&(padapter->stapriv), (u8 *)peer);
-		if (ptdls_sta != NULL) {
-			ptdlsinfo->link_established = _TRUE;
-			ptdls_sta->tdls_sta_state |= TDLS_LINKED_STATE;
-			ptdls_sta->state |= _FW_LINKED;
-			rtw_tdls_cmd(padapter, txmgmt.peer, TDLS_ESTABLISHED);
-		}
-		break;
-	case NL80211_TDLS_DISABLE_LINK:
-		DBG_871X(FUNC_NDEV_FMT", NL80211_TDLS_DISABLE_LINK;mac:"MAC_FMT"\n", FUNC_NDEV_ARG(ndev), MAC_ARG(peer));
-		ptdls_sta = rtw_get_stainfo(&(padapter->stapriv), (u8 *)peer);
-		if (ptdls_sta != NULL) {
-			rtw_tdls_cmd(padapter, (u8 *)peer, TDLS_TEARDOWN_STA_LOCALLY);
-		}
-		break;
-	}
-	return 0;
-}
-#endif /* CONFIG_TDLS */
 
 #if defined(CONFIG_PNO_SUPPORT) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,0))
 static int cfg80211_rtw_sched_scan_start(struct wiphy *wiphy,
@@ -5343,14 +5148,6 @@ static void rtw_cfg80211_preinit_wiphy(_adapter *adapter, struct wiphy *wiphy)
 #endif
 #endif
 
-#if defined(CONFIG_TDLS) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
-	wiphy->flags |= WIPHY_FLAG_SUPPORTS_TDLS;
-#ifndef CONFIG_TDLS_DRIVER_SETUP
-	wiphy->flags |= WIPHY_FLAG_TDLS_EXTERNAL_SETUP;	//Driver handles key exchange
-	wiphy->flags |= NL80211_ATTR_HT_CAPABILITY;
-#endif //CONFIG_TDLS_DRIVER_SETUP
-#endif /* CONFIG_TDLS */
-
 	if (regsty->power_mgnt != PS_MODE_ACTIVE)
 		wiphy->flags |= WIPHY_FLAG_PS_ON_BY_DEFAULT;
 	else
@@ -5424,11 +5221,6 @@ static struct cfg80211_ops rtw_cfg80211_ops = {
 #elif  (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,34) && LINUX_VERSION_CODE<=KERNEL_VERSION(2,6,35))
 	.action = cfg80211_rtw_mgmt_tx,
 #endif
-
-#if defined(CONFIG_TDLS) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
-	.tdls_mgmt = cfg80211_rtw_tdls_mgmt,
-	.tdls_oper = cfg80211_rtw_tdls_oper,
-#endif /* CONFIG_TDLS */
 
 #if defined(CONFIG_PNO_SUPPORT) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,0))
 	.sched_scan_start = cfg80211_rtw_sched_scan_start,
