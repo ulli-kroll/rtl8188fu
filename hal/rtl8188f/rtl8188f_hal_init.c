@@ -3253,7 +3253,7 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 
 #ifdef CONFIG_C2H_PACKET_EN
 
-static void C2HPacketHandler_8188F(PADAPTER padapter, u8 *pbuffer, u16 length)
+static void _rtl8188fu_c2h_packet_handler(PADAPTER padapter, u8 *pbuffer, u16 length)
 {
 	C2H_EVT_HDR 	C2hEvent;
 	u8 *tmpBuf = NULL;
@@ -3994,7 +3994,7 @@ void SetHwRegWithBuf8188F(PADAPTER padapter, u8 variable, u8 *pbuf, int len)
 
 	switch (variable) {
 	case HW_VAR_C2H_HANDLE:
-		C2HPacketHandler_8188F(padapter, pbuf, len);
+		_rtl8188fu_c2h_packet_handler(padapter, pbuf, len);
 		break;
 
 	default:
