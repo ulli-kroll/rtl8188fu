@@ -3271,7 +3271,7 @@ static void C2HPacketHandler_8188F(PADAPTER padapter, u8 *pbuffer, u16 length)
 	return;
 }
 
-void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
+void rtl8188fu_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length)
 {
 	C2H_EVT_HDR C2hEvent;
 	u8 *pdata;

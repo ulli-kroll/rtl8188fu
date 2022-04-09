@@ -197,7 +197,7 @@ VOID Hal_EfuseParseVoltage_8188F(PADAPTER pAdapter,u8* hwinfo,BOOLEAN 	AutoLoadF
 #endif
 
 #ifdef CONFIG_C2H_PACKET_EN
-void rtl8188f_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length);
+void rtl8188fu_c2h_packet_handler(PADAPTER padapter, u8 *pbuf, u16 length);
 #endif
 
 void rtl8188f_set_pll_ref_clk_sel(_adapter *adapter, u8 sel);

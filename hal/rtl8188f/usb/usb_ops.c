@@ -130,7 +130,7 @@ int recvbuf2recvframe(PADAPTER padapter, void *ptr)
 		} else {
 #ifdef CONFIG_C2H_PACKET_EN
 			if (pattrib->pkt_rpt_type == C2H_PACKET)
-				rtl8188f_c2h_packet_handler(padapter, precvframe->u.hdr.rx_data, pattrib->pkt_len);
+				rtl8188fu_c2h_packet_handler(padapter, precvframe->u.hdr.rx_data, pattrib->pkt_len);
 			else {
 				DBG_8192C("%s: [WARNNING] RX type(%d) not be handled!\n",
 						  __func__, pattrib->pkt_rpt_type);
