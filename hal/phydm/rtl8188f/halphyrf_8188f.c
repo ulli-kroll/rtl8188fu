@@ -202,8 +202,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 		if (RFPath == ODM_RF_PATH_A) {
 
 			rtl8188fu_set_iqk_matrix(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
-				pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
-				pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
+				pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][0],
+				pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][1]);
 
 			ODM_Write1Byte(pDM_Odm, 0xa22, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][0]);
 			ODM_Write1Byte(pDM_Odm, 0xa23, CCKSwingTable_Ch1_Ch14_88F[Final_CCK_Swing_Index][1]);
@@ -234,8 +234,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 				pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - PwrTrackingLimit_OFDM;
 
 				rtl8188fu_set_iqk_matrix(pDM_Odm, PwrTrackingLimit_OFDM, RFPath,
-								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
-								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
+								   pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][0],
+								   pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][1]);
 
 				pRFCalibrateInfo->modify_txagc_flag_path_a = TRUE;
 
@@ -247,8 +247,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 				} else if (Final_OFDM_Swing_Index < pRFCalibrateInfo->default_ofdm_index) {
 					pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - pRFCalibrateInfo->default_ofdm_index;
 					rtl8188fu_set_iqk_matrix(pDM_Odm, pRFCalibrateInfo->default_ofdm_index, ODM_RF_PATH_A,
-						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
-						 pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
+						 pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][0],
+						 pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][1]);
 
 					pRFCalibrateInfo->modify_txagc_flag_path_a = TRUE;
 				/* Set TxAGC Page C{}; */
@@ -258,8 +258,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 							  pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath]));
 			} else {
 				rtl8188fu_set_iqk_matrix(pDM_Odm, Final_OFDM_Swing_Index, ODM_RF_PATH_A,
-								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][0],
-								   pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[ChannelMappedIndex].Value[0][1]);
+								   pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][0],
+								   pDM_Odm->RFCalibrateInfo.iqk_matrix[ChannelMappedIndex].value[0][1]);
 
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 							 ("******Path_A Compensate with BBSwing , Final_OFDM_Swing_Index = %d\n", Final_OFDM_Swing_Index));
@@ -1869,8 +1869,8 @@ PHY_IQCalibrate_8188F(
 //To Fix BSOD when final_candidate is 0xff
 //by sherry 20120321
 	if (final_candidate < 4) {
-		for (i = 0; i < IQK_Matrix_REG_NUM; i++) pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[Indexforchannel].Value[0][i] = result[final_candidate][i];
-		pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[Indexforchannel].bIQKDone = TRUE;
+		for (i = 0; i < IQK_MATRIX_REG_NUM; i++) pDM_Odm->RFCalibrateInfo.iqk_matrix[Indexforchannel].value[0][i] = result[final_candidate][i];
+			pDM_Odm->RFCalibrateInfo.iqk_matrix[Indexforchannel].iqk_done = TRUE;
 	}
 	//RT_DISP(FINIT, INIT_IQK, ("\nIQK OK Indexforchannel %d.\n", Indexforchannel));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("\nIQK OK Indexforchannel %d.\n", Indexforchannel));

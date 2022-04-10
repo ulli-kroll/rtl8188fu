@@ -43,8 +43,8 @@
 
 
 
-#define IQK_Matrix_REG_NUM	8
-#define IQK_Matrix_Settings_NUM	14+24+21 // Channels_2_4G_NUM + Channels_5G_20M_NUM + Channels_5G
+#define IQK_MATRIX_REG_NUM	8
+#define IQK_MATRIX_SETTINGS_NUM	14+24+21 // Channels_2_4G_NUM + Channels_5G_20M_NUM + Channels_5G
 
 extern	u4Byte OFDMSwingTable[OFDM_TABLE_SIZE];
 extern	u1Byte CCKSwingTable_Ch1_Ch14_88F[CCK_TABLE_SIZE_88F][16];
@@ -58,11 +58,10 @@ static u1Byte DeltaSwingTableIdx_2GA_N_8188E[] = {0, 0, 0, 2, 2, 3, 3, 4, 4, 4, 
 
 #define dm_CheckTXPowerTracking 	ODM_TXPowerTrackingCheck
 
-typedef struct _IQK_MATRIX_REGS_SETTING{
-	BOOLEAN 	bIQKDone;
-	s4Byte		Value[3][IQK_Matrix_REG_NUM];
-	BOOLEAN 	bBWIqkResultSaved[3];	
-}IQK_MATRIX_REGS_SETTING,*PIQK_MATRIX_REGS_SETTING;
+struct iqk_matrix_regs {
+	bool iqk_done;
+	long value[1][IQK_MATRIX_REG_NUM];
+};
 
 typedef struct ODM_RF_Calibration_Structure
 {
@@ -109,7 +108,7 @@ typedef struct ODM_RF_Calibration_Structure
 		
 	u1Byte 	ThermalValue_HP[HP_THERMAL_NUM];
 	u1Byte 	ThermalValue_HP_index;
-	IQK_MATRIX_REGS_SETTING IQKMatrixRegSetting[IQK_Matrix_Settings_NUM];
+	struct iqk_matrix_regs iqk_matrix[IQK_MATRIX_SETTINGS_NUM];
 	u1Byte	Delta_LCK;
 	s1Byte  BBSwingDiff2G, BBSwingDiff5G; // Unit: dB
 	u1Byte  DeltaSwingTableIdx_2GCCKA_P[DELTA_SWINGIDX_SIZE];
