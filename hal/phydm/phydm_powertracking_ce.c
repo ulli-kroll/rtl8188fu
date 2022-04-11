@@ -226,7 +226,6 @@ odm_TXPowerTrackingThermalMeterInit(
 		pRFCalibrateInfo->PowerIndexOffset[p] = 0;
 	}
 	pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=0;			//add by Mingzhi.Guo
-	pRFCalibrateInfo->Modify_TxAGC_Value_CCK=0;			//add by Mingzhi.Guo
 
 }
 

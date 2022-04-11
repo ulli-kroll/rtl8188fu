@@ -343,7 +343,6 @@ ODM_TxPwrTrackSetPwr_8188F(
 				//Set TxAGC Page C{};
 				rtl8188fu_phy_set_txpower_index_by_rate_section(Adapter, ODM_RF_PATH_A, pHalData->CurrentChannel, CCK );
 			}
-			pRFCalibrateInfo->Modify_TxAGC_Value_CCK = pRFCalibrateInfo->remnant_cck_idx;
 
 		}
 	} else

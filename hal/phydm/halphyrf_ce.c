@@ -95,7 +95,6 @@ ODM_ClearTxPowerTrackingState(
 	pRFCalibrateInfo->remnant_cck_idx = 0;
 	pRFCalibrateInfo->ThermalValue = pHalData->EEPROMThermalMeter;
 	
-	pRFCalibrateInfo->Modify_TxAGC_Value_CCK=0;			//modify by Mingzhi.Guo
 	pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=0;		//modify by Mingzhi.Guo
 }
 
