@@ -101,26 +101,6 @@ ODM_SignConversion(
 }
 
 VOID
-ODM_InitMpDriverStatus(
-	IN		PDM_ODM_T		pDM_Odm
-)
-{
-
-	PADAPTER	Adapter =  pDM_Odm->Adapter;
-
-}
-
-VOID
-ODM_UpdateMpDriverStatus(
-	IN		PDM_ODM_T		pDM_Odm
-)
-{
-	PADAPTER	Adapter =  pDM_Odm->Adapter;
-
-
-}
-
-VOID
 phydm_Init_cck_setting(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -148,9 +128,6 @@ odm_CommonInfoSelfInit(
 {
 	phydm_Init_cck_setting(pDM_Odm);
 	pDM_Odm->RFPathRxEnable = (u1Byte) ODM_GetBBReg(pDM_Odm, ODM_REG(BB_RX_PATH,pDM_Odm), ODM_BIT(BB_RX_PATH,pDM_Odm));
-
-	PHYDM_InitDebugSetting(pDM_Odm);
-	ODM_InitMpDriverStatus(pDM_Odm);
 
 	pDM_Odm->TxRate = 0xFF;
 
@@ -209,8 +186,6 @@ odm_CommonInfoSelfUpdate(
 	pDM_Odm->number_linked_client = EntryCnt;
 	pDM_Odm->number_active_client = num_active_client;	
 
-	/* Update MP driver status*/
-	ODM_UpdateMpDriverStatus(pDM_Odm);
 }
 
 VOID
@@ -361,7 +336,6 @@ _rtl8188fu_dm_watchdog(
 	)
 {
 	odm_CommonInfoSelfUpdate(pDM_Odm);
-	phydm_BasicDbgMessage(pDM_Odm);
 	odm_HWSetting(pDM_Odm);
 
 	rtl9188fu_dm_false_alarm_counter_statistics(pDM_Odm);

@@ -172,13 +172,7 @@
 #define ODM_PRINT_ADDR(pDM_Odm, comp, level, title_str, ptr)
 #endif
 
-
-VOID 
-PHYDM_InitDebugSetting(IN		PDM_ODM_T		pDM_Odm);
-
 #define	BB_TMP_BUF_SIZE		100
-VOID phydm_BB_Debug_Info(IN PDM_ODM_T pDM_Odm);
-VOID phydm_BasicDbgMessage(	IN		PVOID			pDM_VOID);
 
 #define	PHYDM_DBGPRINT		0
 #define	MAX_ARGC				20
@@ -226,35 +220,6 @@ phydm_cmd_parser(
 	IN u1Byte	flag,
 	OUT char	*output,
 	IN u4Byte	out_len
-);
-
-VOID
-phydm_fw_trace_en_h2c(
-	IN	PVOID	pDM_VOID,
-	IN	BOOLEAN		enable,
-	IN	u4Byte		monitor_mode,
-	IN	u4Byte		macid
-);
-
-VOID
-phydm_fw_trace_handler(
-	IN		PVOID	pDM_VOID,
-	IN		pu1Byte	CmdBuf,
-	IN		u1Byte	CmdLen
-);
-
-VOID
-phydm_fw_trace_handler_code(
-	IN	PVOID	pDM_VOID,
-	IN	pu1Byte	Buffer,
-	IN	u1Byte	CmdLen
-);
-
-VOID
-phydm_fw_trace_handler_8051(
-	IN	PVOID	pDM_VOID,
-	IN	pu1Byte	CmdBuf,
-	IN	u1Byte	CmdLen
 );
 
 #endif	// __ODM_DBG_H__

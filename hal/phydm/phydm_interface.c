@@ -525,17 +525,6 @@ phydm_c2H_content_parsing(
 	case PHYDM_C2H_IQK_FINISH:
 		break;
 
-	case PHYDM_C2H_DBG_CODE:
-		phydm_fw_trace_handler_code(pDM_Odm, tmpBuf, c2hCmdLen);
-		break;	
-
-	case PHYDM_C2H_EXTEND:
-		Extend_c2hSubID = tmpBuf[0];
-		if (Extend_c2hSubID == PHYDM_EXTEND_C2H_DBG_PRINT)
-			phydm_fw_trace_handler_8051(pDM_Odm, tmpBuf, c2hCmdLen);
-		
-		break;
-
 	default:
 		find_c2h_cmd = FALSE;
 		break;
