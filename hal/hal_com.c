@@ -2017,27 +2017,6 @@ void SetHalODMVar(
 				ODM_CmnInfoInit(podmpriv, ODM_CMNINFO_DOMAIN_CODE_2G, pHalData->Regulation2_4G);
 				ODM_CmnInfoInit(podmpriv, ODM_CMNINFO_DOMAIN_CODE_5G, pHalData->Regulation5G);
 			break;
-#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)		
-		case HAL_ODM_NOISE_MONITOR:
-			{
-				struct noise_info *pinfo = (struct noise_info *)pValue1;
-
-				#ifdef DBG_NOISE_MONITOR
-				DBG_8192C("### Noise monitor chan(%d)-bPauseDIG:%d,IGIValue:0x%02x,max_time:%d (ms) ###\n",
-					pinfo->chan,pinfo->bPauseDIG,pinfo->IGIValue,pinfo->max_time);
-				#endif
-				
-				pHalData->noise[pinfo->chan] = ODM_InbandNoise_Monitor(podmpriv,pinfo->bPauseDIG,pinfo->IGIValue,pinfo->max_time);				
-				DBG_871X("chan_%d, noise = %d (dBm)\n",pinfo->chan,pHalData->noise[pinfo->chan]);
-				#ifdef DBG_NOISE_MONITOR
-				DBG_871X("noise_a = %d, noise_b = %d  noise_all:%d \n", 
-					podmpriv->noise_level.noise[ODM_RF_PATH_A], 
-					podmpriv->noise_level.noise[ODM_RF_PATH_B],
-					podmpriv->noise_level.noise_all);						
-				#endif
-			}
-			break;
-#endif/*#ifdef CONFIG_BACKGROUND_NOISE_MONITOR*/
 
 		case HAL_ODM_INITIAL_GAIN:
 			{
@@ -2134,18 +2113,6 @@ void GetHalODMVar(
 	PDM_ODM_T podmpriv = &pHalData->odmpriv;
 	
 	switch (eVariable) {
-#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-	case HAL_ODM_NOISE_MONITOR:
-		{
-			u8 chan = *(u8 *)pValue1;
-			*(s16 *)pValue2 = pHalData->noise[chan];
-			#ifdef DBG_NOISE_MONITOR
-			DBG_8192C("### Noise monitor chan(%d)-noise:%d (dBm) ###\n",
-				chan, pHalData->noise[chan]);
-			#endif
-		}
-		break;
-#endif/*#ifdef CONFIG_BACKGROUND_NOISE_MONITOR*/
 	case HAL_ODM_DBG_FLAG:
 		*((u8Byte *)pValue1) = podmpriv->DebugComponents;
 		break;
@@ -3168,26 +3135,6 @@ void rtw_reset_phy_trx_ok_counters(_adapter *padapter)
 }
 void rtw_get_noise(_adapter* padapter)
 {
-#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-	struct noise_info info;
-	if(rtw_linked_check(padapter)){
-		info.bPauseDIG = _TRUE;
-		info.IGIValue = 0x1e;
-		info.max_time = 100;//ms
-		info.chan = pmlmeext->cur_channel ;//rtw_get_oper_ch(padapter);
-		rtw_ps_deny(padapter, PS_DENY_IOCTL);
-		LeaveAllPowerSaveModeDirect(padapter);
-
-		rtw_hal_set_odm_var(padapter, HAL_ODM_NOISE_MONITOR,&info, _FALSE);	
-		//ODM_InbandNoise_Monitor(podmpriv,_TRUE,0x20,100);
-		rtw_ps_deny_cancel(padapter, PS_DENY_IOCTL);
-		rtw_hal_get_odm_var(padapter, HAL_ODM_NOISE_MONITOR,&(info.chan), &(padapter->recvpriv.noise));	
-		#ifdef DBG_NOISE_MONITOR
-		DBG_871X("chan:%d,noise_level:%d\n",info.chan,padapter->recvpriv.noise);
-		#endif
-	}
-#endif		
 
 }
 

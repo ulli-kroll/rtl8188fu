@@ -431,16 +431,6 @@ void SetHalODMVar(
 	PVOID					pValue1,
 	BOOLEAN					bSet);
 
-#ifdef CONFIG_BACKGROUND_NOISE_MONITOR
-struct noise_info
-{
-	u8 		bPauseDIG;
-	u8 		IGIValue;
-	u32 	max_time;//ms	
-	u8		chan;
-};
-#endif
-
 void rtw_get_noise(_adapter* padapter);
 u8 rtw_get_current_tx_rate(_adapter *padapter, u8 macid);
 void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished);

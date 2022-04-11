@@ -9365,18 +9365,6 @@ operation_by_state:
 		scan_ms = ss->scan_ch_ms;
 		#endif
 
-		#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-		{
-			struct noise_info info;
-
-			info.bPauseDIG = _FALSE;
-			info.IGIValue = 0;
-			info.max_time = scan_ms/2;
-			info.chan = scan_ch;
-			rtw_hal_set_odm_var(padapter, HAL_ODM_NOISE_MONITOR, &info, _FALSE); 
-		}
-		#endif
-
 		set_survey_timer(pmlmeext, scan_ms);
 		break;
 	}

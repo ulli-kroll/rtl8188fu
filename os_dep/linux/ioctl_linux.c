@@ -672,11 +672,7 @@ static inline char *  iwe_stream_rssi_process(_adapter *padapter,
 	/* Add quality statistics */
 	iwe->cmd = IWEVQUAL;
 	iwe->u.qual.updated = IW_QUAL_QUAL_UPDATED | IW_QUAL_LEVEL_UPDATED 
-	#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-		| IW_QUAL_NOISE_UPDATED
-	#else
 		| IW_QUAL_NOISE_INVALID
-	#endif
 	#ifdef CONFIG_SIGNAL_DISPLAY_DBM
 		| IW_QUAL_DBM
 	#endif
@@ -713,15 +709,7 @@ static inline char *  iwe_stream_rssi_process(_adapter *padapter,
 	#ifdef CONFIG_PLATFORM_ROCKCHIPS
 	iwe->u.qual.noise = -100; // noise level suggest by zhf@rockchips
 	#else 
-	#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-	{
-		s16 tmp_noise=0;
-		rtw_hal_get_odm_var(padapter, HAL_ODM_NOISE_MONITOR,&(pnetwork->network.Configuration.DSConfig), &(tmp_noise));
-		iwe->u.qual.noise = tmp_noise ;
-	}
-	#else
 	iwe->u.qual.noise = 0; // noise level
-	#endif	
 	#endif //CONFIG_PLATFORM_ROCKCHIPS
 	
 	//DBG_871X("iqual=%d, ilevel=%d, inoise=%d, iupdated=%d\n", iwe.u.qual.qual, iwe.u.qual.level , iwe.u.qual.noise, iwe.u.qual.updated);
@@ -1122,11 +1110,7 @@ static char *translate_scan(_adapter *padapter,
 	/* Add quality statistics */
 	iwe.cmd = IWEVQUAL;
 	iwe.u.qual.updated = IW_QUAL_QUAL_UPDATED | IW_QUAL_LEVEL_UPDATED 
-	#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-		| IW_QUAL_NOISE_UPDATED
-	#else
 		| IW_QUAL_NOISE_INVALID
-	#endif
 	#ifdef CONFIG_SIGNAL_DISPLAY_DBM
 		| IW_QUAL_DBM
 	#endif
@@ -1163,15 +1147,7 @@ static char *translate_scan(_adapter *padapter,
 	#ifdef CONFIG_PLATFORM_ROCKCHIPS
 	iwe.u.qual.noise = -100; // noise level suggest by zhf@rockchips
 	#else 
-	#if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
-	{
-		s16 tmp_noise=0;
-		rtw_hal_get_odm_var(padapter, HAL_ODM_NOISE_MONITOR,&(pnetwork->network.Configuration.DSConfig), &(tmp_noise));
-		iwe.u.qual.noise = tmp_noise ;
-	}
-	#else
 	iwe.u.qual.noise = 0; // noise level
-	#endif	
 	#endif //CONFIG_PLATFORM_ROCKCHIPS
 	
 	//DBG_871X("iqual=%d, ilevel=%d, inoise=%d, iupdated=%d\n", iwe.u.qual.qual, iwe.u.qual.level , iwe.u.qual.noise, iwe.u.qual.updated);
@@ -5057,23 +5033,6 @@ static int rtw_dbg_port(struct net_device *dev,
 						}
 					}
 					break;
-#ifdef CONFIG_BACKGROUND_NOISE_MONITOR
-				case 0x1e:
-					{
-						HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-						PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-						u8 chan = rtw_get_oper_ch(padapter);
-						DBG_871X("===========================================\n");
-						ODM_InbandNoise_Monitor(pDM_Odm,_TRUE,0x1e,100);
-						DBG_871X("channel(%d),noise_a = %d, noise_b = %d , noise_all:%d \n", 
-							chan,pDM_Odm->noise_level.noise[ODM_RF_PATH_A], 
-							pDM_Odm->noise_level.noise[ODM_RF_PATH_B],
-							pDM_Odm->noise_level.noise_all);
-						DBG_871X("===========================================\n");
-						
-					}
-					break;
-#endif
 				case 0x23:
 					{
 						DBG_871X("turn %s the bNotifyChannelChange Variable\n",(extra_arg==1)?"on":"off");

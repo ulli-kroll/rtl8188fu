@@ -144,7 +144,6 @@
 
 /* #define CONFIG_SIGNAL_DISPLAY_DBM */ /* display RX signal with dbm */
 #ifdef CONFIG_SIGNAL_DISPLAY_DBM
-/* #define CONFIG_BACKGROUND_NOISE_MONITOR */
 #endif
 
 /* #define CONFIG_CHECK_AC_LIFETIME	*/ /* Check packet lifetime of 4 ACs. */
