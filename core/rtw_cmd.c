@@ -867,17 +867,6 @@ u8 rtw_sitesurvey_cmd(_adapter  *padapter, NDIS_802_11_SSID *ssid, int ssid_num,
 
 		pmlmepriv->scan_start_time = rtw_get_current_time();
 
-#ifdef CONFIG_SCAN_BACKOP
-		if((padapter->pbuddy_adapter->mlmeextpriv.mlmext_info.state&0x03) == WIFI_FW_AP_STATE)
-		{
-			if(IsSupported5G(padapter->registrypriv.wireless_mode) 
-				&& IsSupported24G(padapter->registrypriv.wireless_mode)) //dual band
-				mlme_set_scan_to_timer(pmlmepriv, CONC_SCANNING_TIMEOUT_DUAL_BAND);
-			else //single band
-				mlme_set_scan_to_timer(pmlmepriv, CONC_SCANNING_TIMEOUT_SINGLE_BAND);
-		}		
-		else
-#endif /* CONFIG_SCAN_BACKOP */
 			mlme_set_scan_to_timer(pmlmepriv, SCANNING_TIMEOUT);
 
 		rtw_led_control(padapter, LED_CTL_SITE_SURVEY);

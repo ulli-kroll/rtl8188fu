@@ -773,13 +773,6 @@ static void init_mlme_ext_priv_value(_adapter* padapter)
 	pmlmeext->sitesurvey_res.scan_ch_ms = SURVEY_TO;
 	pmlmeext->sitesurvey_res.rx_ampdu_accept = RX_AMPDU_ACCEPT_INVALID;
 	pmlmeext->sitesurvey_res.rx_ampdu_size = RX_AMPDU_SIZE_INVALID;
-	#ifdef CONFIG_SCAN_BACKOP
-	mlmeext_assign_scan_backop_flags_sta(pmlmeext, /*SS_BACKOP_EN|*/SS_BACKOP_PS_ANNC|SS_BACKOP_TX_RESUME);
-	mlmeext_assign_scan_backop_flags_ap(pmlmeext, SS_BACKOP_EN|SS_BACKOP_PS_ANNC|SS_BACKOP_TX_RESUME);
-	pmlmeext->sitesurvey_res.scan_cnt = 0;
-	pmlmeext->sitesurvey_res.scan_cnt_max = RTW_SCAN_NUM_OF_CH;
-	pmlmeext->sitesurvey_res.backop_ms = RTW_BACK_OP_CH_MS;
-	#endif
 	pmlmeext->scan_abort = _FALSE;
 
 	pmlmeinfo->state = WIFI_FW_NULL_STATE;
@@ -8970,9 +8963,6 @@ static void sitesurvey_res_reset(_adapter *adapter, struct sitesurvey_parm *parm
 	ss->channel_idx = 0;
 	ss->igi_scan = 0;
 	ss->igi_before_scan = 0;
-#ifdef CONFIG_SCAN_BACKOP
-	ss->scan_cnt = 0;
-#endif
 	
 	for (i = 0; i < RTW_SSID_SCAN_AMOUNT; i++) {
 		if (parm->ssid[i].SsidLength) {
@@ -9016,38 +9006,6 @@ static u8 sitesurvey_pick_ch_behavior(_adapter *padapter, u8 *ch, RT_SCAN_TYPE *
 
 	if (scan_ch != 0) {
 		next_state = SCAN_PROCESS;
-		#ifdef CONFIG_SCAN_BACKOP
-		{
-			u8 sta_num;
-			u8 ld_sta_num;
-			u8 ap_num;
-			u8 ld_ap_num;
-			u8 backop_flags = 0;
-
-			rtw_dev_iface_status(padapter, &sta_num, &ld_sta_num, NULL, &ap_num, &ld_ap_num);
-
-			if ((ld_sta_num > 0 && mlmeext_chk_scan_backop_flags_sta(pmlmeext, SS_BACKOP_EN))
-					|| (sta_num > 0 && mlmeext_chk_scan_backop_flags_sta(pmlmeext, SS_BACKOP_EN_NL))
-			) {
-				backop_flags |= mlmeext_scan_backop_flags_sta(pmlmeext);
-			}
-
-			if ((ld_ap_num > 0 && mlmeext_chk_scan_backop_flags_ap(pmlmeext, SS_BACKOP_EN))
-					|| (ap_num > 0 && mlmeext_chk_scan_backop_flags_ap(pmlmeext, SS_BACKOP_EN_NL))
-			) {
-				backop_flags |= mlmeext_scan_backop_flags_ap(pmlmeext);
-			}
-
-			if (backop_flags) {
-				if (ss->scan_cnt < ss->scan_cnt_max) {
-					ss->scan_cnt++;
-				} else {
-					mlmeext_assign_scan_backop_flags(pmlmeext, backop_flags);
-					next_state = SCAN_BACKING_OP;
-				}
-			}
-		}
-		#endif /* CONFIG_SCAN_BACKOP */
 	} else if (rtw_p2p_findphase_ex_is_needed(pwdinfo)) {
 		/* go p2p listen */
 		next_state = SCAN_TO_P2P_LISTEN;
@@ -9056,12 +9014,6 @@ static u8 sitesurvey_pick_ch_behavior(_adapter *padapter, u8 *ch, RT_SCAN_TYPE *
 		next_state = SCAN_COMPLETE;
 
 	}
-
-	#ifdef CONFIG_SCAN_BACKOP
-	if (next_state != SCAN_PROCESS)
-		ss->scan_cnt = 0;
-	#endif
-
 
 #ifdef DBG_FIXED_CHAN
 	if (pmlmeext->fixed_chan != 0xff && next_state == SCAN_PROCESS)
@@ -9207,16 +9159,6 @@ void sitesurvey_set_igi(_adapter *adapter)
 		igi = 0xff;
 		rtw_hal_set_odm_var(adapter, HAL_ODM_INITIAL_GAIN, &igi, _FALSE);
 		break;
-#ifdef CONFIG_SCAN_BACKOP
-	case SCAN_BACKING_OP:
-		/* write IGI for op channel when DIG is not enabled */
-		ODM_Write_DIG(GET_ODM(adapter), ss->igi_before_scan);
-		break;
-	case SCAN_LEAVE_OP:
-		/* write IGI for scan when DIG is not enabled */
-		ODM_Write_DIG(GET_ODM(adapter), ss->igi_scan);
-		break;
-#endif /* CONFIG_SCAN_BACKOP */
 	default:
 		rtw_warn_on(1);
 		break;
@@ -9368,100 +9310,6 @@ operation_by_state:
 		set_survey_timer(pmlmeext, scan_ms);
 		break;
 	}
-
-	#ifdef CONFIG_SCAN_BACKOP
-	case SCAN_BACKING_OP:
-	{
-		u8 back_ch, back_bw, back_ch_offset;
-
-		if (rtw_get_ch_setting_union(padapter, &back_ch, &back_bw, &back_ch_offset) == 0)
-			rtw_warn_on(1);
-
-		if (0)
-			DBG_871X(FUNC_ADPT_FMT" %s ch:%u, bw:%u, offset:%u at %dms\n"
-				, FUNC_ADPT_ARG(padapter)
-				, mlmeext_scan_state_str(pmlmeext)
-				, back_ch, back_bw, back_ch_offset
-				, rtw_get_passing_time_ms(padapter->mlmepriv.scan_start_time)
-			);
-
-		set_channel_bwmode(padapter, back_ch, back_ch_offset, back_bw);
-
-		Set_MSR(padapter, (pmlmeinfo->state & 0x3));		
-		val8 = 0; /* survey done */
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
-
-		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_PS_ANNC)) {
-			sitesurvey_set_igi(padapter);
-			sitesurvey_ps_annc(adapter_to_dvobj(padapter), 0);
-		}
-
-		mlmeext_set_scan_state(pmlmeext, SCAN_BACK_OP);
-		ss->backop_time = rtw_get_current_time();
-
-		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_TX_RESUME)) {
-			int	i;
-
-			/* resume TX */
-			for (i = 0; i < dvobj->iface_nums; i++) {
-				if (!dvobj->padapters[i])
-					continue;
-
-				rtw_os_xmit_schedule(dvobj->padapters[i]);
-			}
-		}
-
-		goto operation_by_state;
-	}
-	
-	case SCAN_BACK_OP:
-		if (rtw_get_passing_time_ms(ss->backop_time) >= ss->backop_ms
-			|| pmlmeext->scan_abort
-		) {
-			mlmeext_set_scan_state(pmlmeext, SCAN_LEAVING_OP);
-			goto operation_by_state;
-		}
-		set_survey_timer(pmlmeext, 50);
-		break;
-
-	case SCAN_LEAVING_OP:
-		/*
-		* prepare to leave operating channel
-		*/
-
-		/* clear HW TX queue before scan */
-		rtw_hal_set_hwreg(padapter, HW_VAR_CHECK_TXBUF, 0);
-
-		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_PS_ANNC)
-			&& sitesurvey_ps_annc(adapter_to_dvobj(padapter), 1)
-		) {
-			mlmeext_set_scan_state(pmlmeext, SCAN_PS_ANNC_WAIT);
-			mlmeext_set_scan_next_state(pmlmeext, SCAN_LEAVE_OP);
-			set_survey_timer(pmlmeext, 50); /* delay 50ms to protect nulldata(1) */
-		} else {
-			mlmeext_set_scan_state(pmlmeext, SCAN_LEAVE_OP);
-			goto operation_by_state;
-		}
-
-		break;
-
-	case SCAN_LEAVE_OP:
-		/*
-		* HW register and DM setting for enter scan
-		*/
-
-		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_PS_ANNC))
-			sitesurvey_set_igi(padapter);
-
-		/* set MSR to no link state */
-		Set_MSR(padapter, _HW_STATE_NOLINK_);
-		val8 = 1; //under site survey
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
-
-		mlmeext_set_scan_state(pmlmeext, SCAN_PROCESS);
-		goto operation_by_state;
-
-	#endif /* CONFIG_SCAN_BACKOP */
 
 	case SCAN_COMPLETE:		
 
