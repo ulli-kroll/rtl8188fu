@@ -750,13 +750,6 @@ ODM_CmnInfoUpdate(
 			pDM_Odm->RSSI_Min= (u1Byte)Value;
 			break;
 
-		case	ODM_CMNINFO_DBG_COMP:
-			pDM_Odm->DebugComponents = Value;
-			break;
-
-		case	ODM_CMNINFO_DBG_LEVEL:
-			pDM_Odm->DebugLevel = (u4Byte)Value;
-			break;
 		case	ODM_CMNINFO_RA_THRESHOLD_HIGH:
 			pDM_Odm->RateAdaptive.HighRSSIThresh = (u1Byte)Value;
 			break;

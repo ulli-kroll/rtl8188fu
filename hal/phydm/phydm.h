@@ -323,8 +323,6 @@ typedef enum _ODM_Common_Info_Definition
 	ODM_CMNINFO_LINK,
 	ODM_CMNINFO_STATION_STATE,
 	ODM_CMNINFO_RSSI_MIN,
-	ODM_CMNINFO_DBG_COMP,				// u8Byte
-	ODM_CMNINFO_DBG_LEVEL,				// u4Byte
 	ODM_CMNINFO_RA_THRESHOLD_HIGH,		// u1Byte
 	ODM_CMNINFO_RA_THRESHOLD_LOW,		// u1Byte
 	ODM_CMNINFO_RF_ANTENNA_TYPE,		// u1Byte
@@ -428,9 +426,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	
 	u1Byte				PhyRegPgVersion;
 
-	u8Byte			DebugComponents;
-	u4Byte			DebugLevel;
-	
 	u4Byte			NumQryPhyStatusAll; 	//CCK + OFDM
 	u4Byte			LastNumQryPhyStatusAll; 
 	u4Byte			RxPWDBAve;

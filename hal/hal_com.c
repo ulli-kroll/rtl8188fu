@@ -2032,18 +2032,6 @@ void SetHalODMVar(
 				}
 			}
 			break;		
-		case HAL_ODM_FA_CNT_DUMP:
-			if (*((u8 *)pValue1))
-				podmpriv->DebugComponents |= (ODM_COMP_DIG | ODM_COMP_FA_CNT);
-			else
-				podmpriv->DebugComponents &= ~(ODM_COMP_DIG | ODM_COMP_FA_CNT);
-			break;
-		case HAL_ODM_DBG_FLAG:
-			ODM_CmnInfoUpdate(podmpriv, ODM_CMNINFO_DBG_COMP, *((u8Byte *)pValue1));
-			break;
-		case HAL_ODM_DBG_LEVEL:
-			ODM_CmnInfoUpdate(podmpriv, ODM_CMNINFO_DBG_LEVEL, *((u4Byte *)pValue1));
-			break;
 		case HAL_ODM_RX_INFO_DUMP:
 		{
 			PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure(podmpriv , PHYDM_FALSEALMCNT);
@@ -2113,13 +2101,6 @@ void GetHalODMVar(
 	PDM_ODM_T podmpriv = &pHalData->odmpriv;
 	
 	switch (eVariable) {
-	case HAL_ODM_DBG_FLAG:
-		*((u8Byte *)pValue1) = podmpriv->DebugComponents;
-		break;
-	case HAL_ODM_DBG_LEVEL:
-		*((u4Byte *)pValue1) = podmpriv->DebugLevel;
-		break;
-
 #ifdef CONFIG_AUTO_CHNL_SEL_NHM
 	case HAL_ODM_AUTO_CHNL_SEL:
 		{

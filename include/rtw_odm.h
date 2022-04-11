@@ -25,18 +25,7 @@
 /*
 * This file provides utilities/wrappers for rtw driver to use ODM
 */
-
-void rtw_odm_dbg_comp_msg(void *sel,_adapter *adapter);
-void rtw_odm_dbg_comp_set(_adapter *adapter, u64 comps);
-void rtw_odm_dbg_level_msg(void *sel,_adapter *adapter);
-void rtw_odm_dbg_level_set(_adapter *adapter, u32 level);
-
-void rtw_odm_ability_msg(void *sel, _adapter *adapter);
-void rtw_odm_ability_set(_adapter *adapter, u32 ability);
-
 void rtw_odm_init_ic_type(_adapter *adapter);
-
-void rtw_odm_adaptivity_config_msg(void *sel, _adapter *adapter);
 
 void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter);
 void rtw_odm_acquirespinlock(_adapter *adapter,	RT_SPINLOCK_TYPE type);
