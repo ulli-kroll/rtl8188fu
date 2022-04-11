@@ -338,7 +338,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		(pHalData->EEPROMThermalMeter != 0xff)) {
 		//4 7.2 Configure the Swing Table to adjust Tx Power.
 		
-		pDM_Odm->RFCalibrateInfo.bTxPowerChanged = TRUE; // Always TRUE after Tx Power is adjusted by power tracking.			
 		//
 		// 2012/04/23 MH According to Luke's suggestion, we can not write BB digital
 		// to increase TX power. Otherwise, EVM will be bad.

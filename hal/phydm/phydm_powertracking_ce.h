@@ -104,7 +104,6 @@ typedef struct ODM_RF_Calibration_Structure
 	s1Byte	power_index_offset[MAX_RF_PATH];
 	s1Byte	delta_power_index[MAX_RF_PATH];
 	s1Byte	delta_power_index_last[MAX_RF_PATH];	
-	BOOLEAN bTxPowerChanged;
 		
 	u1Byte 	ThermalValue_HP[HP_THERMAL_NUM];
 	u1Byte 	ThermalValue_HP_index;
