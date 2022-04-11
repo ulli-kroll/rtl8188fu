@@ -220,10 +220,10 @@ odm_TXPowerTrackingThermalMeterInit(
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{
 		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->default_ofdm_index;		
-		pRFCalibrateInfo->OFDM_index[p] = pRFCalibrateInfo->default_ofdm_index;		
-		pRFCalibrateInfo->DeltaPowerIndex[p] = 0;
-		pRFCalibrateInfo->DeltaPowerIndexLast[p] = 0;
-		pRFCalibrateInfo->PowerIndexOffset[p] = 0;
+		pRFCalibrateInfo->ofdm_index[p] = pRFCalibrateInfo->default_ofdm_index;		
+		pRFCalibrateInfo->delta_power_index[p] = 0;
+		pRFCalibrateInfo->delta_power_index_last[p] = 0;
+		pRFCalibrateInfo->power_index_offset[p] = 0;
 	}
 	pRFCalibrateInfo->Modify_TxAGC_Value_OFDM=0;			//add by Mingzhi.Guo
 

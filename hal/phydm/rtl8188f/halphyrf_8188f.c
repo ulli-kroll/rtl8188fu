@@ -181,12 +181,12 @@ ODM_TxPwrTrackSetPwr_8188F(
 
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("odm_TxPwrTrackSetPwr8188F CH=%d\n", *(pDM_Odm->pChannel)));
 
-		pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
+		pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = pRFCalibrateInfo->absolute_ofdm_swing_idx[RFPath];
 
 
 	} else if (Method == BBSWING) {
-		Final_OFDM_Swing_Index = pRFCalibrateInfo->default_ofdm_index + pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
-		Final_CCK_Swing_Index = pRFCalibrateInfo->default_cck_index + pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
+		Final_OFDM_Swing_Index = pRFCalibrateInfo->default_ofdm_index + pRFCalibrateInfo->absolute_ofdm_swing_idx[RFPath];
+		Final_CCK_Swing_Index = pRFCalibrateInfo->default_cck_index + pRFCalibrateInfo->absolute_ofdm_swing_idx[RFPath];
 
 		// Adjust BB swing by OFDM IQ matrix
 		if (Final_OFDM_Swing_Index >= PwrTrackingLimit_OFDM)
@@ -227,8 +227,8 @@ ODM_TxPwrTrackSetPwr_8188F(
 		ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,("pRFCalibrateInfo->DefaultOfdmIndex=%d,  pRFCalibrateInfo->DefaultCCKIndex=%d, pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath]=%d, RF_Path = %d\n",
 				pRFCalibrateInfo->default_ofdm_index, pRFCalibrateInfo->default_cck_index, pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath],RFPath ));
 
-		Final_OFDM_Swing_Index = pRFCalibrateInfo->default_ofdm_index + pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
-		Final_CCK_Swing_Index = pRFCalibrateInfo->default_cck_index + pRFCalibrateInfo->Absolute_OFDMSwingIdx[RFPath];
+		Final_OFDM_Swing_Index = pRFCalibrateInfo->default_ofdm_index + pRFCalibrateInfo->absolute_ofdm_swing_idx[RFPath];
+		Final_CCK_Swing_Index = pRFCalibrateInfo->default_cck_index + pRFCalibrateInfo->absolute_ofdm_swing_idx[RFPath];
 		if (RFPath == ODM_RF_PATH_A) {
 			if (Final_OFDM_Swing_Index > PwrTrackingLimit_OFDM) {     //BBSwing higher then Limit
 				pRFCalibrateInfo->remnant_ofdm_swing_idx[RFPath] = Final_OFDM_Swing_Index - PwrTrackingLimit_OFDM;
