@@ -308,62 +308,6 @@ odm_PauseDIG(
 
 }
 
-BOOLEAN 
-odm_DigAbort(
-	IN		PVOID			pDM_VOID
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pDIG_T			pDM_DigTable = &pDM_Odm->DM_DigTable;
-
-
-	//SupportAbility
-	if(!(pDM_Odm->SupportAbility & ODM_BB_FA_CNT))
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: SupportAbility ODM_BB_FA_CNT is disabled\n"));
-		return	TRUE;
-	}
-
-	//SupportAbility
-	if(!(pDM_Odm->SupportAbility & ODM_BB_DIG))
-	{	
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: SupportAbility ODM_BB_DIG is disabled\n"));
-		return	TRUE;
-	}
-
-	//ScanInProcess
-	if(*(pDM_Odm->pbScanInProcess))
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: In Scan Progress \n"));
-	    	return	TRUE;
-	}
-
-	if(pDM_DigTable->bIgnoreDIG)
-	{
-		pDM_DigTable->bIgnoreDIG = FALSE;
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: Ignore DIG \n"));
-	    	return	TRUE;
-	}
-
-	//add by Neil Chen to avoid PSD is processing
-	if(pDM_Odm->bDMInitialGainEnable == FALSE)
-	{
-		ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Return: PSD is Processing \n"));
-		return	TRUE;
-	}
-
-	#ifdef CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV	
-	if((pDM_Odm->bLinked) && (pDM_Odm->Adapter->registrypriv.force_igi !=0))
-	{	
-		printk("pDM_Odm->RSSI_Min=%d \n",pDM_Odm->RSSI_Min);
-		ODM_Write_DIG(pDM_Odm,pDM_Odm->Adapter->registrypriv.force_igi);
-		return	TRUE;
-	}
-	#endif
-
-	return	FALSE;
-}
-
 VOID
 odm_DIGInit(
 	IN		PVOID		pDM_VOID
@@ -430,9 +374,6 @@ odm_DIG(
 	u4Byte						TxTp = 0, RxTp = 0;
 	BOOLEAN						bDFSBand = FALSE;
 	BOOLEAN						bPerformance = TRUE, bFirstTpTarget = FALSE, bFirstCoverage = FALSE;
-
-	if(odm_DigAbort(pDM_Odm) == TRUE)
-		return;
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG()===========================>\n\n"));
 	
@@ -626,9 +567,6 @@ odm_DIGbyRSSI_LPS(
 
 	u1Byte	RSSI_Lower=DM_DIG_MIN_NIC;   //0x1E or 0x1C
 	u1Byte	CurrentIGI=pDM_Odm->RSSI_Min;
-
-	if(odm_DigAbort(pDM_Odm) == TRUE)
-		return;
 
 	CurrentIGI=CurrentIGI+RSSI_OFFSET_DIG;
 
