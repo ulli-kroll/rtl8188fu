@@ -215,13 +215,6 @@ typedef enum tag_PHYDM_Pause_Level {
 #define 		RSSI_OFFSET_DIG				0x05
 
 VOID
-ODM_ChangeDynamicInitGainThresh(
-	IN		PVOID					pDM_VOID,
-	IN		u4Byte  					DM_Type,
-	IN		u4Byte 					DM_Value
-	);
-
-VOID
 rtl8188fu_dm_write_dig(
 	IN		PVOID					pDM_VOID, 	
 	IN		u1Byte					CurrentIGI

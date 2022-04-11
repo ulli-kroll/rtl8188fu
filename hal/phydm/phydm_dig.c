@@ -25,40 +25,6 @@
 #include "phydm_precomp.h"
 
 
-VOID
-ODM_ChangeDynamicInitGainThresh(
-	IN	PVOID		pDM_VOID,
-	IN	u4Byte		DM_Type,
-	IN	u4Byte		DM_Value
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pDIG_T			pDM_DigTable = &pDM_Odm->DM_DigTable;
-
-	if (DM_Type == DIG_TYPE_THRESH_HIGH)
-	{
-		pDM_DigTable->RssiHighThresh = DM_Value;		
-	}
-	else if (DM_Type == DIG_TYPE_THRESH_LOW)
-	{
-		pDM_DigTable->RssiLowThresh = DM_Value;
-	}
-	else if (DM_Type == DIG_TYPE_ENABLE)
-	{
-		pDM_DigTable->Dig_Enable_Flag	= TRUE;
-	}	
-	else if (DM_Type == DIG_TYPE_DISABLE)
-	{
-		pDM_DigTable->Dig_Enable_Flag = FALSE;
-	}	
-	else if (DM_Type == DIG_TYPE_BACKOFF)
-	{
-		if(DM_Value > 30)
-			DM_Value = 30;
-		pDM_DigTable->BackoffVal = (u1Byte)DM_Value;
-	}
-}	// DM_ChangeDynamicInitGainThresh //
-
 int 
 getIGIForDiff(int value_IGI)
 {
