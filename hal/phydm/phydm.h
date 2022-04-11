@@ -35,7 +35,6 @@
 #include "phydm_acs.h"
 #include "phydm_adaptivity.h"
 
-#include "phydm_noisemonitor.h"
 #include "halphyrf_ce.h"
 #include "phydm_powertracking_ce.h"
 
@@ -673,7 +672,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	BOOLEAN			pre_b_noisy;	
 	u4Byte			NoisyDecision_Smooth;
 
-	ODM_NOISE_MONITOR noise_level;//[ODM_MAX_CHANNEL_NUM];
 	//
 	//2 Define STA info.
 	// _ODM_STA_INFO
