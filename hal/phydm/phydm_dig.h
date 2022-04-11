@@ -28,7 +28,6 @@
 
 typedef struct _Dynamic_Initial_Gain_Threshold_
 {
-	BOOLEAN		bStopDIG;		// for debug
 	BOOLEAN		bIgnoreDIG;
 	BOOLEAN		bPSDInProgress;
 

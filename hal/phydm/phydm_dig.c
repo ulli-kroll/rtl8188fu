@@ -167,11 +167,6 @@ rtl8188fu_dm_write_dig(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pDIG_T			pDM_DigTable = &pDM_Odm->DM_DigTable;
 
-	if (pDM_DigTable->bStopDIG) {
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("ODM_Write_DIG(): Stop Writing IGI\n"));
-		return;
-	}
-
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_TRACE, ("ODM_Write_DIG(): ODM_REG(IGI_A,pDM_Odm)=0x%x, ODM_BIT(IGI,pDM_Odm)=0x%x\n",
 		ODM_REG(IGI_A,pDM_Odm),ODM_BIT(IGI,pDM_Odm)));
 
@@ -377,7 +372,6 @@ odm_DIGInit(
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	pDIG_T						pDM_DigTable = &pDM_Odm->DM_DigTable;
 
-	pDM_DigTable->bStopDIG = FALSE;
 	pDM_DigTable->bIgnoreDIG = FALSE;
 	pDM_DigTable->bPSDInProgress = FALSE;
 	pDM_DigTable->CurIGValue = (u1Byte) ODM_GetBBReg(pDM_Odm, ODM_REG(IGI_A,pDM_Odm), ODM_BIT(IGI,pDM_Odm));
