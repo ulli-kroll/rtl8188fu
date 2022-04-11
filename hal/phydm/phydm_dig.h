@@ -32,15 +32,8 @@ typedef struct _Dynamic_Initial_Gain_Threshold_
 	BOOLEAN		bIgnoreDIG;
 	BOOLEAN		bPSDInProgress;
 
-	u1Byte		Dig_Enable_Flag;
 	u1Byte		Dig_Ext_Port_Stage;
 	
-	int		   	RssiLowThresh;
-	int		    	RssiHighThresh;
-
-	u4Byte		FALowThresh;
-	u4Byte		FAHighThresh;
-
 	u1Byte		CurSTAConnectState;
 	u1Byte		PreSTAConnectState;
 	u1Byte		CurMultiSTAConnectState;
@@ -51,9 +44,6 @@ typedef struct _Dynamic_Initial_Gain_Threshold_
 	u1Byte		BT30_CurIGI;
 	u1Byte		IGIBackup;
 
-	s1Byte		BackoffVal;
-	s1Byte		BackoffVal_range_max;
-	s1Byte		BackoffVal_range_min;
 	u1Byte		rx_gain_range_max;
 	u1Byte		rx_gain_range_min;
 	u1Byte		Rssi_val_min;

@@ -381,13 +381,6 @@ odm_DIGInit(
 	pDM_DigTable->bIgnoreDIG = FALSE;
 	pDM_DigTable->bPSDInProgress = FALSE;
 	pDM_DigTable->CurIGValue = (u1Byte) ODM_GetBBReg(pDM_Odm, ODM_REG(IGI_A,pDM_Odm), ODM_BIT(IGI,pDM_Odm));
-	pDM_DigTable->RssiLowThresh 	= DM_DIG_THRESH_LOW;
-	pDM_DigTable->RssiHighThresh 	= DM_DIG_THRESH_HIGH;
-	pDM_DigTable->FALowThresh	= DM_FALSEALARM_THRESH_LOW;
-	pDM_DigTable->FAHighThresh	= DM_FALSEALARM_THRESH_HIGH;
-	pDM_DigTable->BackoffVal = DM_DIG_BACKOFF_DEFAULT;
-	pDM_DigTable->BackoffVal_range_max = DM_DIG_BACKOFF_MAX;
-	pDM_DigTable->BackoffVal_range_min = DM_DIG_BACKOFF_MIN;
 	pDM_DigTable->PreCCK_CCAThres = 0xFF;
 	pDM_DigTable->CurCCK_CCAThres = 0x83;
 	pDM_DigTable->ForbiddenIGI = DM_DIG_MIN_NIC;
