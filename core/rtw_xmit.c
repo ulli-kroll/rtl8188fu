@@ -4192,9 +4192,7 @@ bool rtw_xmit_ac_blocked(_adapter *adapter)
 			goto exit;
 		}
 
-		if (mlmeext_scan_state(mlmeext) == SCAN_BACK_OP
-			&& !mlmeext_chk_scan_backop_flags(mlmeext, SS_BACKOP_TX_RESUME)
-		) {
+		if (mlmeext_scan_state(mlmeext) == SCAN_BACK_OP) {
 			blocked = _TRUE;
 			goto exit;
 		}

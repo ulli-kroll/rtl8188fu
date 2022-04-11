@@ -626,18 +626,6 @@ struct mlme_ext_priv
 		/* DBG_871X("set_scan_next_state:%s\n", scan_state_str(_state)); */ \
 	} while (0)
 
-#define mlmeext_scan_backop_flags(mlmeext) (0)
-#define mlmeext_chk_scan_backop_flags(mlmeext, flags) (0)
-#define mlmeext_assign_scan_backop_flags(mlmeext, flags) do {} while (0)
-
-#define mlmeext_scan_backop_flags_sta(mlmeext) (0)
-#define mlmeext_chk_scan_backop_flags_sta(mlmeext, flags) (0)
-#define mlmeext_assign_scan_backop_flags_sta(mlmeext, flags) do {} while (0)
-
-#define mlmeext_scan_backop_flags_ap(mlmeext) (0)
-#define mlmeext_chk_scan_backop_flags_ap(mlmeext, flags) (0)
-#define mlmeext_assign_scan_backop_flags_ap(mlmeext, flags) do {} while (0)
-
 void init_mlme_default_rate_set(_adapter* padapter);
 int init_mlme_ext_priv(_adapter* padapter);
 int init_hw_mlme_ext(_adapter *padapter);
