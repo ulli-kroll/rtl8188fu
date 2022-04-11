@@ -107,8 +107,8 @@ typedef enum tag_Dynamic_Init_Gain_Operation_Type_Definition
 	DIG_TYPE_THRESH_HIGH	= 0,
 	DIG_TYPE_THRESH_LOW	= 1,
 	DIG_TYPE_BACKOFF		= 2,
-	DIG_TYPE_RX_GAIN_MIN	= 3,
-	DIG_TYPE_RX_GAIN_MAX	= 4,
+	__DIG_TYPE_RX_GAIN_MIN__	= 3,
+	__DIG_TYPE_RX_GAIN_MAX__	= 4,
 	DIG_TYPE_ENABLE 		= 5,
 	DIG_TYPE_DISABLE 		= 6,	
 	DIG_OP_TYPE_MAX

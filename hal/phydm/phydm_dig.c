@@ -57,18 +57,6 @@ ODM_ChangeDynamicInitGainThresh(
 			DM_Value = 30;
 		pDM_DigTable->BackoffVal = (u1Byte)DM_Value;
 	}
-	else if(DM_Type == DIG_TYPE_RX_GAIN_MIN)
-	{
-		if(DM_Value == 0)
-			DM_Value = 0x1;
-		pDM_DigTable->rx_gain_range_min = (u1Byte)DM_Value;
-	}
-	else if(DM_Type == DIG_TYPE_RX_GAIN_MAX)
-	{
-		if(DM_Value > 0x50)
-			DM_Value = 0x50;
-		pDM_DigTable->rx_gain_range_max = (u1Byte)DM_Value;
-	}
 }	// DM_ChangeDynamicInitGainThresh //
 
 int 
