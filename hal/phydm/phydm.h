@@ -1060,8 +1060,6 @@ PhyDM_Get_Structure(
 
 //===========================================================
 
-void odm_dtc(PDM_ODM_T pDM_Odm);
-
 
 VOID phydm_NoisyDetection(IN	PDM_ODM_T	pDM_Odm	);
 
