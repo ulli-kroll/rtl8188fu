@@ -224,13 +224,6 @@ PhyDM_Get_Structure(
 	return	pStruct;
 }
 
-VOID
-odm_HWSetting(
-	IN		PDM_ODM_T		pDM_Odm
-	)
-{
-}
-
 //
 // 2011/09/21 MH Add to describe different team necessary resource allocate??
 //
@@ -336,7 +329,6 @@ _rtl8188fu_dm_watchdog(
 	)
 {
 	odm_CommonInfoSelfUpdate(pDM_Odm);
-	odm_HWSetting(pDM_Odm);
 
 	rtl9188fu_dm_false_alarm_counter_statistics(pDM_Odm);
 	phydm_NoisyDetection(pDM_Odm);
