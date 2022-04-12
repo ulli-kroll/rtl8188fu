@@ -361,8 +361,6 @@ _rtl8188fu_dm_watchdog(
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);
 
-	phydm_rf_watchdog(pDM_Odm);
-
 	odm_dtc(pDM_Odm);
 
 	odm_CommonInfoSelfReset(pDM_Odm);

@@ -71,7 +71,6 @@ ODM_GetRightChnlPlaceforIQK(
 );
 
 void phydm_rf_init(	IN		PVOID					pDM_VOID);
-void phydm_rf_watchdog(	IN		PVOID					pDM_VOID);
 								
 #endif	// #ifndef __HAL_PHY_RF_H__
 

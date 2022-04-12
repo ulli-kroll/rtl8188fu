@@ -435,8 +435,3 @@ void phydm_rf_init(IN	PVOID		pDM_VOID)
 
 }
 
-void phydm_rf_watchdog(IN	PVOID		pDM_VOID)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	ODM_TXPowerTrackingCheck(pDM_Odm);
-}
