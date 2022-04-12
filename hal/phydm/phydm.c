@@ -330,9 +330,13 @@ _rtl8188fu_dm_watchdog(
 {
 	odm_CommonInfoSelfUpdate(pDM_Odm);
 
+	/* ULLI : function name in rtlwifi */
 	rtl9188fu_dm_false_alarm_counter_statistics(pDM_Odm);
+
+	/* ULLI : some obscure noise dectection, we can/should drop */
 	phydm_NoisyDetection(pDM_Odm);
 	
+	/* ULLI : phydm functions for rate decition and RSSI phy*/
 	odm_RSSIMonitorCheck(pDM_Odm);
 
 	if(*(pDM_Odm->pbPowerSaving) == TRUE)
@@ -346,18 +350,29 @@ _rtl8188fu_dm_watchdog(
 		return;
 	}
 	
+	/* ULLI : obscure Adaptivity */
 	Phydm_CheckAdaptivity(pDM_Odm);
+
+	/* ULLI : function name should be in rtlwifi, I'm lazy */
 	odm_DIG(pDM_Odm);
 	{
 		pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 		Phydm_Adaptivity(pDM_Odm, pDM_DigTable->CurIGValue);
 	}
+
+	/* ULLI : function name in rtlwifi */
 	odm_CCKPacketDetectionThresh(pDM_Odm);
+
+	/* ULLI : phydm functions for rate decition , in mac80211 */
 	phydm_ra_dynamic_retry_limit(pDM_Odm);
 	phydm_ra_dynamic_retry_count(pDM_Odm);
 	odm_RefreshRateAdaptiveMask(pDM_Odm);
 	odm_RefreshBasicRateMask(pDM_Odm);
+
+	/* ULLI : function name in rtlwifi */
 	odm_EdcaTurboCheck(pDM_Odm);
+
+	/* ULLI : in rtlwifi but we may have one antenna */
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);
 
