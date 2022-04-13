@@ -159,7 +159,7 @@ ODM_CfoTracking(
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking()=========> \n"));
 
-	if(!pDM_Odm->bLinked || !pDM_Odm->bOneEntryOnly)
+	if(!pDM_Odm->bLinked || !0)
 	{	
 		//4 No link or more than one entry
 		ODM_CfoTrackingReset(pDM_Odm);

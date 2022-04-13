@@ -430,7 +430,7 @@ odm_DIG(
 	}
 	
 	//1 Force Lower Bound for AntDiv
-	if(pDM_Odm->bLinked && !pDM_Odm->bOneEntryOnly)
+	if(pDM_Odm->bLinked && !0)
 	{
 	}
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Adjust boundary by RSSI Upper bound = 0x%x, Lower bound = 0x%x\n",

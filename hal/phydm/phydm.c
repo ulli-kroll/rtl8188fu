@@ -158,28 +158,6 @@ odm_CommonInfoSelfUpdate(
 	} else
 		pDM_Odm->ControlChannel = *(pDM_Odm->pChannel);
 
-	for (i=0; i<ODM_ASSOCIATE_ENTRY_NUM; i++)
-	{
-		pEntry = pDM_Odm->pODM_StaInfo[i];
-		if(IS_STA_VALID(pEntry))
-		{
-			EntryCnt++;
-			if(EntryCnt==1)
-			{
-				OneEntry_MACID=i;
-			}
-
-                }
-	}
-	
-	if(EntryCnt == 1)
-	{
-		pDM_Odm->bOneEntryOnly = TRUE;
-		pDM_Odm->OneEntry_MACID=OneEntry_MACID;
-	}
-	else
-		pDM_Odm->bOneEntryOnly = FALSE;
-
 	pDM_Odm->pre_number_linked_client = pDM_Odm->number_linked_client;
 	pDM_Odm->pre_number_active_client = pDM_Odm->number_active_client;
 	
