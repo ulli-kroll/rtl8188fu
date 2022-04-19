@@ -679,9 +679,7 @@ post_process:
 
 	_rtw_up_sema(&pcmdpriv->terminate_cmdthread_sema);
 
-
-	thread_exit();
-
+	return 0;
 }
 
 
