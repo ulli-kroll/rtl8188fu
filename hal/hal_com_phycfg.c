@@ -609,9 +609,6 @@ rtl8188fu_phy_get_tx_power_tracking_offset(
 	PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;	
 	s8	offset = 0;
 	
-	if( pDM_Odm->RFCalibrateInfo.TxPowerTrackControl  == _FALSE)
-		return offset;
-	
 	if ((Rate == MGN_1M) ||(Rate == MGN_2M)||(Rate == MGN_5_5M)||(Rate == MGN_11M))
 	{ 
 		offset = pDM_Odm->RFCalibrateInfo.remnant_cck_idx;

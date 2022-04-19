@@ -138,9 +138,9 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		pRFCalibrateInfo->swing_idx_cck_base, pRFCalibrateInfo->BbSwingIdxOfdmBase[ODM_RF_PATH_A], pRFCalibrateInfo->default_ofdm_index));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, 
-		("pDM_Odm->RFCalibrateInfo.TxPowerTrackControl %d,  pHalData->EEPROMThermalMeter %d\n", pDM_Odm->RFCalibrateInfo.TxPowerTrackControl,  pHalData->EEPROMThermalMeter));
+		("pHalData->EEPROMThermalMeter %d\n", pHalData->EEPROMThermalMeter));
 	ThermalValue = (u1Byte)ODM_GetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_T_METER_8188F, 0xfc00);	//0x42: RF Reg[15:10] 88E
-	if( ! pDM_Odm->RFCalibrateInfo.TxPowerTrackControl || pHalData->EEPROMThermalMeter == 0 || 
+	if(pHalData->EEPROMThermalMeter == 0 || 
 		pHalData->EEPROMThermalMeter == 0xFF)
 		return;
 
@@ -210,7 +210,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	}
 	//3 7. If necessary, move the index of swing table to adjust Tx power.	
 	
-	if (delta > 0 && pDM_Odm->RFCalibrateInfo.TxPowerTrackControl) 	{
+	if (delta > 0) 	{
 		//"delta" here is used to record the absolute value of differrence.
 		delta = ThermalValue > pHalData->EEPROMThermalMeter?(ThermalValue - pHalData->EEPROMThermalMeter):(pHalData->EEPROMThermalMeter - ThermalValue);		
 		if (delta >= TXPWR_TRACK_TABLE_SIZE)
@@ -334,7 +334,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	
 	if ((pDM_Odm->RFCalibrateInfo.power_index_offset[ODM_RF_PATH_A] != 0 ||
 		pDM_Odm->RFCalibrateInfo.power_index_offset[ODM_RF_PATH_B] != 0) && 
-		pDM_Odm->RFCalibrateInfo.TxPowerTrackControl &&
 		(pHalData->EEPROMThermalMeter != 0xff)) {
 		//4 7.2 Configure the Swing Table to adjust Tx Power.
 		

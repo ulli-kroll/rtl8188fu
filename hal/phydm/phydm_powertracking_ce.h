@@ -76,7 +76,6 @@ typedef struct ODM_RF_Calibration_Structure
 	u1Byte  	TXPowercount;
 	BOOLEAN bTXPowerTrackingInit; 
 	BOOLEAN bTXPowerTracking;
-	u1Byte  	TxPowerTrackControl; //for mp mode, turn off txpwrtracking as default
 	u1Byte  	TM_Trigger;
     	u1Byte  	InternalPA5G[2];	//pathA / pathB
 	
