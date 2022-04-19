@@ -1084,7 +1084,7 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 			pwrpriv = adapter_to_pwrctl(padapter);
 
-			PHY_LCCalibrate_8188F(&pHalData->odmpriv);
+			rtl8188fu_phy_lc_calibrate(&pHalData->odmpriv);
 
 			restore_iqk_rst = (pwrpriv->bips_processing == _TRUE) ? _TRUE : _FALSE;
 			PHY_IQCalibrate_8188F(padapter, _FALSE, restore_iqk_rst);

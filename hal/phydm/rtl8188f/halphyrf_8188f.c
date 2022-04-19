@@ -1888,7 +1888,7 @@ PHY_IQCalibrate_8188F(
 
 
 VOID
-PHY_LCCalibrate_8188F(
+rtl8188fu_phy_lc_calibrate(
 	PVOID pDM_VOID
 )
 {

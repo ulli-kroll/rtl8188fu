@@ -55,7 +55,7 @@ PHY_IQCalibrate_8188F(
 // LC calibrate
 //
 void	
-PHY_LCCalibrate_8188F(
+rtl8188fu_phy_lc_calibrate(
 	IN	PVOID		pDM_VOID
 );
 
