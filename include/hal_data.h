@@ -432,7 +432,7 @@ typedef struct hal_com_data
 	int			EntryMaxUndecoratedSmoothedPWDB;
 	int			MinUndecoratedPWDBForDM;
 	DM_ODM_T	odmpriv;	
-	u8			bIQKInitialized;
+	u8			iqk_initialized;
 	u8 			bNeedIQK;
 	/******** PHY DM & DM Section **********/
 

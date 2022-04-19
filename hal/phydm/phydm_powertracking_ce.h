@@ -152,7 +152,7 @@ typedef struct ODM_RF_Calibration_Structure
 	u4Byte 	Reg860;
 	u4Byte 	Reg864;
 	
-	BOOLEAN	bIQKInitialized;
+	BOOLEAN	iqk_initialized;
 	BOOLEAN bLCKInProgress;
 	BOOLEAN	bAntennaDetected;
 	BOOLEAN	bNeedIQK;

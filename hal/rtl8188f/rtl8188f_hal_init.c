@@ -1737,7 +1737,7 @@ void rtl8188f_init_default_value(PADAPTER padapter)
 	padapter->registrypriv.wireless_mode = WIRELESS_11BG_24N;
 
 	/*init phydm default value */
-	pHalData->bIQKInitialized = _FALSE;
+	pHalData->iqk_initialized = _FALSE;
 	pHalData->odmpriv.RFCalibrateInfo.TM_Trigger = 0;/*for IQK */
 	pHalData->odmpriv.RFCalibrateInfo.ThermalValue_HP_index = 0;
 	for (i = 0; i < HP_THERMAL_NUM; i++)
