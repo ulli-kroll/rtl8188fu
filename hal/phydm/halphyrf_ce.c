@@ -74,8 +74,8 @@ ODM_ClearTxPowerTrackingState(
 	
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{
-		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->default_ofdm_index;
-		pRFCalibrateInfo->BbSwingIdxOfdm[p] = pRFCalibrateInfo->default_ofdm_index;
+		pRFCalibrateInfo->swing_idx_ofdm_base[p] = pRFCalibrateInfo->default_ofdm_index;
+		pRFCalibrateInfo->swing_idx_ofdm[p] = pRFCalibrateInfo->default_ofdm_index;
 		pRFCalibrateInfo->ofdm_index[p] = pRFCalibrateInfo->default_ofdm_index;
 
 		pRFCalibrateInfo->power_index_offset[p] = 0;
@@ -283,11 +283,11 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 				("[Path-%d] power_index_offset(%d) = delta_power_index(%d) - delta_power_index_last(%d)\n", p, pDM_Odm->RFCalibrateInfo.power_index_offset[p], pDM_Odm->RFCalibrateInfo.delta_power_index[p], pDM_Odm->RFCalibrateInfo.delta_power_index_last[p]));		
 		
-			pDM_Odm->RFCalibrateInfo.ofdm_index[p] = pRFCalibrateInfo->BbSwingIdxOfdmBase[p] + pDM_Odm->RFCalibrateInfo.power_index_offset[p];
+			pDM_Odm->RFCalibrateInfo.ofdm_index[p] = pRFCalibrateInfo->swing_idx_ofdm_base[p] + pDM_Odm->RFCalibrateInfo.power_index_offset[p];
 			pDM_Odm->RFCalibrateInfo.cck_index = pRFCalibrateInfo->swing_idx_cck_base + pDM_Odm->RFCalibrateInfo.power_index_offset[p];
 
 			pRFCalibrateInfo->swing_idx_cck = pDM_Odm->RFCalibrateInfo.cck_index;	
-			pRFCalibrateInfo->BbSwingIdxOfdm[p] = pDM_Odm->RFCalibrateInfo.ofdm_index[p];
+			pRFCalibrateInfo->swing_idx_ofdm[p] = pDM_Odm->RFCalibrateInfo.ofdm_index[p];
 
 
 
@@ -370,7 +370,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 
 		pRFCalibrateInfo->swing_idx_cck_base = pRFCalibrateInfo->swing_idx_cck;    /*Record last time Power Tracking result as base.*/
 		for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-				pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->BbSwingIdxOfdm[p];
+				pRFCalibrateInfo->swing_idx_ofdm_base[p] = pRFCalibrateInfo->swing_idx_ofdm[p];
 
 	 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
 					("pDM_Odm->RFCalibrateInfo.ThermalValue = %d ThermalValue= %d\n", pDM_Odm->RFCalibrateInfo.ThermalValue, ThermalValue));

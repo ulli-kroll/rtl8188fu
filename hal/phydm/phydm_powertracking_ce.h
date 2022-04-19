@@ -118,9 +118,9 @@ typedef struct ODM_RF_Calibration_Structure
 	u1Byte  DeltaSwingTableIdx_2GB_P[DELTA_SWINGIDX_SIZE];
 	u1Byte  DeltaSwingTableIdx_2GB_N[DELTA_SWINGIDX_SIZE];
     
-	u1Byte			BbSwingIdxOfdm[MAX_RF_PATH];
-	u1Byte			BbSwingIdxOfdmCurrent;
-	u1Byte			BbSwingIdxOfdmBase[MAX_RF_PATH];
+	u1Byte			swing_idx_ofdm[MAX_RF_PATH];
+	u1Byte			swing_idx_ofdm_cur;
+	u1Byte			swing_idx_ofdm_base[MAX_RF_PATH];
 	BOOLEAN			swing_flag_ofdm;
 	u1Byte			swing_idx_cck;
 	u1Byte			swing_idx_cck_cur;

@@ -215,7 +215,7 @@ odm_TXPowerTrackingThermalMeterInit(
 	
 	for (p = ODM_RF_PATH_A; p < MAX_RF_PATH; ++p)
 	{
-		pRFCalibrateInfo->BbSwingIdxOfdmBase[p] = pRFCalibrateInfo->default_ofdm_index;		
+		pRFCalibrateInfo->swing_idx_ofdm_base[p] = pRFCalibrateInfo->default_ofdm_index;		
 		pRFCalibrateInfo->ofdm_index[p] = pRFCalibrateInfo->default_ofdm_index;		
 		pRFCalibrateInfo->delta_power_index[p] = 0;
 		pRFCalibrateInfo->delta_power_index_last[p] = 0;
