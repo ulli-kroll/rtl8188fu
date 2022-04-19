@@ -383,7 +383,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	if (delta_IQK >= IQK_THRESHOLD) {
 		if (!pDM_Odm->RFCalibrateInfo.bIQKInProgress) {
 			pDM_Odm->RFCalibrateInfo.ThermalValue_IQK = ThermalValue;
-			PHY_IQCalibrate_8188F(Adapter, FALSE, FALSE);
+			rtl8188fu_phy_iq_calibrate(Adapter, FALSE, FALSE);
 		 }
 	}
 

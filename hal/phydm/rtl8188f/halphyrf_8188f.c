@@ -1655,7 +1655,7 @@ phy_APCalibrate_8188F(
 
 
 VOID
-PHY_IQCalibrate_8188F(
+rtl8188fu_phy_iq_calibrate(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN bReCovery,
 	IN BOOLEAN bRestore

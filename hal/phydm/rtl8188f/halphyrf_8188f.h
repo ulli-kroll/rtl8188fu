@@ -45,7 +45,7 @@ ODM_TxPwrTrackSetPwr_8188F(
 //1 7.	IQK
 
 void	
-PHY_IQCalibrate_8188F(	
+rtl8188fu_phy_iq_calibrate(	
 	IN PADAPTER	Adapter,
 	IN	BOOLEAN 	bReCovery,
 	IN	BOOLEAN 	bRestore);
