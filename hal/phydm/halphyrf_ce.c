@@ -112,7 +112,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	u4Byte			ThermalValue_AVG = 0;	
 
 	u1Byte			OFDM_min_index = 0;  // OFDM BB Swing should be less than +3.0dB, which is required by Arthur
-	u1Byte			Indexforchannel = 0; // GetRightChnlPlaceforIQK(pHalData->CurrentChannel)
 	BOOLEAN			bTSSIenable = FALSE;
 
 	TXPWRTRACK_CFG 	c;
@@ -365,7 +364,7 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 		} else {
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking MIX_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-					ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, Indexforchannel);
+					ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, 0);
 		}
 
 		pRFCalibrateInfo->swing_idx_cck_base = pRFCalibrateInfo->swing_idx_cck;    /*Record last time Power Tracking result as base.*/
