@@ -1328,8 +1328,7 @@ phy_SimularityCompare_8188F(
 
 
 
-VOID
-phy_IQCalibrate_8188F(
+static void _rtl8188fu_phy_iq_calibrate(
 	IN PADAPTER pAdapter,
 	IN s4Byte result[][8],
 	IN u1Byte t,
@@ -1773,7 +1772,7 @@ rtl8188fu_phy_iq_calibrate(
 	for (i = 0; i < 3; i++) {
 
 
-		phy_IQCalibrate_8188F(pAdapter, result, i, FALSE);
+		_rtl8188fu_phy_iq_calibrate(pAdapter, result, i, FALSE);
 
 
 
