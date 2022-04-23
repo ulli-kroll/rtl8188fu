@@ -2229,11 +2229,11 @@ Hal_EfuseParseXtal_8188F(
 
 	/*RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("%s(): AutoLoadFail = %d\n", __func__, AutoLoadFail)); */
 	if (!AutoLoadFail) {
-		pHalData->CrystalCap = hwinfo[EEPROM_XTAL_8188F];
-		if (pHalData->CrystalCap == 0xFF)
-			pHalData->CrystalCap = EEPROM_Default_CrystalCap_8188F;	   /*what value should 8812 set? */
+		pHalData->crystalcap = hwinfo[EEPROM_XTAL_8188F];
+		if (pHalData->crystalcap == 0xFF)
+			pHalData->crystalcap = EEPROM_Default_CrystalCap_8188F;	   /*what value should 8812 set? */
 	} else
-		pHalData->CrystalCap = EEPROM_Default_CrystalCap_8188F;
+		pHalData->crystalcap = EEPROM_Default_CrystalCap_8188F;
 	RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("EEPROM CrystalCap: 0x%2x\n", pHalData->CrystalCap));
 }
 

@@ -62,7 +62,7 @@ odm_GetDefaultCrytaltalCap(
 	PADAPTER					Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE				*pHalData = GET_HAL_DATA(Adapter);
 
-	CrystalCap = pHalData->CrystalCap;
+	CrystalCap = pHalData->crystalcap;
 
 	CrystalCap = CrystalCap & 0x3f;
 
@@ -78,11 +78,11 @@ odm_SetATCStatus(
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 
-	if(pCfoTrack->bATCStatus == ATCStatus)
+	if(pCfoTrack->atc_status == ATCStatus)
 		return;
 	
 	ODM_SetBBReg(pDM_Odm, ODM_REG(BB_ATC,pDM_Odm), ODM_BIT(BB_ATC,pDM_Odm), ATCStatus);
-	pCfoTrack->bATCStatus = ATCStatus;
+	pCfoTrack->atc_status = ATCStatus;
 }
 
 BOOLEAN
@@ -132,7 +132,7 @@ ODM_CfoTrackingInit(
 	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 
 	pCfoTrack->DefXCap = pCfoTrack->CrystalCap = odm_GetDefaultCrytaltalCap(pDM_Odm);
-	pCfoTrack->bATCStatus = odm_GetATCStatus(pDM_Odm);
+	pCfoTrack->atc_status = odm_GetATCStatus(pDM_Odm);
 	pCfoTrack->bAdjust = TRUE;
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking_init()=========> \n"));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CFO_TRACKING, ODM_DBG_LOUD, ("ODM_CfoTracking_init(): bATCStatus = %d, CrystalCap = 0x%x \n",pCfoTrack->bATCStatus, pCfoTrack->DefXCap));

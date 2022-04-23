@@ -382,7 +382,7 @@ typedef struct hal_com_data
 	u32	MCSTxPowerLevelOriginalOffset[MAX_PG_GROUP][16];
 	u32	CCKTxPowerLevelOriginalOffset;
 
-	u8	CrystalCap;
+	u8	crystalcap;
 	
 	u8	PAType_2G;
 	u8	PAType_5G;

@@ -29,7 +29,7 @@
 
 typedef struct _CFO_TRACKING_
 {
-	BOOLEAN			bATCStatus;
+	BOOLEAN			atc_status;
 	BOOLEAN			largeCFOHit;
 	BOOLEAN			bAdjust;
 	u1Byte			CrystalCap;

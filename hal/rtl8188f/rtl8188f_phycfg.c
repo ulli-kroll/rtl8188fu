@@ -580,7 +580,7 @@ int rtl8188fu_phy_bb_config(
 	/* Config BB and AGC */
 	rtStatus = _rtl8188fu_phy_config_parafile(Adapter);
 
-	hal_set_crystal_cap(Adapter, pHalData->CrystalCap);
+	hal_set_crystal_cap(Adapter, pHalData->crystalcap);
 
 	return rtStatus;
 }
