@@ -44,10 +44,7 @@ void ConfigureTxpowerTrack(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 
-#if RTL8188F_SUPPORT
-	if (pDM_Odm->SupportICType == ODM_RTL8188F)
-		ConfigureTxpowerTrack_8188F(pConfig);
-#endif 
+	ConfigureTxpowerTrack_8188F(pConfig);
 }
 
 //======================================================================

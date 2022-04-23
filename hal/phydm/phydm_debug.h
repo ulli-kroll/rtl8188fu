@@ -127,8 +127,7 @@
 	do {	\
 		if(((comp) & pDM_Odm->DebugComponents) && (level <= pDM_Odm->DebugLevel || level == ODM_DBG_SERIOUS))	\
 		{																			\
-			if (pDM_Odm->SupportICType == ODM_RTL8188F)							\
-				DbgPrint("[ODM-8188F] ");											\
+			DbgPrint("[ODM-8188F] ");											\
 			RT_PRINTK fmt;															\
 		}	\
 	} while (0)

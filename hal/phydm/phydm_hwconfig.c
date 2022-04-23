@@ -330,95 +330,15 @@ odm_RxPhyStatus92CSeries_Parsing(
 		//2011.11.28 LukeLee: 88E use different LNA & VGA gain table
 		//The RSSI formula should be modified according to the gain table
 		//In 88E, cck_highpwr is always set to 1
-		if (pDM_Odm->SupportICType & (ODM_RTL8188F)) /*3 bit LNA*/
 		{
 			LNA_idx = ((cck_agc_rpt & 0xE0) >>5);
 			VGA_idx = (cck_agc_rpt & 0x1F); 
 
-			if (pDM_Odm->SupportICType & (ODM_RTL8188F)) {
-#if (RTL8188F_SUPPORT == 1)
+			{
 				rx_pwr_all = odm_CCKRSSI_8188F(LNA_idx, VGA_idx);
 				PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
 				if (PWDB_ALL > 100)
 					PWDB_ALL = 100;
-#endif
-			}
-		}
-		else
-		{
-			if(!cck_highpwr)
-			{			
-				report =( cck_agc_rpt & 0xc0 )>>6;
-				switch(report)
-				{
-					// 03312009 modified by cosa
-					// Modify the RF RNA gain value to -40, -20, -2, 14 by Jenyu's suggestion
-					// Note: different RF with the different RNA gain.
-					case 0x3:
-						rx_pwr_all = -46 - (cck_agc_rpt & 0x3e);
-						break;
-					case 0x2:
-						rx_pwr_all = -26 - (cck_agc_rpt & 0x3e);
-						break;
-					case 0x1:
-						rx_pwr_all = -12 - (cck_agc_rpt & 0x3e);
-						break;
-					case 0x0:
-						rx_pwr_all = 16 - (cck_agc_rpt & 0x3e);
-						break;
-				}
-			}
-			else
-			{
-				//report = pDrvInfo->cfosho[0] & 0x60;			
-				//report = pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a& 0x60;
-				
-				report = (cck_agc_rpt & 0x60)>>5;
-				switch(report)
-				{
-					case 0x3:
-						rx_pwr_all = -46 - ((cck_agc_rpt & 0x1f)<<1) ;
-						break;
-					case 0x2:
-						rx_pwr_all = -26 - ((cck_agc_rpt & 0x1f)<<1);
-						break;
-					case 0x1:
-						rx_pwr_all = -12 - ((cck_agc_rpt & 0x1f)<<1) ;
-						break;
-					case 0x0:
-						rx_pwr_all = 16 - ((cck_agc_rpt & 0x1f)<<1) ;
-						break;
-				}
-			}
-
-			PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-
-			//Modification for ext-LNA board
-			if(pDM_Odm->board_type & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA))
-			{
-				if((cck_agc_rpt>>7) == 0){
-					PWDB_ALL = (PWDB_ALL>94)?100:(PWDB_ALL +6);
-				}
-				else	
-	                   {
-					if(PWDB_ALL > 38)
-						PWDB_ALL -= 16;
-					else
-						PWDB_ALL = (PWDB_ALL<=16)?(PWDB_ALL>>2):(PWDB_ALL -12);
-				}             
-
-				//CCK modification
-				if(PWDB_ALL > 25 && PWDB_ALL <= 60)
-					PWDB_ALL += 6;
-				//else if (PWDB_ALL <= 25)
-				//	PWDB_ALL += 8;
-			}
-			else//Modification for int-LNA board
-			{
-				if(PWDB_ALL > 99)
-				  	PWDB_ALL -= 8;
-				else if(PWDB_ALL > 50 && PWDB_ALL <= 68)
-					PWDB_ALL += 4;
 			}
 		}
 
@@ -801,7 +721,8 @@ ODM_PhyStatusQuery(
 }
 	
 // For future use.
-VOIDODM_MacStatusQuery(
+VOID
+ODM_MacStatusQuery(
 	IN OUT	PDM_ODM_T					pDM_Odm,
 	IN 		pu1Byte						pMacStatus,
 	IN		u1Byte						MacID,	
@@ -878,10 +799,7 @@ ODM_GetHWImgVersion(
 
 //1 AP doesn't use PHYDM initialization in these ICs
 /*1 All platforms support*/
-#if (RTL8188F_SUPPORT == 1)  
-	if (pDM_Odm->SupportICType == ODM_RTL8188F)
-		Version = GET_VERSION_MP(8188F, _MAC_REG);
-#endif
+	Version = GET_VERSION_MP(8188F, _MAC_REG);
 
 //1 New ICs (WIN only)
 
