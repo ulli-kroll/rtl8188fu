@@ -44,11 +44,6 @@ typedef struct _CFO_TRACKING_
 }CFO_TRACKING, *PCFO_TRACKING;
 
 VOID
-ODM_CfoTrackingReset(
-	IN		PVOID					pDM_VOID
-);
-
-VOID
 ODM_CfoTrackingInit(
 	IN		PVOID					pDM_VOID
 );

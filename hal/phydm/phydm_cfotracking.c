@@ -20,7 +20,7 @@
 #include "mp_precomp.h"
 #include "phydm_precomp.h"
 
-VOID
+static VOID
 odm_SetCrystalCap(
 	IN		PVOID					pDM_VOID,
 	IN		u1Byte					CrystalCap
@@ -69,24 +69,23 @@ odm_GetDefaultCrytaltalCap(
 	return CrystalCap;
 }
 
-VOID
+static VOID
 odm_SetATCStatus(
 	IN		PVOID					pDM_VOID,
-	IN		BOOLEAN					ATCStatus
+	IN		BOOLEAN					atc_status
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 
-	if(pCfoTrack->atc_status == ATCStatus)
+	if(pCfoTrack->atc_status == atc_status)
 		return;
 	
-	ODM_SetBBReg(pDM_Odm, ODM_REG(BB_ATC,pDM_Odm), ODM_BIT(BB_ATC,pDM_Odm), ATCStatus);
-	pCfoTrack->atc_status = ATCStatus;
+	ODM_SetBBReg(pDM_Odm, ODM_REG(BB_ATC,pDM_Odm), ODM_BIT(BB_ATC,pDM_Odm), atc_status);
+	pCfoTrack->atc_status = atc_status;
 }
 
-BOOLEAN
-odm_GetATCStatus(
+static BOOLEAN odm_GetATCStatus(
 	IN		PVOID					pDM_VOID
 )
 {
@@ -97,8 +96,7 @@ odm_GetATCStatus(
 	return ATCStatus;
 }
 
-VOID
-ODM_CfoTrackingReset(
+static VOID ODM_CfoTrackingReset(
 	IN		PVOID					pDM_VOID
 )
 {
