@@ -158,10 +158,10 @@ typedef struct ODM_RF_Calibration_Structure
 	BOOLEAN	bNeedIQK;
 	BOOLEAN	bIQKInProgress;	
 	u1Byte	Delta_IQK;
-	u4Byte	ADDA_backup[IQK_ADDA_REG_NUM];
-	u4Byte	IQK_MAC_backup[IQK_MAC_REG_NUM];
+	u4Byte	adda_backup[IQK_ADDA_REG_NUM];
+	u4Byte	iqk_mac_backup[IQK_MAC_REG_NUM];
 	u4Byte	IQK_BB_backup_recover[9];
-	u4Byte	IQK_BB_backup[IQK_BB_REG_NUM];	
+	u4Byte	iqk_bb_backup[IQK_BB_REG_NUM];	
 	u4Byte 	TxIQC_8723B[2][3][2]; // { {S1: 0xc94, 0xc80, 0xc4c} , {S0: 0xc9c, 0xc88, 0xc4c}}
 	u4Byte 	RxIQC_8723B[2][2][2]; // { {S1: 0xc14, 0xca0} ,           {S0: 0xc14, 0xca0}}
 	u4Byte	TxIQC_8703B[3][2];	/* { {S1: 0xc94, 0xc80, 0xc4c} , {S0: 0xc9c, 0xc88, 0xc4c}}*/
