@@ -1229,8 +1229,7 @@ _PHY_PIModeSwitch8188F(
 	ODM_SetBBReg(pDM_Odm, rFPGA0_XB_HSSIParameter1, bMaskDWord, mode);
 }
 
-BOOLEAN
-phy_SimularityCompare_8188F(
+static bool _rtl8188fu_phy_simularity_compare(
 	IN PADAPTER pAdapter,
 	IN s4Byte result[][8],
 	IN u1Byte c1,
@@ -1766,7 +1765,7 @@ rtl8188fu_phy_iq_calibrate(
 		_rtl8188fu_phy_iq_calibrate(pAdapter, result, i, FALSE);
 
 		if (i == 1) {
-			is12simular = phy_SimularityCompare_8188F(pAdapter, result, 0, 1);
+			is12simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 1);
 			if (is12simular) {
 				final_candidate = 0;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is12simular final_candidate is %x\n", final_candidate));
@@ -1775,14 +1774,14 @@ rtl8188fu_phy_iq_calibrate(
 		}
 
 		if (i == 2) {
-			is13simular = phy_SimularityCompare_8188F(pAdapter, result, 0, 2);
+			is13simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 2);
 			if (is13simular) {
 				final_candidate = 0;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is13simular final_candidate is %x\n", final_candidate));
 
 				break;
 			}
-			is23simular = phy_SimularityCompare_8188F(pAdapter, result, 1, 2);
+			is23simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 1, 2);
 			if (is23simular) {
 				final_candidate = 1;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is23simular final_candidate is %x\n", final_candidate));
