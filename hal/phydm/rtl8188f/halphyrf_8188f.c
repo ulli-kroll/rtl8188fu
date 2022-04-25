@@ -1735,8 +1735,7 @@ rtl8188fu_phy_iq_calibrate(
 
 	}
 
-	if (bReCovery)
-	{
+	if (bReCovery) {
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("PHY_IQCalibrate_8188F: Return due to bReCovery!\n"));
 		_PHY_ReloadADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
 		return;
@@ -1764,11 +1763,7 @@ rtl8188fu_phy_iq_calibrate(
 
 
 	for (i = 0; i < 3; i++) {
-
-
 		_rtl8188fu_phy_iq_calibrate(pAdapter, result, i, FALSE);
-
-
 
 		if (i == 1) {
 			is12simular = phy_SimularityCompare_8188F(pAdapter, result, 0, 1);
@@ -1833,16 +1828,11 @@ rtl8188fu_phy_iq_calibrate(
 		pDM_Odm->RFCalibrateInfo.RegE9C = pDM_Odm->RFCalibrateInfo.RegEBC = 0x0;        //Y default value
 	}
 
-	{
-		if (RegE94 != 0) {
-			_rtl9188fu_phy_path_a_fill_iqk_matrix(pAdapter, bPathAOK, result, final_candidate, (RegEA4 == 0));
-		}
-	}
+	if (RegE94 != 0)
+		_rtl9188fu_phy_path_a_fill_iqk_matrix(pAdapter, bPathAOK, result, final_candidate, (RegEA4 == 0));
 
-	{
-		if (RegEB4 != 0)
+	if (RegEB4 != 0)
 			_rtl9188fu_phy_path_b_fill_iqk_matrix(pAdapter, bPathBOK, result, final_candidate, (RegEC4 == 0));
-	}
 
 	Indexforchannel = ODM_GetRightChnlPlaceforIQK(pHalData->CurrentChannel);
 
