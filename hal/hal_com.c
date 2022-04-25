@@ -3086,7 +3086,7 @@ void rtw_hal_ch_sw_iqk_info_backup(_adapter* padapter) {
 	u8 i;
 
 	/* If it's an existed record, overwrite it */
-	res = rtw_hal_ch_sw_iqk_info_search(padapter, pHalData->CurrentChannel, pHalData->CurrentChannelBW);
+	res = rtw_hal_ch_sw_iqk_info_search(padapter, pHalData->CurrentChannel, pHalData->current_chan_bw);
 	if ((res >= 0) && (res < MAX_IQK_INFO_BACKUP_CHNL_NUM)) {
 		rtw_hal_set_hwreg(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8*)&(pHalData->iqk_reg_backup[res]));
 		return;

@@ -362,28 +362,28 @@ rtl8188fu_phy_set_txpower_index_by_rate_section(PADAPTER pAdapter,
 	{
 		u8	cckRates[]   = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M};
 		if ( pHalData->CurrentBandType == BAND_ON_2_4G )
-			rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+			rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->current_chan_bw, Channel,
 									  cckRates, sizeof(cckRates)/sizeof(u8) );
 			
 	}
 	else if ( RateSection == OFDM )
 	{
 		u8	ofdmRates[]  = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M};
-		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->current_chan_bw, Channel,
 									 ofdmRates, sizeof(ofdmRates)/sizeof(u8));
 		
 	}
 	else if ( RateSection == HT_MCS0_MCS7 )
 	{
 		u8	htRates1T[]  = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7};
-		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->current_chan_bw, Channel,
 									 htRates1T, sizeof(htRates1T)/sizeof(u8));
 
 	}
 	else if ( RateSection == HT_MCS8_MCS15 )
 	{
 		u8	htRates2T[]  = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15};
-		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->CurrentChannelBW, Channel,
+		rtl8188fu_phy_set_txpower_index_by_rate_array( pAdapter, RFPath, pHalData->current_chan_bw, Channel,
 								  	 htRates2T, sizeof(htRates2T)/sizeof(u8));
 		
 	}

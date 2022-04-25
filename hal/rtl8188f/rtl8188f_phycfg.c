@@ -718,7 +718,7 @@ u8 rtl8188fu_phy_get_txpower_index(
 	txPower = (s8) rtl8188fu_phy_get_txpower_index_base(pAdapter, RFPath, Rate, BandWidth, Channel, &bIn24G);
 	powerDiffByRate = rtl8188fu_get_tx_power_by_rate(pAdapter, BAND_ON_2_4G, ODM_RF_PATH_A, RF_1TX, Rate);
 
-	limit = rtl8188fu_phy_get_txpower_limit(pAdapter, pAdapter->registrypriv.RegPwrTblSel, (u8)(!bIn24G), pHalData->CurrentChannelBW, RFPath, Rate, pHalData->CurrentChannel);
+	limit = rtl8188fu_phy_get_txpower_limit(pAdapter, pAdapter->registrypriv.RegPwrTblSel, (u8)(!bIn24G), pHalData->current_chan_bw, RFPath, Rate, pHalData->CurrentChannel);
 
 	powerDiffByRate = powerDiffByRate > limit ? limit : powerDiffByRate;
 	txPower += powerDiffByRate;
@@ -892,32 +892,32 @@ phy_GetSecondaryChnl_8188F(
 	u8	SCSettingOf40 = 0, SCSettingOf20 = 0;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-	RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->CurrentChannelBW %d, pHalData->nCur80MhzPrimeSC %d, pHalData->nCur40MhzPrimeSC %d\n", pHalData->CurrentChannelBW,
-			 pHalData->nCur80MhzPrimeSC, pHalData->nCur40MhzPrimeSC));
-	if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_80) {
-		if (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER)
+	RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->current_chan_bw %d, pHalData->cur_80_prime_sc %d, pHalData->cur_40_prime_sc %d\n", pHalData->current_chan_bw,
+			 pHalData->cur_80_prime_sc, pHalData->cur_40_prime_sc));
+	if (pHalData->current_chan_bw == CHANNEL_WIDTH_80) {
+		if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER)
 			SCSettingOf40 = VHT_DATA_SC_40_LOWER_OF_80MHZ;
-		else if (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER)
+		else if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
 			SCSettingOf40 = VHT_DATA_SC_40_UPPER_OF_80MHZ;
 		else
 			RT_TRACE(_module_hal_init_c_, _drv_err_, ("SCMapping: Not Correct Primary40MHz Setting\n"));
 
-		if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER))
+		if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
 			SCSettingOf20 = VHT_DATA_SC_20_LOWEST_OF_80MHZ;
-		else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER))
+		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
 			SCSettingOf20 = VHT_DATA_SC_20_LOWER_OF_80MHZ;
-		else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER))
+		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
 			SCSettingOf20 = VHT_DATA_SC_20_UPPER_OF_80MHZ;
-		else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER))
+		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
 			SCSettingOf20 = VHT_DATA_SC_20_UPPERST_OF_80MHZ;
 		else
 			RT_TRACE(_module_hal_init_c_, _drv_err_, ("SCMapping: Not Correct Primary40MHz Setting\n"));
-	} else if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_40) {
-		RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->CurrentChannelBW %d, pHalData->nCur40MhzPrimeSC %d\n", pHalData->CurrentChannelBW, pHalData->nCur40MhzPrimeSC));
+	} else if (pHalData->current_chan_bw == CHANNEL_WIDTH_40) {
+		RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->current_chan_bw %d, pHalData->cur_40_prime_sc %d\n", pHalData->current_chan_bw, pHalData->cur_40_prime_sc));
 
-		if (pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER)
+		if (pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
 			SCSettingOf20 = VHT_DATA_SC_20_UPPER_OF_80MHZ;
-		else if (pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER)
+		else if (pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER)
 			SCSettingOf20 = VHT_DATA_SC_20_LOWER_OF_80MHZ;
 		else
 			RT_TRACE(_module_hal_init_c_, _drv_err_, ("SCMapping: Not Correct Primary40MHz Setting\n"));
@@ -932,9 +932,9 @@ void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
 	u1Byte			SubChnlNum = 0;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 
-	/* DBG_8192C("===>%s: CurrentChannelBW = %s Mhz\n", __func__, pHalData->CurrentChannelBW?"40":"20"); */
+	/* DBG_8192C("===>%s: current_chan_bw = %s Mhz\n", __func__, pHalData->current_chan_bw?"40":"20"); */
 
-	switch (pHalData->CurrentChannelBW) {
+	switch (pHalData->current_chan_bw) {
 	case CHANNEL_WIDTH_20:
 		/*
 		0x800[0]=1'b0
@@ -988,24 +988,24 @@ void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
 		PHY_SetBBReg(Adapter, BBrx_DFIR, BIT19, 0x0);							/* OFDM RX DFIR */
 		PHY_SetBBReg(Adapter, BBrx_DFIR, BIT23 | BIT22 | BIT21 | BIT20, 0x6);	/* OFDM RX DFIR */
 
-		PHY_SetBBReg(Adapter, rCCK0_System, BIT4, (pHalData->nCur40MhzPrimeSC >> 1)); /* primary channel (CCK RXSC) */
+		PHY_SetBBReg(Adapter, rCCK0_System, BIT4, (pHalData->cur_40_prime_sc >> 1)); /* primary channel (CCK RXSC) */
 
 		SubChnlNum = phy_GetSecondaryChnl_8188F(Adapter);
 		PHY_SetMacReg(Adapter, REG_DATA_SC_8188F, BIT3 | BIT2 | BIT1 | BIT0, SubChnlNum);	/* txsc_20 */
 		PHY_SetMacReg(Adapter, REG_RRSR_8188F, BIT22 | BIT21, 0x0);							/* RRSR_RSC */
 
 		if (0)
-			DBG_871X("%s: REG_DATA_SC_8188F(%d) nCur40MhzPrimeSC(%d)\n", __func__, SubChnlNum, pHalData->nCur40MhzPrimeSC);
+			DBG_871X("%s: REG_DATA_SC_8188F(%d) cur_40_prime_sc(%d)\n", __func__, SubChnlNum, pHalData->cur_40_prime_sc);
 		break;
 
 	default:
 		RT_TRACE(COMP_DBG, DBG_LOUD, ("phy_SetBWMode8188F(): unknown Bandwidth: %#X\n"\
-									  , pHalData->CurrentChannelBW));
+									  , pHalData->current_chan_bw));
 		break;
 	}
 
 	/*3<3>Set RF related register */
-	_rtl8188fu_phy_rf6052_set_bandwidth(Adapter, pHalData->CurrentChannelBW);
+	_rtl8188fu_phy_rf6052_set_bandwidth(Adapter, pHalData->current_chan_bw);
 }
 
 void _rtl8188fu_phy_switch_channel(PADAPTER pAdapter)
@@ -1042,7 +1042,7 @@ phy_SwChnlAndSetBwMode8188F(
 				 pHalData->bSwChnl,
 				 pHalData->CurrentChannel,
 				 pHalData->bSetChnlBW,
-				 pHalData->CurrentChannelBW);
+				 pHalData->current_chan_bw);
 	}
 
 	if (RTW_CANNOT_RUN(Adapter))
@@ -1076,9 +1076,9 @@ PHY_HandleSwChnlAndSetBW8188F(
 	/*static BOOLEAN		bInitialzed = _FALSE; */
 	PHAL_DATA_TYPE		pHalData = GET_HAL_DATA(Adapter);
 	u8					tmpChannel = pHalData->CurrentChannel;
-	CHANNEL_WIDTH		tmpBW = pHalData->CurrentChannelBW;
-	u8					tmpnCur40MhzPrimeSC = pHalData->nCur40MhzPrimeSC;
-	u8					tmpnCur80MhzPrimeSC = pHalData->nCur80MhzPrimeSC;
+	CHANNEL_WIDTH		tmpBW = pHalData->current_chan_bw;
+	u8					tmpcur_40_prime_sc = pHalData->cur_40_prime_sc;
+	u8					tmpcur_80_prime_sc = pHalData->cur_80_prime_sc;
 	u8					tmpCenterFrequencyIndex1 = pHalData->CurrentCenterFrequencyIndex1;
 	struct mlme_ext_priv	*pmlmeext = &Adapter->mlmeextpriv;
 
@@ -1117,9 +1117,9 @@ PHY_HandleSwChnlAndSetBW8188F(
 
 
 	if (pHalData->bSetChnlBW) {
-		pHalData->CurrentChannelBW = ChnlWidth;
-		pHalData->nCur40MhzPrimeSC = ExtChnlOffsetOf40MHz;
-		pHalData->nCur80MhzPrimeSC = ExtChnlOffsetOf80MHz;
+		pHalData->current_chan_bw = ChnlWidth;
+		pHalData->cur_40_prime_sc = ExtChnlOffsetOf40MHz;
+		pHalData->cur_80_prime_sc = ExtChnlOffsetOf80MHz;
 
 		pHalData->CurrentCenterFrequencyIndex1 = CenterFrequencyIndex1;
 	}
@@ -1133,15 +1133,15 @@ PHY_HandleSwChnlAndSetBW8188F(
 			pHalData->CurrentCenterFrequencyIndex1 = tmpChannel;
 		}
 		if (pHalData->bSetChnlBW) {
-			pHalData->CurrentChannelBW = tmpBW;
-			pHalData->nCur40MhzPrimeSC = tmpnCur40MhzPrimeSC;
-			pHalData->nCur80MhzPrimeSC = tmpnCur80MhzPrimeSC;
+			pHalData->current_chan_bw = tmpBW;
+			pHalData->cur_40_prime_sc = tmpcur_40_prime_sc;
+			pHalData->cur_80_prime_sc = tmpcur_80_prime_sc;
 			pHalData->CurrentCenterFrequencyIndex1 = tmpCenterFrequencyIndex1;
 		}
 	}
 
-	/*DBG_871X("Channel %d ChannelBW %d ",pHalData->CurrentChannel, pHalData->CurrentChannelBW); */
-	/*DBG_871X("40MhzPrimeSC %d 80MhzPrimeSC %d ",pHalData->nCur40MhzPrimeSC, pHalData->nCur80MhzPrimeSC); */
+	/*DBG_871X("Channel %d ChannelBW %d ",pHalData->CurrentChannel, pHalData->current_chan_bw); */
+	/*DBG_871X("40MhzPrimeSC %d 80MhzPrimeSC %d ",pHalData->cur_40_prime_sc, pHalData->cur_80_prime_sc); */
 	/*DBG_871X("CenterFrequencyIndex1 %d\n",pHalData->CurrentCenterFrequencyIndex1); */
 
 	/*DBG_871X("<= PHY_HandleSwChnlAndSetBW8188F: bSwChnl %d, bSetChnlBW %d\n",pHalData->bSwChnl,pHalData->bSetChnlBW); */

@@ -215,13 +215,13 @@ typedef struct hal_com_data
 
 	/****** current WIFI_PHY values ******/
 	WIRELESS_MODE	CurrentWirelessMode;
-	CHANNEL_WIDTH	CurrentChannelBW;
+	CHANNEL_WIDTH	current_chan_bw;
 	BAND_TYPE		CurrentBandType;	/* 0:2.4G, 1:5G */
 	BAND_TYPE		BandSet;
 	u8				CurrentChannel;
 	u8				CurrentCenterFrequencyIndex1;
-	u8				nCur40MhzPrimeSC;	/* Control channel sub-carrier */
-	u8				nCur80MhzPrimeSC;   /* used for primary 40MHz of 80MHz mode */
+	u8				cur_40_prime_sc;	/* Control channel sub-carrier */
+	u8				cur_80_prime_sc;   /* used for primary 40MHz of 80MHz mode */
 	BOOLEAN 		bSwChnlAndSetBWInProgress;	
 	u8				bDisableSWChannelPlan; /* flag of disable software change channel plan	 */
 	u16				BasicRateSet;	

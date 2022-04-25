@@ -2314,16 +2314,16 @@ BWMapping_8188F(
 	u8	BWSettingOfDesc = 0;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-	/*DBG_871X("BWMapping pHalData->CurrentChannelBW %d, pattrib->bwmode %d\n",pHalData->CurrentChannelBW,pattrib->bwmode); */
+	/*DBG_871X("BWMapping pHalData->current_chan_bw %d, pattrib->bwmode %d\n",pHalData->current_chan_bw,pattrib->bwmode); */
 
-	if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_80) {
+	if (pHalData->current_chan_bw == CHANNEL_WIDTH_80) {
 		if (pattrib->bwmode == CHANNEL_WIDTH_80)
 			BWSettingOfDesc = 2;
 		else if (pattrib->bwmode == CHANNEL_WIDTH_40)
 			BWSettingOfDesc = 1;
 		else
 			BWSettingOfDesc = 0;
-	} else if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_40) {
+	} else if (pHalData->current_chan_bw == CHANNEL_WIDTH_40) {
 		if ((pattrib->bwmode == CHANNEL_WIDTH_40) || (pattrib->bwmode == CHANNEL_WIDTH_80))
 			BWSettingOfDesc = 1;
 		else
@@ -2342,39 +2342,39 @@ u8	SCMapping_8188F(PADAPTER Adapter, struct pkt_attrib *pattrib)
 	u8	SCSettingOfDesc = 0;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-	/*DBG_871X("SCMapping: pHalData->CurrentChannelBW %d, pHalData->nCur80MhzPrimeSC %d, pHalData->nCur40MhzPrimeSC %d\n",pHalData->CurrentChannelBW,pHalData->nCur80MhzPrimeSC,pHalData->nCur40MhzPrimeSC); */
+	/*DBG_871X("SCMapping: pHalData->current_chan_bw %d, pHalData->cur_80_prime_sc %d, pHalData->cur_40_prime_sc %d\n",pHalData->current_chan_bw,pHalData->cur_80_prime_sc,pHalData->cur_40_prime_sc); */
 
-	if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_80) {
+	if (pHalData->current_chan_bw == CHANNEL_WIDTH_80) {
 		if (pattrib->bwmode == CHANNEL_WIDTH_80)
 			SCSettingOfDesc = VHT_DATA_SC_DONOT_CARE;
 		else if (pattrib->bwmode == CHANNEL_WIDTH_40) {
-			if (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER)
+			if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER)
 				SCSettingOfDesc = VHT_DATA_SC_40_LOWER_OF_80MHZ;
-			else if (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER)
+			else if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
 				SCSettingOfDesc = VHT_DATA_SC_40_UPPER_OF_80MHZ;
 			else
 				DBG_871X("SCMapping: DONOT CARE Mode Setting\n");
 		} else {
-			if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER))
+			if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
 				SCSettingOfDesc = VHT_DATA_SC_20_LOWEST_OF_80MHZ;
-			else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER))
+			else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
 				SCSettingOfDesc = VHT_DATA_SC_20_LOWER_OF_80MHZ;
-			else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER))
+			else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
 				SCSettingOfDesc = VHT_DATA_SC_20_UPPER_OF_80MHZ;
-			else if ((pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->nCur80MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER))
+			else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
 				SCSettingOfDesc = VHT_DATA_SC_20_UPPERST_OF_80MHZ;
 			else
 				DBG_871X("SCMapping: DONOT CARE Mode Setting\n");
 		}
-	} else if (pHalData->CurrentChannelBW == CHANNEL_WIDTH_40) {
-		/*DBG_871X("SCMapping: HT Case: pHalData->CurrentChannelBW %d, pHalData->nCur40MhzPrimeSC %d\n",pHalData->CurrentChannelBW,pHalData->nCur40MhzPrimeSC); */
+	} else if (pHalData->current_chan_bw == CHANNEL_WIDTH_40) {
+		/*DBG_871X("SCMapping: HT Case: pHalData->current_chan_bw %d, pHalData->cur_40_prime_sc %d\n",pHalData->current_chan_bw,pHalData->cur_40_prime_sc); */
 
 		if (pattrib->bwmode == CHANNEL_WIDTH_40)
 			SCSettingOfDesc = VHT_DATA_SC_DONOT_CARE;
 		else if (pattrib->bwmode == CHANNEL_WIDTH_20) {
-			if (pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_UPPER)
+			if (pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
 				SCSettingOfDesc = VHT_DATA_SC_20_UPPER_OF_80MHZ;
-			else if (pHalData->nCur40MhzPrimeSC == HAL_PRIME_CHNL_OFFSET_LOWER)
+			else if (pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER)
 				SCSettingOfDesc = VHT_DATA_SC_20_LOWER_OF_80MHZ;
 			else
 				SCSettingOfDesc = VHT_DATA_SC_DONOT_CARE;
@@ -3525,7 +3525,7 @@ void rtl8188fu_set_hw_reg(PADAPTER padapter, u8 variable, u8 *val)
 		u8 bShortPreamble = *val;
 
 		/* Joseph marked out for Netgear 3500 TKIP channel 7 issue.(Temporarily) */
-		/*regTmp = (pHalData->nCur40MhzPrimeSC)<<5; */
+		/*regTmp = (pHalData->cur_40_prime_sc)<<5; */
 		regTmp = 0;
 		if (bShortPreamble)
 			regTmp |= 0x80;
