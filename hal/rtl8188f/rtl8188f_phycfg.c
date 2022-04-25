@@ -889,30 +889,12 @@ phy_GetSecondaryChnl_8188F(
 	IN	PADAPTER	Adapter
 )
 {
-	u8	SCSettingOf40 = 0, SCSettingOf20 = 0;
+	u8	SCSettingOf20 = 0;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
 	RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->current_chan_bw %d, pHalData->cur_80_prime_sc %d, pHalData->cur_40_prime_sc %d\n", pHalData->current_chan_bw,
 			 pHalData->cur_80_prime_sc, pHalData->cur_40_prime_sc));
-	if (pHalData->current_chan_bw == CHANNEL_WIDTH_80) {
-		if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER)
-			SCSettingOf40 = VHT_DATA_SC_40_LOWER_OF_80MHZ;
-		else if (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
-			SCSettingOf40 = VHT_DATA_SC_40_UPPER_OF_80MHZ;
-		else
-			RT_TRACE(_module_hal_init_c_, _drv_err_, ("SCMapping: Not Correct Primary40MHz Setting\n"));
-
-		if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
-			SCSettingOf20 = VHT_DATA_SC_20_LOWEST_OF_80MHZ;
-		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER))
-			SCSettingOf20 = VHT_DATA_SC_20_LOWER_OF_80MHZ;
-		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_LOWER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
-			SCSettingOf20 = VHT_DATA_SC_20_UPPER_OF_80MHZ;
-		else if ((pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER) && (pHalData->cur_80_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER))
-			SCSettingOf20 = VHT_DATA_SC_20_UPPERST_OF_80MHZ;
-		else
-			RT_TRACE(_module_hal_init_c_, _drv_err_, ("SCMapping: Not Correct Primary40MHz Setting\n"));
-	} else if (pHalData->current_chan_bw == CHANNEL_WIDTH_40) {
+	if (pHalData->current_chan_bw == CHANNEL_WIDTH_40) {
 		RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: VHT Case: pHalData->current_chan_bw %d, pHalData->cur_40_prime_sc %d\n", pHalData->current_chan_bw, pHalData->cur_40_prime_sc));
 
 		if (pHalData->cur_40_prime_sc == HAL_PRIME_CHNL_OFFSET_UPPER)
@@ -924,7 +906,7 @@ phy_GetSecondaryChnl_8188F(
 	}
 
 	RT_TRACE(_module_hal_init_c_, _drv_info_, ("SCMapping: SC Value %x\n", ((SCSettingOf40 << 4) | SCSettingOf20)));
-	return ((SCSettingOf40 << 4) | SCSettingOf20);
+	return (SCSettingOf20);
 }
 
 void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
