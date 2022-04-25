@@ -142,8 +142,7 @@ static void rtl8188fu_set_iqk_matrix(
  *	04/23/2012	MHC		Create Version 0.
  *
  *---------------------------------------------------------------------------*/
-VOID
-ODM_TxPwrTrackSetPwr_8188F(
+void rtl8188fu_dm_tx_power_track_set_power(
 	IN PVOID pDM_VOID,
 	PWRTRACK_METHOD Method,
 	u1Byte RFPath,

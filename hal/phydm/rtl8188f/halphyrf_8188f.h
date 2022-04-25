@@ -35,7 +35,7 @@ void ConfigureTxpowerTrack_8188F(
 	);
 
 VOID
-ODM_TxPwrTrackSetPwr_8188F(
+rtl8188fu_dm_tx_power_track_set_power(
 	IN	PVOID		pDM_VOID,
 	PWRTRACK_METHOD 	Method,
 	u1Byte 				RFPath,

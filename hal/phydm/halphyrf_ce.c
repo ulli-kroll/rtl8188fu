@@ -357,11 +357,11 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 				("Temperature(%d) higher than PG value(%d)\n", ThermalValue, pHalData->EEPROMThermalMeter));			
 
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-						ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, 0);
+						rtl8188fu_dm_tx_power_track_set_power(pDM_Odm, MIX_MODE, p, 0);
 		} else {
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("**********Enter POWER Tracking MIX_MODE**********\n"));
 				for (p = ODM_RF_PATH_A; p < MAX_PATH_NUM_8188F; p++)
-					ODM_TxPwrTrackSetPwr_8188F(pDM_Odm, MIX_MODE, p, 0);
+					rtl8188fu_dm_tx_power_track_set_power(pDM_Odm, MIX_MODE, p, 0);
 		}
 
 		pRFCalibrateInfo->swing_idx_cck_base = pRFCalibrateInfo->swing_idx_cck;    /*Record last time Power Tracking result as base.*/
