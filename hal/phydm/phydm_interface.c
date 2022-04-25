@@ -124,7 +124,7 @@ ODM_GetMACReg(
 	IN	u4Byte		BitMask
 	)
 {
-	return PHY_QueryMacReg(pDM_Odm->Adapter, RegAddr, BitMask);
+	return PHY_QueryBBReg(pDM_Odm->Adapter, RegAddr, BitMask);
 }
 
 

@@ -973,8 +973,8 @@ void _rtl8188fu_post_set_bw_mode(PADAPTER	Adapter)
 		PHY_SetBBReg(Adapter, rCCK0_System, BIT4, (pHalData->cur_40_prime_sc >> 1)); /* primary channel (CCK RXSC) */
 
 		SubChnlNum = phy_GetSecondaryChnl_8188F(Adapter);
-		PHY_SetMacReg(Adapter, REG_DATA_SC_8188F, BIT3 | BIT2 | BIT1 | BIT0, SubChnlNum);	/* txsc_20 */
-		PHY_SetMacReg(Adapter, REG_RRSR_8188F, BIT22 | BIT21, 0x0);							/* RRSR_RSC */
+		PHY_SetBBReg(Adapter, REG_DATA_SC_8188F, BIT3 | BIT2 | BIT1 | BIT0, SubChnlNum);	/* txsc_20 */
+		PHY_SetBBReg(Adapter, REG_RRSR_8188F, BIT22 | BIT21, 0x0);							/* RRSR_RSC */
 
 		if (0)
 			DBG_871X("%s: REG_DATA_SC_8188F(%d) cur_40_prime_sc(%d)\n", __func__, SubChnlNum, pHalData->cur_40_prime_sc);

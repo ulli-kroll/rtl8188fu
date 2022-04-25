@@ -742,15 +742,15 @@ PHY_InitAntennaSelection8188F(
 {
 	/* TODO: <20130114, Kordan> The following setting is only for DPDT and Fixed board type. */
 	/* TODO:  A better solution is configure it according EFUSE during the run-time. */
-	PHY_SetMacReg(Adapter, 0x64, BIT20, 0x0);			/*0x66[4]=0 */
-	PHY_SetMacReg(Adapter, 0x64, BIT24, 0x0);			/*0x66[8]=0 */
-	PHY_SetMacReg(Adapter, 0x40, BIT4, 0x0);			/*0x40[4]=0 */
-	PHY_SetMacReg(Adapter, 0x40, BIT3, 0x1);			/*0x40[3]=1 */
-	PHY_SetMacReg(Adapter, 0x4C, BIT24, 0x1);			/*0x4C[24:23]=10 */
-	PHY_SetMacReg(Adapter, 0x4C, BIT23, 0x0);			/*0x4C[24:23]=10 */
+	PHY_SetBBReg(Adapter, 0x64, BIT20, 0x0);			/*0x66[4]=0 */
+	PHY_SetBBReg(Adapter, 0x64, BIT24, 0x0);			/*0x66[8]=0 */
+	PHY_SetBBReg(Adapter, 0x40, BIT4, 0x0);			/*0x40[4]=0 */
+	PHY_SetBBReg(Adapter, 0x40, BIT3, 0x1);			/*0x40[3]=1 */
+	PHY_SetBBReg(Adapter, 0x4C, BIT24, 0x1);			/*0x4C[24:23]=10 */
+	PHY_SetBBReg(Adapter, 0x4C, BIT23, 0x0);			/*0x4C[24:23]=10 */
 	PHY_SetBBReg(Adapter, 0x944, BIT1 | BIT0, 0x3);		/*0x944[1:0]=11 */
 	PHY_SetBBReg(Adapter, 0x930, bMaskByte0, 0x77);		/*0x930[7:0]=77 */
-	PHY_SetMacReg(Adapter, 0x38, BIT11, 0x1);			/*0x38[11]=1 */
+	PHY_SetBBReg(Adapter, 0x38, BIT11, 0x1);			/*0x38[11]=1 */
 }
 
 /* Set CCK and OFDM Block "ON" */
