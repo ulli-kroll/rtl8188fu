@@ -1668,11 +1668,7 @@ rtl8188fu_phy_iq_calibrate(
 	s4Byte result[4][8];   //last is final result
 	u1Byte i, final_candidate, Indexforchannel;
 	BOOLEAN bPathAOK, bPathBOK;
-#if DBG
-	s4Byte RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC, RegTmp = 0;
-#else
 	s4Byte RegE94, RegEA4, RegEB4, RegEC4, RegTmp = 0;
-#endif
 	BOOLEAN is12simular, is13simular, is23simular;
 	BOOLEAN bSingleTone = FALSE, bCarrierSuppression = FALSE;
 	u4Byte IQK_BB_REG_92C[IQK_BB_REG_NUM] = {
@@ -1814,12 +1810,6 @@ rtl8188fu_phy_iq_calibrate(
 		RegEA4 = result[i][2];
 		RegEB4 = result[i][4];
 		RegEC4 = result[i][6];
-#if DBG
-		RegE9C = result[i][1];
-		RegEAC = result[i][3];
-		RegEBC = result[i][5];
-		RegECC = result[i][7];
-#endif
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: RegE94=%04x RegE9C=%04x RegEA4=%04x RegEAC=%04x RegEB4=%04x RegEBC=%04x RegEC4=%04x RegECC=%04x\n",
 					 RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC));
 	}
@@ -1834,12 +1824,6 @@ rtl8188fu_phy_iq_calibrate(
 		RegEA4 = result[final_candidate][2];
 		RegEB4 = result[final_candidate][4];
 		RegEC4 = result[final_candidate][6];
-#if DBG
-		RegE9C = result[final_candidate][1];
-		RegEAC = result[final_candidate][3];
-		RegEBC = result[final_candidate][5];
-		RegECC = result[final_candidate][7];
-#endif
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: final_candidate is %x\n", final_candidate));
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: RegE94=%04x RegE9C=%04x RegEA4=%04x RegEAC=%04x RegEB4=%04x RegEBC=%04x RegEC4=%04x RegECC=%04x\n",
 					 RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC));
