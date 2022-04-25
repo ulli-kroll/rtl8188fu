@@ -877,8 +877,7 @@ phy_PathB_RxIQK8188F(
 }
 
 
-VOID
-_PHY_PathAFillIQKMatrix8188F(
+void _rtl9188fu_phy_path_a_fill_iqk_matrix(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN bIQKOK,
 	IN s4Byte result[][8],
@@ -957,7 +956,7 @@ _PHY_PathAFillIQKMatrix8188F(
 }
 
 VOID
-_PHY_PathBFillIQKMatrix8188F(
+_rtl9188fu_phy_path_b_fill_iqk_matrix(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN bIQKOK,
 	IN s4Byte result[][8],
@@ -1837,13 +1836,13 @@ rtl8188fu_phy_iq_calibrate(
 
 	{
 		if (RegE94 != 0) {
-			_PHY_PathAFillIQKMatrix8188F(pAdapter, bPathAOK, result, final_candidate, (RegEA4 == 0));
+			_rtl9188fu_phy_path_a_fill_iqk_matrix(pAdapter, bPathAOK, result, final_candidate, (RegEA4 == 0));
 		}
 	}
 
 	{
 		if (RegEB4 != 0)
-			_PHY_PathBFillIQKMatrix8188F(pAdapter, bPathBOK, result, final_candidate, (RegEC4 == 0));
+			_rtl9188fu_phy_path_b_fill_iqk_matrix(pAdapter, bPathBOK, result, final_candidate, (RegEC4 == 0));
 	}
 
 	Indexforchannel = ODM_GetRightChnlPlaceforIQK(pHalData->CurrentChannel);
