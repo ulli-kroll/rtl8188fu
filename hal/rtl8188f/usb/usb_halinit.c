@@ -1086,7 +1086,7 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 			rtl8188fu_phy_lc_calibrate(&pHalData->odmpriv);
 
-			restore_iqk_rst = (pwrpriv->bips_processing == _TRUE) ? _TRUE : _FALSE;
+			restore_iqk_rst = _FALSE;
 
 			DBG_871X_LEVEL(_drv_always_, "************************** %d **************************\n", restore_iqk_rst);
 
