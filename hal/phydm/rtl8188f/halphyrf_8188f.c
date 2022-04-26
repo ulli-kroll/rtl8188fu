@@ -1529,7 +1529,7 @@ rtl8188fu_phy_iq_calibrate(
 	s4Byte result[4][8];   //last is final result
 	u1Byte i, final_candidate, Indexforchannel;
 	BOOLEAN bPathAOK, bPathBOK;
-	s4Byte RegE94, RegEA4, RegEB4, RegEC4, RegTmp = 0;
+	s4Byte reg_e94, reg_ea4, reg_eb4, reg_ec4, RegTmp = 0;
 	u4Byte IQK_BB_REG_92C[IQK_BB_REG_NUM] = {
 		rOFDM0_XARxIQImbalance, rOFDM0_XBRxIQImbalance,
 		rOFDM0_ECCAThreshold, rOFDM0_AGCRSSITable,
@@ -1651,10 +1651,10 @@ rtl8188fu_phy_iq_calibrate(
 //	RT_TRACE(COMP_INIT,DBG_LOUD,("Release Mutex in IQCalibrate\n"));
 
 	for (i = 0; i < 4; i++) {
-		RegE94 = result[i][0];
-		RegEA4 = result[i][2];
-		RegEB4 = result[i][4];
-		RegEC4 = result[i][6];
+		reg_e94 = result[i][0];
+		reg_ea4 = result[i][2];
+		reg_eb4 = result[i][4];
+		reg_ec4 = result[i][6];
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: RegE94=%04x RegE9C=%04x RegEA4=%04x RegEAC=%04x RegEB4=%04x RegEBC=%04x RegEC4=%04x RegECC=%04x\n",
 					 RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC));
 	}
@@ -1665,10 +1665,10 @@ rtl8188fu_phy_iq_calibrate(
 		pDM_Odm->RFCalibrateInfo.reg_eb4 = result[final_candidate][4];
 		pDM_Odm->RFCalibrateInfo.reg_ebc = result[final_candidate][5];
 
-		RegE94 = result[final_candidate][0];
-		RegEA4 = result[final_candidate][2];
-		RegEB4 = result[final_candidate][4];
-		RegEC4 = result[final_candidate][6];
+		reg_e94 = result[final_candidate][0];
+		reg_ea4 = result[final_candidate][2];
+		reg_eb4 = result[final_candidate][4];
+		reg_ec4 = result[final_candidate][6];
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: final_candidate is %x\n", final_candidate));
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: RegE94=%04x RegE9C=%04x RegEA4=%04x RegEAC=%04x RegEB4=%04x RegEBC=%04x RegEC4=%04x RegECC=%04x\n",
 					 RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC));
@@ -1680,11 +1680,11 @@ rtl8188fu_phy_iq_calibrate(
 		pDM_Odm->RFCalibrateInfo.reg_e9c = pDM_Odm->RFCalibrateInfo.reg_ebc = 0x0;        //Y default value
 	}
 
-	if (RegE94 != 0)
-		_rtl9188fu_phy_path_a_fill_iqk_matrix(pAdapter, bPathAOK, result, final_candidate, (RegEA4 == 0));
+	if (reg_e94 != 0)
+		_rtl9188fu_phy_path_a_fill_iqk_matrix(pAdapter, bPathAOK, result, final_candidate, (reg_ea4 == 0));
 
-	if (RegEB4 != 0)
-			_rtl9188fu_phy_path_b_fill_iqk_matrix(pAdapter, bPathBOK, result, final_candidate, (RegEC4 == 0));
+	if (reg_eb4 != 0)
+			_rtl9188fu_phy_path_b_fill_iqk_matrix(pAdapter, bPathBOK, result, final_candidate, (reg_ec4 == 0));
 
 	Indexforchannel = ODM_GetRightChnlPlaceforIQK(pHalData->CurrentChannel);
 
