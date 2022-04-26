@@ -1079,18 +1079,13 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 		if (pwrctrlpriv->rf_pwrstate == rf_on) {
 			struct pwrctrl_priv *pwrpriv;
 			u32 start_time;
-			u8 restore_iqk_rst;
 			u8 h2cCmdBuf;
 
 			pwrpriv = adapter_to_pwrctl(padapter);
 
 			rtl8188fu_phy_lc_calibrate(&pHalData->odmpriv);
 
-			restore_iqk_rst = _FALSE;
-
-			DBG_871X_LEVEL(_drv_always_, "************************** %d **************************\n", restore_iqk_rst);
-
-			rtl8188fu_phy_iq_calibrate(padapter, _FALSE, restore_iqk_rst);
+			rtl8188fu_phy_iq_calibrate(padapter, _FALSE, _FALSE);
 			pHalData->odmpriv.RFCalibrateInfo.iqk_initialized = _TRUE;
 
 			ODM_TXPowerTrackingCheck(&pHalData->odmpriv);
