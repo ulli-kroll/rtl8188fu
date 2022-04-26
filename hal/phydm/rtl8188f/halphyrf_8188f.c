@@ -1530,7 +1530,6 @@ rtl8188fu_phy_iq_calibrate(
 	u1Byte i, final_candidate, Indexforchannel;
 	BOOLEAN bPathAOK, bPathBOK;
 	s4Byte RegE94, RegEA4, RegEB4, RegEC4, RegTmp = 0;
-	BOOLEAN is12simular, is13simular, is23simular;
 	BOOLEAN bSingleTone = FALSE, bCarrierSuppression = FALSE;
 	u4Byte IQK_BB_REG_92C[IQK_BB_REG_NUM] = {
 		rOFDM0_XARxIQImbalance, rOFDM0_XBRxIQImbalance,
@@ -1617,17 +1616,15 @@ rtl8188fu_phy_iq_calibrate(
 	final_candidate = 0xff;
 	bPathAOK = FALSE;
 	bPathBOK = FALSE;
-	is12simular = FALSE;
-	is23simular = FALSE;
-	is13simular = FALSE;
-
 
 	for (i = 0; i < 3; i++) {
+		bool is_simular;
+
 		_rtl8188fu_phy_iq_calibrate(pAdapter, result, i, FALSE);
 
 		if (i == 1) {
-			is12simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 1);
-			if (is12simular) {
+			is_simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 1);
+			if (is_simular) {
 				final_candidate = 0;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is12simular final_candidate is %x\n", final_candidate));
 				break;
@@ -1635,15 +1632,15 @@ rtl8188fu_phy_iq_calibrate(
 		}
 
 		if (i == 2) {
-			is13simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 2);
-			if (is13simular) {
+			is_simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 0, 2);
+			if (is_simular) {
 				final_candidate = 0;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is13simular final_candidate is %x\n", final_candidate));
 
 				break;
 			}
-			is23simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 1, 2);
-			if (is23simular) {
+			is_simular = _rtl8188fu_phy_simularity_compare(pAdapter, result, 1, 2);
+			if (is_simular) {
 				final_candidate = 1;
 				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: is23simular final_candidate is %x\n", final_candidate));
 			} else {
