@@ -880,25 +880,14 @@ void _rtl9188fu_phy_path_a_fill_iqk_matrix(
 		TX0_C = (Y * Oldval_0) >> 8;
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Y = 0x%x, TX = 0x%x\n", Y, TX0_C));
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XCTxAFE, 0xF0000000, ((TX0_C & 0x3C0) >> 6));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC94][KEY] = rOFDM0_XCTxAFE;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC94][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XCTxAFE, bMaskDWord);
 
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, 0x003F0000, (TX0_C & 0x3F));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC80][KEY] = rOFDM0_XATxIQImbalance;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC80][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XATxIQImbalance, bMaskDWord);
 
 		ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT(29), ((Y * Oldval_0 >> 7) & 0x1));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC4C][KEY] = rOFDM0_ECCAThreshold;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S1][IDX_0xC4C][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, bMaskDWord);
 
 		if (bTxOnly) {
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("_PHY_PathAFillIQKMatrix8188F only Tx OK\n"));
 
-			// <20130226, Kordan> Saving RxIQC, otherwise not initialized.
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xCA0][KEY] = rOFDM0_RxIQExtAnta;
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xCA0][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_RxIQExtAnta, bMaskDWord);
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xC14][KEY] = rOFDM0_XARxIQImbalance;
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xC14][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XARxIQImbalance, bMaskDWord);
 			return;
 		}
 
@@ -908,13 +897,9 @@ void _rtl9188fu_phy_path_a_fill_iqk_matrix(
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XARxIQImbalance, 0x3FF, reg);
 		reg = result[final_candidate][3] & 0x3F;
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XARxIQImbalance, 0xFC00, reg);
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xC14][KEY] = rOFDM0_XARxIQImbalance;
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xC14][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XARxIQImbalance, bMaskDWord);
 
 		reg = (result[final_candidate][3] >> 6) & 0xF;
 		ODM_SetBBReg(pDM_Odm, rOFDM0_RxIQExtAnta, 0xF0000000, reg);
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xCA0][KEY] = rOFDM0_RxIQExtAnta;
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S1][IDX_0xCA0][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_RxIQExtAnta, bMaskDWord);
 
 	}
 }
@@ -961,24 +946,14 @@ _rtl9188fu_phy_path_b_fill_iqk_matrix(
 
 		//2 Tx IQC
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XDTxAFE, 0xF0000000, ((TX1_C & 0x3C0) >> 6));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC9C][KEY] = rOFDM0_XDTxAFE;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC9C][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XDTxAFE, bMaskDWord);
 
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XBTxIQImbalance, 0x003F0000, (TX1_C & 0x3F));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC88][KEY] = rOFDM0_XBTxIQImbalance;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC88][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XBTxIQImbalance, bMaskDWord);
 
 		ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT(25), ((Y * Oldval_1 >> 7) & 0x1));
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC4C][KEY] = rOFDM0_ECCAThreshold;
-		pRFCalibrateInfo->TxIQC_8723B[PATH_S0][IDX_0xC4C][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, bMaskDWord);
 
 		if (bTxOnly) {
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("_PHY_PathBFillIQKMatrix8188F only Tx OK\n"));
 
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC1C][KEY] = rOFDM0_XBRxIQImbalance;
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC1C][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XBRxIQImbalance, bMaskDWord);
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC78][KEY] = rOFDM0_AGCRSSITable;
-			pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC78][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_AGCRSSITable, bMaskDWord);
 			return;
 		}
 
@@ -987,13 +962,9 @@ _rtl9188fu_phy_path_b_fill_iqk_matrix(
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XBRxIQImbalance, 0x3FF, reg);
 		reg = result[final_candidate][7] & 0x3F;
 		ODM_SetBBReg(pDM_Odm, rOFDM0_XBRxIQImbalance, 0xFC00, reg);
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC1C][KEY] = rOFDM0_XBRxIQImbalance;
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC1C][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_XBRxIQImbalance, bMaskDWord);
 
 		reg = (result[final_candidate][7] >> 6) & 0xF;
 		ODM_SetBBReg(pDM_Odm, rOFDM0_AGCRSSITable, 0x0000F000, reg);
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC78][KEY] = rOFDM0_AGCRSSITable;
-		pRFCalibrateInfo->RxIQC_8723B[PATH_S0][IDX_0xC78][VAL] = ODM_GetBBReg(pDM_Odm, rOFDM0_AGCRSSITable, bMaskDWord);
 	}
 }
 
