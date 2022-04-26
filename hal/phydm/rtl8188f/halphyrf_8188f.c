@@ -159,15 +159,6 @@ void rtl8188fu_dm_tx_power_track_set_power(
 //	u1Byte	i = 0;
 	PODM_RF_CAL_T pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 
-#if 0
-	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(Adapter);
-	PMGNT_INFO pMgntInfo = &(Adapter->MgntInfo);
-	if (!pMgntInfo->ForcedDataRate) { //auto rate
-		if (pDM_Odm->TxRate != 0xFF)
-			TxRate = HwRateToMRate8812(pDM_Odm->TxRate);
-	} else   //force rate
-		TxRate = (u1Byte) pMgntInfo->ForcedDataRate;
-#endif
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("===>ODM_TxPwrTrackSetPwr8188F\n"));
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD, ("PwrTrackingLimit=%d\n", PwrTrackingLimit_OFDM));
@@ -706,15 +697,6 @@ _rtl8188fu_phy_path_b_iqk(
 		result |= 0x01;
 	else
 		return result;
-#if 0
-	if (!(regEAC & BIT30) &&
-		(((regEC4 & 0x03FF0000) >> 16) != 0x132) &&
-		(((regECC & 0x03FF0000) >> 16) != 0x36))
-		result |= 0x02;
-	else
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B Rx IQK fail!!\n"));
-
-#endif
 	return result;
 }
 
@@ -845,15 +827,6 @@ _rtl8188fu_phy_path_b_rx_iqk(
 //	ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_B, 0xdf, bRFRegOffsetMask, 0x180 );
 
 
-
-#if 0
-	if (!(regEAC & BIT31) &&
-		(((regEB4 & 0x03FF0000) >> 16) != 0x142) &&
-		(((regEBC & 0x03FF0000) >> 16) != 0x42))
-		result |= 0x01;
-	else                            //if Tx not OK, ignore Rx
-		return result;
-#endif
 
 	if (!(regEAC & BIT30) &&     //if Tx is OK, check whether Rx is OK
 		(((regEC4 & 0x03FF0000) >> 16) != 0x132) &&
@@ -1182,10 +1155,6 @@ static bool _rtl8188fu_phy_simularity_compare(
 )
 {
 	u4Byte i, j, diff, SimularityBitMap, bound = 0;
-#if DBG
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
-	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-#endif
 	u1Byte final_candidate[2] = { 0xFF, 0xFF };  //for path A and path B
 	BOOLEAN bResult = TRUE;
 	BOOLEAN is2T = TRUE;
@@ -1336,12 +1305,6 @@ static void _rtl8188fu_phy_iq_calibrate(
 	if (t == 0)
 		pDM_Odm->RFCalibrateInfo.bRfPiEnable = (u1Byte)ODM_GetBBReg(pDM_Odm, rFPGA0_XA_HSSIParameter1, BIT(8));
 
-#if 0
-	if (!pDM_Odm->RFCalibrateInfo.bRfPiEnable) {
-		// Switch BB to PI mode to do IQ Calibration.
-		_rtl8188fu_phy_pi_mode_switch(pAdapter, TRUE);
-	}
-#endif
 
 	//save RF path
 	Path_SEL_BB = ODM_GetBBReg(pDM_Odm, 0x948, bMaskDWord);
@@ -1398,18 +1361,9 @@ static void _rtl8188fu_phy_iq_calibrate(
 			result[t][1] = (ODM_GetBBReg(pDM_Odm, rTx_Power_After_IQK_A, bMaskDWord) & 0x3FF0000) >> 16;
 			break;
 		}
-#if 0
-		else if (i == (retryCount - 1) && PathAOK == 0x01) { //Tx IQK OK
-			RT_DISP(FINIT, INIT_IQK, ("Path A IQK Only  Tx Success!!\n"));
-
-			result[t][0] = (ODM_GetBBReg(pDM_Odm, rTx_Power_Before_IQK_A, bMaskDWord) & 0x3FF0000) >> 16;
-			result[t][1] = (ODM_GetBBReg(pDM_Odm, rTx_Power_After_IQK_A, bMaskDWord) & 0x3FF0000) >> 16;
-		}
-#endif
 	}
 
 //bypass RXQIK
-#if 1
 
 	for (i = 0; i < retryCount; i++) {
 		PathAOK = _rtl8188fu_phy_path_a_rx_iqk(pAdapter, is2T);
@@ -1423,7 +1377,6 @@ static void _rtl8188fu_phy_iq_calibrate(
 		} else
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A Rx IQK Fail!!\n"));
 	}
-#endif
 
 
 	if (0x00 == PathAOK)
@@ -1447,33 +1400,9 @@ static void _rtl8188fu_phy_iq_calibrate(
 				result[t][5] = (ODM_GetBBReg(pDM_Odm, rTx_Power_After_IQK_A, bMaskDWord) & 0x3FF0000) >> 16;
 				break;
 			}
-#if 0
-			else if (i == (retryCount - 1) && PathAOK == 0x01) { //Tx IQK OK
-				RT_DISP(FINIT, INIT_IQK, ("Path B IQK Only  Tx Success!!\n"));
-
-				result[t][0] = (ODM_GetBBReg(pDM_Odm, rTx_Power_Before_IQK_B, bMaskDWord) & 0x3FF0000) >> 16;
-				result[t][1] = (ODM_GetBBReg(pDM_Odm, rTx_Power_After_IQK_B, bMaskDWord) & 0x3FF0000) >> 16;
-			}
-#endif
 		}
 
 //bypass RXQIK
-#if 0
-
-		for (i = 0; i < retryCount; i++) {
-			PathBOK = phy_PathB_RxIQK8188F(pAdapter, is2T);
-			if (PathBOK == 0x03) {
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B Rx IQK Success!!\n"));
-//				result[t][0] = (ODM_GetBBReg(pDM_Odm, rTx_Power_Before_IQK_A, bMaskDWord)&0x3FF0000)>>16;
-//				result[t][1] = (ODM_GetBBReg(pDM_Odm, rTx_Power_After_IQK_A, bMaskDWord)&0x3FF0000)>>16;
-				result[t][6] = (ODM_GetBBReg(pDM_Odm, rRx_Power_Before_IQK_B_2, bMaskDWord) & 0x3FF0000) >> 16;
-				result[t][7] = (ODM_GetBBReg(pDM_Odm, rRx_Power_After_IQK_B_2, bMaskDWord) & 0x3FF0000) >> 16;
-				break;
-			} else
-				ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path B Rx IQK Fail!!\n"));
-		}
-
-#endif
 
 ////////Allen end /////////
 		if (0x00 == PathBOK)
