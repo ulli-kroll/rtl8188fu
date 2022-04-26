@@ -1131,8 +1131,8 @@ _rtl8188fu_phy_path_adda_on(
 
 }
 
-VOID
-_PHY_MACSettingCalibration8188F(
+static void
+_rtl8188fu_phy_mac_setting_calibration(
 	IN PADAPTER pAdapter,
 	IN pu4Byte MACReg,
 	IN pu4Byte MACBackup
@@ -1144,16 +1144,7 @@ _PHY_MACSettingCalibration8188F(
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("MAC settings for Calibration.\n"));
 
-#if 0
-	ODM_Write1Byte(pDM_Odm, MACReg[i], 0x3F);
-
-	for (i = 1; i < (IQK_MAC_REG_NUM - 1); i++)
-		ODM_Write1Byte(pDM_Odm, MACReg[i], (u1Byte)(MACBackup[i] & (~BIT3)));
-	ODM_Write1Byte(pDM_Odm, MACReg[i], (u1Byte)(MACBackup[i] & (~BIT5)));
-#else
-
 	ODM_SetBBReg(pDM_Odm, 0x520, 0x00ff0000, 0xff);
-#endif
 }
 
 static void 
@@ -1386,7 +1377,7 @@ static void _rtl8188fu_phy_iq_calibrate(
 	}
 
 	//MAC settings
-	_PHY_MACSettingCalibration8188F(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
+	_rtl8188fu_phy_mac_setting_calibration(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
 
 
 	//Page B init
