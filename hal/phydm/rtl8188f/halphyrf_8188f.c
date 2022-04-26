@@ -1517,10 +1517,10 @@ _rtl8188fu_phy_lc_calibrate(
 VOID
 rtl8188fu_phy_iq_calibrate(
 	IN PADAPTER pAdapter,
-	IN BOOLEAN bReCovery,
-	IN BOOLEAN bRestore
+	IN BOOLEAN bReCovery
 )
 {
+	BOOLEAN bRestore = _FALSE;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
 
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;

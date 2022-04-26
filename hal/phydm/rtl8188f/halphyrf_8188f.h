@@ -43,8 +43,7 @@ rtl8188fu_dm_tx_power_track_set_power(
 void	
 rtl8188fu_phy_iq_calibrate(	
 	IN PADAPTER	Adapter,
-	IN	BOOLEAN 	bReCovery,
-	IN	BOOLEAN 	bRestore);
+	IN	BOOLEAN 	bReCovery);
 
 
 //

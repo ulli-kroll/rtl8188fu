@@ -1085,7 +1085,7 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 			rtl8188fu_phy_lc_calibrate(&pHalData->odmpriv);
 
-			rtl8188fu_phy_iq_calibrate(padapter, _FALSE, _FALSE);
+			rtl8188fu_phy_iq_calibrate(padapter, _FALSE);
 			pHalData->odmpriv.RFCalibrateInfo.iqk_initialized = _TRUE;
 
 			ODM_TXPowerTrackingCheck(&pHalData->odmpriv);
