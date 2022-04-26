@@ -1520,7 +1520,6 @@ rtl8188fu_phy_iq_calibrate(
 	IN BOOLEAN bReCovery
 )
 {
-	BOOLEAN bRestore = _FALSE;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
 
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
@@ -1541,53 +1540,6 @@ rtl8188fu_phy_iq_calibrate(
 
 	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
 		return;
-
-	if (bRestore) {
-		u4Byte offset, data;
-		u1Byte path, bResult = SUCCESS;
-		PODM_RF_CAL_T pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
-
-		//#define 	PATH_S0                         1 // RF_PATH_B
-		//#define 	PATH_S1                         0 // RF_PATH_A
-
-		path = (ODM_GetBBReg(pDM_Odm, rS0S1_PathSwitch, bMaskByte0) == 0x00) ? ODM_RF_PATH_A : ODM_RF_PATH_B;
-		//Restore TX IQK
-		for (i = 0; i < 3; ++i) {
-			offset = pRFCalibrateInfo->TxIQC_8723B[path][i][0];
-			data = pRFCalibrateInfo->TxIQC_8723B[path][i][1];
-			if ((offset == 0) || (data == 0)) {
-				//DBG_871X("%s =>path:%s Restore TX IQK result failed\n",__FUNCTION__,(path==ODM_RF_PATH_A)?"A":"B");
-				bResult = FAIL;
-				break;
-			}
-			RT_TRACE(COMP_MP, DBG_TRACE, ("Switch to S1 TxIQC(offset, data) = (0x%X, 0x%X)\n", offset, data));
-			ODM_SetBBReg(pDM_Odm, offset, bMaskDWord, data);
-		}
-		//Restore RX IQK
-		for (i = 0; i < 2; ++i) {
-			offset = pRFCalibrateInfo->RxIQC_8723B[path][i][0];
-			data = pRFCalibrateInfo->RxIQC_8723B[path][i][1];
-			if ((offset == 0) || (data == 0)) {
-				//DBG_871X("%s =>path:%s  Restore RX IQK result failed\n",__FUNCTION__,(path==ODM_RF_PATH_A)?"A":"B");
-				bResult = FAIL;
-				break;
-			}
-			RT_TRACE(COMP_MP, DBG_TRACE, ("Switch to S1 RxIQC (offset, data) = (0x%X, 0x%X)\n", offset, data));
-			ODM_SetBBReg(pDM_Odm, offset, bMaskDWord, data);
-		}
-
-		if (pDM_Odm->RFCalibrateInfo.TxLOK[ODM_RF_PATH_A] == 0) {
-			//DBG_871X("%s => Restore Path-A TxLOK result failed\n",__FUNCTION__);
-			bResult = FAIL;
-		} else {
-			ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_TXM_IDAC, bRFRegOffsetMask, pDM_Odm->RFCalibrateInfo.TxLOK[ODM_RF_PATH_A]);
-			ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_B, RF_TXM_IDAC, bRFRegOffsetMask, pDM_Odm->RFCalibrateInfo.TxLOK[ODM_RF_PATH_B]);
-		}
-
-		if (bResult == SUCCESS)
-			return;
-
-	}
 
 	if (bReCovery) {
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("PHY_IQCalibrate_8188F: Return due to bReCovery!\n"));
