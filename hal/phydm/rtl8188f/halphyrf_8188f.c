@@ -1660,10 +1660,10 @@ rtl8188fu_phy_iq_calibrate(
 	}
 
 	if (final_candidate != 0xff) {
-		pDM_Odm->RFCalibrateInfo.RegE94 = result[final_candidate][0];
-		pDM_Odm->RFCalibrateInfo.RegE9C = result[final_candidate][1];
-		pDM_Odm->RFCalibrateInfo.RegEB4 = result[final_candidate][4];
-		pDM_Odm->RFCalibrateInfo.RegEBC = result[final_candidate][5];
+		pDM_Odm->RFCalibrateInfo.reg_e94 = result[final_candidate][0];
+		pDM_Odm->RFCalibrateInfo.reg_e9c = result[final_candidate][1];
+		pDM_Odm->RFCalibrateInfo.reg_eb4 = result[final_candidate][4];
+		pDM_Odm->RFCalibrateInfo.reg_ebc = result[final_candidate][5];
 
 		RegE94 = result[final_candidate][0];
 		RegEA4 = result[final_candidate][2];
@@ -1676,8 +1676,8 @@ rtl8188fu_phy_iq_calibrate(
 	} else {
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK: FAIL use default value\n"));
 
-		pDM_Odm->RFCalibrateInfo.RegE94 = pDM_Odm->RFCalibrateInfo.RegEB4 = 0x100;  //X default value
-		pDM_Odm->RFCalibrateInfo.RegE9C = pDM_Odm->RFCalibrateInfo.RegEBC = 0x0;        //Y default value
+		pDM_Odm->RFCalibrateInfo.reg_e94 = pDM_Odm->RFCalibrateInfo.reg_eb4 = 0x100;  //X default value
+		pDM_Odm->RFCalibrateInfo.reg_e9c = pDM_Odm->RFCalibrateInfo.reg_ebc = 0x0;        //Y default value
 	}
 
 	if (RegE94 != 0)

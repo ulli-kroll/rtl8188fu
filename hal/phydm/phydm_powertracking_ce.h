@@ -67,11 +67,10 @@ typedef struct ODM_RF_Calibration_Structure
 {
 	//for tx power tracking
 	
-	u4Byte	RegA24; // for TempCCK
-	s4Byte	RegE94;
-	s4Byte 	RegE9C;
-	s4Byte	RegEB4;
-	s4Byte	RegEBC;	
+	s4Byte	reg_e94;
+	s4Byte 	reg_e9c;
+	s4Byte	reg_eb4;
+	s4Byte	reg_ebc;
 
 	u1Byte  	TXPowercount;
 	BOOLEAN bTXPowerTrackingInit; 
