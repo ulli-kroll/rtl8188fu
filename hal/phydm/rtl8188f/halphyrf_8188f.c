@@ -1067,8 +1067,8 @@ ODM_CheckPowerStatus(
 	return TRUE;
 }
 
-VOID
-_PHY_SaveADDARegisters8188F(
+static void
+_rtl8188fu_phy_save_adda_registers(
 	IN PADAPTER pAdapter,
 	IN pu4Byte ADDAReg,
 	IN pu4Byte ADDABackup,
@@ -1088,8 +1088,8 @@ _PHY_SaveADDARegisters8188F(
 }
 
 
-VOID
-_PHY_SaveMACRegisters8188F(
+static void
+_rtl8188fu_phy_save_mac_registers(
 	IN PADAPTER pAdapter,
 	IN pu4Byte MACReg,
 	IN pu4Byte MACBackup
@@ -1107,8 +1107,8 @@ _PHY_SaveMACRegisters8188F(
 }
 
 
-VOID
-_PHY_ReloadADDARegisters8188F(
+static void
+_rtl8188fu_phy_reload_adda_registers(
 	IN PADAPTER pAdapter,
 	IN pu4Byte ADDAReg,
 	IN pu4Byte ADDABackup,
@@ -1124,8 +1124,8 @@ _PHY_ReloadADDARegisters8188F(
 		ODM_SetBBReg(pDM_Odm, ADDAReg[i], bMaskDWord, ADDABackup[i]);
 }
 
-VOID
-_PHY_ReloadMACRegisters8188F(
+static void
+_rtl8188fu_phy_reload_mac_registers(
 	IN PADAPTER pAdapter,
 	IN pu4Byte MACReg,
 	IN pu4Byte MACBackup
@@ -1142,8 +1142,8 @@ _PHY_ReloadMACRegisters8188F(
 }
 
 
-VOID
-_PHY_PathADDAOn8188F(
+static void
+_rtl8188fu_phy_path_adda_on(
 	IN PADAPTER pAdapter,
 	IN pu4Byte ADDAReg,
 	IN BOOLEAN isPathAOn,
@@ -1194,8 +1194,8 @@ _PHY_MACSettingCalibration8188F(
 #endif
 }
 
-VOID
-_PHY_PathAStandBy8188F(
+static void 
+_rtl8188fu_phy_path_a_standby(
 	IN PADAPTER pAdapter
 )
 {
@@ -1212,8 +1212,8 @@ _PHY_PathAStandBy8188F(
 	ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, bMaskH3Bytes, 0x808000);
 }
 
-VOID
-_PHY_PIModeSwitch8188F(
+static void
+_rtl8188fu_phy_pi_mode_switch(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN PIMode
 )
@@ -1379,13 +1379,13 @@ static void _rtl8188fu_phy_iq_calibrate(
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQ Calibration for %s for %d times\n", (is2T ? "2T2R" : "1T1R"), t));
 
 		// Save ADDA parameters, turn Path A ADDA on
-		_PHY_SaveADDARegisters8188F(pAdapter, ADDA_REG, pDM_Odm->RFCalibrateInfo.adda_backup, IQK_ADDA_REG_NUM);
-		_PHY_SaveMACRegisters8188F(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
-		_PHY_SaveADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.iqk_bb_backup, IQK_BB_REG_NUM);
+		_rtl8188fu_phy_save_adda_registers(pAdapter, ADDA_REG, pDM_Odm->RFCalibrateInfo.adda_backup, IQK_ADDA_REG_NUM);
+		_rtl8188fu_phy_save_mac_registers(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
+		_rtl8188fu_phy_save_adda_registers(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.iqk_bb_backup, IQK_BB_REG_NUM);
 	}
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQ Calibration for %s for %d times\n", (is2T ? "2T2R" : "1T1R"), t));
 
-	_PHY_PathADDAOn8188F(pAdapter, ADDA_REG, TRUE, is2T);
+	_rtl8188fu_phy_path_adda_on(pAdapter, ADDA_REG, TRUE, is2T);
 
 
 	if (t == 0)
@@ -1394,7 +1394,7 @@ static void _rtl8188fu_phy_iq_calibrate(
 #if 0
 	if (!pDM_Odm->RFCalibrateInfo.bRfPiEnable) {
 		// Switch BB to PI mode to do IQ Calibration.
-		_PHY_PIModeSwitch8188F(pAdapter, TRUE);
+		_rtl8188fu_phy_pi_mode_switch(pAdapter, TRUE);
 	}
 #endif
 
@@ -1485,10 +1485,10 @@ static void _rtl8188fu_phy_iq_calibrate(
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A IQK failed!!\n"));
 
 	if (is2T) {
-		_PHY_PathAStandBy8188F(pAdapter);
+		_rtl8188fu_phy_path_a_standby(pAdapter);
 
 		// Turn Path B ADDA on
-		_PHY_PathADDAOn8188F(pAdapter, ADDA_REG, FALSE, is2T);
+		_rtl8188fu_phy_path_adda_on(pAdapter, ADDA_REG, FALSE, is2T);
 //Allen
 		for (i = 0; i < retryCount; i++) {
 			PathBOK = _rtl8188fu_phy_path_b_iqk(pAdapter);
@@ -1542,16 +1542,16 @@ static void _rtl8188fu_phy_iq_calibrate(
 	if (t != 0) {
 		if (!pDM_Odm->RFCalibrateInfo.bRfPiEnable) {
 			// Switch back BB to SI mode after finish IQ Calibration.
-			_PHY_PIModeSwitch8188F(pAdapter, FALSE);
+			_rtl8188fu_phy_pi_mode_switch(pAdapter, FALSE);
 		}
 
 		// Reload ADDA power saving parameters
-		_PHY_ReloadADDARegisters8188F(pAdapter, ADDA_REG, pDM_Odm->RFCalibrateInfo.adda_backup, IQK_ADDA_REG_NUM);
+		_rtl8188fu_phy_reload_adda_registers(pAdapter, ADDA_REG, pDM_Odm->RFCalibrateInfo.adda_backup, IQK_ADDA_REG_NUM);
 
 		// Reload MAC parameters
-		_PHY_ReloadMACRegisters8188F(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
+		_rtl8188fu_phy_reload_mac_registers(pAdapter, IQK_MAC_REG, pDM_Odm->RFCalibrateInfo.iqk_mac_backup);
 
-		_PHY_ReloadADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.iqk_bb_backup, IQK_BB_REG_NUM);
+		_rtl8188fu_phy_reload_adda_registers(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.iqk_bb_backup, IQK_BB_REG_NUM);
 
 
 		//Reload RF path
@@ -1736,7 +1736,7 @@ rtl8188fu_phy_iq_calibrate(
 
 	if (bReCovery) {
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("PHY_IQCalibrate_8188F: Return due to bReCovery!\n"));
-		_PHY_ReloadADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
+		_rtl8188fu_phy_reload_adda_registers(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
 		return;
 	}
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("IQK:Start!!!\n"));
@@ -1844,7 +1844,7 @@ rtl8188fu_phy_iq_calibrate(
 	//RT_DISP(FINIT, INIT_IQK, ("\nIQK OK Indexforchannel %d.\n", Indexforchannel));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("\nIQK OK Indexforchannel %d.\n", Indexforchannel));
 
-	_PHY_SaveADDARegisters8188F(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
+	_rtl8188fu_phy_save_adda_registers(pAdapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
 
 	// Restore RF Path
 	ODM_SetBBReg(pDM_Odm, 0x948, bMaskDWord, Path_SEL_BB);
