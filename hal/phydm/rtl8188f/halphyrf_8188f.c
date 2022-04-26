@@ -1591,16 +1591,6 @@ _rtl8188fu_phy_lc_calibrate(
 #define		APK_CURVE_REG_NUM 4
 #define		PATH_NUM		2
 
-VOID
-phy_APCalibrate_8188F(
-	IN PADAPTER pAdapter,
-	IN s1Byte delta,
-	IN BOOLEAN is2T
-)
-{
-}
-
-
 
 #define		DP_BB_REG_NUM		7
 #define		DP_RF_REG_NUM		1
