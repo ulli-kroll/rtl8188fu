@@ -30,10 +30,6 @@
 #define	RF_T_METER_8188F			0x42
 
 
-void ConfigureTxpowerTrack_8188F(
-	PTXPWRTRACK_CFG	pConfig
-	);
-
 VOID
 rtl8188fu_dm_tx_power_track_set_power(
 	IN	PVOID		pDM_VOID,

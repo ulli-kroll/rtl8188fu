@@ -404,14 +404,6 @@ rtl8188fu_get_delta_swing_table(
 	return;
 }
 
-
-void ConfigureTxpowerTrack_8188F(
-	PTXPWRTRACK_CFG pConfig
-)
-{
-	RT_TRACE(COMP_CMD, DBG_LOUD, ("ConfigureTxpowerTrack_8188F ====> \n"));
-}
-
 //1 7.	IQK
 #define MAX_TOLERANCE		5
 #define IQK_DELAY_TIME		1		//ms

@@ -45,12 +45,6 @@ typedef struct _TXPWRTRACK_CFG {
 	u1Byte		Threshold_DPK;
 } TXPWRTRACK_CFG, *PTXPWRTRACK_CFG;
 
-void ConfigureTxpowerTrack(
-	IN		PVOID					pDM_VOID,
-	OUT	PTXPWRTRACK_CFG	pConfig
-	);
-
-
 VOID
 ODM_ClearTxPowerTrackingState(
 	IN		PVOID					pDM_VOID

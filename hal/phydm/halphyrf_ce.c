@@ -37,15 +37,6 @@
 							_offset = _size-1;\
 					} while(0)
 
-void ConfigureTxpowerTrack(
-	IN		PVOID					pDM_VOID,
-	OUT	PTXPWRTRACK_CFG	pConfig
-	)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-
-	ConfigureTxpowerTrack_8188F(pConfig);
-}
 
 //======================================================================
 // <20121113, Kordan> This function should be called when TxAGC changed.
@@ -121,8 +112,6 @@ ODM_TXPowerTrackingCallback_ThermalMeter(
 	/*for 8814 add by Yu Chen*/
 	
 	//4 2. Initilization ( 7 steps in total )
-
-	ConfigureTxpowerTrack(pDM_Odm, &c);
 
 	rtl8188fu_get_delta_swing_table(pDM_Odm, (pu1Byte*)&deltaSwingTableIdx_TUP_A, (pu1Byte*)&deltaSwingTableIdx_TDOWN_A,
 						  (pu1Byte*)&deltaSwingTableIdx_TUP_B, (pu1Byte*)&deltaSwingTableIdx_TDOWN_B);
