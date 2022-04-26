@@ -1032,41 +1032,6 @@ _rtl9188fu_phy_path_b_fill_iqk_matrix(
 	}
 }
 
-//
-// 2011/07/26 MH Add an API for testing IQK fail case.
-//
-// MP Already declare in odm.c
-BOOLEAN
-ODM_CheckPowerStatus(
-	IN PADAPTER Adapter)
-{
-	/*
-		HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-		PDM_ODM_T			pDM_Odm = &pHalData->DM_OutSrc;
-		RT_RF_POWER_STATE 	rtState;
-		PMGNT_INFO			pMgntInfo	= &(Adapter->MgntInfo);
-
-		// 2011/07/27 MH We are not testing ready~~!! We may fail to get correct value when init sequence.
-		if (pMgntInfo->init_adpt_in_progress == TRUE)
-		{
-			ODM_RT_TRACE(pDM_Odm,COMP_INIT, DBG_LOUD, ("ODM_CheckPowerStatus Return TRUE, due to initadapter"));
-			return	TRUE;
-		}
-
-		//
-		//	2011/07/19 MH We can not execute tx pwoer tracking/ LLC calibrate or IQK.
-		//
-		Adapter->HalFunc.GetHwRegHandler(Adapter, HW_VAR_RF_STATE, (pu1Byte)(&rtState));
-		if(Adapter->bDriverStopped || Adapter->bDriverIsGoingToPnpSetPowerSleep || rtState == eRfOff)
-		{
-			ODM_RT_TRACE(pDM_Odm,COMP_INIT, DBG_LOUD, ("ODM_CheckPowerStatus Return FALSE, due to %d/%d/%d\n",
-			Adapter->bDriverStopped, Adapter->bDriverIsGoingToPnpSetPowerSleep, rtState));
-			return	FALSE;
-		}
-	*/
-	return TRUE;
-}
-
 static void
 _rtl8188fu_phy_save_adda_registers(
 	IN PADAPTER pAdapter,
@@ -1078,9 +1043,6 @@ _rtl8188fu_phy_save_adda_registers(
 	u4Byte i;
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(pAdapter);
 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
-
-	if (ODM_CheckPowerStatus(pAdapter) == FALSE)
-		return;
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Save ADDA parameters.\n"));
 	for (i = 0; i < RegisterNum; i++)
@@ -1676,9 +1638,6 @@ rtl8188fu_phy_iq_calibrate(
 		rOFDM0_RxIQExtAnta
 	};
 	u4Byte Path_SEL_BB = 0, Path_SEL_RF = 0;
-
-	if (ODM_CheckPowerStatus(pAdapter) == FALSE)
-		return;
 
 	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
 		return;
