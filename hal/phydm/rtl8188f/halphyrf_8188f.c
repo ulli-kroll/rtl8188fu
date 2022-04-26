@@ -416,8 +416,8 @@ void ConfigureTxpowerTrack_8188F(
 #define MAX_TOLERANCE		5
 #define IQK_DELAY_TIME		1		//ms
 
-u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
-phy_PathA_IQK_8188F(
+static u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
+_rtl8188fu_phy_path_a_iqk(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN configPathB
 )
@@ -493,8 +493,8 @@ phy_PathA_IQK_8188F(
 
 }
 
-u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
-phy_PathA_RxIQK8188F(
+static u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
+_rtl8188fu_phy_path_a_rx_iqk(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN configPathB
 )
@@ -642,8 +642,8 @@ phy_PathA_RxIQK8188F(
 
 }
 
-u1Byte              //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
-phy_PathB_IQK_8188F(
+static u1Byte              //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
+_rtl8188fu_phy_path_b_iqk(
 	IN PADAPTER pAdapter
 )
 {
@@ -728,8 +728,8 @@ phy_PathB_IQK_8188F(
 
 
 
-u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
-phy_PathB_RxIQK8188F(
+static u1Byte          //bit0 = 1 => Tx OK, bit1 = 1 => Rx OK
+_rtl8188fu_phy_path_b_rx_iqk(
 	IN PADAPTER pAdapter,
 	IN BOOLEAN configPathB
 )
@@ -1442,7 +1442,7 @@ static void _rtl8188fu_phy_iq_calibrate(
 	ODM_SetBBReg(pDM_Odm, rRx_IQK, bMaskDWord, 0x01004800);
 
 	for (i = 0; i < retryCount; i++) {
-		PathAOK = phy_PathA_IQK_8188F(pAdapter, is2T);
+		PathAOK = _rtl8188fu_phy_path_a_iqk(pAdapter, is2T);
 //		if(PathAOK == 0x03){
 		if (PathAOK == 0x01) { //Path A Tx IQK Success
 			ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, bMaskH3Bytes, 0x000000);
@@ -1467,7 +1467,7 @@ static void _rtl8188fu_phy_iq_calibrate(
 #if 1
 
 	for (i = 0; i < retryCount; i++) {
-		PathAOK = phy_PathA_RxIQK8188F(pAdapter, is2T);
+		PathAOK = _rtl8188fu_phy_path_a_rx_iqk(pAdapter, is2T);
 		if (PathAOK == 0x03) {
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Path A Rx IQK Success!!\n"));
 //				result[t][0] = (ODM_GetBBReg(pDM_Odm, rTx_Power_Before_IQK_A, bMaskDWord)&0x3FF0000)>>16;
@@ -1491,7 +1491,7 @@ static void _rtl8188fu_phy_iq_calibrate(
 		_PHY_PathADDAOn8188F(pAdapter, ADDA_REG, FALSE, is2T);
 //Allen
 		for (i = 0; i < retryCount; i++) {
-			PathBOK = phy_PathB_IQK_8188F(pAdapter);
+			PathBOK = _rtl8188fu_phy_path_b_iqk(pAdapter);
 //		if(PathBOK == 0x03){
 			if (PathBOK == 0x01) { //Path B Tx IQK Success
 				ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, bMaskH3Bytes, 0x000000);
