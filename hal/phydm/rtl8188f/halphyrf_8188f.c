@@ -1530,7 +1530,6 @@ rtl8188fu_phy_iq_calibrate(
 	u1Byte i, final_candidate, Indexforchannel;
 	BOOLEAN bPathAOK, bPathBOK;
 	s4Byte RegE94, RegEA4, RegEB4, RegEC4, RegTmp = 0;
-	BOOLEAN bSingleTone = FALSE, bCarrierSuppression = FALSE;
 	u4Byte IQK_BB_REG_92C[IQK_BB_REG_NUM] = {
 		rOFDM0_XARxIQImbalance, rOFDM0_XBRxIQImbalance,
 		rOFDM0_ECCAThreshold, rOFDM0_AGCRSSITable,
@@ -1541,10 +1540,6 @@ rtl8188fu_phy_iq_calibrate(
 	u4Byte Path_SEL_BB = 0, Path_SEL_RF = 0;
 
 	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION))
-		return;
-
-	// 20120213<Kordan> Turn on when continuous Tx to pass lab testing. (required by Edlu)
-	if (bSingleTone || bCarrierSuppression)
 		return;
 
 	if (bRestore) {
