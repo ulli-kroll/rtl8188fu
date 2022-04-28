@@ -103,8 +103,6 @@
 
 #define CONFIG_OUT_EP_WIFI_MODE
 
-#define ENABLE_USB_DROP_INCORRECT_OUT
-
 /* #define CONFIG_REDUCE_USB_TX_INT	*/ /* Trade-off: Improve performance, but may cause TX URBs blocked by USB Host/Bus driver on few platforms. */
 
 /*

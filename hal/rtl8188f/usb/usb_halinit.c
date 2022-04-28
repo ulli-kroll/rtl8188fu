@@ -407,16 +407,6 @@ static void _InitPageBoundary(PADAPTER padapter)
 }
 
 static VOID
-_InitHardwareDropIncorrectBulkOut(
-	IN  PADAPTER Adapter
-)
-{
-	u32	value32 = rtw_read32(Adapter, REG_TXDMA_OFFSET_CHK);
-	value32 |= DROP_DATA_EN;
-	rtw_write32(Adapter, REG_TXDMA_OFFSET_CHK, value32);
-}
-
-static VOID
 _InitNetworkType(
 	IN  PADAPTER Adapter
 )
@@ -1036,10 +1026,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 	_InitBurstPktLen(padapter);
 	_initUsbAggregationSetting(padapter);
-
-#ifdef ENABLE_USB_DROP_INCORRECT_OUT
-	_InitHardwareDropIncorrectBulkOut(padapter);
-#endif
 
 #ifdef CONFIG_LED
 	_InitHWLed(padapter);
