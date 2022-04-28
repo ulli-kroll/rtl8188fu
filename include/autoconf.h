@@ -87,7 +87,6 @@
 	#endif
 #endif /* CONFIG_LED */
 
-#define CONFIG_XMIT_ACK
 #ifdef CONFIG_XMIT_ACK
 	#define CONFIG_ACTIVE_KEEP_ALIVE_CHECK
 #endif
