@@ -3797,77 +3797,16 @@ s32 dump_mgntframe_and_wait(_adapter *padapter, struct xmit_frame *pmgntframe, i
 
 s32 dump_mgntframe_and_wait_ack(_adapter *padapter, struct xmit_frame *pmgntframe)
 {
-#ifdef CONFIG_XMIT_ACK
-	static u8 seq_no = 0;
-	s32 ret = _FAIL;
-	u32 timeout_ms = 500;//  500ms
-	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
-
-	if (RTW_CANNOT_RUN(padapter)) {
-		rtw_free_xmitbuf(&padapter->xmitpriv, pmgntframe->pxmitbuf);
-		rtw_free_xmitframe(&padapter->xmitpriv, pmgntframe);
-		return -1;
-	}
-
-	_enter_critical_mutex(&pxmitpriv->ack_tx_mutex, NULL);
-	pxmitpriv->ack_tx = _TRUE;
-	pxmitpriv->seq_no = seq_no++;
-	pmgntframe->ack_report = 1;
-	rtw_sctx_init(&(pxmitpriv->ack_tx_ops), timeout_ms);
-	if (rtw_hal_mgnt_xmit(padapter, pmgntframe) == _SUCCESS) {
-#ifdef CONFIG_XMIT_ACK_POLLING
-		ret = rtw_ack_tx_polling(pxmitpriv, timeout_ms);
-#else
-		ret = rtw_sctx_wait(&(pxmitpriv->ack_tx_ops), __func__);
-#endif
-	}
-
-	pxmitpriv->ack_tx = _FALSE;
-	_exit_critical_mutex(&pxmitpriv->ack_tx_mutex, NULL);
-
-	 return ret;
-#else //!CONFIG_XMIT_ACK
 	dump_mgntframe(padapter, pmgntframe);
 	rtw_msleep_os(50);
 	return _SUCCESS;
-#endif //!CONFIG_XMIT_ACK	 
 }
 
 s32 dump_mgntframe_and_wait_ack_timeout(_adapter *padapter, struct xmit_frame *pmgntframe, int timeout_ms)
 {
-#ifdef CONFIG_XMIT_ACK
-	static u8 seq_no = 0;
-	s32 ret = _FAIL;
-	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
-
-	if (RTW_CANNOT_RUN(padapter)) {
-		rtw_free_xmitbuf(&padapter->xmitpriv, pmgntframe->pxmitbuf);
-		rtw_free_xmitframe(&padapter->xmitpriv, pmgntframe);
-		return -1;
-	}
-
-	_enter_critical_mutex(&pxmitpriv->ack_tx_mutex, NULL);
-	pxmitpriv->ack_tx = _TRUE;
-	pxmitpriv->seq_no = seq_no++;
-	pmgntframe->ack_report = 1;
-	rtw_sctx_init(&(pxmitpriv->ack_tx_ops), timeout_ms);
-	if (rtw_hal_mgnt_xmit(padapter, pmgntframe) == _SUCCESS) {
-#ifdef CONFIG_XMIT_ACK_POLLING
-		ret = rtw_ack_tx_polling(pxmitpriv, timeout_ms);
-#else
-		ret = rtw_sctx_wait(&(pxmitpriv->ack_tx_ops), __func__);
-#endif
-	}
-
-	pxmitpriv->ack_tx = _FALSE;
-	_exit_critical_mutex(&pxmitpriv->ack_tx_mutex, NULL);
-
-	 return ret;
-#else //!CONFIG_XMIT_ACK
 	dump_mgntframe(padapter, pmgntframe);
 	rtw_msleep_os(50);
 	return _SUCCESS;
-#endif //!CONFIG_XMIT_ACK	 
 }
 
 int update_hidden_ssid(u8 *ies, u32 ies_len, u8 hidden_ssid_mode)

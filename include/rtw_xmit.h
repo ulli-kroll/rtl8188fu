@@ -452,9 +452,6 @@ struct xmit_frame
 	s8	pkt_offset;
 #endif
 
-#ifdef CONFIG_XMIT_ACK
-	u8 ack_report;
-#endif
 
 	u8 *alloc_addr; /* the actual address this xmitframe allocated */
 	u8 ext_tag; /* 0:data, 1:mgmt */
@@ -606,12 +603,6 @@ struct	xmit_priv	{
 	u8   hw_ssn_seq_no;//mapping to REG_HW_SEQ 0,1,2,3
 	u16	nqos_ssn;
 
-#ifdef CONFIG_XMIT_ACK
-	int	ack_tx;
-	_mutex ack_tx_mutex;
-	struct submit_ctx ack_tx_ops;
-	u8 seq_no;
-#endif
 	_lock lock_sctx;
 };
 

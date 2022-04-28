@@ -2590,16 +2590,6 @@ static void rtl8188f_fill_default_txdesc(
 			SET_TX_DESC_TX_RATE_8188F(pbuf, MRateToHwRate(pmlmeext->tx_rate));
 		}
 
-#ifdef CONFIG_XMIT_ACK
-		/* CCX-TXRPT ack for xmit mgmt frames. */
-		if (pxmitframe->ack_report) {
-#ifdef DBG_CCX
-			DBG_8192C("%s set spe_rpt\n", __func__);
-#endif
-			SET_TX_DESC_SPE_RPT_8188F(pbuf, 1);
-			SET_TX_DESC_SW_DEFINE_8188F(pbuf, (u8)(GET_PRIMARY_ADAPTER(padapter)->xmitpriv.seq_no));
-		}
-#endif /* CONFIG_XMIT_ACK */
 	} else if (pxmitframe->frame_tag == TXAGG_FRAMETAG)
 		RT_TRACE(_module_hal_xmit_c_, _drv_warning_, ("%s: TXAGG_FRAMETAG\n", __func__));
 	else {
@@ -3154,18 +3144,6 @@ void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len)
 
 	seq_no = *(pdata + 6);
 
-#ifdef CONFIG_XMIT_ACK
-	if (GET_8188F_C2H_TX_RPT_RETRY_OVER(pdata) | GET_8188F_C2H_TX_RPT_LIFE_TIME_OVER(pdata))
-		rtw_ack_tx_done(&padapter->xmitpriv, RTW_SCTX_DONE_CCX_PKT_FAIL);
-	/*
-		else if(seq_no != padapter->xmitpriv.seq_no) {
-			DBG_871X("tx_seq_no=%d, rpt_seq_no=%d\n", padapter->xmitpriv.seq_no, seq_no);
-			rtw_ack_tx_done(&padapter->xmitpriv, RTW_SCTX_DONE_CCX_PKT_FAIL);
-		}
-	*/
-	else
-		rtw_ack_tx_done(&padapter->xmitpriv, RTW_SCTX_DONE_SUCCESS);
-#endif
 }
 
 s32 c2h_id_filter_ccx_8188f(u8 *buf)

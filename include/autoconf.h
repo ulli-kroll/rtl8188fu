@@ -87,10 +87,6 @@
 	#endif
 #endif /* CONFIG_LED */
 
-#ifdef CONFIG_XMIT_ACK
-	#define CONFIG_ACTIVE_KEEP_ALIVE_CHECK
-#endif
-
 #define CONFIG_C2H_PACKET_EN
 
 /* #define CONFIG_RF_POWER_TRIM */

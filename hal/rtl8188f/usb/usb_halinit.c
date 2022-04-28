@@ -1113,11 +1113,6 @@ u32 rtl8188fu_hw_init(PADAPTER padapter)
 
 	rtw_hal_set_hwreg(padapter, HW_VAR_NAV_UPPER, (u8 *)&NavUpper);
 
-#ifdef CONFIG_XMIT_ACK
-	/*ack for xmit mgmt frames. */
-	rtw_write32(padapter, REG_FWHW_TXQ_CTRL, rtw_read32(padapter, REG_FWHW_TXQ_CTRL) | BIT(12));
-#endif /*CONFIG_XMIT_ACK */
-
 	/* Enable MACTXEN/MACRXEN block */
 	u1bRegCR = rtw_read8(padapter, REG_CR);
 	u1bRegCR |= (MACTXEN | MACRXEN);
