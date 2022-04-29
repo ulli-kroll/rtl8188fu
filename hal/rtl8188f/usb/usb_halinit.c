@@ -162,41 +162,6 @@ u32 rtl8188fu_init_power_on(PADAPTER padapter)
 }
 
 
-
-/*------------------------------------------------------------------------- */
-/* */
-/* LLT R/W/Init function */
-/* */
-/*------------------------------------------------------------------------- */
-static u8 _LLTWrite(
-	IN  PADAPTER	Adapter,
-	IN	u32		address,
-	IN	u32		data
-)
-{
-	u8	status = _SUCCESS;
-	s8 	count = POLLING_LLT_THRESHOLD;
-	u32 	value = _LLT_INIT_ADDR(address) | _LLT_INIT_DATA(data) | _LLT_OP(_LLT_WRITE_ACCESS);
-
-	rtw_write32(Adapter, REG_LLT_INIT, value);
-
-	/*polling */
-	do {
-		value = rtw_read32(Adapter, REG_LLT_INIT);
-		if (_LLT_NO_ACTIVE == _LLT_OP_VALUE(value))
-			break;
-	} while (--count);
-
-	if (count <= 0) {
-		DBG_871X("Failed to polling write LLT done at address %d!\n", address);
-		status = _FAIL;
-	}
-	return status;
-
-}
-
-
-
 /*--------------------------------------------------------------- */
 /* */
 /*	MAC init functions */
