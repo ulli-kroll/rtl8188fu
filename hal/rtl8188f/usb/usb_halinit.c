@@ -1336,22 +1336,6 @@ unsigned int rtl8188fu_inirp_deinit(PADAPTER Adapter)
 }
 
 
-static u32
-_GetChannelGroup(
-	IN	u32	channel
-)
-{
-	/*RT_ASSERT((channel < 14), ("Channel %d no is supported!\n")); */
-
-	if (channel < 3)	/* Channel 1~3 */
-		return 0;
-	else if (channel < 9)	/* Channel 4~9 */
-		return 1;
-
-	return 2;				/* Channel 10~14 */
-}
-
-
 /*------------------------------------------------------------------- */
 /* */
 /*	EEPROM/EFUSE Content Parsing */
