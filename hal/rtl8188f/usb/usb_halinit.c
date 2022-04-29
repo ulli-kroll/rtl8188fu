@@ -1342,47 +1342,6 @@ unsigned int rtl8188fu_inirp_deinit(PADAPTER Adapter)
 /* */
 /*------------------------------------------------------------------- */
 static VOID
-_ReadLEDSetting(
-	IN	PADAPTER	Adapter,
-	IN	u8		*PROMContent,
-	IN	BOOLEAN		AutoloadFail
-)
-{
-	struct led_priv *pledpriv = &(Adapter->ledpriv);
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
-#ifdef CONFIG_SW_LED
-	pledpriv->bRegUseLed = _TRUE;
-
-	/* */
-	/* Led mode */
-	/* */
-	switch (pHalData->CustomerID) {
-	case RT_CID_DEFAULT:
-		pledpriv->LedStrategy = SW_LED_MODE1;
-		pledpriv->bRegUseLed = _TRUE;
-		break;
-
-	case RT_CID_819x_HP:
-		pledpriv->LedStrategy = SW_LED_MODE6;
-		break;
-
-	default:
-		pledpriv->LedStrategy = SW_LED_MODE1;
-		break;
-	}
-
-/*	if( BOARD_MINICARD == pHalData->BoardType ) */
-/*	{ */
-/*		pledpriv->LedStrategy = SW_LED_MODE6; */
-/*	} */
-	pHalData->bLedOpenDrain = _TRUE;/* Support Open-drain arrangement for controlling the LED. Added by Roger, 2009.10.16. */
-#else /* HW LED */
-	pledpriv->LedStrategy = HW_LED;
-#endif /*CONFIG_SW_LED */
-}
-
-static VOID
 _ReadThermalMeter(
 	IN	PADAPTER	Adapter,
 	IN	u8	*PROMContent,
@@ -1513,7 +1472,6 @@ static void _rtl8188fu_read_adapter_info(PADAPTER padapter)
 
 	Hal_EfuseParseChnlPlan_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
 	Hal_EfuseParseThermalMeter_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
-/* _ReadLEDSetting(Adapter, PROMContent, pHalData->bautoload_fail_flag); */
 	Hal_EfuseParsePowerSavingMode_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
 	Hal_EfuseParseAntennaDiversity_8188F(padapter, hwinfo, pHalData->bautoload_fail_flag);
 
