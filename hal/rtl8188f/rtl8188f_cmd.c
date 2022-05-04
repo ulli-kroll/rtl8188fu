@@ -851,26 +851,3 @@ void rtl8188f_fw_try_ap_cmd(PADAPTER padapter, u32 need_ack)
 }
 #endif
 
-#ifdef CONFIG_TSF_RESET_OFFLOAD
-/*
-	ask FW to Reset sync register at Beacon early interrupt
-*/
-u8 rtl8188f_reset_tsf(_adapter *padapter, u8 reset_port)
-{
-	u8	buf[2];
-	u8	res = _SUCCESS;
-
-	if (IFACE_PORT0 == reset_port) {
-		buf[0] = 0x1;
-		buf[1] = 0;
-
-	} else {
-		buf[0] = 0x0;
-		buf[1] = 0x1;
-	}
-	rtl8188fu_fill_h2c_cmd(padapter, H2C_8188F_RESET_TSF, 2, buf);
-
-	return res;
-}
-#endif	/* CONFIG_TSF_RESET_OFFLOAD */
-

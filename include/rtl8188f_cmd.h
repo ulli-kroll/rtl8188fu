@@ -196,9 +196,6 @@ void CheckFwRsvdPageContent(PADAPTER padapter);
 
 void rtl8188f_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param);
 
-#ifdef CONFIG_TSF_RESET_OFFLOAD
-u8 rtl8188f_reset_tsf(_adapter *padapter, u8 reset_port);
-#endif	// CONFIG_TSF_RESET_OFFLOAD
 s32 rtl8188fu_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
 u8 GetTxBufferRsvdPageNum8188F(_adapter *padapter, bool wowlan);
 #endif

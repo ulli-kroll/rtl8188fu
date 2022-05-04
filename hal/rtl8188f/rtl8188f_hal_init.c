@@ -2605,27 +2605,6 @@ void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 
 }
 
-#ifdef CONFIG_TSF_RESET_OFFLOAD
-int reset_tsf(PADAPTER Adapter, u8 reset_port)
-{
-	u8 reset_cnt_before = 0, reset_cnt_after = 0, loop_cnt = 0;
-	u32 reg_reset_tsf_cnt = (IFACE_PORT0 == reset_port) ?
-							REG_FW_RESET_TSF_CNT_0 : REG_FW_RESET_TSF_CNT_1;
-
-	rtw_scan_abort(Adapter->pbuddy_adapter);	/*	site survey will cause reset_tsf fail	*/
-	reset_cnt_after = reset_cnt_before = rtw_read8(Adapter, reg_reset_tsf_cnt);
-	rtl8188f_reset_tsf(Adapter, reset_port);
-
-	while ((reset_cnt_after == reset_cnt_before) && (loop_cnt < 10)) {
-		rtw_msleep_os(100);
-		loop_cnt++;
-		reset_cnt_after = rtw_read8(Adapter, reg_reset_tsf_cnt);
-	}
-
-	return (loop_cnt >= 10) ? _FAIL : _TRUE;
-}
-#endif /* CONFIG_TSF_RESET_OFFLOAD */
-
 /* ULLI : note about receive config, registers and values */
 
 static void hw_var_set_monitor(PADAPTER Adapter, u8 variable, u8 *val)
@@ -2781,14 +2760,6 @@ static void hw_var_set_opmode(PADAPTER padapter, u8 variable, u8 *val)
 			val8 = rtw_read8(padapter, REG_BCN_CTRL_1);
 			val8 |= DIS_ATIM;
 			rtw_write8(padapter, REG_BCN_CTRL_1, val8);
-#ifdef CONFIG_TSF_RESET_OFFLOAD
-			/* Reset TSF for STA+AP concurrent mode */
-			if (check_buddy_fwstate(padapter, (WIFI_STATION_STATE | WIFI_ASOC_STATE))) {
-				if (reset_tsf(padapter, IFACE_PORT0) == _FALSE)
-					DBG_871X("ERROR! %s()-%d: Reset port0 TSF fail\n",
-							 __func__, __LINE__);
-			}
-#endif	/* CONFIG_TSF_RESET_OFFLOAD */
 		}
 	}
 }
