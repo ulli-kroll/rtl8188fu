@@ -2428,9 +2428,8 @@ static void fill_txdesc_phy_8188f(PADAPTER padapter, struct pkt_attrib *pattrib,
 	}
 }
 
-static void rtl8188f_fill_default_txdesc(
-	struct xmit_frame *pxmitframe,
-	u8 *pbuf)
+
+void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 {
 	PADAPTER padapter;
 	HAL_DATA_TYPE *pHalData;
@@ -2599,23 +2598,11 @@ static void rtl8188f_fill_default_txdesc(
 	/* 2010.06.23. Added by tynli. */
 	if (!pattrib->qos_en)
 		SET_TX_DESC_HWSEQ_EN_8188F(pbuf, 1);
-}
-
-/*
- *	Description:
- *
- *	Parameters:
- *		pxmitframe	xmitframe
- *		pbuf		where to fill tx desc
- */
-void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
-{
-	PADAPTER padapter = pxmitframe->padapter;
-	rtl8188f_fill_default_txdesc(pxmitframe, pbuf);
 
 #if defined(CONFIG_USB_HCI)
 	rtl8188f_cal_txdesc_chksum((struct tx_desc *)pbuf);
 #endif
+
 }
 
 #ifdef CONFIG_TSF_RESET_OFFLOAD
