@@ -619,9 +619,9 @@ s32 rtw_hal_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBu
 }
 
 void rtw_hal_fill_fake_txdesc(_adapter* padapter, u8* pDesc, u32 BufferLen,
-		u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame)
+		u8 IsPsPoll)
 {
-	padapter->HalFunc.fill_fake_txdesc(padapter, pDesc, BufferLen,IsPsPoll, IsBTQosNull, bDataFrame);
+	padapter->HalFunc.fill_fake_txdesc(padapter, pDesc, BufferLen,IsPsPoll);
 
 }
 u8 rtw_hal_get_txbuff_rsvd_page_num(_adapter *adapter, bool wowlan)

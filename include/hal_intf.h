@@ -300,7 +300,7 @@ struct hal_ops {
 	c2h_id_filter c2h_id_filter_ccx;
 	s32 (*fill_h2c_cmd)(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
 	void (*fill_fake_txdesc)(PADAPTER, u8 *pDesc, u32 BufferLen,
-			u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
+			u8 IsPsPoll);
 	s32 (*fw_dl)(_adapter *adapter);
 
 	u8 (*hal_get_tx_buff_rsvd_page_num)(_adapter *adapter, bool wowlan);
@@ -499,7 +499,7 @@ s32 rtw_hal_macid_wakeup(PADAPTER padapter, u8 macid);
 
 s32 rtw_hal_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
 void rtw_hal_fill_fake_txdesc(_adapter *padapter, u8 *pDesc, u32 BufferLen,
-		u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
+		u8 IsPsPoll);
 u8 rtw_hal_get_txbuff_rsvd_page_num(_adapter *adapter, bool wowlan);
 
 #ifdef CONFIG_GPIO_API

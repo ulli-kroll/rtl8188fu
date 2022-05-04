@@ -283,7 +283,7 @@
 
 
 void rtl8188f_update_txdesc(struct xmit_frame *pxmitframe, u8 *pmem);
-void rtl8188f_fill_fake_txdesc(PADAPTER padapter, u8 *pDesc, u32 BufferLen, u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
+void rtl8188f_fill_fake_txdesc(PADAPTER padapter, u8 *pDesc, u32 BufferLen, u8 IsPsPoll);
 
 #ifdef CONFIG_USB_HCI
 s32 rtl8188fu_xmit_buf_handler(PADAPTER padapter);

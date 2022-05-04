@@ -1636,11 +1636,12 @@ void rtl8188f_fill_fake_txdesc(
 	PADAPTER	padapter,
 	u8			*pDesc,
 	u32			BufferLen,
-	u8			IsPsPoll,
-	u8			IsBTQosNull,
-	u8			bDataFrame)
+	u8			IsPsPoll)
 {
-	/* Clear all status */
+	u8 IsBTQosNull = _FALSE;
+	u8 bDataFrame = _FALSE;
+ 
+ 	/* Clear all status */
 	_rtw_memset(pDesc, 0, TXDESC_SIZE);
 
 	SET_TX_DESC_FIRST_SEG_8188F(pDesc, 1); /*bFirstSeg; */

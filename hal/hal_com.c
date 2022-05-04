@@ -1623,7 +1623,7 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 			get_my_bssid(&pmlmeinfo->network), _FALSE);
 		rtw_hal_fill_fake_txdesc(adapter,
 			&ReservedPagePacket[BufIndex-TxDescLen],
-			ProbeRspLength, _FALSE, _FALSE, _FALSE);
+			ProbeRspLength, _FALSE);
 
 		CurtPktPageNum = (u8)PageNum(TxDescLen + ProbeRspLength, PageSize);
 		TotalPageNum += CurtPktPageNum;
@@ -1639,7 +1639,7 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 			&ReservedPagePacket[BufIndex], &PSPollLength);
 	rtw_hal_fill_fake_txdesc(adapter,
 			&ReservedPagePacket[BufIndex-TxDescLen],
-			PSPollLength, _TRUE, _FALSE, _FALSE);
+			PSPollLength, _TRUE);
 
 	CurtPktPageNum = (u8)PageNum((TxDescLen + PSPollLength), PageSize);
 
@@ -1659,7 +1659,7 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 			_FALSE, 0, 0, _FALSE);
 	rtw_hal_fill_fake_txdesc(adapter,
 			&ReservedPagePacket[BufIndex-TxDescLen],
-			NullDataLength, _FALSE, _FALSE, _FALSE);
+			NullDataLength, _FALSE);
 
 	CurtPktPageNum = (u8)PageNum(TxDescLen + NullDataLength, PageSize);
 
@@ -1678,7 +1678,7 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 			_TRUE, 0, 0, _FALSE);
 	rtw_hal_fill_fake_txdesc(adapter,
 			&ReservedPagePacket[BufIndex-TxDescLen],
-			QosNullLength, _FALSE, _FALSE, _FALSE);
+			QosNullLength, _FALSE);
 
 	CurtPktPageNum = (u8)PageNum(TxDescLen + QosNullLength, PageSize);
 
