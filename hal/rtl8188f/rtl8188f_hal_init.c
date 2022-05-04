@@ -1638,9 +1638,6 @@ void rtl8188f_fill_fake_txdesc(
 	u32			BufferLen,
 	u8			IsPsPoll)
 {
-	u8 IsBTQosNull = _FALSE;
-	u8 bDataFrame = _FALSE;
- 
  	/* Clear all status */
 	_rtw_memset(pDesc, 0, TXDESC_SIZE);
 
@@ -1661,41 +1658,10 @@ void rtl8188f_fill_fake_txdesc(
 		SET_TX_DESC_HWSEQ_SEL_8188F(pDesc, 0);
 	}
 
-	if (_TRUE == IsBTQosNull)
-		SET_TX_DESC_BT_INT_8188F(pDesc, 1);
-
 	SET_TX_DESC_USE_RATE_8188F(pDesc, 1); /* use data rate which is set by Sw */
 	SET_TX_DESC_OWN_8188F((pu1Byte)pDesc, 1);
 
 	SET_TX_DESC_TX_RATE_8188F(pDesc, DESC8188F_RATE1M);
-
-	/* */
-	/* Encrypt the data frame if under security mode excepct null data. Suggested by CCW. */
-	/* */
-	if (_TRUE == bDataFrame) {
-		u32 EncAlg;
-
-		EncAlg = padapter->securitypriv.dot11PrivacyAlgrthm;
-		switch (EncAlg) {
-		case _NO_PRIVACY_:
-			SET_TX_DESC_SEC_TYPE_8188F(pDesc, 0x0);
-			break;
-		case _WEP40_:
-		case _WEP104_:
-		case _TKIP_:
-			SET_TX_DESC_SEC_TYPE_8188F(pDesc, 0x1);
-			break;
-		case _SMS4_:
-			SET_TX_DESC_SEC_TYPE_8188F(pDesc, 0x2);
-			break;
-		case _AES_:
-			SET_TX_DESC_SEC_TYPE_8188F(pDesc, 0x3);
-			break;
-		default:
-			SET_TX_DESC_SEC_TYPE_8188F(pDesc, 0x0);
-			break;
-		}
-	}
 
 #if defined(CONFIG_USB_HCI)
 	/* USB interface drop packet if the checksum of descriptor isn't correct. */
