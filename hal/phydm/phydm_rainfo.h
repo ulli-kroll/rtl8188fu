@@ -137,29 +137,6 @@ typedef struct _ODM_RA_Info_ {
 typedef struct _Rate_Adaptive_Table_ {
 	u1Byte		firstconnect;
 
-#if (defined(CONFIG_RA_DBG_CMD))
-	BOOLEAN		is_ra_dbg_init;
-
-	u1Byte	RTY_P[ODM_NUM_RATE_IDX];
-	u1Byte	RTY_P_default[ODM_NUM_RATE_IDX];
-	BOOLEAN	RTY_P_modify_note[ODM_NUM_RATE_IDX];
-
-	u1Byte	RATE_UP_RTY_RATIO[ODM_NUM_RATE_IDX];
-	u1Byte	RATE_UP_RTY_RATIO_default[ODM_NUM_RATE_IDX];
-	BOOLEAN	RATE_UP_RTY_RATIO_modify_note[ODM_NUM_RATE_IDX];
-
-	u1Byte	RATE_DOWN_RTY_RATIO[ODM_NUM_RATE_IDX];
-	u1Byte	RATE_DOWN_RTY_RATIO_default[ODM_NUM_RATE_IDX];
-	BOOLEAN	RATE_DOWN_RTY_RATIO_modify_note[ODM_NUM_RATE_IDX];
-
-	BOOLEAN RA_Para_feedback_req;
-
-	u1Byte   para_idx;
-	u1Byte	rate_idx;
-	u1Byte	value;
-	u2Byte	value_16;
-	u1Byte	rate_length;
-#endif
 	u1Byte	link_tx_rate[ODM_ASSOCIATE_ENTRY_NUM];
 
 } RA_T, *pRA_T;

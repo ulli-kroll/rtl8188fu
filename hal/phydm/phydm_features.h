@@ -25,8 +25,5 @@
 
 	/*Antenna Diversity*/
 	
-	/*#define CONFIG_RA_DBG_CMD*/
-
-
 
 #endif
