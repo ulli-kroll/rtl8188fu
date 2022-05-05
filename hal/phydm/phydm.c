@@ -216,7 +216,6 @@ ODM_DMInit(
 	Phydm_AdaptivityInit(pDM_Odm);
 	phydm_ra_info_init(pDM_Odm);
 	odm_RateAdaptiveMaskInit(pDM_Odm);
-	odm_RA_ParaAdjust_init(pDM_Odm);
 	ODM_CfoTrackingInit(pDM_Odm);
 	ODM_EdcaTurboInit(pDM_Odm);
 	odm_RSSIMonitorInit(pDM_Odm);
@@ -342,7 +341,6 @@ _rtl8188fu_dm_watchdog(
 	odm_CCKPacketDetectionThresh(pDM_Odm);
 
 	/* ULLI : phydm functions for rate decition , in mac80211 */
-	phydm_ra_dynamic_retry_limit(pDM_Odm);
 	phydm_ra_dynamic_retry_count(pDM_Odm);
 	odm_RefreshRateAdaptiveMask(pDM_Odm);
 	odm_RefreshBasicRateMask(pDM_Odm);

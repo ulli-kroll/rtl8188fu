@@ -25,31 +25,6 @@
 #include "phydm_precomp.h"
 
 VOID
-ODM_C2HRaParaReportHandler(
-	IN	PVOID	pDM_VOID,
-	IN pu1Byte   CmdBuf,
-	IN u1Byte   CmdLen
-)
-{
-}
-
-VOID
-odm_RA_debug(
-	IN		PVOID		pDM_VOID,
-	IN		u4Byte		*const dm_value
-)
-{
-}
-
-VOID
-odm_RA_ParaAdjust_init(
-	IN		PVOID		pDM_VOID
-)
-
-{
-}
-
-VOID
 phydm_ra_dynamic_retry_count(
 	IN	PVOID	pDM_VOID
 )
@@ -73,13 +48,6 @@ phydm_ra_dynamic_retry_count(
 		}
 		pDM_Odm->pre_b_noisy = pDM_Odm->NoisyDecision;
 	}
-}
-
-VOID
-phydm_ra_dynamic_retry_limit(
-	IN	PVOID	pDM_VOID
-)
-{
 }
 
 

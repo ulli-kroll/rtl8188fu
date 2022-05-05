@@ -518,10 +518,6 @@ phydm_c2H_content_parsing(
 		phydm_c2h_ra_report_handler(pDM_Odm, tmpBuf, c2hCmdLen);
 		break;
 
-	case PHYDM_C2H_RA_PARA_RPT:
-		ODM_C2HRaParaReportHandler(pDM_Odm, tmpBuf, c2hCmdLen);
-		break;
-		
 	case PHYDM_C2H_IQK_FINISH:
 		break;
 
