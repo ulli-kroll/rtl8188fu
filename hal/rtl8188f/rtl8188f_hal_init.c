@@ -492,7 +492,6 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter)
 
 	fwdl_start_time = rtw_get_current_time();
 
-#if 1
 	DBG_871X("%s by IO write!\n", __func__);
 
 	/*
@@ -519,68 +518,6 @@ s32 rtl8188f_FirmwareDownload(PADAPTER padapter)
 		if (rtStatus == _SUCCESS)
 			break;
 	}
-#else
-	DBG_871X("%s by Tx pkt write!\n", __func__);
-
-	if ((rtw_read8(padapter, REG_MCUFWDL) & MCUFWDL_RDY) == 0) {
-		/* DLFW use HIQ only */
-		value32 = 0xFF | BIT(31);
-		rtw_write32(padapter, REG_RQPN, value32);
-
-		/* Set beacon boundary to TXFIFO header */
-		rtw_write8(padapter, REG_BCNQ_BDNY, 0);
-		rtw_write16(padapter, REG_DWBCN0_CTRL_8188F + 1, BIT(8));
-
-		/* SDIO need read this register before send packet */
-		rtw_read32(padapter, 0x10250020);
-
-		_FWDownloadEnable(padapter, _TRUE);
-
-		/* Get original check sum */
-		new_chk_sum = *(pFirmwareBuf + FirmwareLen - 2) | ((u16) *(pFirmwareBuf + FirmwareLen - 1) << 8);
-
-		/* Send ram code flow */
-		dma_iram_sel = 0;
-		mem_offset = 0;
-		pkt_size_tmp = FirmwareLen;
-		while (0 != pkt_size_tmp) {
-			if (pkt_size_tmp >= FW_DOWNLOAD_SIZE_8188F) {
-				send_pkt_size = FW_DOWNLOAD_SIZE_8188F;
-				/* Modify check sum value */
-				new_chk_sum = (u16)(new_chk_sum ^ (((send_pkt_size - 1) << 2) - TXDESC_SIZE));
-			} else {
-				send_pkt_size = pkt_size_tmp;
-				new_chk_sum = (u16)(new_chk_sum ^ ((send_pkt_size << 2) - TXDESC_SIZE));
-
-			}
-
-			if (send_pkt_size == pkt_size_tmp) {
-				/* last partition packet, write new check sum to ram code file */
-				*(pFirmwareBuf + FirmwareLen - 2) = new_chk_sum & 0xFF;
-				*(pFirmwareBuf + FirmwareLen - 1) = (new_chk_sum & 0xFF00) >> 8;
-			}
-
-			/* IRAM select */
-			rtw_write8(padapter, REG_MCUFWDL + 1, (rtw_read8(padapter, REG_MCUFWDL + 1) & 0x3F) | (dma_iram_sel << 6));
-			/* Enable DMA */
-			rtw_write8(padapter, REG_MCUFWDL + 1, rtw_read8(padapter, REG_MCUFWDL + 1) | BIT(5));
-
-			if (_FALSE == send_fw_packet(padapter, pFirmwareBuf + mem_offset, send_pkt_size)) {
-				DBG_871X("%s: Send FW fail !\n", __func__);
-				rtStatus = _FAIL;
-				goto DLFW_FAIL;
-			}
-
-			dma_iram_sel++;
-			mem_offset += send_pkt_size;
-			pkt_size_tmp -= send_pkt_size;
-		}
-	} else {
-		DBG_871X("%s: Download FW fail since MCUFWDL_RDY is not set!\n", __func__);
-		rtStatus = _FAIL;
-		goto DLFW_FAIL;
-	}
-#endif
 
 	_FWDownloadEnable(padapter, _FALSE);
 
