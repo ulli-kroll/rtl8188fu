@@ -2878,20 +2878,6 @@ static void hw_var_set_hw_update_tsf(PADAPTER padapter)
 	pmlmeext->en_hw_update_tsf = _FALSE;
 }
 
-void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len)
-{
-	u8 seq_no;
-
-#define	GET_8188F_C2H_TX_RPT_LIFE_TIME_OVER(_Header)	LE_BITS_TO_1BYTE((_Header + 0), 6, 1)
-#define	GET_8188F_C2H_TX_RPT_RETRY_OVER(_Header)	LE_BITS_TO_1BYTE((_Header + 0), 7, 1)
-
-	/*DBG_871X("%s, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", __func__, */
-	/*		*pdata, *(pdata+1), *(pdata+2), *(pdata+3), *(pdata+4), *(pdata+5), *(pdata+6), *(pdata+7)); */
-
-	seq_no = *(pdata + 6);
-
-}
-
 s32 c2h_id_filter_ccx_8188f(u8 *buf)
 {
 	struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)buf;
@@ -2955,9 +2941,6 @@ static void process_c2h_event(PADAPTER padapter, PC2H_EVT_HDR pC2hEvent, u8 *c2h
 	}
 
 	switch (pC2hEvent->CmdID) {
-	case C2H_CCX_TX_RPT:
-		CCX_FwC2HTxRpt_8188f(padapter, c2hBuf, pC2hEvent->CmdLen);
-		break;
 
 	default:
 		if (!(phydm_c2H_content_parsing(pDM_Odm, pC2hEvent->CmdID, pC2hEvent->CmdLen, c2hBuf)))

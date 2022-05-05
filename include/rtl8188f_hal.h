@@ -220,7 +220,6 @@ void _8051Reset8188(PADAPTER padapter);
 void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);
 
-void CCX_FwC2HTxRpt_8188f(PADAPTER padapter, u8 *pdata, u8 len);
 s32 c2h_id_filter_ccx_8188f(u8 *buf);
 s32 c2h_handler_8188f(PADAPTER padapter, u8 *pC2hEvent);
 u8 MRateToHwRate8188F(u8  rate);
