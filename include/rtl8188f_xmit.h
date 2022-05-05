@@ -109,6 +109,7 @@
 #define SET_TX_DESC_PKT_SIZE_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 0, 16, __Value)
 #define SET_TX_DESC_OFFSET_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 16, 8, __Value)
 #define SET_TX_DESC_BMC_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 24, 1, __Value)
+#define SET_TX_DESC_HTC_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 25, 1, __Value)
 #define SET_TX_DESC_LAST_SEG_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 26, 1, __Value)
 #define SET_TX_DESC_FIRST_SEG_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 27, 1, __Value)
 #define SET_TX_DESC_LINIP_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc, 28, 1, __Value)
@@ -124,9 +125,10 @@
 
 
 // Dword 2
-#define SET_TX_DESC_CCA_RTS_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 10, 2, __Value)
 #define SET_TX_DESC_AGG_ENABLE_8188F(__pTxDesc, __Value)		SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 12, 1, __Value)
+#define SET_TX_DESC_RDG_ENABLE_8188F(__pTxDesc, __Value)		SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 13, 1, __Value)
 #define SET_TX_DESC_AGG_BREAK_8188F(__pTxDesc, __Value) 				SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 16, 1, __Value)
+#define SET_TX_DESC_MORE_FRAG_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 17, 1, __Value)
 #define SET_TX_DESC_AMPDU_DENSITY_8188F(__pTxDesc, __Value) SET_BITS_TO_LE_4BYTE(__pTxDesc+8, 20, 3, __Value)
 
 

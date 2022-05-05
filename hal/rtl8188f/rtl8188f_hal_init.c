@@ -2404,7 +2404,6 @@ static void fill_txdesc_vcs_8188f(PADAPTER padapter, struct pkt_attrib *pattrib,
 #if 1 /* TODO: */
 	/* Protection mode related */
 	if (pattrib->vcs_mode) {
-		/* SET_TX_DESC_CCA_RTS_8188F(ptxdesc, pTcb->RTSCCA); */
 		SET_TX_DESC_RTS_RATE_8188F(ptxdesc, 8); /*TODO: Hardcode?, RTS Rate=24M (8) */
 		SET_TX_DESC_RTS_RATE_FB_LIMIT_8188F(ptxdesc, 0xF); /* TODO: PROTECTION_MODE ?? */
 
