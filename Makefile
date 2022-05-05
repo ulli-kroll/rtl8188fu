@@ -103,7 +103,6 @@ _HAL_INTFS_FILES +=	hal/rtl8188f/rtl8188f_hal_init.o \
 			hal/rtl8188f/rtl8188f_phycfg.o \
 			hal/rtl8188f/rtl8188f_rf6052.o \
 			hal/rtl8188f/rtl8188f_dm.o \
-			hal/rtl8188f/rtl8188f_rxdesc.o \
 			hal/rtl8188f/rtl8188f_cmd.o \
 
 
