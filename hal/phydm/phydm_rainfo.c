@@ -25,33 +25,6 @@
 #include "phydm_precomp.h"
 
 VOID
-phydm_ra_dynamic_retry_count(
-	IN	PVOID	pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	pRA_T		        pRA_Table = &pDM_Odm->DM_RA_Table;
-	PSTA_INFO_T		pEntry;
-	u1Byte	i, retry_offset;
-	u4Byte	ma_rx_tp;
-	/*ODM_RT_TRACE(pDM_Odm, ODM_COMP_RATE_ADAPTIVE, ODM_DBG_LOUD, ("pDM_Odm->pre_b_noisy = %d\n", pDM_Odm->pre_b_noisy ));*/
-	if (pDM_Odm->pre_b_noisy != pDM_Odm->NoisyDecision) {
-
-		if (pDM_Odm->NoisyDecision) {
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_RATE_ADAPTIVE, ODM_DBG_LOUD, ("->Noisy Env. RA fallback value\n"));
-			ODM_SetMACReg(pDM_Odm, 0x430, bMaskDWord, 0x0);
-			ODM_SetMACReg(pDM_Odm, 0x434, bMaskDWord, 0x04030201);		
-		} else {
-			ODM_RT_TRACE(pDM_Odm, ODM_COMP_RATE_ADAPTIVE, ODM_DBG_LOUD, ("->Clean Env. RA fallback value\n"));
-			ODM_SetMACReg(pDM_Odm, 0x430, bMaskDWord, 0x02010000);
-			ODM_SetMACReg(pDM_Odm, 0x434, bMaskDWord, 0x06050403);		
-		}
-		pDM_Odm->pre_b_noisy = pDM_Odm->NoisyDecision;
-	}
-}
-
-
-VOID
 phydm_c2h_ra_report_handler(
 	IN PVOID	pDM_VOID,
 	IN pu1Byte   CmdBuf,
@@ -251,8 +224,6 @@ s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
 		H2C_Parameter[3] |= RAINFO_BF_STATE;
 	if (STBC_TX)
 		H2C_Parameter[3] |= RAINFO_STBC_STATE;
-	if (pDM_Odm->NoisyDecision)
-		H2C_Parameter[3] |= RAINFO_NOISY_STATE;
 		
 	if (pEntry->ra_rpt_linked == _FALSE) {
 		H2C_Parameter[3] |= RAINFO_INIT_RSSI_RATE_STATE;

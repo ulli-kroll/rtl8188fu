@@ -660,11 +660,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	BOOLEAN			fw_buff_is_enpty;
 	u4Byte			data_frame_num;
 
-	/*for noise detection*/
-	BOOLEAN			NoisyDecision; /*b_noisy*/
-	BOOLEAN			pre_b_noisy;	
-	u4Byte			NoisyDecision_Smooth;
-
 	//
 	//2 Define STA info.
 	// _ODM_STA_INFO
@@ -1057,10 +1052,6 @@ PhyDM_Get_Structure(
 #define TARGET_CHNL_NUM_2G_5G	59
 
 //===========================================================
-
-
-VOID phydm_NoisyDetection(IN	PDM_ODM_T	pDM_Odm	);
-
 
 #endif
 

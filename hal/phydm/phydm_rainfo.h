@@ -165,10 +165,6 @@ odm_RA_ParaAdjust(
 	IN		PVOID		pDM_VOID
 );
 
-VOID
-phydm_ra_dynamic_retry_count(
-	IN	PVOID	pDM_VOID
-);
 
 VOID
 phydm_ra_dynamic_rate_id_on_assoc(

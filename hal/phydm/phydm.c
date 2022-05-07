@@ -310,9 +310,6 @@ _rtl8188fu_dm_watchdog(
 	/* ULLI : function name in rtlwifi */
 	rtl9188fu_dm_false_alarm_counter_statistics(pDM_Odm);
 
-	/* ULLI : some obscure noise dectection, we can/should drop */
-	phydm_NoisyDetection(pDM_Odm);
-	
 	/* ULLI : phydm functions for rate decition and RSSI phy*/
 	odm_RSSIMonitorCheck(pDM_Odm);
 
@@ -341,7 +338,6 @@ _rtl8188fu_dm_watchdog(
 	odm_CCKPacketDetectionThresh(pDM_Odm);
 
 	/* ULLI : phydm functions for rate decition , in mac80211 */
-	phydm_ra_dynamic_retry_count(pDM_Odm);
 	odm_RefreshRateAdaptiveMask(pDM_Odm);
 	odm_RefreshBasicRateMask(pDM_Odm);
 
@@ -987,137 +983,4 @@ ODM_AsocEntry_Init(
 /*===========================================================*/
 /*#define TARGET_CHNL_NUM_2G_5G	59*/
 /*===========================================================*/
-
-VOID
-phydm_NoisyDetection(
-	IN	PDM_ODM_T	pDM_Odm
-	)
-{
-	u4Byte  Total_FA_Cnt, Total_CCA_Cnt;
-	u4Byte  Score = 0, i, Score_Smooth;
-    
-	Total_CCA_Cnt = pDM_Odm->FalseAlmCnt.cnt_cca_all;
-	Total_FA_Cnt  = pDM_Odm->FalseAlmCnt.cnt_all;    
-
-/*
-    if( Total_FA_Cnt*16>=Total_CCA_Cnt*14 )         // 87.5
-    
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*12 )    // 75
-    
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*10 )    // 56.25
-    
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*8 )     // 50
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*7 )     // 43.75
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*6 )     // 37.5
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*5 )     // 31.25%
-        
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*4 )     // 25%
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*3 )     // 18.75%
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*2 )     // 12.5%
-
-    else if( Total_FA_Cnt*16>=Total_CCA_Cnt*1 )     // 6.25%
-*/
-    for(i=0;i<=16;i++)
-    {
-        if( Total_FA_Cnt*16>=Total_CCA_Cnt*(16-i) )
-        {
-            Score = 16-i;
-            break;
-        }
-    }
-
-    // NoisyDecision_Smooth = NoisyDecision_Smooth>>1 + (Score<<3)>>1;
-    pDM_Odm->NoisyDecision_Smooth = (pDM_Odm->NoisyDecision_Smooth>>1) + (Score<<2);
-
-    // Round the NoisyDecision_Smooth: +"3" comes from (2^3)/2-1
-    Score_Smooth = (Total_CCA_Cnt>=300)?((pDM_Odm->NoisyDecision_Smooth+3)>>3):0;
-
-    pDM_Odm->NoisyDecision = (Score_Smooth>=3)?1:0;
-/*
-    switch(Score_Smooth)
-    {
-        case 0:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=0%%\n"));
-            break;
-        case 1:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=6.25%%\n"));
-            break;
-        case 2:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=12.5%%\n"));
-            break;
-        case 3:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=18.75%%\n"));
-            break;
-        case 4:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=25%%\n"));
-            break;
-        case 5:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=31.25%%\n"));
-            break;
-        case 6:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=37.5%%\n"));
-            break;
-        case 7:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=43.75%%\n"));
-            break;
-        case 8:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=50%%\n"));
-            break;
-        case 9:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=56.25%%\n"));
-            break;
-        case 10:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=62.5%%\n"));
-            break;
-        case 11:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=68.75%%\n"));
-            break;
-        case 12:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=75%%\n"));
-            break;
-        case 13:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=81.25%%\n"));
-            break;
-        case 14:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=87.5%%\n"));
-            break;
-        case 15:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=93.75%%\n"));            
-            break;
-        case 16:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Total_FA_Cnt/Total_CCA_Cnt=100%%\n"));
-            break;
-        default:
-            ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD,
-            ("[NoisyDetection] Unknown Value!! Need Check!!\n"));            
-    }
-*/        
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_NOISY_DETECT, ODM_DBG_LOUD,
-	("[NoisyDetection] Total_CCA_Cnt=%d, Total_FA_Cnt=%d, NoisyDecision_Smooth=%d, Score=%d, Score_Smooth=%d, pDM_Odm->NoisyDecision=%d\n",
-	Total_CCA_Cnt, Total_FA_Cnt, pDM_Odm->NoisyDecision_Smooth, Score, Score_Smooth, pDM_Odm->NoisyDecision));
-	
-}
-
 
