@@ -32,10 +32,6 @@
 
 
 //DWORD 0
-#define SET_RX_STATUS_DESC_PKT_LEN_8188F(__pRxStatusDesc, __Value)		SET_BITS_TO_LE_4BYTE( __pRxStatusDesc, 0, 14, __Value)
-#define SET_RX_STATUS_DESC_EOR_8188F(__pRxStatusDesc, __Value)		SET_BITS_TO_LE_4BYTE( __pRxStatusDesc, 30, 1, __Value)
-#define SET_RX_STATUS_DESC_OWN_8188F(__pRxStatusDesc, __Value)		SET_BITS_TO_LE_4BYTE( __pRxStatusDesc, 31, 1, __Value)
-
 #define GET_RX_STATUS_DESC_PKT_LEN_8188F(__pRxStatusDesc)			LE_BITS_TO_4BYTE( __pRxStatusDesc, 0, 14)
 #define GET_RX_STATUS_DESC_CRC32_8188F(__pRxStatusDesc) 		LE_BITS_TO_4BYTE( __pRxStatusDesc, 14, 1)
 #define GET_RX_STATUS_DESC_ICV_8188F(__pRxStatusDesc)				LE_BITS_TO_4BYTE( __pRxStatusDesc, 15, 1)
