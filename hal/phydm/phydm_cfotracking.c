@@ -162,35 +162,4 @@ ODM_CfoTracking(
 	}
 }
 
-VOID
-ODM_ParsingCFO(
-	IN		PVOID			pDM_VOID,
-	IN		PVOID			pPktinfo_VOID,
-	IN		s1Byte* 			pcfotail
-	)
-{
-	PDM_ODM_T				pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PODM_PACKET_INFO_T		pPktinfo = (PODM_PACKET_INFO_T)pPktinfo_VOID;
-	PCFO_TRACKING			pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
-	u1Byte					i;
-
-	if(!(pDM_Odm->SupportAbility & ODM_BB_CFO_TRACKING))
-		return;
-
-	if(pPktinfo->bPacketMatchBSSID)
-	{				
-		//3 Update CFO report for path-A & path-B
-		// Only paht-A and path-B have CFO tail and short CFO
-		for(i = ODM_RF_PATH_A; i <= ODM_RF_PATH_B; i++)   
-		{
-			pCfoTrack->CFO_tail[i] = (int)pcfotail[i];
-	 	}
-
-		//3 Update packet counter
-		if(pCfoTrack->packetCount == 0xffffffff)
-			pCfoTrack->packetCount = 0;
-		else
-	 		pCfoTrack->packetCount++;
-	}
-}
 

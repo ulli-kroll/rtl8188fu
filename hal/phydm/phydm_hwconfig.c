@@ -460,8 +460,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 				}
 			}
 		}
-
-		ODM_ParsingCFO(pDM_Odm, pPktinfo, pPhyStaRpt->path_cfotail);
 		
 	}
 	//UI BSS List signal strength(in percentage), make it good looking, from 0~100.

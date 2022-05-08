@@ -53,11 +53,4 @@ ODM_CfoTracking(
 	IN		PVOID					pDM_VOID
 );
 
-VOID
-ODM_ParsingCFO(
-	IN		PVOID					pDM_VOID,
-	IN		PVOID					pPktinfo_VOID,
-	IN     	s1Byte* 					pcfotail
-);
-
 #endif
