@@ -55,30 +55,6 @@ odm_QueryRxPwrPercentage(
 }
 
 
-//
-// 2012/01/12 MH MOve some signal strength smooth method to MP HAL layer.
-// IF other SW team do not support the feature, remove this section.??
-//
-s4Byte
-odm_SignalScaleMapping_92CSeries_patch_RT_CID_819x_Lenovo(	
-	IN OUT PDM_ODM_T pDM_Odm,
-	s4Byte CurrSig 
-)
-{	
-	s4Byte RetSig = 0;
-	return RetSig;
-}
-
-s4Byte
-odm_SignalScaleMapping_92CSeries_patch_RT_CID_819x_Netcore(	
-	IN OUT PDM_ODM_T pDM_Odm,
-	s4Byte CurrSig 
-)
-{
-	s4Byte RetSig = 0;
-	return RetSig;
-}
-
 
 s4Byte
 odm_SignalScaleMapping_92CSeries(	
