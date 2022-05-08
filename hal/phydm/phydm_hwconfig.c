@@ -314,7 +314,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 		u1Byte report;
 		u1Byte cck_agc_rpt;
 		
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK++;
 		// 
 		// (1)Hardware does not provide RSSI for CCK
 		// (2)PWDB, Average PWDB cacluated by hardware (for rate adaptive)
@@ -384,7 +383,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 	}
 	else //2 is OFDM rate
 	{
-		pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM++;
 
 		// 
 		// (1)Get RSSI for HT rate
@@ -411,7 +409,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
 
 			//Get Rx snr value in DB		
-			pPhyInfo->RxSNR[i] = pDM_Odm->PhyDbgInfo.RxSNRdB[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
+			pPhyInfo->RxSNR[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
 		
 			/* Record Signal Strength for next packet */
 			//if(pPktinfo->bPacketMatchBSSID)
@@ -542,9 +540,6 @@ odm_Process_RSSIForDM(
 			return;
 	}
 
-	if(pPktinfo->bPacketBeacon)
-		pDM_Odm->PhyDbgInfo.NumQryBeaconPkt++;
-	
 	isCCKrate = (pPktinfo->DataRate <= ODM_RATE11M )?TRUE :FALSE;
 	pDM_Odm->RxRate = pPktinfo->DataRate;
 

@@ -449,18 +449,6 @@ odm_DIG(
 			pDM_DigTable->rx_gain_range_min = odm_ForbiddenIGICheck(pDM_Odm, DIG_Dynamic_MIN, CurrentIGI);
 	}
 
-	//2 Abnormal # beacon case
-	if(pDM_Odm->bLinked && !FirstConnect)
-	{
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_DIG, ODM_DBG_LOUD, ("Beacon Num (%d)\n", pDM_Odm->PhyDbgInfo.NumQryBeaconPkt));
-		if((pDM_Odm->PhyDbgInfo.NumQryBeaconPkt < 5) && (pDM_Odm->bsta_state))
-		{
-			pDM_DigTable->rx_gain_range_min = dm_dig_min;
-			ODM_RT_TRACE(pDM_Odm,ODM_COMP_DIG, ODM_DBG_LOUD, ("odm_DIG(): Abnrormal #beacon (%d) case in STA mode: Force lower bound to 0x%x !!!!!!\n\n",
-				pDM_Odm->PhyDbgInfo.NumQryBeaconPkt, pDM_DigTable->rx_gain_range_min));
-		}
-	}
-
 	//2 Abnormal lower bound case
 	if(pDM_DigTable->rx_gain_range_min > pDM_DigTable->rx_gain_range_max)
 	{

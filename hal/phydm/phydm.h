@@ -150,20 +150,6 @@ typedef struct _ODM_Per_Pkt_Info_
 }ODM_PACKET_INFO_T,*PODM_PACKET_INFO_T;
 
 
-typedef struct _ODM_Phy_Dbg_Info_
-{
-	//ODM Write,debug info
-	s1Byte		RxSNRdB[4];
-	u4Byte		NumQryPhyStatus;
-	u4Byte		NumQryPhyStatusCCK;
-	u4Byte		NumQryPhyStatusOFDM;
-	u1Byte		NumQryBeaconPkt;
-	//Others
-	s4Byte		RxEVM[4];	
-	
-}ODM_PHY_DBG_INFO_T;
-
-
 typedef struct _ODM_Mac_Status_Info_
 {
 	u1Byte	test;
@@ -678,10 +664,6 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure
 	BOOLEAN				RaSupport88E;
 
 	// Define ...........
-
-	// Latest packet phy info (ODM write)
-	ODM_PHY_DBG_INFO_T	 PhyDbgInfo;
-	//PHY_INFO_88E		PhyInfo;
 
 	// Latest packet phy info (ODM write)
 	ODM_MAC_INFO		*pMacInfo;

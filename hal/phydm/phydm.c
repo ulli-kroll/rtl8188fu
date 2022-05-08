@@ -166,14 +166,6 @@ odm_CommonInfoSelfUpdate(
 
 }
 
-VOID
-odm_CommonInfoSelfReset(
-	IN		PDM_ODM_T		pDM_Odm
-	)
-{
-	pDM_Odm->PhyDbgInfo.NumQryBeaconPkt = 0;
-}
-
 PVOID
 PhyDM_Get_Structure(
 	IN		PDM_ODM_T		pDM_Odm,
@@ -348,8 +340,6 @@ _rtl8188fu_dm_watchdog(
 	odm_PathDiversity(pDM_Odm);
 	ODM_CfoTracking(pDM_Odm);
 
-	odm_CommonInfoSelfReset(pDM_Odm);
-	
 }
 
 
