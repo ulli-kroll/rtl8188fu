@@ -688,21 +688,7 @@ static inline char *  iwe_stream_rssi_process(_adapter *padapter,
 	}
 	
 	
-	#ifdef CONFIG_SIGNAL_DISPLAY_DBM
-	iwe->u.qual.level = (u8) translate_percentage_to_dbm(ss); /* dbm */
-	#else
-	#ifdef CONFIG_SIGNAL_SCALE_MAPPING
 	iwe->u.qual.level = (u8)ss; /* % */
-	#else
-	{
-		/* Do signal scale mapping when using percentage as the unit of signal strength, since the scale mapping is skipped in odm */
-		
-		HAL_DATA_TYPE *pHal = GET_HAL_DATA(padapter);
-		
-		iwe->u.qual.level = (u8)odm_SignalScaleMapping(&pHal->odmpriv, ss);
-	}	
-	#endif
-	#endif
 	
 	iwe->u.qual.qual = (u8)sq;   // signal quality
 
@@ -1126,22 +1112,8 @@ static char *translate_scan(_adapter *padapter,
 	}
 	
 	
-	#ifdef CONFIG_SIGNAL_DISPLAY_DBM
-	iwe.u.qual.level = (u8) translate_percentage_to_dbm(ss); /* dbm */
-	#else
-	#ifdef CONFIG_SIGNAL_SCALE_MAPPING
 	iwe.u.qual.level = (u8)ss; /* % */
-	#else
-	{
-		/* Do signal scale mapping when using percentage as the unit of signal strength, since the scale mapping is skipped in odm */
-		
-		HAL_DATA_TYPE *pHal = GET_HAL_DATA(padapter);
-		
-		iwe.u.qual.level = (u8)odm_SignalScaleMapping(&pHal->odmpriv, ss);
-	}
-	#endif
-	#endif
-	
+
 	iwe.u.qual.qual = (u8)sq;   // signal quality
 
 	#ifdef CONFIG_PLATFORM_ROCKCHIPS
@@ -6292,21 +6264,7 @@ static struct iw_statistics *rtw_get_wireless_stats(struct net_device *dev)
 		//DBG_871X("No link  level:%d, qual:%d, noise:%d\n", tmp_level, tmp_qual, tmp_noise);
 	}
 	else{
-		#ifdef CONFIG_SIGNAL_DISPLAY_DBM
-		tmp_level = translate_percentage_to_dbm(padapter->recvpriv.signal_strength); 
-		#else
-		#ifdef CONFIG_SIGNAL_SCALE_MAPPING
 		tmp_level = padapter->recvpriv.signal_strength;
-		#else
-		{
-			/* Do signal scale mapping when using percentage as the unit of signal strength, since the scale mapping is skipped in odm */
-			
-			HAL_DATA_TYPE *pHal = GET_HAL_DATA(padapter);
-			
-			tmp_level = (u8)odm_SignalScaleMapping(&pHal->odmpriv, padapter->recvpriv.signal_strength);
-		}
-		#endif
-		#endif
 		
 		tmp_qual = padapter->recvpriv.signal_qual;
 		rtw_get_noise(padapter);

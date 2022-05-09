@@ -229,11 +229,5 @@ ODM_GetHWImgVersion(
 	IN	PDM_ODM_T	pDM_Odm
 	);
 
-s4Byte
-odm_SignalScaleMapping(	
-	IN OUT PDM_ODM_T pDM_Odm,
-	IN	s4Byte CurrSig 
-	);
-
 #endif
 

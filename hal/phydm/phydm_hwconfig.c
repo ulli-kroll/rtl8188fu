@@ -56,7 +56,7 @@ odm_QueryRxPwrPercentage(
 
 
 
-s4Byte
+static s4Byte
 odm_SignalScaleMapping_92CSeries(	
 	IN OUT PDM_ODM_T pDM_Odm,
 	IN s4Byte CurrSig 
@@ -102,7 +102,7 @@ odm_SignalScaleMapping_92CSeries(
 
 	return RetSig;
 }
-s4Byte
+static s4Byte
 odm_SignalScaleMapping(	
 	IN OUT PDM_ODM_T pDM_Odm,
 	IN	s4Byte CurrSig 
@@ -442,22 +442,13 @@ odm_RxPhyStatus92CSeries_Parsing(
 	//It is assigned to the BSS List in GetValueFromBeaconOrProbeRsp().
 	if(isCCKrate)
 	{		
-	#ifdef CONFIG_SIGNAL_SCALE_MAPPING
 		pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pDM_Odm, PWDB_ALL));/*PWDB_ALL;*/
-	#else
-		pPhyInfo->SignalStrength = (u1Byte)PWDB_ALL;
-	#endif
 	}
 	else
 	{	
 		if (rf_rx_num != 0)
 		{			
-			#ifdef CONFIG_SIGNAL_SCALE_MAPPING
 			pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pDM_Odm, total_rssi /= rf_rx_num));
-			#else
-			total_rssi/=rf_rx_num;
-			pPhyInfo->SignalStrength = (u1Byte)total_rssi;
-			#endif
 		}
 	}
 
