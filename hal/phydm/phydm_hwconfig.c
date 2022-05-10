@@ -113,33 +113,6 @@ odm_SignalScaleMapping(
 	}
 	
 }
-
-
-
-static u1Byte odm_SQ_process_patch_RT_CID_819x_Lenovo(
-	IN PDM_ODM_T	pDM_Odm,
-	IN u1Byte 		isCCKrate,
-	IN u1Byte 		PWDB_ALL,
-	IN u1Byte 		path,
-	IN u1Byte 		RSSI
-)
-{
-	u1Byte	SQ = 0;
-	return SQ;
-}
-
-static u1Byte odm_SQ_process_patch_RT_CID_819x_Acer(
-	IN PDM_ODM_T	pDM_Odm,
-	IN u1Byte 		isCCKrate,
-	IN u1Byte 		PWDB_ALL,
-	IN u1Byte 		path,
-	IN u1Byte 		RSSI
-)
-{
-	u1Byte	SQ = 0;
-	
-	return SQ;
-}
 			
 static u1Byte 
 odm_EVMdbToPercentage(
@@ -181,85 +154,8 @@ odm_EVMdbToPercentage(
 
 	return (u1Byte)ret_val;
 }
-			
-static u1Byte 
-odm_EVMdbm_JaguarSeries(
-	IN  s1Byte Value
-	)
-{
-	s1Byte ret_val = Value;
-	
-	// -33dB~0dB to 33dB ~ 0dB
-	if(ret_val == -128)
-		ret_val = 127;
-	else if (ret_val < 0)
-		ret_val = 0 - ret_val;
-	
-	ret_val  = ret_val >> 1;
-	return (u1Byte)ret_val;
-}
-
-static s2Byte
-odm_Cfo(
-  IN s1Byte Value
-)
-{
-	s2Byte  ret_val;
-
-	if (Value < 0)
-	{
-		ret_val = 0 - Value;
-		ret_val = (ret_val << 1) + (ret_val >> 1) ;  //  *2.5~=312.5/2^7
-		ret_val = ret_val | BIT12;  // set bit12 as 1 for negative cfo
-	}
-	else
-	{
-		ret_val = Value;
-		ret_val = (ret_val << 1) + (ret_val>>1) ;  //  *2.5~=312.5/2^7
-	}
-	return ret_val;
-}
 
 #if(ODM_IC_11N_SERIES_SUPPORT == 1)
-
-s1Byte
-odm_CCKRSSI_8703B(
-	IN		u2Byte	LNA_idx,
-	IN		u1Byte	VGA_idx
-	)
-{
-	s1Byte	rx_pwr_all = 0x00;
-	
-	switch (LNA_idx) {
-	case 0xf:
-		rx_pwr_all = -48 - (2 * VGA_idx);
-		break;		
-	case 0xb:
-		rx_pwr_all = -42 - (2 * VGA_idx); /*TBD*/
-		break;
-	case 0xa:
-		rx_pwr_all = -36 - (2 * VGA_idx);
-		break;
-	case 8:
-		rx_pwr_all = -32 - (2 * VGA_idx);
-		break;
-	case 7:	
-		rx_pwr_all = -28 - (2 * VGA_idx); /*TBD*/
-		break;
-	case 4:	
-		rx_pwr_all = -16 - (2 * VGA_idx);
-		break;
-	case 0:	
-		rx_pwr_all = -2 - (2 * VGA_idx);
-		break;
-	default:
-	/*rx_pwr_all = -53+(2*(31-VGA_idx));*/
-	/*DbgPrint("wrong LNA index\n");*/
-		break;
-			
-	}
-	return	rx_pwr_all;
-}
 
 VOID
 odm_RxPhyStatus92CSeries_Parsing(
