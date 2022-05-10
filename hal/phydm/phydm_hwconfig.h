@@ -42,17 +42,16 @@
 // structure and define
 //============================================================
 
-__PACK typedef struct _Phy_Rx_AGC_Info
-{
+struct phy_rx_agc_info {
 	#if (ODM_ENDIAN_TYPE == ODM_ENDIAN_LITTLE)	
 		u1Byte	gain:7,trsw:1;			
 	#else			
 		u1Byte	trsw:1,gain:7;
 	#endif
-} __WLAN_ATTRIB_PACK__ PHY_RX_AGC_INFO_T, *pPHY_RX_AGC_INFO_T;
+} __packed;
 
-__PACK typedef struct _Phy_Status_Rpt_8192cd {
-	PHY_RX_AGC_INFO_T path_agc[2];
+struct phy_status_rpt {
+	struct phy_rx_agc_info path_agc[2];
 	u1Byte	ch_corr[2];
 	u1Byte	cck_sig_qual_ofdm_pwdb_all;
 	u1Byte	cck_agc_rpt_ofdm_cfosho_a;
@@ -87,7 +86,7 @@ __PACK typedef struct _Phy_Status_Rpt_8192cd {
 	u1Byte	sgi_en: 1;
 	u1Byte	antsel_rx_keep_2: 1;/*ex_intf_flg:1;*/
 #endif
-} __WLAN_ATTRIB_PACK__ PHY_STATUS_RPT_8192CD_T, *PPHY_STATUS_RPT_8192CD_T;
+} __packed;
 
 
 typedef struct _Phy_Status_Rpt_8812 {

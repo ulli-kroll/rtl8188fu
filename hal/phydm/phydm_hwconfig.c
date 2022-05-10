@@ -155,8 +155,6 @@ odm_EVMdbToPercentage(
 	return (u1Byte)ret_val;
 }
 
-#if(ODM_IC_11N_SERIES_SUPPORT == 1)
-
 VOID
 odm_RxPhyStatus92CSeries_Parsing(
 	IN OUT	PDM_ODM_T					pDM_Odm,
@@ -165,25 +163,22 @@ odm_RxPhyStatus92CSeries_Parsing(
 	IN		PODM_PACKET_INFO_T			pPktinfo
 	)
 {							
-	u1Byte				i, Max_spatial_stream;
+	u1Byte				i, max_spatial_stream;
 	s1Byte				rx_pwr[4], rx_pwr_all=0;
-	u1Byte				EVM, PWDB_ALL = 0, PWDB_ALL_BT;
-	u1Byte				RSSI, total_rssi=0;
-	BOOLEAN				isCCKrate=FALSE;	
+	u1Byte				evm, pwdb_all = 0, PWDB_ALL_BT;
+	u1Byte				rssi, total_rssi=0;
+	BOOLEAN				is_cck=FALSE;	
 	u1Byte				rf_rx_num = 0;
-	u1Byte				cck_highpwr = 0;
-	u1Byte				LNA_idx = 0;
-	u1Byte				VGA_idx = 0;
-	PPHY_STATUS_RPT_8192CD_T pPhyStaRpt = (PPHY_STATUS_RPT_8192CD_T)pPhyStatus;
+	u1Byte				lna_idx = 0;
+	u1Byte				vga_idx = 0;
+	struct phy_status_rpt *phystrpt = (struct phy_status_rpt  *) pPhyStatus;
 
-	isCCKrate = (pPktinfo->DataRate <= ODM_RATE11M) ? TRUE : FALSE;
+	is_cck = (pPktinfo->DataRate <= ODM_RATE11M) ? TRUE : FALSE;
 	pPhyInfo->RxMIMOSignalQuality[ODM_RF_PATH_A] = -1;
 	pPhyInfo->RxMIMOSignalQuality[ODM_RF_PATH_B] = -1;
 
 
-	if(isCCKrate)
-	{
-		u1Byte report;
+	if(is_cck) {
 		u1Byte cck_agc_rpt;
 		
 		// 
@@ -191,32 +186,24 @@ odm_RxPhyStatus92CSeries_Parsing(
 		// (2)PWDB, Average PWDB cacluated by hardware (for rate adaptive)
 		//
 
-		//if(pHalData->eRFPowerState == eRfOn)
-			cck_highpwr = pDM_Odm->bCckHighPower;
-		//else
-		//	cck_highpwr = FALSE;
-
-		cck_agc_rpt =  pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a ;
+		cck_agc_rpt =  phystrpt->cck_agc_rpt_ofdm_cfosho_a ;
 		
 		//2011.11.28 LukeLee: 88E use different LNA & VGA gain table
 		//The RSSI formula should be modified according to the gain table
 		//In 88E, cck_highpwr is always set to 1
-		{
-			LNA_idx = ((cck_agc_rpt & 0xE0) >>5);
-			VGA_idx = (cck_agc_rpt & 0x1F); 
 
-			{
-				rx_pwr_all = odm_CCKRSSI_8188F(LNA_idx, VGA_idx);
-				PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-				if (PWDB_ALL > 100)
-					PWDB_ALL = 100;
-			}
-		}
+		lna_idx = ((cck_agc_rpt & 0xE0) >>5);
+		vga_idx = (cck_agc_rpt & 0x1F); 
 
-		pDM_Odm->cck_lna_idx = LNA_idx;
-		pDM_Odm->cck_vga_idx = VGA_idx;
-		pPhyInfo->RxPWDBAll = PWDB_ALL;
-		pPhyInfo->BTRxRSSIPercentage = PWDB_ALL;
+		rx_pwr_all = odm_CCKRSSI_8188F(lna_idx, vga_idx);
+		pwdb_all = odm_QueryRxPwrPercentage(rx_pwr_all);
+		if (pwdb_all > 100)
+			pwdb_all = 100;
+
+		pDM_Odm->cck_lna_idx = lna_idx;
+		pDM_Odm->cck_vga_idx = vga_idx;
+		pPhyInfo->RxPWDBAll = pwdb_all;
+		pPhyInfo->BTRxRSSIPercentage = pwdb_all;
 		pPhyInfo->RecvSignalPower = rx_pwr_all;
 		//
 		// (3) Get Signal Quality (EVM)
@@ -229,7 +216,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 				SQ = 100;
 			}
 			else{						
-				SQ_rpt = pPhyStaRpt->cck_sig_qual_ofdm_pwdb_all;
+				SQ_rpt = phystrpt->cck_sig_qual_ofdm_pwdb_all;
 					
 				if(SQ_rpt > 64)
 					SQ = 0;
@@ -248,57 +235,52 @@ odm_RxPhyStatus92CSeries_Parsing(
 
 		for (i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX; i++) {
 			if (i == 0)
-				pPhyInfo->RxMIMOSignalStrength[0] = PWDB_ALL;
+				pPhyInfo->RxMIMOSignalStrength[0] = pwdb_all;
 			else
 				pPhyInfo->RxMIMOSignalStrength[1] = 0;
 		}
-	}
-	else //2 is OFDM rate
-	{
-
+	} else { //2 is OFDM rate
+	
 		// 
 		// (1)Get RSSI for HT rate
 		//
 		
-       	 for(i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX; i++)   
-		{
+		for (i = ODM_RF_PATH_A; i < ODM_RF_PATH_MAX; i++) {
 			// 2008/01/30 MH we will judge RF RX path now.
 			if (pDM_Odm->RFPathRxEnable & BIT(i))
 				rf_rx_num++;
 			//else
 				//continue;
 
-			rx_pwr[i] = ((pPhyStaRpt->path_agc[i].gain& 0x3F)*2) - 110;
-			pDM_Odm->ofdm_agc_idx[i] = (pPhyStaRpt->path_agc[i].gain & 0x3F);
+			rx_pwr[i] = ((phystrpt->path_agc[i].gain& 0x3F)*2) - 110;
+			pDM_Odm->ofdm_agc_idx[i] = (phystrpt->path_agc[i].gain & 0x3F);
 
 			pPhyInfo->RxPwr[i] = rx_pwr[i];
 
 			/* Translate DBM to percentage. */
-			RSSI = odm_QueryRxPwrPercentage(rx_pwr[i]);
-			total_rssi += RSSI;
+			rssi = odm_QueryRxPwrPercentage(rx_pwr[i]);
+			total_rssi += rssi;
 			//RT_DISP(FRX, RX_PHY_SS, ("RF-%d RXPWR=%x RSSI=%d\n", i, rx_pwr[i], RSSI));
 		
-			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
+			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) rssi;
 
 			//Get Rx snr value in DB		
-			pPhyInfo->RxSNR[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
+			pPhyInfo->RxSNR[i] = (s4Byte)(phystrpt->path_rxsnr[i]/2);
 		
 			/* Record Signal Strength for next packet */
 			//if(pPktinfo->bPacketMatchBSSID)
-			{				
-			}
 		}
 		
 		
 		//
 		// (2)PWDB, Average PWDB cacluated by hardware (for rate adaptive)
 		//
-		rx_pwr_all = (((pPhyStaRpt->cck_sig_qual_ofdm_pwdb_all) >> 1 )& 0x7f) -110;		
+		rx_pwr_all = (((phystrpt->cck_sig_qual_ofdm_pwdb_all) >> 1 )& 0x7f) -110;		
 		
-		PWDB_ALL_BT = PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);	
+		PWDB_ALL_BT = pwdb_all = odm_QueryRxPwrPercentage(rx_pwr_all);	
 	
 	
-		pPhyInfo->RxPWDBAll = PWDB_ALL;
+		pPhyInfo->RxPWDBAll = pwdb_all;
 		//ODM_RT_TRACE(pDM_Odm,ODM_COMP_RSSI_MONITOR, ODM_DBG_LOUD, ("ODM OFDM RSSI=%d\n",pPhyInfo->RxPWDBAll));
 		pPhyInfo->BTRxRSSIPercentage = PWDB_ALL_BT;
 		pPhyInfo->RxPower = rx_pwr_all;
@@ -309,43 +291,34 @@ odm_RxPhyStatus92CSeries_Parsing(
 			// (3)EVM of HT rate
 			//
 			if(pPktinfo->DataRate >=ODM_RATEMCS8 && pPktinfo->DataRate <=ODM_RATEMCS15)
-				Max_spatial_stream = 2; //both spatial stream make sense
+				max_spatial_stream = 2; //both spatial stream make sense
 			else
-				Max_spatial_stream = 1; //only spatial stream 1 makes sense
+				max_spatial_stream = 1; //only spatial stream 1 makes sense
 
-			for(i=0; i<Max_spatial_stream; i++)
-			{
+			for(i=0; i < max_spatial_stream; i++) {
 				// Do not use shift operation like "rx_evmX >>= 1" because the compilor of free build environment
 				// fill most significant bit to "zero" when doing shifting operation which may change a negative 
 				// value to positive one, then the dbm value (which is supposed to be negative)  is not correct anymore.			
-				EVM = odm_EVMdbToPercentage( (pPhyStaRpt->stream_rxevm[i] ));	//dbm
+				evm = odm_EVMdbToPercentage( (phystrpt->stream_rxevm[i] ));	//dbm
 
 				//GET_RX_STATUS_DESC_RX_MCS(pDesc), pDrvInfo->rxevm[i], "%", EVM));
 				
 				//if(pPktinfo->bPacketMatchBSSID)
-				{
-					if(i==ODM_RF_PATH_A) // Fill value in RFD, Get the first spatial stream only
-					{						
-						pPhyInfo->SignalQuality = (u1Byte)(EVM & 0xff);
-					}					
-					pPhyInfo->RxMIMOSignalQuality[i] = (u1Byte)(EVM & 0xff);
-				}
+				if(i==ODM_RF_PATH_A) // Fill value in RFD, Get the first spatial stream only
+					pPhyInfo->SignalQuality = (u1Byte)(evm & 0xff);
+
+				pPhyInfo->RxMIMOSignalQuality[i] = (u1Byte)(evm & 0xff);
 			}
 		}
 		
 	}
 	//UI BSS List signal strength(in percentage), make it good looking, from 0~100.
 	//It is assigned to the BSS List in GetValueFromBeaconOrProbeRsp().
-	if(isCCKrate)
-	{		
-		pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pDM_Odm, PWDB_ALL));/*PWDB_ALL;*/
-	}
-	else
-	{	
+	if(is_cck) {		
+		pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pDM_Odm, pwdb_all));/*PWDB_ALL;*/
+	} else {	
 		if (rf_rx_num != 0)
-		{			
 			pPhyInfo->SignalStrength = (u1Byte)(odm_SignalScaleMapping(pDM_Odm, total_rssi /= rf_rx_num));
-		}
 	}
 
 	//DbgPrint("isCCKrate = %d, pPhyInfo->RxPWDBAll = %d, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a = 0x%x\n", 
@@ -353,7 +326,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 
 	//For 92C/92D HW (Hybrid) Antenna Diversity
 }
-#endif
 
 VOID
 odm_Init_RSSIForDM(
