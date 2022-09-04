@@ -203,7 +203,8 @@ static void crc32_init(void)
 		}
 		bcrc32initialized= 1;
 	}
-exit:	
+exit:
+     return;	
 }
 
 static u32 getcrc32(u8 *buf, sint len)
