@@ -3830,7 +3830,7 @@ void rtw_disassoc_cmd_callback(_adapter*	padapter,  struct cmd_obj *pcmd)
 	rtw_free_cmd_obj(pcmd);
 	
 exit:
-	
+     return;
 }
 
 

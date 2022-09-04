@@ -393,7 +393,7 @@ void _rtw_free_xmit_priv (struct xmit_priv *pxmitpriv)
 	rtw_free_hwxmits(padapter);
 
 out:	
-
+       return;
 
 }
 

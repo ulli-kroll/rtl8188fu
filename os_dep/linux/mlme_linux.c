@@ -289,7 +289,7 @@ void rtw_report_sec_ie(_adapter *adapter,u8 authmode,u8 *sec_ie)
 	}
 
 exit:
-
+       return;
 
 }
 
