@@ -39,11 +39,27 @@ Run following commands for disabling MAC Address Spoofing (Note: This is not nee
 
 `echo -e "[device]\nwifi.scan-rand-mac-address=no" | sudo tee /etc/NetworkManager/conf.d/disable-random-mac.conf`
 
-#### Blacklist for kernel 5.15 and 5.16 (No needed for kernel 5.17 and up)
+#### Blacklist (alias) for kernel 5.15 and 5.16 (No needed for kernel 5.17 and up)
 
-If you are using kernel 5.15 and 5.16, you must create a configuration file with following commands for preventing to conflict rtl8188fu module with built-in r8188eu module.
+If you are using kernel 5.15 and 5.16, you must create a configuration file with following command for preventing to conflict rtl8188fu module with built-in r8188eu module.
 
 `echo 'alias usb:v0BDApF179d*dc*dsc*dp*icFFiscFFipFFin* rtl8188fu' | sudo tee /etc/modprobe.d/r8188eu-blacklist.conf`
+
+#### Blacklist (alias) for kernel 6.2 and up
+
+If you are using kernel 6.2 and up, you must create a configuration file with following command for preventing to conflict rtl8188fu module with built-in rtl8xxxu module.
+
+`echo 'alias usb:v0BDApF179d*dc*dsc*dp*icFFiscFFipFFin* rtl8188fu' | sudo tee /etc/modprobe.d/rtl8xxxu-blacklist.conf`
+
+##### Then you must update initramfs
+
+For initramfs
+
+`sudo update initramfs -u`
+
+For dracut
+
+`sudo dracut -q --force`
 
 
 ------------------
@@ -63,7 +79,7 @@ If you are using kernel 5.15 and 5.16, you must create a configuration file with
 
 You can install rtl8188fu driver with following commands from PPA.
 
-for xUbuntu 16.04-18.04-20.04-21.10 / Linux Mint 18.x-19.x-20.x
+for xUbuntu 16.04-18.04-20.04-22.04-22.10-23.04 / Linux Mint 18.x-19.x-20.x-21.x
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
 
