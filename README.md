@@ -93,7 +93,3 @@ You can purge packages with following commands
 `sudo apt purge rtl8188fu-dkms`
 
 ------------------
-
-## How to install (for ARM devices)
-
-https://github.com/kelebek333/rtl8188fu/tree/arm#how-to-install-for-arm-devices
