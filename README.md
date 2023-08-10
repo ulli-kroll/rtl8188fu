@@ -27,7 +27,7 @@ Run following commands for disable power management and plugging/replugging issu
 
 `sudo touch /etc/modprobe.d/rtl8188fu.conf`
 
-`echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
+`echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0 rtw_ips_mode=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
 
 #### Disable MAC Address Spoofing
 
