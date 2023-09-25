@@ -55,7 +55,7 @@ If you are using kernel 6.2 and up, you must create a configuration file with fo
 
 For initramfs
 
-`sudo update initramfs -u`
+`sudo update-initramfs -u`
 
 For dracut
 
@@ -79,7 +79,7 @@ For dracut
 
 You can install rtl8188fu driver with following commands from PPA.
 
-for xUbuntu 16.04-18.04-20.04-22.04-22.10-23.04 / Linux Mint 18.x-19.x-20.x-21.x
+for xUbuntu 16.04-18.04-20.04-22.04-23.04-23.10 / Linux Mint 20.x-21.x
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
 
