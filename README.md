@@ -1,4 +1,4 @@
-RTL8188FU driver for Linux kernel 4.15.x ~ 6.0.x (Linux Mint, Ubuntu or Debian Derivatives)
+RTL8188FU driver for Linux kernel 4.15.x ~ 6.5.x (Linux Mint, Ubuntu or Debian Derivatives)
 
 info: rtl8188fu support will be add to rtl8xxxu module of Linux kernel. https://patchwork.kernel.org/project/linux-wireless/patch/b14f299d-3248-98fe-eee1-ba50d2e76c74@gmail.com/
 
@@ -61,6 +61,17 @@ For dracut
 
 `sudo dracut -q --force`
 
+##### Enable rtl8188fu module
+
+Run following command for up to kernel 6.1
+
+`sudo modprobe rtl8188fu`
+
+Run following commands for kernel 6.2 and up
+
+`sudo modprobe -r rtl8188fu`
+
+`sudo modprobe rtl8188fu`
 
 ------------------
 
