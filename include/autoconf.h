@@ -302,7 +302,7 @@
 /*
  * Debug Related Configure
  */
-#define CONFIG_DEBUG /* DBG_871X, etc... */
+// #define CONFIG_DEBUG /* DBG_871X, etc... */
 #ifdef CONFIG_DEBUG
 	#define DBG	1	/* for ODM & BTCOEX debug */
 	#define DBG_PHYDM_MORE 0
@@ -315,7 +315,7 @@
 	#define CONFIG_DEBUG_RTL871X /* RT_TRACE, RT_PRINT_DATA, _func_enter_, _func_exit_ */
 #endif /* DBG_MORE */
 
-#define CONFIG_PROC_DEBUG
+// #define CONFIG_PROC_DEBUG
 
 /*
 #define DBG_CONFIG_ERROR_DETECT
