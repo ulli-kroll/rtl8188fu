@@ -89,7 +89,7 @@ void interrupt_handler_8192eu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
 void rtl8188fu_set_hw_type(struct dvobj_priv *pdvobj);
 void rtl8188fu_set_intf_ops(struct _io_ops *pops);
 void rtl8188fu_recv_tasklet(void *priv);
-void rtl8188fu_xmit_tasklet(void *priv);
+void rtl8188fu_xmit_tasklet(unsigned long priv);
 #ifdef CONFIG_SUPPORT_USB_INT
 void interrupt_handler_8188fu(_adapter *padapter, u16 pkt_len, u8 *pbuf);
 #endif
